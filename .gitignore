@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+*.tif
+*.tiff
+data/raw/
+data/cache/
+*.joblib
+.DS_Store
+node_modules/
+dist/
