@@ -1,0 +1,160 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "zone": "araucania_cordillerana",
+    "communes": ["Curarrehue", "Melipeuco", "Lonquimay"],
+    "updated": "2026-05-17"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.58, -38.65] },
+      "properties": {
+        "id": "conguillio",
+        "name": "Parque Nacional Conguillío",
+        "type": "natural",
+        "ecosystem": "bosque_araucaria",
+        "commune": "Melipeuco",
+        "description": "Bosque milenario de araucarias con lagos de origen volcánico. Reserva de la Biosfera UNESCO.",
+        "stem_areas": ["ecología", "geología", "cambio_climático"],
+        "heritage": "natural",
+        "threats": ["incendios", "cambio_climático"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.93, -39.42] },
+      "properties": {
+        "id": "villarrica_volcano",
+        "name": "Volcán Villarrica (Rukapillán)",
+        "type": "geological",
+        "ecosystem": "zona_volcanica",
+        "commune": "Curarrehue",
+        "description": "Uno de los volcanes más activos de Sudamérica. Nombre mapuche: Rukapillán (casa del espíritu).",
+        "stem_areas": ["geología", "vulcanología", "física", "cultura_mapuche"],
+        "heritage": "natural_cultural",
+        "threats": ["erupciones", "deshielo_glaciar"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.47, -38.43] },
+      "properties": {
+        "id": "reserva_nalcas",
+        "name": "Reserva Nacional Nalcas-Malalcahuello",
+        "type": "natural",
+        "ecosystem": "bosque_araucaria",
+        "commune": "Lonquimay",
+        "description": "Bosque de araucarias y coigües en la precordillera. Hábitat del carpintero negro.",
+        "stem_areas": ["biología", "ecología", "conservación"],
+        "heritage": "natural",
+        "threats": ["tala_ilegal", "especies_invasoras"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.38, -38.37] },
+      "properties": {
+        "id": "volcan_lonquimay",
+        "name": "Volcán Lonquimay",
+        "type": "geological",
+        "ecosystem": "estepa_altoandina",
+        "commune": "Lonquimay",
+        "description": "Volcán activo con cráter adventicio Navidad (erupción 1988). Zona de nieves eternas.",
+        "stem_areas": ["geología", "vulcanología", "meteorología"],
+        "heritage": "natural",
+        "threats": ["actividad_volcánica", "cambio_climático"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.60, -39.27] },
+      "properties": {
+        "id": "termas_geometricas",
+        "name": "Termas Geométricas",
+        "type": "geological",
+        "ecosystem": "bosque_valdiviano",
+        "commune": "Curarrehue",
+        "description": "Aguas termales en quebrada de bosque nativo. Ejemplo de geotermia y arquitectura sustentable.",
+        "stem_areas": ["geología", "química", "energías_renovables", "arquitectura"],
+        "heritage": "natural",
+        "threats": ["sobreexplotación_turística"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.82, -38.69] },
+      "properties": {
+        "id": "lago_conguillio",
+        "name": "Lago Conguillío",
+        "type": "hydrological",
+        "ecosystem": "bosque_araucaria",
+        "commune": "Melipeuco",
+        "description": "Lago formado por represamiento volcánico del río Truful-Truful. Aguas cristalinas rodeadas de araucarias.",
+        "stem_areas": ["hidrología", "ecología_acuática", "geología"],
+        "heritage": "natural",
+        "threats": ["contaminación", "turismo_no_regulado"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.55, -38.95] },
+      "properties": {
+        "id": "rio_allipén",
+        "name": "Río Allipén",
+        "type": "hydrological",
+        "ecosystem": "bosque_valdiviano",
+        "commune": "Melipeuco",
+        "description": "Río cordillerano con alta biodiversidad acuática. Importante para comunidades mapuche locales.",
+        "stem_areas": ["hidrología", "biología", "química_agua", "cultura_mapuche"],
+        "heritage": "natural_cultural",
+        "threats": ["centrales_hidroeléctricas", "contaminación_agrícola"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.65, -39.15] },
+      "properties": {
+        "id": "comunidad_mapuche_curarrehue",
+        "name": "Rewe ceremonial - Comunidad Mapuche Curarrehue",
+        "type": "cultural",
+        "ecosystem": "bosque_valdiviano",
+        "commune": "Curarrehue",
+        "description": "Sitio de nguillatún y ceremonias mapuche. Conocimiento ancestral de astronomía, medicina y agricultura.",
+        "stem_areas": ["etnobotánica", "astronomía_mapuche", "agricultura_ancestral"],
+        "heritage": "cultural_intangible",
+        "threats": ["pérdida_tradiciones", "presión_territorial"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.30, -38.50] },
+      "properties": {
+        "id": "paso_icalma",
+        "name": "Lago Icalma y Paso Fronterizo",
+        "type": "hydrological",
+        "ecosystem": "bosque_araucaria",
+        "commune": "Lonquimay",
+        "description": "Lago de origen glaciar en zona pehuenche. Nacimiento del río Biobío.",
+        "stem_areas": ["glaciología", "hidrología", "geografía", "historia_pehuenche"],
+        "heritage": "natural_cultural",
+        "threats": ["cambio_climático", "retroceso_glaciar"]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-71.48, -38.68] },
+      "properties": {
+        "id": "sierra_nevada",
+        "name": "Sierra Nevada - Bosque de Pehuén",
+        "type": "natural",
+        "ecosystem": "bosque_araucaria",
+        "commune": "Melipeuco",
+        "description": "Bosque puro de araucaria (pehuén). El piñón es alimento ancestral mapuche-pehuenche.",
+        "stem_areas": ["botánica", "nutrición", "ecología", "cultura_pehuenche"],
+        "heritage": "natural_cultural",
+        "threats": ["recolección_excesiva", "cambio_climático", "incendios"]
+      }
+    }
+  ]
+}
