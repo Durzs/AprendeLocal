@@ -1,30 +1,33 @@
-# Datos Araucanía
+# Datos Araucanía - Links Actualizados (Mayo 2026)
 
-## Fuentes a descargar
-
-### 1. CONAF - Catastro Vegetacional
-- URL: https://www.conaf.cl/nuestros-bosques/bosques-en-chile/catastro-vegetacional/
+## 1. CONAF - Catastro Vegetacional (bosques, vegetación)
+- **SIT CONAF**: https://sit.conaf.cl/
+- **Info catastro**: https://www.conaf.cl/regulacion/informacion-geografica-o-territorial/catastro-vegetacional/
 - Formato: Shapefile (.shp)
-- Descargar: Región de La Araucanía (IX)
+- Buscar: Región de La Araucanía (IX)
 
-### 2. IDE Chile - Límites comunales
-- URL: https://www.ide.cl/index.php/informacion-territorial/descargar-capas
-- Formato: GeoJSON / Shapefile
-- Descargar: División comunal, filtrar Curarrehue, Melipeuco, Lonquimay
+## 2. Límites comunales (polígonos de comunas)
+- **IDE SUBDERE**: https://ide.subdere.gov.cl/
+- **Geoportal Chile**: https://geoportal.cl/
+- **Datos Abiertos Chile**: https://datos.gob.cl/organization/infraestructura-de-datos-geoespaciales-de-chile
+- **INE Geodatos**: https://www.ine.gob.cl/herramientas/portal-de-mapas/geodatos-abiertos
+- Formato: Shapefile / GeoJSON
 
-### 3. Sentinel-2 - Imágenes satelitales
-- URL: https://dataspace.copernicus.eu/
-- Bandas: B02 (Blue), B03 (Green), B04 (Red), B08 (NIR), B11 (SWIR)
-- Zona: Tiles T18GYS y T18GYT (cubren Araucanía cordillerana)
-- Fecha: verano reciente (enero-marzo) para máximo NDVI
+## 3. Imágenes Satelitales Sentinel-2
+- **Copernicus Browser**: https://browser.dataspace.copernicus.eu/
+- Gratis, sin registro para browsear
+- Filtrar por fecha (verano: enero-marzo) y nubosidad (<20%)
+- Zona: centrar en (-38.7, -71.5), cubrir Araucanía cordillerana
 
-### 4. DEM - Modelo de elevación
-- URL: https://earthexplorer.usgs.gov/ (SRTM 30m)
-- Zona: S39W072, S39W071
+## 4. Modelo de Elevación (DEM)
+- **USGS Earth Explorer**: https://earthexplorer.usgs.gov/
+  - Data Sets → Digital Elevation → SRTM 1-ArcSecond Global
+- **OpenTopography**: https://portal.opentopography.org/dataCatalog?loc=Chile
+- Resolución: 30m
 
-### 5. CMN - Monumentos Nacionales
-- URL: https://www.monumentos.gob.cl/
-- Buscar: Región de La Araucanía
+## 5. Portal central (buscar todo)
+- **Geoportal Chile**: https://geoportal.cl/ (1,000+ capas disponibles)
+- **IDE Minagri**: https://ide.minagri.gob.cl/geoweb/
 
 ## Estructura esperada
 
@@ -35,5 +38,11 @@ araucania/
 ├── sentinel/       # Imágenes Sentinel-2 (GeoTIFF)
 ├── dem/            # Modelo elevación
 ├── heritage/       # POIs patrimonio (JSON curado)
-└── pois.json       # Puntos de interés educativos
+└── pois.json       # Puntos de interés educativos (ya creado)
 ```
+
+## Por dónde empezar
+
+1. **Geoportal Chile** (https://geoportal.cl/) → buscar "límites comunales" → descargar Araucanía
+2. **SIT CONAF** (https://sit.conaf.cl/) → buscar catastro Región IX
+3. **Copernicus Browser** → navegar a La Araucanía, descargar imagen de verano reciente
