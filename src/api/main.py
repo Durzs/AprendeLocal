@@ -267,6 +267,222 @@ async def generate_project(req: GenerateRequest):
     }
 
 
+# ── Camino B: Búsqueda por currículo ─────────────────────────────────
+
+@app.get("/curriculum")
+async def get_curriculum(
+    level: str | None = Query(None, description="Filtrar por nivel: 5to_basico, 6to_basico, etc."),
+    subject: str | None = Query(None, description="Filtrar por asignatura: ciencias_naturales"),
+    axis: str | None = Query(None, description="Filtrar por eje: ciencias_vida, fisica, quimica, etc."),
+):
+    """Retorna objetivos de aprendizaje del currículo chileno con conteo de proyectos disponibles."""
+    sb = get_supabase()
+    query = sb.table("curriculum_objectives").select("*")
+
+    if level:
+        query = query.eq("level", level)
+    if subject:
+        query = query.eq("subject", subject)
+    if axis:
+        query = query.eq("axis", axis)
+
+    result = query.order("level").order("oa_number").execute()
+
+    # Para cada OA, contar cuántos proyectos lo cubren
+    objectives = []
+    for oa in result.data:
+        # Buscar proyectos cuyo curriculum_alignment mencione este OA
+        # (búsqueda por texto en el array de curriculum_alignment del proyecto)
+        project_count = (
+            sb.table("project_curriculum")
+            .select("id", count="exact")
+            .eq("objective_id", oa["id"])
+            .execute()
+        )
+        objectives.append({
+            **oa,
+            "project_count": project_count.count or 0,
+        })
+
+    return {"objectives": objectives}
+
+
+@app.get("/curriculum/levels")
+async def get_curriculum_levels():
+    """Retorna los niveles educativos disponibles con conteo de OA."""
+    sb = get_supabase()
+    result = sb.table("curriculum_objectives").select("level").execute()
+
+    # Contar OA por nivel
+    level_counts: dict[str, int] = {}
+    for row in result.data:
+        lvl = row["level"]
+        level_counts[lvl] = level_counts.get(lvl, 0) + 1
+
+    # Ordenar por nivel
+    order = ["5to_basico", "6to_basico", "7mo_basico", "8vo_basico", "1ro_medio", "2do_medio"]
+    levels = []
+    for lvl in order:
+        if lvl in level_counts:
+            levels.append({"level": lvl, "total_oa": level_counts[lvl]})
+
+    return {"levels": levels}
+
+
+@app.get("/curriculum/{objective_code}/projects")
+async def get_projects_for_objective(objective_code: str):
+    """Retorna proyectos STEM que cubren un objetivo de aprendizaje específico."""
+    sb = get_supabase()
+
+    # Buscar el OA
+    oa_result = (
+        sb.table("curriculum_objectives")
+        .select("*")
+        .eq("code", objective_code)
+        .execute()
+    )
+
+    if not oa_result.data:
+        raise HTTPException(status_code=404, detail="Objetivo no encontrado")
+
+    oa = oa_result.data[0]
+
+    # Buscar proyectos vinculados via project_curriculum
+    linked = (
+        sb.table("project_curriculum")
+        .select("project_id")
+        .eq("objective_id", oa["id"])
+        .execute()
+    )
+
+    projects = []
+    if linked.data:
+        project_ids = [r["project_id"] for r in linked.data]
+        for pid in project_ids:
+            p = sb.table("stem_projects").select("*").eq("id", pid).execute()
+            if p.data:
+                projects.append(p.data[0])
+
+    # También buscar proyectos cuyo curriculum_alignment TEXT[] mencione este OA
+    # (para proyectos generados antes de la tabla de relación)
+    keyword = f"OA {oa['oa_number']}"
+    text_match = (
+        sb.table("stem_projects")
+        .select("*")
+        .execute()
+    )
+
+    existing_ids = {p["id"] for p in projects}
+    for p in text_match.data:
+        if p["id"] not in existing_ids:
+            alignment = p.get("curriculum_alignment", [])
+            if any(keyword in str(a) for a in alignment):
+                projects.append(p)
+
+    return {
+        "objective": oa,
+        "projects": projects,
+    }
+
+
+# ── Escuelas: punto de entrada del docente ──────────────────────────
+
+@app.get("/schools")
+async def get_schools(
+    commune: str | None = Query(None, description="Filtrar por comuna"),
+):
+    """Retorna escuelas rurales de la zona piloto."""
+    sb = get_supabase()
+
+    # Usar RPC para obtener coordenadas calculadas por PostGIS
+    rpc_result = sb.rpc("get_schools_with_coords", {}).execute()
+
+    schools = []
+    for row in rpc_result.data:
+        if commune and row.get("commune") != commune:
+            continue
+        schools.append({
+            "id": row["id"],
+            "rbd": row["rbd"],
+            "name": row["name"],
+            "commune": row["commune"],
+            "address": row.get("address"),
+            "coordinates": [row.get("lon", 0), row.get("lat", 0)],
+            "dependency": row.get("dependency"),
+            "rural": row.get("rural", True),
+            "levels": row.get("levels", []),
+            "student_count": row.get("student_count"),
+        })
+
+    # Ordenar
+    schools.sort(key=lambda s: (s["commune"], s["name"]))
+    return {"schools": schools}
+
+
+@app.get("/schools/{school_id}/nearby")
+async def get_nearby_pois(
+    school_id: str,
+    radius_km: float = Query(20, description="Radio de búsqueda en km"),
+):
+    """Retorna puntos de interés cercanos a una escuela, ordenados por distancia."""
+    sb = get_supabase()
+
+    # Verificar que la escuela existe
+    school_result = sb.table("schools").select("*").eq("id", school_id).execute()
+    if not school_result.data:
+        raise HTTPException(status_code=404, detail="Escuela no encontrada")
+
+    school = school_result.data[0]
+    school_loc = school.get("location")
+
+    if not school_loc:
+        raise HTTPException(status_code=400, detail="Escuela sin coordenadas")
+
+    # Llamar a la función PostGIS nearby_pois
+    result = sb.rpc("nearby_pois", {
+        "school_id": school_id,
+        "radius_km": radius_km,
+    }).execute()
+
+    pois = []
+    for row in result.data:
+        pois.append({
+            "id": row["poi_id"],
+            "name": row["poi_name"],
+            "type": row["poi_type"],
+            "ecosystem": row.get("ecosystem_type"),
+            "commune": row.get("commune"),
+            "description": row.get("description"),
+            "stem_areas": row.get("stem_areas", []),
+            "heritage_type": row.get("heritage_type"),
+            "threats": row.get("threats", []),
+            "distance_km": row["distance_km"],
+            "coordinates": [row["longitude"], row["latitude"]],
+        })
+
+    # Obtener coordenadas de la escuela via RPC
+    school_coords_result = sb.rpc("get_schools_with_coords", {}).execute()
+    school_entry = next(
+        (s for s in school_coords_result.data if s["id"] == school_id),
+        None
+    )
+    school_coords = [
+        school_entry.get("lon", 0) if school_entry else 0,
+        school_entry.get("lat", 0) if school_entry else 0,
+    ]
+
+    return {
+        "school": {
+            "id": school["id"],
+            "name": school["name"],
+            "commune": school["commune"],
+            "coordinates": school_coords,
+        },
+        "radius_km": radius_km,
+        "pois": pois,
+    }
+
+
 # ── Utilidades ───────────────────────────────────────────────────────
 
 def _parse_point(location) -> list[float]:

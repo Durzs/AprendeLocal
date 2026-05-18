@@ -11,6 +11,8 @@ export default defineConfig({
       "/projects": "http://127.0.0.1:8000",
       "/communes": "http://127.0.0.1:8000",
       "/generate-project": "http://127.0.0.1:8000",
+      "/schools": "http://127.0.0.1:8000",
+      "/curriculum": "http://127.0.0.1:8000",
     },
   },
 })

@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from "react-leaflet";
+import { useEffect } from "react";
 import L from "leaflet";
-import type { POIFeature } from "../types";
+import type { POIFeature, School } from "../types";
 
 import "leaflet/dist/leaflet.css";
 
@@ -31,23 +32,93 @@ function createIcon(type: string) {
   });
 }
 
+const schoolIcon = L.divIcon({
+  className: "school-marker",
+  html: `<div style="
+    background: #f59e0b;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  ">🏫</div>`,
+  iconSize: [36, 36],
+  iconAnchor: [18, 18],
+});
+
 interface Props {
   points: POIFeature[];
   onSelectPoint: (point: POIFeature) => void;
   selectedId: string | null;
+  center?: [number, number];    // [lon, lat] de la escuela
+  schoolMarker?: School;        // Para mostrar la escuela en el mapa
 }
 
-export default function MapView({ points, onSelectPoint, selectedId }: Props) {
+export default function MapView({
+  points,
+  onSelectPoint,
+  selectedId,
+  center,
+  schoolMarker,
+}: Props) {
+  // Centro del mapa: si hay escuela, usar sus coordenadas
+  const mapCenter: [number, number] = center
+    ? [center[1], center[0]] // [lat, lon]
+    : ARAUCANIA_CENTER;
+
+  const zoom = center ? 11 : INITIAL_ZOOM;
+
   return (
     <MapContainer
-      center={ARAUCANIA_CENTER}
-      zoom={INITIAL_ZOOM}
+      center={mapCenter}
+      zoom={zoom}
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
+      {/* Marcador de la escuela */}
+      {schoolMarker && (
+        <>
+          <Marker
+            position={[schoolMarker.coordinates[1], schoolMarker.coordinates[0]]}
+            icon={schoolIcon}
+            zIndexOffset={1000}
+          >
+            <Popup>
+              <strong>🏫 {schoolMarker.name}</strong>
+              <br />
+              {schoolMarker.commune}
+              {schoolMarker.student_count && (
+                <>
+                  <br />
+                  {schoolMarker.student_count} estudiantes
+                </>
+              )}
+            </Popup>
+          </Marker>
+          {/* Círculo de radio de búsqueda */}
+          <Circle
+            center={[schoolMarker.coordinates[1], schoolMarker.coordinates[0]]}
+            radius={20000}
+            pathOptions={{
+              color: "#f59e0b",
+              fillColor: "#f59e0b",
+              fillOpacity: 0.05,
+              weight: 1,
+              dashArray: "6 4",
+            }}
+          />
+        </>
+      )}
+
+      {/* POIs */}
       {points.map((poi) => {
         const [lon, lat] = poi.geometry.coordinates;
         return (
@@ -67,7 +138,9 @@ export default function MapView({ points, onSelectPoint, selectedId }: Props) {
           </Marker>
         );
       })}
+
       {selectedId && <FlyToSelected points={points} selectedId={selectedId} />}
+      {center && <RecenterMap center={center} />}
     </MapContainer>
   );
 }
@@ -85,5 +158,13 @@ function FlyToSelected({
     const [lon, lat] = point.geometry.coordinates;
     map.flyTo([lat, lon], 12, { duration: 1 });
   }
+  return null;
+}
+
+function RecenterMap({ center }: { center: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([center[1], center[0]], 11, { animate: true });
+  }, [center[0], center[1]]);
   return null;
 }

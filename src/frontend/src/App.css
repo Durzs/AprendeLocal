@@ -1,8 +1,309 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
   font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ── School Selector (pantalla de bienvenida) ── */
+.school-selector {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.school-welcome {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.welcome-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.school-welcome h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+.welcome-subtitle {
+  margin: 8px 0 0;
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.welcome-instruction {
+  margin: 16px 0 0;
+  font-size: 15px;
+  color: #d1d5db;
+  font-weight: 500;
+}
+
+.school-search-bar {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 16px;
+}
+
+.school-search-input {
+  width: 100%;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.school-search-input::placeholder {
+  color: #6b7280;
+}
+
+.school-search-input:focus {
+  border-color: #22c55e;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.commune-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 600px;
+  margin-bottom: 24px;
+}
+
+.commune-chip {
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  color: #9ca3af;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.commune-chip:hover {
+  border-color: #22c55e;
+  color: white;
+}
+
+.commune-chip.active {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.school-list {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.school-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  width: 100%;
+}
+
+.school-card:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #22c55e;
+  transform: translateY(-1px);
+}
+
+.school-card-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.school-card-info {
+  flex: 1;
+}
+
+.school-card-info h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.school-card-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.school-commune-tag {
+  font-size: 12px;
+  padding: 2px 8px;
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+  border-radius: 8px;
+}
+
+.school-students {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.school-card-arrow {
+  font-size: 20px;
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+.school-loading,
+.school-empty {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
+/* ── School Dashboard ── */
+.school-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #1a1a2e;
+  color: white;
+  gap: 16px;
+}
+
+.dashboard-school-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-school-icon {
+  font-size: 28px;
+}
+
+.dashboard-school-info h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #22c55e;
+  line-height: 1.2;
+}
+
+.dashboard-school-commune {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.dashboard-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.radius-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radius-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.radius-slider {
+  width: 100px;
+  accent-color: #22c55e;
+}
+
+.radius-value {
+  font-size: 13px;
+  color: #22c55e;
+  font-weight: 600;
+  min-width: 45px;
+}
+
+.btn-change-school {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-change-school:hover {
+  border-color: #22c55e;
+  color: white;
+}
+
+.dashboard-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.dashboard-nearest {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+/* Dark mode dashboard footer */
+@media (prefers-color-scheme: dark) {
+  .dashboard-footer {
+    background: #111827;
+    border-top-color: #374151;
+    color: #9ca3af;
+  }
 }
 
 .app-header {
@@ -26,6 +327,35 @@
   color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.app-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  border-color: #22c55e;
+  color: white;
+}
+
+.nav-btn.active {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #1a1a2e;
+  font-weight: 600;
 }
 
 .app-content {
@@ -340,6 +670,170 @@
   .project-section p,
   .project-section ul,
   .project-section ol { color: #9ca3af; }
+}
+
+/* ── Curriculum View ── */
+.curriculum-view {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.curriculum-header {
+  margin-bottom: 24px;
+}
+
+.curriculum-header h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.curriculum-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.level-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 12px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.level-card:hover {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.level-card.active {
+  border-color: #22c55e;
+  background: #22c55e;
+  color: white;
+}
+
+.level-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.level-card.active .level-name {
+  color: white;
+}
+
+.level-count {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.level-card.active .level-count {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.curriculum-loading,
+.curriculum-empty {
+  color: #9ca3af;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.axis-group {
+  margin-bottom: 24px;
+}
+
+.axis-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.oa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oa-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.oa-card:hover {
+  border-color: #22c55e;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+}
+
+.oa-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.oa-code {
+  font-size: 13px;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+.oa-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.oa-description {
+  margin: 0;
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* Dark mode curriculum */
+@media (prefers-color-scheme: dark) {
+  .curriculum-view { background: #111827; }
+  .curriculum-header h2 { color: #f3f4f6; }
+  .curriculum-subtitle { color: #9ca3af; }
+  .level-card { background: #1f2937; border-color: #374151; }
+  .level-card:hover { background: #1a3a2a; }
+  .level-name { color: #f3f4f6; }
+  .axis-title { color: #d1d5db; border-bottom-color: #374151; }
+  .oa-card { background: #1f2937; border-color: #374151; }
+  .oa-card:hover { border-color: #22c55e; }
+  .oa-description { color: #9ca3af; }
 }
 
 /* Mobile */

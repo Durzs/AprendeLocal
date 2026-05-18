@@ -48,3 +48,61 @@ export interface GenerateResponse {
   source: "generated" | "cache";
   message: string;
 }
+
+// Objetivo de Aprendizaje del currículo chileno
+export interface CurriculumObjective {
+  id: string;
+  code: string;
+  subject: string;
+  level: string;
+  axis: string;
+  oa_number: number;
+  description: string;
+  keywords: string[];
+  project_count: number;
+}
+
+export interface CurriculumLevel {
+  level: string;
+  total_oa: number;
+}
+
+// Escuela rural
+export interface School {
+  id: string;
+  rbd: number;
+  name: string;
+  commune: string;
+  address: string | null;
+  coordinates: [number, number];
+  dependency: string | null;
+  rural: boolean;
+  levels: string[];
+  student_count: number | null;
+}
+
+// POI cercano con distancia
+export interface NearbyPOI {
+  id: string;
+  name: string;
+  type: string;
+  ecosystem: string | null;
+  commune: string;
+  description: string | null;
+  stem_areas: string[];
+  heritage_type: string | null;
+  threats: string[];
+  distance_km: number;
+  coordinates: [number, number];
+}
+
+export interface NearbyResponse {
+  school: {
+    id: string;
+    name: string;
+    commune: string;
+    coordinates: [number, number];
+  };
+  radius_km: number;
+  pois: NearbyPOI[];
+}
