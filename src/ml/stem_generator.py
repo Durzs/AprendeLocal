@@ -1,108 +1,210 @@
 """
 Generador de proyectos STEM contextualizados usando Claude API.
-Recibe perfil territorial y genera proyectos adaptados al contexto local.
+Recibe datos de un punto de interés y genera proyectos adaptados al contexto local.
+
+¿Cómo funciona? (explicación simple)
+─────────────────────────────────────
+1. Toma la info de un lugar (ecosistema, amenazas, patrimonio)
+2. Le pide a Claude (IA de Anthropic) que genere un proyecto STEM
+   específico para ese lugar
+3. Claude devuelve un JSON con título, materiales, pasos, etc.
+4. Guardamos ese proyecto en la base de datos
+
+Es como pedirle a un profesor experto que diseñe una actividad
+mirando el mapa y la ficha del lugar.
 """
 
-from dataclasses import dataclass
-
-
-@dataclass
-class STEMProject:
-    title: str
-    stem_areas: list[str]
-    level: str
-    duration: str
-    local_connection: str
-    objectives: list[str]
-    materials: list[str]
-    steps: list[str]
-    expected_outcomes: list[str]
-    curriculum_alignment: list[str]
-    location_name: str
-    lat: float
-    lon: float
+import json
+import anthropic
+from dataclasses import dataclass, asdict
 
 
 @dataclass
 class TerritorialContext:
+    """Datos del lugar que Claude usará para generar el proyecto."""
+    name: str
     ecosystem_type: str
-    vegetation: list[str]
-    key_species: list[str]
+    commune: str
+    description: str
+    stem_areas: list[str]
+    heritage_type: str
     threats: list[str]
-    heritage_sites: list[dict]
-    local_challenges: list[str]
-    available_resources: list[str]
-    student_level: str
+    student_level: str = "basica_segundo_ciclo"  # 5to-8vo básico por defecto
 
 
-SYSTEM_PROMPT = """Eres un experto en educación STEM contextualizada para zonas rurales de Chile.
-Tu tarea es generar proyectos STEM que:
-1. Se conecten directamente con el ecosistema y patrimonio local
-2. Aborden desafíos reales de la comunidad
-3. Usen materiales accesibles en zonas rurales
-4. Se alineen con el currículum nacional chileno
-5. Sean ejecutables en 2-6 semanas
-6. Promuevan el pensamiento científico y la conexión con el territorio
+# Este es el "prompt de sistema": le dice a Claude quién es y cómo debe responder.
+# Se envía UNA vez y se reutiliza (prompt caching = más barato).
+SYSTEM_PROMPT = """Eres un experto en educación STEM contextualizada para zonas rurales del sur de Chile (La Araucanía).
 
-Genera proyectos específicos, prácticos y que un docente rural pueda implementar
-sin necesidad de equipamiento costoso. Prioriza la observación directa del entorno,
-la recolección de datos de campo, y la resolución de problemas locales reales."""
+Tu tarea es generar proyectos STEM que cumplan TODOS estos criterios:
+1. Se conecten directamente con el ecosistema y patrimonio del lugar específico
+2. Aborden un desafío real de la comunidad local
+3. Usen SOLO materiales accesibles en zonas rurales (nada costoso ni especializado)
+4. Se alineen con el currículum nacional chileno (Bases Curriculares MINEDUC)
+5. Sean ejecutables en 2-6 semanas por un docente rural
+6. Promuevan observación directa del entorno y recolección de datos de campo
+7. Incluyan conexión con la cultura mapuche cuando sea pertinente
+
+IMPORTANTE:
+- Sé MUY específico con el lugar (no genérico)
+- Los materiales deben ser cosas como: cuadernos, lupa, termómetro, botellas recicladas, tierra, agua del río
+- Los pasos deben ser claros para un docente que NO es especialista en ciencias
+- Incluye siempre una actividad de campo (salir al terreno)
+
+Responde SOLO con un JSON válido (sin markdown, sin ```), con exactamente estos campos:
+{
+  "title": "Título atractivo del proyecto",
+  "stem_areas": ["área1", "área2"],
+  "level": "5to_basico | 6to_basico | 7mo_basico | 8vo_basico | 1ro_medio | 2do_medio",
+  "duration": "X semanas",
+  "local_connection": "Explicación de cómo el proyecto se conecta con el lugar específico",
+  "objectives": ["Objetivo de aprendizaje 1", "Objetivo 2", "Objetivo 3"],
+  "materials": ["Material 1", "Material 2"],
+  "steps": ["Semana 1: descripción", "Semana 2: descripción"],
+  "expected_outcomes": ["Resultado esperado 1", "Resultado 2"],
+  "curriculum_alignment": ["OA de Ciencias Naturales X", "OA de Matemáticas Y"]
+}"""
 
 
 class STEMGenerator:
-    """Genera proyectos STEM contextualizados usando Claude API."""
+    """Genera proyectos STEM contextualizados usando Claude API.
+
+    Piensa en esto como un "profesor virtual" que diseña actividades
+    mirando la ficha de cada lugar en el mapa.
+    """
 
     def __init__(self, api_key: str):
-        self.api_key = api_key
+        # Creamos el cliente de Anthropic (la "conexión" con Claude)
+        self.client = anthropic.Anthropic(api_key=api_key)
 
-    async def generate_project(self, context: TerritorialContext) -> STEMProject:
-        """Genera un proyecto STEM basado en el contexto territorial."""
+    async def generate_project(self, context: TerritorialContext) -> dict:
+        """Genera UN proyecto STEM basado en el contexto del lugar.
+
+        Args:
+            context: Datos del punto de interés (ecosistema, amenazas, etc.)
+
+        Returns:
+            dict con todos los campos del proyecto STEM
+        """
         prompt = self._build_prompt(context)
-        response = await self._call_claude(prompt)
-        return self._parse_response(response)
+        response = self._call_claude(prompt)
+        project = self._parse_response(response)
 
-    async def generate_batch(self, context: TerritorialContext, count: int = 5) -> list[STEMProject]:
-        """Genera múltiples proyectos para una zona."""
+        # Agregar metadata del lugar
+        project["point_name"] = context.name
+        project["commune"] = context.commune
+
+        return project
+
+    async def generate_batch(
+        self, context: TerritorialContext, count: int = 3
+    ) -> list[dict]:
+        """Genera varios proyectos distintos para un mismo lugar.
+
+        Útil para darle opciones al docente: "Elige el que más te guste".
+        """
         projects = []
+        # Le pedimos a Claude que varíe: cada vez enfocamos un área STEM diferente
+        areas_to_focus = context.stem_areas[:count] if len(context.stem_areas) >= count else context.stem_areas
+
         for i in range(count):
-            project = await self.generate_project(context)
+            focus = areas_to_focus[i % len(areas_to_focus)]
+            focused_context = TerritorialContext(
+                name=context.name,
+                ecosystem_type=context.ecosystem_type,
+                commune=context.commune,
+                description=context.description,
+                stem_areas=context.stem_areas,
+                heritage_type=context.heritage_type,
+                threats=context.threats,
+                student_level=context.student_level,
+            )
+            prompt = self._build_prompt(focused_context, focus_area=focus)
+            response = self._call_claude(prompt)
+            project = self._parse_response(response)
+            project["point_name"] = context.name
+            project["commune"] = context.commune
             projects.append(project)
+
         return projects
 
-    def _build_prompt(self, context: TerritorialContext) -> str:
-        return f"""Contexto territorial:
-- Ecosistema: {context.ecosystem_type}
-- Vegetación dominante: {', '.join(context.vegetation)}
-- Especies clave: {', '.join(context.key_species)}
-- Amenazas: {', '.join(context.threats)}
-- Patrimonio: {context.heritage_sites}
-- Desafíos locales: {', '.join(context.local_challenges)}
-- Recursos disponibles: {', '.join(context.available_resources)}
-- Nivel estudiantes: {context.student_level}
+    def _build_prompt(self, context: TerritorialContext, focus_area: str | None = None) -> str:
+        """Arma el mensaje que le enviamos a Claude con los datos del lugar."""
+        focus_text = f"\nENFÓCATE especialmente en el área: {focus_area}" if focus_area else ""
 
-Genera UN proyecto STEM detallado que conecte con este territorio.
-Responde en formato JSON con los campos: title, stem_areas, level, duration,
-local_connection, objectives, materials, steps, expected_outcomes, curriculum_alignment."""
+        return f"""Genera un proyecto STEM para este lugar específico:
 
-    async def _call_claude(self, prompt: str) -> str:
-        # TODO: implementar llamada a Claude API con anthropic SDK
-        # Usar prompt caching para el system prompt (se repite)
-        return ""
+📍 Lugar: {context.name}
+🏔️ Ecosistema: {context.ecosystem_type}
+🗺️ Comuna: {context.commune}
+📝 Descripción: {context.description}
+🔬 Áreas STEM relevantes: {', '.join(context.stem_areas)}
+🏛️ Tipo de patrimonio: {context.heritage_type}
+⚠️ Amenazas: {', '.join(context.threats)}
+🎓 Nivel estudiantes: {context.student_level}
+{focus_text}
 
-    def _parse_response(self, response: str) -> STEMProject:
-        # TODO: parsear JSON de respuesta Claude
-        return STEMProject(
-            title="",
-            stem_areas=[],
-            level="",
-            duration="",
-            local_connection="",
-            objectives=[],
-            materials=[],
-            steps=[],
-            expected_outcomes=[],
-            curriculum_alignment=[],
-            location_name="",
-            lat=0.0,
-            lon=0.0,
+Genera el proyecto en formato JSON."""
+
+    def _call_claude(self, prompt: str) -> str:
+        """Llama a Claude API y obtiene la respuesta.
+
+        Usa prompt caching: el system prompt (instrucciones) se cachea
+        para no enviarlo completo cada vez → más rápido y más barato.
+        """
+        message = self.client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            system=[
+                {
+                    "type": "text",
+                    "text": SYSTEM_PROMPT,
+                    "cache_control": {"type": "ephemeral"},  # Cache por 5 min
+                }
+            ],
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
         )
+
+        # Claude devuelve una lista de bloques de contenido
+        # Tomamos el texto del primer bloque
+        return message.content[0].text
+
+    def _parse_response(self, response: str) -> dict:
+        """Convierte la respuesta de Claude (texto JSON) en un diccionario Python.
+
+        Si Claude devuelve algo que no es JSON válido, retorna un error limpio.
+        """
+        try:
+            # Limpiar posibles artefactos (a veces Claude agrega ```json ... ```)
+            clean = response.strip()
+            if clean.startswith("```"):
+                clean = clean.split("\n", 1)[1]
+                clean = clean.rsplit("```", 1)[0]
+
+            project = json.loads(clean)
+
+            # Validar que tenga los campos mínimos
+            required = ["title", "stem_areas", "level", "objectives", "materials", "steps"]
+            for field in required:
+                if field not in project:
+                    project[field] = [] if field != "title" else "Proyecto sin título"
+
+            return project
+
+        except json.JSONDecodeError:
+            return {
+                "title": "Error al generar proyecto",
+                "error": "Claude no devolvió JSON válido",
+                "raw_response": response[:500],
+                "stem_areas": [],
+                "level": "",
+                "duration": "",
+                "local_connection": "",
+                "objectives": [],
+                "materials": [],
+                "steps": [],
+                "expected_outcomes": [],
+                "curriculum_alignment": [],
+            }
