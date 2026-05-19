@@ -271,6 +271,79 @@ async def generate_project(req: GenerateRequest):
     }
 
 
+# ── Fase 2: Mis Proyectos ───────────────────────────────────────────
+
+class BatchRequest(BaseModel):
+    """IDs de proyectos a recuperar (para el hub 'Mis Proyectos')."""
+    project_ids: list[str]
+
+
+@app.post("/projects/batch")
+async def get_projects_batch(req: BatchRequest):
+    """Retorna varios proyectos por sus IDs.
+
+    El frontend guarda los IDs de proyectos elegidos en localStorage.
+    Con este endpoint puede traerlos todos de una vez.
+    """
+    if not req.project_ids:
+        return {"projects": []}
+
+    sb = get_supabase()
+    # Supabase soporta filtro "in" para traer varios IDs a la vez
+    result = (
+        sb.table("stem_projects")
+        .select("*")
+        .in_("id", req.project_ids)
+        .execute()
+    )
+    return {"projects": result.data}
+
+
+@app.post("/projects/{project_id}/expand")
+async def expand_project(project_id: str):
+    """Expande un proyecto: genera sesiones, guía docente, fichas y rúbrica.
+
+    Flujo:
+    1. Busca el proyecto en Supabase
+    2. Si ya tiene 'detail', lo retorna (cache)
+    3. Si no, llama a Claude para generar la planificación completa
+    4. Guarda el resultado en la columna 'detail' del proyecto
+    5. Retorna la planificación
+    """
+    if not settings.anthropic_api_key:
+        raise HTTPException(
+            status_code=503,
+            detail="Generador no configurado: falta ANTHROPIC_API_KEY"
+        )
+
+    sb = get_supabase()
+
+    # 1. Buscar el proyecto
+    result = sb.table("stem_projects").select("*").eq("id", project_id).execute()
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Proyecto no encontrado")
+
+    project = result.data[0]
+
+    # 2. ¿Ya tiene detalle generado? → retornar cache
+    if project.get("detail"):
+        return project["detail"]
+
+    # 3. Generar con Claude
+    from ..ml.stem_generator import STEMGenerator
+
+    generator = STEMGenerator(api_key=settings.anthropic_api_key)
+    detail = await generator.expand_project(project)
+
+    # 4. Guardar en Supabase para no regenerar
+    if "error" not in detail:
+        sb.table("stem_projects").update(
+            {"detail": detail}
+        ).eq("id", project_id).execute()
+
+    return detail
+
+
 # ── Camino B: Búsqueda por currículo ─────────────────────────────────
 
 @app.get("/curriculum")

@@ -68,6 +68,70 @@ Responde SOLO con un JSON válido (sin markdown, sin ```), con exactamente estos
 }"""
 
 
+# Prompt para expandir un proyecto: generar sesiones, guía docente, fichas y rúbrica.
+# Se usa cuando el docente abre un proyecto en "Mis Proyectos" por primera vez.
+EXPAND_SYSTEM_PROMPT = """Eres un experto en planificación educativa STEM para escuelas rurales del sur de Chile.
+
+Tu tarea es tomar un proyecto STEM ya definido y generar su PLANIFICACIÓN COMPLETA:
+1. Desglose sesión a sesión (cada sesión = 1 clase de 90 min aprox)
+2. Guía para el docente (preparación, preguntas clave, adaptaciones)
+3. Fichas de trabajo para estudiantes (una por sesión)
+4. Rúbrica de evaluación con criterios claros
+
+IMPORTANTE:
+- Las sesiones deben alternar entre aula y terreno
+- Las fichas deben ser simples (estudiantes rurales de 10-14 años)
+- La rúbrica debe tener 3-4 criterios con 4 niveles cada uno (Excelente, Bueno, Suficiente, Por lograr)
+- Todo debe ser CONCRETO y EJECUTABLE por un docente no especialista
+
+Responde SOLO con un JSON válido (sin markdown, sin ```) con exactamente esta estructura:
+{
+  "sessions": [
+    {
+      "session_number": 1,
+      "title": "Título de la sesión",
+      "duration_minutes": 90,
+      "objective": "Lo que lograrán en esta sesión",
+      "activities": ["Actividad 1 (20 min)", "Actividad 2 (30 min)"],
+      "materials": ["Material 1", "Material 2"],
+      "location": "aula | terreno | mixto"
+    }
+  ],
+  "teacher_guide": {
+    "preparation": ["Qué preparar antes de empezar"],
+    "key_questions": ["Pregunta guía 1", "Pregunta guía 2"],
+    "differentiation": ["Adaptación para estudiantes avanzados", "Adaptación para quienes necesitan apoyo"],
+    "safety_notes": ["Precaución en terreno"],
+    "assessment_tips": ["Cómo evaluar durante el proceso"]
+  },
+  "worksheets": [
+    {
+      "session_number": 1,
+      "title": "Ficha: Título",
+      "instructions": "Instrucciones claras para el estudiante",
+      "activities": [
+        {"description": "Qué hacer", "type": "observacion | registro | analisis | creacion"}
+      ],
+      "reflection_questions": ["Pregunta de reflexión"]
+    }
+  ],
+  "rubric": {
+    "criteria": [
+      {
+        "name": "Nombre del criterio",
+        "levels": [
+          {"label": "Excelente", "description": "Qué se espera", "points": 4},
+          {"label": "Bueno", "description": "...", "points": 3},
+          {"label": "Suficiente", "description": "...", "points": 2},
+          {"label": "Por lograr", "description": "...", "points": 1}
+        ]
+      }
+    ],
+    "total_points": 16
+  }
+}"""
+
+
 class STEMGenerator:
     """Genera proyectos STEM contextualizados usando Claude API.
 
@@ -129,6 +193,60 @@ class STEMGenerator:
             projects.append(project)
 
         return projects
+
+    async def expand_project(self, project: dict) -> dict:
+        """Expande un proyecto STEM: genera sesiones, guía docente, fichas y rúbrica.
+
+        Es como pedirle a un coordinador pedagógico que tome el proyecto
+        y arme toda la planificación detallada para que el docente solo
+        tenga que seguirla.
+
+        Args:
+            project: El proyecto STEM existente (título, pasos, materiales, etc.)
+
+        Returns:
+            dict con sessions, teacher_guide, worksheets, rubric
+        """
+        prompt = f"""Expande este proyecto STEM en una planificación completa:
+
+📌 Título: {project.get('title', 'Sin título')}
+🔬 Áreas STEM: {', '.join(project.get('stem_areas', []))}
+🎓 Nivel: {project.get('level', 'desconocido')}
+⏱️ Duración: {project.get('duration', '4 semanas')}
+🔗 Conexión local: {project.get('local_connection', '')}
+
+🎯 Objetivos:
+{chr(10).join(f'  - {o}' for o in project.get('objectives', []))}
+
+🧰 Materiales:
+{chr(10).join(f'  - {m}' for m in project.get('materials', []))}
+
+📋 Pasos generales:
+{chr(10).join(f'  {i+1}. {s}' for i, s in enumerate(project.get('steps', [])))}
+
+📚 Alineación curricular:
+{chr(10).join(f'  - {a}' for a in project.get('curriculum_alignment', []))}
+
+Genera la planificación completa en formato JSON."""
+
+        # Usamos más tokens porque la respuesta es más larga
+        message = self.client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=5000,
+            system=[
+                {
+                    "type": "text",
+                    "text": EXPAND_SYSTEM_PROMPT,
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ],
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+        )
+
+        response = message.content[0].text
+        return self._parse_response(response)
 
     def _build_prompt(self, context: TerritorialContext, focus_area: str | None = None) -> str:
         """Arma el mensaje que le enviamos a Claude con los datos del lugar."""

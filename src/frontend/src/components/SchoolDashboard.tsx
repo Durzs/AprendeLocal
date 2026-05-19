@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import MapView from "./MapView";
 import PointPanel from "./PointPanel";
+import MisProyectos from "./MisProyectos";
+import ProjectDetailView from "./ProjectDetailView";
 import type { School, NearbyPOI, POIFeature } from "../types";
 import { fetchNearbyPOIs } from "../api";
+
+// Dos vistas principales del dashboard:
+// - "explore": mapa con POIs cercanos (lo que ya existía)
+// - "projects": hub "Mis Proyectos" con los proyectos guardados
+type DashView = "explore" | "projects";
 
 interface Props {
   school: School;
@@ -14,6 +21,11 @@ export default function SchoolDashboard({ school, onChangeSchool }: Props) {
   const [radius, setRadius] = useState(20);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<POIFeature | null>(null);
+
+  // Navegación entre Explorar y Mis Proyectos
+  const [dashView, setDashView] = useState<DashView>("explore");
+  // Cuando el docente abre un proyecto para ver su detalle
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -44,6 +56,13 @@ export default function SchoolDashboard({ school, onChangeSchool }: Props) {
     },
   }));
 
+  // Cambiar de tab limpiando selecciones
+  const switchTab = (view: DashView) => {
+    setDashView(view);
+    setActiveProjectId(null);
+    if (view === "projects") setSelected(null);
+  };
+
   return (
     <div className="school-dashboard">
       {/* Barra superior con info de la escuela */}
@@ -56,59 +75,95 @@ export default function SchoolDashboard({ school, onChangeSchool }: Props) {
           </div>
         </div>
 
+        {/* Tabs de navegación */}
+        <div className="dashboard-tabs">
+          <button
+            className={`dashboard-tab ${dashView === "explore" ? "active" : ""}`}
+            onClick={() => switchTab("explore")}
+          >
+            🗺️ Explorar
+          </button>
+          <button
+            className={`dashboard-tab ${dashView === "projects" ? "active" : ""}`}
+            onClick={() => switchTab("projects")}
+          >
+            📋 Mis Proyectos
+          </button>
+        </div>
+
         <div className="dashboard-controls">
-          <label className="radius-control">
-            <span className="radius-label">Radio:</span>
-            <input
-              type="range"
-              min={5}
-              max={50}
-              step={5}
-              value={radius}
-              onChange={(e) => setRadius(Number(e.target.value))}
-              className="radius-slider"
-            />
-            <span className="radius-value">{radius} km</span>
-          </label>
+          {dashView === "explore" && (
+            <label className="radius-control">
+              <span className="radius-label">Radio:</span>
+              <input
+                type="range"
+                min={5}
+                max={50}
+                step={5}
+                value={radius}
+                onChange={(e) => setRadius(Number(e.target.value))}
+                className="radius-slider"
+              />
+              <span className="radius-value">{radius} km</span>
+            </label>
+          )}
           <button className="btn-change-school" onClick={onChangeSchool}>
             Cambiar escuela
           </button>
         </div>
       </div>
 
-      {/* Contenido principal */}
-      <div className="dashboard-content">
-        <div className={`map-container ${selected ? "with-panel" : ""}`}>
-          {loading ? (
-            <div className="loading">Buscando recursos cercanos...</div>
-          ) : (
-            <MapView
-              points={poiFeatures}
-              onSelectPoint={setSelected}
-              selectedId={selected?.properties.id || null}
-              center={school.coordinates}
-              schoolMarker={school}
+      {/* Contenido principal: cambia según la tab */}
+      {dashView === "explore" && (
+        <>
+          <div className="dashboard-content">
+            <div className={`map-container ${selected ? "with-panel" : ""}`}>
+              {loading ? (
+                <div className="loading">Buscando recursos cercanos...</div>
+              ) : (
+                <MapView
+                  points={poiFeatures}
+                  onSelectPoint={setSelected}
+                  selectedId={selected?.properties.id || null}
+                  center={school.coordinates}
+                  schoolMarker={school}
+                />
+              )}
+            </div>
+
+            <PointPanel
+              point={selected}
+              onClose={() => setSelected(null)}
             />
-          )}
-        </div>
+          </div>
 
-        <PointPanel
-          point={selected}
-          onClose={() => setSelected(null)}
+          {/* Footer con stats */}
+          <div className="dashboard-footer">
+            <span>
+              {pois.length} recursos educativos en {radius} km · {school.commune}
+            </span>
+            {pois.length > 0 && (
+              <span className="dashboard-nearest">
+                Más cercano: {pois[0]?.name} ({pois[0]?.distance_km} km)
+              </span>
+            )}
+          </div>
+        </>
+      )}
+
+      {dashView === "projects" && !activeProjectId && (
+        <MisProyectos
+          onOpenProject={(id) => setActiveProjectId(id)}
+          onGoExplore={() => switchTab("explore")}
         />
-      </div>
+      )}
 
-      {/* Footer con stats */}
-      <div className="dashboard-footer">
-        <span>
-          {pois.length} recursos educativos en {radius} km · {school.commune}
-        </span>
-        {pois.length > 0 && (
-          <span className="dashboard-nearest">
-            Más cercano: {pois[0]?.name} ({pois[0]?.distance_km} km)
-          </span>
-        )}
-      </div>
+      {dashView === "projects" && activeProjectId && (
+        <ProjectDetailView
+          projectId={activeProjectId}
+          onBack={() => setActiveProjectId(null)}
+        />
+      )}
     </div>
   );
 }

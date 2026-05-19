@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import type { POIFeature, STEMProject } from "../types";
 import { fetchProjectsForPoint, generateProject } from "../api";
+import { saveProjectId } from "../utils/teacherStorage";
 import ProjectCard from "./ProjectCard";
 import ProjectConfigurator from "./ProjectConfigurator";
 import type { ProjectSpecs } from "./ProjectConfigurator";
@@ -92,6 +93,10 @@ export default function PointPanel({ point, onClose }: Props) {
   const handleSelectProject = (project: STEMProject) => {
     // Agregar a la lista de proyectos del punto
     setProjects((prev) => [project, ...prev]);
+    // Guardar en localStorage para que aparezca en "Mis Proyectos"
+    if (project.id) {
+      saveProjectId(project.id);
+    }
     // Volver a la vista de info
     setView("info");
     setGeneratedOptions([]);

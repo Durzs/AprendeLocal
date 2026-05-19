@@ -6,6 +6,7 @@ import type {
   CurriculumLevel,
   School,
   NearbyResponse,
+  ProjectDetail,
 } from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -121,5 +122,32 @@ export async function fetchNearbyPOIs(
     `${API_URL}/schools/${schoolId}/nearby?radius_km=${radiusKm}`
   );
   if (!res.ok) throw new Error(`Error ${res.status}`);
+  return res.json();
+}
+
+// ── Fase 2: Mis Proyectos ──
+
+/** Obtiene varios proyectos por sus IDs (para el hub "Mis Proyectos") */
+export async function fetchProjectsByIds(ids: string[]): Promise<STEMProject[]> {
+  if (ids.length === 0) return [];
+  const res = await fetch(`${API_URL}/projects/batch`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ project_ids: ids }),
+  });
+  if (!res.ok) throw new Error(`Error ${res.status}`);
+  const data = await res.json();
+  return data.projects;
+}
+
+/** Expande un proyecto: genera sesiones, guía docente, fichas y rúbrica con Claude */
+export async function expandProject(projectId: string): Promise<ProjectDetail> {
+  const res = await fetch(`${API_URL}/projects/${projectId}/expand`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: "Error desconocido" }));
+    throw new Error(err.detail || `Error ${res.status}`);
+  }
   return res.json();
 }
