@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import type { POIFeature, STEMProject } from "../types";
 import { fetchProjectsForPoint, generateProject } from "../api";
 import ProjectCard from "./ProjectCard";
+import ProjectConfigurator from "./ProjectConfigurator";
+import type { ProjectSpecs } from "./ProjectConfigurator";
+import ProjectOptions from "./ProjectOptions";
 
 const TYPE_LABELS: Record<string, string> = {
   natural: "Natural",
@@ -17,6 +20,8 @@ const TYPE_EMOJI: Record<string, string> = {
   cultural: "🏛️",
 };
 
+type PanelView = "info" | "configure" | "options";
+
 interface Props {
   point: POIFeature | null;
   onClose: () => void;
@@ -25,8 +30,13 @@ interface Props {
 export default function PointPanel({ point, onClose }: Props) {
   const [projects, setProjects] = useState<STEMProject[]>([]);
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState<PanelView>("info");
+
+  // Generación
   const [generating, setGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [genError, setGenError] = useState<string | null>(null);
+  const [generatedOptions, setGeneratedOptions] = useState<STEMProject[]>([]);
+  const [currentSpecs, setCurrentSpecs] = useState<ProjectSpecs | null>(null);
 
   const pointId = point?.properties.id;
 
@@ -34,8 +44,10 @@ export default function PointPanel({ point, onClose }: Props) {
   useEffect(() => {
     if (!pointId) return;
     setProjects([]);
-    setError(null);
+    setGenError(null);
     setLoading(true);
+    setView("info");
+    setGeneratedOptions([]);
 
     fetchProjectsForPoint(pointId)
       .then(setProjects)
@@ -47,32 +59,83 @@ export default function PointPanel({ point, onClose }: Props) {
 
   const { properties: p } = point;
 
-  const handleGenerate = async () => {
-    if (!pointId) return;
+  const handleStartConfigure = () => {
+    setView("configure");
+    setGenError(null);
+  };
+
+  const handleGenerate = async (specs: ProjectSpecs) => {
+    setCurrentSpecs(specs);
+    setView("options");
     setGenerating(true);
-    setError(null);
+    setGenError(null);
+    setGeneratedOptions([]);
 
     try {
-      const result = await generateProject(pointId, "basica_segundo_ciclo", 1);
-      // Agregar los nuevos proyectos a la lista existente
-      setProjects((prev) => [...prev, ...result.projects]);
+      const result = await generateProject(
+        specs.pointId,
+        specs.level,
+        3,
+        specs.oaDescriptions,
+        specs.duration
+      );
+      setGeneratedOptions(result.projects);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al generar proyecto");
+      setGenError(
+        err instanceof Error ? err.message : "Error al generar proyectos"
+      );
     } finally {
       setGenerating(false);
     }
   };
 
+  const handleSelectProject = (project: STEMProject) => {
+    // Agregar a la lista de proyectos del punto
+    setProjects((prev) => [project, ...prev]);
+    // Volver a la vista de info
+    setView("info");
+    setGeneratedOptions([]);
+  };
+
+  // Vista: Configurador
+  if (view === "configure") {
+    return (
+      <div className="point-panel panel-wide">
+        <button className="panel-close" onClick={onClose}>✕</button>
+        <ProjectConfigurator
+          pointId={p.id}
+          pointName={p.name}
+          onGenerate={handleGenerate}
+          onCancel={() => setView("info")}
+        />
+      </div>
+    );
+  }
+
+  // Vista: Opciones generadas
+  if (view === "options") {
+    return (
+      <div className="point-panel panel-wide">
+        <button className="panel-close" onClick={onClose}>✕</button>
+        <ProjectOptions
+          projects={generatedOptions}
+          pointName={p.name}
+          onSelect={handleSelectProject}
+          onBack={() => setView("configure")}
+          loading={generating}
+          error={genError}
+        />
+      </div>
+    );
+  }
+
+  // Vista: Info del punto (default)
   return (
     <div className="point-panel">
-      <button className="panel-close" onClick={onClose}>
-        ✕
-      </button>
+      <button className="panel-close" onClick={onClose}>✕</button>
 
       <div className="panel-header">
-        <span className="panel-emoji">
-          {TYPE_EMOJI[p.type] || "📍"}
-        </span>
+        <span className="panel-emoji">{TYPE_EMOJI[p.type] || "📍"}</span>
         <h2>{p.name}</h2>
       </div>
 
@@ -122,22 +185,17 @@ export default function PointPanel({ point, onClose }: Props) {
       <div className="panel-section projects-section">
         <div className="projects-header">
           <h3>Proyectos STEM</h3>
-          <button
-            className="btn-generate"
-            onClick={handleGenerate}
-            disabled={generating}
-          >
-            {generating ? "⏳ Generando..." : "✨ Generar proyecto"}
+          <button className="btn-generate" onClick={handleStartConfigure}>
+            ✨ Generar proyecto
           </button>
         </div>
 
-        {error && <p className="project-error">⚠️ {error}</p>}
-
         {loading && <p className="project-loading">Cargando proyectos...</p>}
 
-        {!loading && projects.length === 0 && !generating && (
+        {!loading && projects.length === 0 && (
           <p className="project-empty">
-            No hay proyectos aún. Haz click en "Generar proyecto" para crear uno con IA.
+            No hay proyectos aún. Haz click en "Generar proyecto" para
+            configurar curso, OA y crear propuestas con IA.
           </p>
         )}
 

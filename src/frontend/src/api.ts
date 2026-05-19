@@ -41,12 +41,26 @@ export async function fetchProjectsForPoint(pointId: string): Promise<STEMProjec
 export async function generateProject(
   pointId: string,
   level: string = "basica_segundo_ciclo",
-  count: number = 1
+  count: number = 1,
+  oaDescriptions?: string[],
+  duration?: string
 ): Promise<GenerateResponse> {
+  const body: Record<string, unknown> = {
+    point_id: pointId,
+    level,
+    count,
+  };
+  if (oaDescriptions && oaDescriptions.length > 0) {
+    body.oa_descriptions = oaDescriptions;
+  }
+  if (duration) {
+    body.duration = duration;
+  }
+
   const res = await fetch(`${API_URL}/generate-project`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ point_id: pointId, level, count }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: "Error desconocido" }));

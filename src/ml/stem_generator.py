@@ -30,6 +30,8 @@ class TerritorialContext:
     heritage_type: str
     threats: list[str]
     student_level: str = "basica_segundo_ciclo"  # 5to-8vo básico por defecto
+    oa_descriptions: list[str] | None = None  # OA seleccionados por el docente
+    duration: str = ""  # Duración deseada
 
 
 # Este es el "prompt de sistema": le dice a Claude quién es y cómo debe responder.
@@ -132,6 +134,29 @@ class STEMGenerator:
         """Arma el mensaje que le enviamos a Claude con los datos del lugar."""
         focus_text = f"\nENFÓCATE especialmente en el área: {focus_area}" if focus_area else ""
 
+        # Si el docente seleccionó OA específicos, incluirlos
+        oa_text = ""
+        if context.oa_descriptions:
+            oa_list = "\n".join(f"  - {oa}" for oa in context.oa_descriptions)
+            oa_text = f"""
+
+📚 OBJETIVOS DE APRENDIZAJE seleccionados por el docente:
+{oa_list}
+IMPORTANTE: El proyecto DEBE cubrir estos OA específicos. Alinea las actividades
+y evaluaciones directamente con estos objetivos del currículo chileno."""
+
+        # Duración específica
+        duration_text = ""
+        if context.duration:
+            dur_map = {
+                "1_semana": "1 semana (2-3 sesiones de clase)",
+                "2_semanas": "2 semanas (4-5 sesiones de clase)",
+                "4_semanas": "4 semanas (8 sesiones de clase)",
+                "8_semanas": "8 semanas (proyecto semestral, 16 sesiones)",
+            }
+            dur_label = dur_map.get(context.duration, context.duration)
+            duration_text = f"\n⏱️ Duración solicitada: {dur_label}"
+
         return f"""Genera un proyecto STEM para este lugar específico:
 
 📍 Lugar: {context.name}
@@ -141,10 +166,10 @@ class STEMGenerator:
 🔬 Áreas STEM relevantes: {', '.join(context.stem_areas)}
 🏛️ Tipo de patrimonio: {context.heritage_type}
 ⚠️ Amenazas: {', '.join(context.threats)}
-🎓 Nivel estudiantes: {context.student_level}
+🎓 Nivel estudiantes: {context.student_level}{duration_text}{oa_text}
 {focus_text}
 
-Genera el proyecto en formato JSON."""
+Genera el proyecto en formato JSON. Cada proyecto debe ser DISTINTO en enfoque y metodología."""
 
     def _call_claude(self, prompt: str) -> str:
         """Llama a Claude API y obtiene la respuesta.

@@ -27,6 +27,8 @@ class GenerateRequest(BaseModel):
     point_id: str
     level: str = "basica_segundo_ciclo"
     count: int = 1  # Cuántos proyectos generar (1-3)
+    oa_descriptions: list[str] = []  # Objetivos de Aprendizaje seleccionados
+    duration: str = ""  # Duración deseada (1_semana, 2_semanas, etc.)
 
 
 # ── Endpoints existentes ─────────────────────────────────────────────
@@ -218,6 +220,8 @@ async def generate_project(req: GenerateRequest):
         heritage_type=poi.get("heritage_type", ""),
         threats=poi.get("threats", []),
         student_level=req.level,
+        oa_descriptions=req.oa_descriptions if req.oa_descriptions else None,
+        duration=req.duration,
     )
 
     # 4. Generar con Claude
