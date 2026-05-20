@@ -248,6 +248,63 @@ Genera la planificación completa en formato JSON."""
         response = message.content[0].text
         return self._parse_response(response)
 
+    async def generate_quiz(self, project: dict, session: dict) -> dict:
+        """Genera preguntas de quiz para una sesión específica.
+
+        Piensa en esto como pedirle a un profesor que haga una mini-prueba
+        rápida sobre lo que los alumnos aprendieron en esa sesión.
+
+        Args:
+            project: El proyecto STEM completo
+            session: La sesión específica (con title, objective, activities)
+
+        Returns:
+            dict con "questions": lista de preguntas con opciones y respuesta correcta
+        """
+        prompt = f"""Genera un quiz de 5 preguntas de alternativas para evaluar el aprendizaje de esta sesión:
+
+📌 Proyecto: {project.get('title', '')}
+📖 Sesión {session.get('session_number', 1)}: {session.get('title', '')}
+🎯 Objetivo: {session.get('objective', '')}
+📋 Actividades: {', '.join(session.get('activities', []))}
+🎓 Nivel: {project.get('level', 'basica_segundo_ciclo')}
+
+Genera exactamente 5 preguntas en formato JSON:
+{{
+  "questions": [
+    {{
+      "question": "texto de la pregunta",
+      "options": ["opción A", "opción B", "opción C", "opción D"],
+      "correct_index": 0
+    }}
+  ]
+}}
+
+Reglas:
+- Preguntas claras y directas, apropiadas para el nivel
+- 4 opciones por pregunta, solo 1 correcta
+- Mezcla comprensión conceptual, aplicación y análisis
+- Usa el contexto local del proyecto (no preguntas genéricas)
+- correct_index es 0-based (0=primera opción, 3=última)"""
+
+        message = self.client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=2000,
+            system=[
+                {
+                    "type": "text",
+                    "text": "Eres un evaluador educativo STEM para escuelas rurales de Chile. Generas quizzes de alternativas claros y contextualizados. Responde SOLO con JSON válido.",
+                    "cache_control": {"type": "ephemeral"},
+                }
+            ],
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+        )
+
+        response = message.content[0].text
+        return self._parse_response(response)
+
     def _build_prompt(self, context: TerritorialContext, focus_area: str | None = None) -> str:
         """Arma el mensaje que le enviamos a Claude con los datos del lugar."""
         focus_text = f"\nENFÓCATE especialmente en el área: {focus_area}" if focus_area else ""

@@ -560,6 +560,407 @@ async def get_nearby_pois(
     }
 
 
+# ── Fase 3: Flujo profesor/estudiante ──────────────────────────────
+
+import random
+import string
+
+class ShareCodeRequest(BaseModel):
+    teacher_id: str
+    school_id: str
+
+class StudentRegisterRequest(BaseModel):
+    local_id: str
+    display_name: str
+    school_id: str | None = None
+
+class EnrollRequest(BaseModel):
+    share_code: str
+
+class ProgressUpdate(BaseModel):
+    session_number: int
+    activity_index: int
+    completed: bool
+
+class FieldNoteRequest(BaseModel):
+    session_number: int
+    note_text: str
+
+class QuizSubmission(BaseModel):
+    session_number: int
+    questions: list  # [{question, options[], correct_index}]
+    answers: list    # [índices seleccionados]
+    score: int
+
+
+def _generate_code(length: int = 6) -> str:
+    """Genera un código alfanumérico sin caracteres ambiguos (0/O, 1/I/L)."""
+    chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+    return "".join(random.choices(chars, k=length))
+
+
+@app.post("/projects/{project_id}/share-code")
+async def create_share_code(project_id: str, req: ShareCodeRequest):
+    """El profesor genera un código para que estudiantes se unan al proyecto."""
+    sb = get_supabase()
+
+    # Verificar que el proyecto existe
+    proj = sb.table("stem_projects").select("id,title").eq("id", project_id).execute()
+    if not proj.data:
+        raise HTTPException(status_code=404, detail="Proyecto no encontrado")
+
+    # Si ya existe un código activo para este proyecto+profe, retornarlo
+    existing = (
+        sb.table("project_share_codes")
+        .select("*")
+        .eq("project_id", project_id)
+        .eq("teacher_id", req.teacher_id)
+        .eq("active", True)
+        .execute()
+    )
+    if existing.data:
+        return existing.data[0]
+
+    # Generar código único (reintentar si hay colisión)
+    for _ in range(10):
+        code = _generate_code()
+        try:
+            result = sb.table("project_share_codes").insert({
+                "project_id": project_id,
+                "code": code,
+                "teacher_id": req.teacher_id,
+                "school_id": req.school_id,
+            }).execute()
+            if result.data:
+                return result.data[0]
+        except Exception:
+            continue
+
+    raise HTTPException(status_code=500, detail="No se pudo generar código único")
+
+
+@app.get("/share-code/{code}")
+async def lookup_share_code(code: str):
+    """Busca un código compartido y retorna info del proyecto."""
+    sb = get_supabase()
+    result = (
+        sb.table("project_share_codes")
+        .select("*")
+        .eq("code", code.upper())
+        .eq("active", True)
+        .execute()
+    )
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Código no encontrado o inactivo")
+
+    share = result.data[0]
+
+    # Traer info del proyecto
+    proj = sb.table("stem_projects").select("id,title,stem_areas,level,duration").eq("id", share["project_id"]).execute()
+
+    # Traer info de la escuela
+    school_info = None
+    if share.get("school_id"):
+        sch = sb.table("schools").select("id,name,commune").eq("id", share["school_id"]).execute()
+        if sch.data:
+            school_info = sch.data[0]
+
+    return {
+        "share_code": share,
+        "project": proj.data[0] if proj.data else None,
+        "school": school_info,
+    }
+
+
+@app.post("/students/register")
+async def register_student(req: StudentRegisterRequest):
+    """Registra o actualiza una sesión de estudiante."""
+    sb = get_supabase()
+
+    # Buscar si ya existe
+    existing = (
+        sb.table("student_sessions")
+        .select("*")
+        .eq("local_id", req.local_id)
+        .execute()
+    )
+
+    if existing.data:
+        # Actualizar nombre si cambió
+        student = existing.data[0]
+        if student["display_name"] != req.display_name:
+            sb.table("student_sessions").update(
+                {"display_name": req.display_name}
+            ).eq("id", student["id"]).execute()
+            student["display_name"] = req.display_name
+        return student
+
+    # Crear nuevo
+    row = {
+        "local_id": req.local_id,
+        "display_name": req.display_name,
+    }
+    if req.school_id:
+        row["school_id"] = req.school_id
+
+    result = sb.table("student_sessions").insert(row).execute()
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Error al registrar estudiante")
+    return result.data[0]
+
+
+@app.post("/students/{student_id}/enroll")
+async def enroll_student(student_id: str, req: EnrollRequest):
+    """Inscribe a un estudiante en un proyecto usando un código compartido."""
+    sb = get_supabase()
+
+    # Buscar el código
+    code_result = (
+        sb.table("project_share_codes")
+        .select("*")
+        .eq("code", req.share_code.upper())
+        .eq("active", True)
+        .execute()
+    )
+    if not code_result.data:
+        raise HTTPException(status_code=404, detail="Código no válido")
+
+    share = code_result.data[0]
+
+    # Verificar si ya está inscrito
+    existing = (
+        sb.table("student_enrollments")
+        .select("*")
+        .eq("student_id", student_id)
+        .eq("project_id", share["project_id"])
+        .execute()
+    )
+    if existing.data:
+        return existing.data[0]
+
+    # Crear inscripción
+    result = sb.table("student_enrollments").insert({
+        "student_id": student_id,
+        "project_id": share["project_id"],
+        "share_code_id": share["id"],
+    }).execute()
+
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Error al inscribir")
+    return result.data[0]
+
+
+@app.get("/students/{student_id}/projects")
+async def get_student_projects(student_id: str):
+    """Lista los proyectos en los que un estudiante está inscrito."""
+    sb = get_supabase()
+    enrollments = (
+        sb.table("student_enrollments")
+        .select("*")
+        .eq("student_id", student_id)
+        .execute()
+    )
+
+    projects = []
+    for enr in enrollments.data:
+        proj = sb.table("stem_projects").select("*").eq("id", enr["project_id"]).execute()
+        if proj.data:
+            projects.append({
+                "enrollment_id": enr["id"],
+                "enrolled_at": enr["enrolled_at"],
+                **proj.data[0],
+            })
+
+    return {"projects": projects}
+
+
+@app.post("/enrollments/{enrollment_id}/progress")
+async def update_progress(enrollment_id: str, req: ProgressUpdate):
+    """Marca una actividad como completada/incompleta."""
+    sb = get_supabase()
+    from datetime import datetime
+
+    # Intentar actualizar existente
+    existing = (
+        sb.table("student_progress")
+        .select("*")
+        .eq("enrollment_id", enrollment_id)
+        .eq("session_number", req.session_number)
+        .eq("activity_index", req.activity_index)
+        .execute()
+    )
+
+    if existing.data:
+        sb.table("student_progress").update({
+            "completed": req.completed,
+            "completed_at": datetime.utcnow().isoformat() if req.completed else None,
+        }).eq("id", existing.data[0]["id"]).execute()
+        return {"status": "updated"}
+
+    # Crear nuevo
+    sb.table("student_progress").insert({
+        "enrollment_id": enrollment_id,
+        "session_number": req.session_number,
+        "activity_index": req.activity_index,
+        "completed": req.completed,
+        "completed_at": datetime.utcnow().isoformat() if req.completed else None,
+    }).execute()
+    return {"status": "created"}
+
+
+@app.get("/enrollments/{enrollment_id}/progress")
+async def get_progress(enrollment_id: str):
+    """Obtiene todo el progreso de una inscripción."""
+    sb = get_supabase()
+    result = (
+        sb.table("student_progress")
+        .select("*")
+        .eq("enrollment_id", enrollment_id)
+        .execute()
+    )
+    return {"progress": result.data}
+
+
+@app.post("/enrollments/{enrollment_id}/field-notes")
+async def save_field_note(enrollment_id: str, req: FieldNoteRequest):
+    """Guarda una nota de campo del estudiante."""
+    sb = get_supabase()
+    result = sb.table("student_field_notes").insert({
+        "enrollment_id": enrollment_id,
+        "session_number": req.session_number,
+        "note_text": req.note_text,
+    }).execute()
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Error al guardar nota")
+    return result.data[0]
+
+
+@app.get("/enrollments/{enrollment_id}/field-notes")
+async def get_field_notes(enrollment_id: str):
+    """Obtiene las notas de campo de una inscripción."""
+    sb = get_supabase()
+    result = (
+        sb.table("student_field_notes")
+        .select("*")
+        .eq("enrollment_id", enrollment_id)
+        .order("created_at")
+        .execute()
+    )
+    return {"notes": result.data}
+
+
+@app.post("/enrollments/{enrollment_id}/quiz")
+async def submit_quiz(enrollment_id: str, req: QuizSubmission):
+    """Guarda el resultado de un quiz."""
+    sb = get_supabase()
+    result = sb.table("student_quiz_results").insert({
+        "enrollment_id": enrollment_id,
+        "session_number": req.session_number,
+        "questions": req.questions,
+        "answers": req.answers,
+        "score": req.score,
+    }).execute()
+    if not result.data:
+        raise HTTPException(status_code=500, detail="Error al guardar quiz")
+    return result.data[0]
+
+
+@app.post("/projects/{project_id}/generate-quiz")
+async def generate_quiz(project_id: str, session_number: int = Query(1)):
+    """Genera preguntas de quiz para una sesión usando Claude."""
+    if not settings.anthropic_api_key:
+        raise HTTPException(status_code=503, detail="Falta ANTHROPIC_API_KEY")
+
+    sb = get_supabase()
+    proj = sb.table("stem_projects").select("*").eq("id", project_id).execute()
+    if not proj.data:
+        raise HTTPException(status_code=404, detail="Proyecto no encontrado")
+
+    project = proj.data[0]
+    detail = project.get("detail")
+    if not detail:
+        raise HTTPException(status_code=400, detail="El proyecto no tiene detalle expandido aún")
+
+    # Encontrar la sesión
+    sessions = detail.get("sessions", [])
+    session = next((s for s in sessions if s["session_number"] == session_number), None)
+    if not session:
+        raise HTTPException(status_code=404, detail=f"Sesión {session_number} no encontrada")
+
+    from ..ml.stem_generator import STEMGenerator
+    generator = STEMGenerator(api_key=settings.anthropic_api_key)
+    quiz = await generator.generate_quiz(project, session)
+    return quiz
+
+
+@app.get("/projects/{project_id}/student-progress")
+async def get_project_student_progress(project_id: str):
+    """Dashboard del profesor: progreso de todos los estudiantes inscritos."""
+    sb = get_supabase()
+
+    # Obtener inscripciones
+    enrollments = (
+        sb.table("student_enrollments")
+        .select("*")
+        .eq("project_id", project_id)
+        .execute()
+    )
+
+    # Obtener detalle del proyecto para saber total de actividades
+    proj = sb.table("stem_projects").select("detail").eq("id", project_id).execute()
+    total_activities = 0
+    if proj.data and proj.data[0].get("detail"):
+        detail = proj.data[0]["detail"]
+        for ws in detail.get("worksheets", []):
+            total_activities += len(ws.get("activities", []))
+
+    students = []
+    for enr in enrollments.data:
+        # Info del estudiante
+        student = sb.table("student_sessions").select("*").eq("id", enr["student_id"]).execute()
+        if not student.data:
+            continue
+
+        # Progreso
+        progress = (
+            sb.table("student_progress")
+            .select("*")
+            .eq("enrollment_id", enr["id"])
+            .eq("completed", True)
+            .execute()
+        )
+        completed = len(progress.data)
+
+        # Notas
+        notes = (
+            sb.table("student_field_notes")
+            .select("id")
+            .eq("enrollment_id", enr["id"])
+            .execute()
+        )
+
+        # Quizzes
+        quizzes = (
+            sb.table("student_quiz_results")
+            .select("score")
+            .eq("enrollment_id", enr["id"])
+            .execute()
+        )
+
+        students.append({
+            "student_name": student.data[0]["display_name"],
+            "student_id": enr["student_id"],
+            "enrollment_id": enr["id"],
+            "total_activities": total_activities,
+            "completed_activities": completed,
+            "completion_pct": round(completed / total_activities * 100) if total_activities > 0 else 0,
+            "field_notes_count": len(notes.data),
+            "quiz_scores": [q["score"] for q in quizzes.data],
+        })
+
+    return {"students": students, "total_activities": total_activities}
+
+
 # ── Utilidades ───────────────────────────────────────────────────────
 
 def _parse_point(location) -> list[float]:

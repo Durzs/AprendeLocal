@@ -154,3 +154,85 @@ export interface ProjectDetail {
   worksheets: StudentWorksheet[];
   rubric: EvaluationRubric;
 }
+
+// ── Fase 3: Roles, códigos compartidos, progreso de estudiantes ──
+
+/** Rol del usuario: profesor o estudiante */
+export type UserRole = "profesor" | "estudiante";
+
+/** Código que el profesor comparte con estudiantes para unirse a un proyecto */
+export interface ShareCode {
+  id: string;
+  project_id: string;
+  code: string;
+  teacher_id: string;
+  school_id: string;
+  active: boolean;
+  created_at: string;
+}
+
+/** Sesión de un estudiante (identidad sin auth) */
+export interface StudentSession {
+  id: string;
+  local_id: string;
+  display_name: string;
+  school_id: string | null;
+  created_at: string;
+}
+
+/** Inscripción de un estudiante en un proyecto */
+export interface StudentEnrollment {
+  id: string;
+  student_id: string;
+  project_id: string;
+  share_code_id: string | null;
+  enrolled_at: string;
+  // Campos extras que vienen en joins
+  project_title?: string;
+  school_name?: string;
+}
+
+/** Progreso de una actividad individual */
+export interface ActivityProgress {
+  session_number: number;
+  activity_index: number;
+  completed: boolean;
+  completed_at: string | null;
+}
+
+/** Nota de campo escrita por un estudiante */
+export interface FieldNote {
+  id: string;
+  session_number: number;
+  note_text: string;
+  created_at: string;
+}
+
+/** Pregunta de quiz generada por IA */
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correct_index: number;
+}
+
+/** Resultado de un quiz */
+export interface QuizResult {
+  id: string;
+  session_number: number;
+  questions: QuizQuestion[];
+  answers: number[];
+  score: number;
+  submitted_at: string;
+}
+
+/** Progreso de un estudiante visto por el profesor */
+export interface StudentProgressSummary {
+  student_name: string;
+  student_id: string;
+  enrollment_id: string;
+  total_activities: number;
+  completed_activities: number;
+  completion_pct: number;
+  field_notes_count: number;
+  quiz_scores: number[];
+}

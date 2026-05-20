@@ -162,6 +162,7 @@ export default function SchoolDashboard({ school, onChangeSchool }: Props) {
         <ProjectDetailView
           projectId={activeProjectId}
           onBack={() => setActiveProjectId(null)}
+          schoolId={school.id}
         />
       )}
     </div>

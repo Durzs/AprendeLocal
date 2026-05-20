@@ -4,9 +4,10 @@ import { fetchSchools } from "../api";
 
 interface Props {
   onSelectSchool: (school: School) => void;
+  onBack?: () => void; // Volver al selector de rol
 }
 
-export default function SchoolSelector({ onSelectSchool }: Props) {
+export default function SchoolSelector({ onSelectSchool, onBack }: Props) {
   const [schools, setSchools] = useState<School[]>([]);
   const [search, setSearch] = useState("");
   const [selectedCommune, setSelectedCommune] = useState<string | null>(null);
@@ -52,6 +53,12 @@ export default function SchoolSelector({ onSelectSchool }: Props) {
 
   return (
     <div className="school-selector">
+      {onBack && (
+        <button className="back-to-role" onClick={onBack}>
+          ← Cambiar rol
+        </button>
+      )}
+
       <div className="school-welcome">
         <div className="welcome-icon">🏫</div>
         <h1>Bienvenido a AprendeLocal</h1>

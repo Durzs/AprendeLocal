@@ -13,6 +13,9 @@ export default defineConfig({
       "/generate-project": "http://127.0.0.1:8000",
       "/schools": "http://127.0.0.1:8000",
       "/curriculum": "http://127.0.0.1:8000",
+      "/students": "http://127.0.0.1:8000",
+      "/share-code": "http://127.0.0.1:8000",
+      "/enrollments": "http://127.0.0.1:8000",
     },
   },
 })

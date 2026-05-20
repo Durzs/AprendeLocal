@@ -15,21 +15,25 @@ import SessionTimeline from "./SessionTimeline";
 import TeacherGuideView from "./TeacherGuideView";
 import WorksheetView from "./WorksheetView";
 import RubricView from "./RubricView";
+import ShareCodeModal from "./ShareCodeModal";
+import ProgressDashboard from "./ProgressDashboard";
 
-type DetailTab = "sesiones" | "guia" | "fichas" | "evaluacion";
+type DetailTab = "sesiones" | "guia" | "fichas" | "evaluacion" | "progreso";
 
 interface Props {
   projectId: string;
   onBack: () => void;
+  schoolId?: string;
 }
 
-export default function ProjectDetailView({ projectId, onBack }: Props) {
+export default function ProjectDetailView({ projectId, onBack, schoolId }: Props) {
   const [project, setProject] = useState<STEMProject | null>(null);
   const [detail, setDetail] = useState<ProjectDetail | null>(null);
   const [activeTab, setActiveTab] = useState<DetailTab>("sesiones");
   const [loading, setLoading] = useState(true);
   const [expanding, setExpanding] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Cargar el proyecto
   useEffect(() => {
@@ -84,7 +88,11 @@ export default function ProjectDetailView({ projectId, onBack }: Props) {
     { id: "guia", label: "Guía Docente", icon: "👩‍🏫" },
     { id: "fichas", label: "Fichas Alumno", icon: "📝" },
     { id: "evaluacion", label: "Evaluación", icon: "✅" },
+    { id: "progreso", label: "Progreso", icon: "👥" },
   ];
+
+  // Teacher ID from localStorage (same as student pattern)
+  const teacherId = localStorage.getItem("aprendelocal_student_id") || "teacher-default";
 
   return (
     <div className="project-detail">
@@ -110,7 +118,23 @@ export default function ProjectDetailView({ projectId, onBack }: Props) {
         {project.local_connection && (
           <p className="detail-connection">{project.local_connection}</p>
         )}
+        <button
+          className="btn-share"
+          onClick={() => setShowShareModal(true)}
+        >
+          🔗 Compartir con estudiantes
+        </button>
       </div>
+
+      {showShareModal && project.id && schoolId && (
+        <ShareCodeModal
+          projectId={project.id}
+          projectTitle={project.title}
+          teacherId={teacherId}
+          schoolId={schoolId}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
 
       {/* Estado de carga de la expansión */}
       {expanding && (
@@ -155,6 +179,9 @@ export default function ProjectDetailView({ projectId, onBack }: Props) {
             )}
             {activeTab === "evaluacion" && detail.rubric && (
               <RubricView rubric={detail.rubric} />
+            )}
+            {activeTab === "progreso" && project.id && (
+              <ProgressDashboard projectId={project.id} />
             )}
           </div>
         </>
