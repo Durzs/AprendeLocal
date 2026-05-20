@@ -351,11 +351,53 @@
         "antenna": "Antena",
         "battery": "Bateria"
       },
+      "phase1Tag": "Montar",
+      "phase2Tag": "Detectar",
       "completed": {
         "title": "Projeto concluído!",
         "subtitle": "Sua estação de monitoramento está pronta para La Araucanía e São Paulo",
         "badge": "Maker Iniciante",
-        "retry": "Tentar novamente"
+        "retry": "Tentar novamente",
+        "deploy": "Implantar na floresta"
+      }
+    },
+    "forest": {
+      "title": "Detecte espécies na floresta",
+      "subtitle": "Sua estação está ativa. Clique na floresta para escanear e descobrir a fauna e flora nativa.",
+      "logLabel": "Registro de espécies",
+      "progress": "Espécies detectadas",
+      "hint": "Procure brilhos sutis entre as árvores. Clique perto para escanear.",
+      "creatures": {
+        "monito": {
+          "name": "Monito del Monte",
+          "fact": "Marsupial único das florestas valdivianas. Considerado um fóssil vivo."
+        },
+        "araucaria": {
+          "name": "Araucária",
+          "fact": "Árvore milenar sagrada para o povo Mapuche. Suas sementes (pinhões) são alimento ancestral."
+        },
+        "woodpecker": {
+          "name": "Pica-pau-de-Magalhães",
+          "fact": "O maior pica-pau da América do Sul. Habita florestas nativas do Chile e Argentina."
+        },
+        "frog": {
+          "name": "Rã de Darwin",
+          "fact": "Espécie endêmica que incuba seus filhotes na boca. Em perigo de extinção."
+        },
+        "fern": {
+          "name": "Samambaia Gigante",
+          "fact": "Presente tanto na floresta valdiviana quanto na Amazônia. Pode atingir 5 metros."
+        },
+        "orchid": {
+          "name": "Orquídea Nativa",
+          "fact": "Mais de 3.000 espécies nas florestas tropicais da LATAM. Indicador de saúde do ecossistema."
+        }
+      },
+      "completed": {
+        "title": "Exploração completa!",
+        "subtitle": "Você identificou todas as espécies da floresta",
+        "badge": "Explorador STEM",
+        "restart": "Jogar novamente"
       }
     },
     "country": {

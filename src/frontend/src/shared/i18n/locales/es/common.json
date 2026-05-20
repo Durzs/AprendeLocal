@@ -351,11 +351,53 @@
         "antenna": "Antena",
         "battery": "Batería"
       },
+      "phase1Tag": "Armar",
+      "phase2Tag": "Detectar",
       "completed": {
         "title": "¡Proyecto completado!",
         "subtitle": "Tu estación de monitoreo está lista para La Araucanía y São Paulo",
         "badge": "Maker Novato",
-        "retry": "Intentar de nuevo"
+        "retry": "Intentar de nuevo",
+        "deploy": "Desplegar en el bosque"
+      }
+    },
+    "forest": {
+      "title": "Detecta especies en el bosque",
+      "subtitle": "Tu estación está activa. Haz clic en el bosque para escanear y descubrir la fauna y flora nativa.",
+      "logLabel": "Registro de especies",
+      "progress": "Especies detectadas",
+      "hint": "Busca los brillos sutiles entre los árboles. Haz clic cerca para escanear.",
+      "creatures": {
+        "monito": {
+          "name": "Monito del Monte",
+          "fact": "Marsupial único de los bosques valdivianos. Es considerado un fósil viviente."
+        },
+        "araucaria": {
+          "name": "Araucaria Araucana",
+          "fact": "Árbol milenario sagrado para el pueblo Mapuche. Sus semillas (piñones) son alimento ancestral."
+        },
+        "woodpecker": {
+          "name": "Carpintero Negro",
+          "fact": "El pájaro carpintero más grande de Sudamérica. Habita bosques nativos de Chile y Argentina."
+        },
+        "frog": {
+          "name": "Rana de Darwin",
+          "fact": "Especie endémica que incuba sus crías en la boca. En peligro de extinción."
+        },
+        "fern": {
+          "name": "Helecho Gigante",
+          "fact": "Presente tanto en la selva valdiviana como en el Amazonas. Puede alcanzar 5 metros."
+        },
+        "orchid": {
+          "name": "Orquídea Nativa",
+          "fact": "Más de 3.000 especies en los bosques lluviosos de LATAM. Indicador de salud del ecosistema."
+        }
+      },
+      "completed": {
+        "title": "¡Exploración completa!",
+        "subtitle": "Has identificado todas las especies del bosque",
+        "badge": "Explorador STEM",
+        "restart": "Jugar de nuevo"
       }
     },
     "country": {

@@ -351,11 +351,53 @@
         "antenna": "Antenna",
         "battery": "Battery"
       },
+      "phase1Tag": "Build",
+      "phase2Tag": "Detect",
       "completed": {
         "title": "Project completed!",
         "subtitle": "Your monitoring station is ready for La Araucanía and São Paulo",
         "badge": "Rookie Maker",
-        "retry": "Try again"
+        "retry": "Try again",
+        "deploy": "Deploy in the forest"
+      }
+    },
+    "forest": {
+      "title": "Detect species in the forest",
+      "subtitle": "Your station is active. Click on the forest to scan and discover native fauna and flora.",
+      "logLabel": "Species log",
+      "progress": "Species detected",
+      "hint": "Look for subtle glows among the trees. Click nearby to scan.",
+      "creatures": {
+        "monito": {
+          "name": "Monito del Monte",
+          "fact": "Unique marsupial from the Valdivian forests. Considered a living fossil."
+        },
+        "araucaria": {
+          "name": "Araucaria Araucana",
+          "fact": "Ancient tree sacred to the Mapuche people. Its seeds (piñones) are ancestral food."
+        },
+        "woodpecker": {
+          "name": "Magellanic Woodpecker",
+          "fact": "The largest woodpecker in South America. Inhabits native forests of Chile and Argentina."
+        },
+        "frog": {
+          "name": "Darwin's Frog",
+          "fact": "Endemic species that incubates its young in its mouth. Endangered."
+        },
+        "fern": {
+          "name": "Giant Fern",
+          "fact": "Found in both Valdivian and Amazon rainforests. Can reach 5 meters tall."
+        },
+        "orchid": {
+          "name": "Native Orchid",
+          "fact": "Over 3,000 species in LATAM rainforests. An indicator of ecosystem health."
+        }
+      },
+      "completed": {
+        "title": "Exploration complete!",
+        "subtitle": "You've identified all species in the forest",
+        "badge": "STEM Explorer",
+        "restart": "Play again"
       }
     },
     "country": {
