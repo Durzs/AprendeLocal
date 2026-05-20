@@ -49,18 +49,6 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 md:flex">
-            <Link
-              to="/makerspaces"
-              className={[
-                "rounded-full px-4 py-2 text-sm font-medium transition",
-                isActive("/makerspaces")
-                  ? "bg-slate-100 text-slate-950"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-              ].join(" ")}
-            >
-              Makerspaces
-            </Link>
-
             {user && (
               <Link
                 to="/plataforma"
@@ -174,17 +162,6 @@ export default function Header() {
               <span className="text-sm font-medium text-slate-700">{t("header.user.language")}</span>
               <LanguageSwitcher />
             </div>
-
-            <Link
-              to="/makerspaces"
-              onClick={closeMobile}
-              className={[
-                "rounded-xl px-4 py-3 text-sm font-medium transition",
-                isActive("/makerspaces") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
-              ].join(" ")}
-            >
-              Makerspaces
-            </Link>
 
             {user && (
               <>
