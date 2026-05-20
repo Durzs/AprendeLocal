@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Play, ArrowRight, Sparkles } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
@@ -9,6 +10,23 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
+  const fullTitle = t("home.hero.title");
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    setDisplayedText("");
+    let index = 0;
+    const interval = window.setInterval(() => {
+      setDisplayedText(fullTitle.slice(0, index + 1));
+      index += 1;
+      if (index >= fullTitle.length) {
+        window.clearInterval(interval);
+      }
+    }, 45);
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [fullTitle]);
 
   return (
     <section className="relative isolate min-h-[720px] overflow-hidden px-4 pb-20 pt-24 text-center md:min-h-[860px] md:pb-28 md:pt-32">
@@ -29,9 +47,9 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
           AprendeLocal
         </div>
 
-        {/* Title with typing cursor */}
+        {/* Title with typewriter effect */}
         <h1 className="mx-auto max-w-5xl text-5xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] md:text-7xl lg:text-8xl">
-          {t("home.hero.title")}
+          {displayedText}
           <span className="ml-1 inline-block animate-pulse text-blue-600">|</span>
         </h1>
 

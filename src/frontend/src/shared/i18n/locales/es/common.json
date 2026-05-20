@@ -310,6 +310,18 @@
         }
       }
     },
+    "map": {
+      "badge": "Plataforma STEM",
+      "title": "Explora tu territorio",
+      "subtitle": "Descubre escuelas y puntos de interés en La Araucanía. Genera proyectos STEM contextualizados con IA conectados a tu entorno local.",
+      "cta": "Abrir Plataforma STEM",
+      "explore": "Explorar proyectos de esta escuela",
+      "stats": {
+        "schools": "Escuelas conectadas",
+        "pois": "Puntos de interés",
+        "projects": "Proyectos STEM"
+      }
+    },
     "courses": {
       "title": "Cursos Populares",
       "subtitle": "Comienza tu camino de aprendizaje",

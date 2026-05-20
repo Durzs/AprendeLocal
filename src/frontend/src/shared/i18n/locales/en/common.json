@@ -310,6 +310,18 @@
         }
       }
     },
+    "map": {
+      "badge": "STEM Platform",
+      "title": "Explore your territory",
+      "subtitle": "Discover schools and points of interest in La Araucanía. Generate AI-powered contextualized STEM projects connected to your local environment.",
+      "cta": "Open STEM Platform",
+      "explore": "Explore projects for this school",
+      "stats": {
+        "schools": "Connected schools",
+        "pois": "Points of interest",
+        "projects": "STEM projects"
+      }
+    },
     "courses": {
       "title": "Popular Courses",
       "subtitle": "Start your learning journey",
