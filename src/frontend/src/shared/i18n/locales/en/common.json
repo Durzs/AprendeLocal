@@ -338,6 +338,25 @@
       "subtitle": "Join thousands of students applying STEM in real projects through maker culture",
       "button": "Start Maker Journey",
       "buttonAria": "Start Maker Journey"
+    },
+    "country": {
+      "title": "Choose your experience",
+      "subtitle": "AprendeLocal operates in different countries with content and resources tailored to each region.",
+      "tags": {
+        "courses": "Courses",
+        "stemPlatform": "STEM Platform",
+        "schools": "Schools",
+        "makerspaces": "Makerspaces"
+      },
+      "chile": {
+        "description": "Explore schools and generate AI-powered contextualized STEM projects in the Araucanía region.",
+        "makerspacesSoon": "Makerspaces — coming soon",
+        "cta": "Explore Chile"
+      },
+      "brasil": {
+        "description": "Access courses, makerspaces, and a network of maker spaces to apply STEM in real projects.",
+        "cta": "Explore Brazil"
+      }
     }
   }
 }

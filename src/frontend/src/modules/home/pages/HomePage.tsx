@@ -4,6 +4,7 @@ import { supabase } from "../../../shared/lib/supabaseClient";
 
 import HeroSection from "../components/HeroSection";
 import FeaturesSection from "../components/FeaturesSection";
+import CountrySection from "../components/CountrySection";
 import MapSection from "../components/MapSection";
 import CoursesSection from "../components/CoursesSection";
 import CallToAction from "../components/CallToAction";
@@ -75,6 +76,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-white text-[#111217]">
       <HeroSection onStart={goStart} onExplore={goExplore} />
       <FeaturesSection />
+      <CountrySection />
       <MapSection />
       <CoursesSection
         courses={courses}

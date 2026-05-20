@@ -338,6 +338,25 @@
       "subtitle": "Junte-se a milhares de estudantes aplicando STEM em projetos reais através da cultura maker",
       "button": "Começar Jornada Maker",
       "buttonAria": "Começar Jornada Maker"
+    },
+    "country": {
+      "title": "Escolha sua experiência",
+      "subtitle": "O AprendeLocal opera em diferentes países com conteúdos e recursos adaptados a cada região.",
+      "tags": {
+        "courses": "Cursos",
+        "stemPlatform": "Plataforma STEM",
+        "schools": "Escolas",
+        "makerspaces": "Makerspaces"
+      },
+      "chile": {
+        "description": "Explore escolas e gere projetos STEM contextualizados com IA na região de La Araucanía.",
+        "makerspacesSoon": "Makerspaces — em breve",
+        "cta": "Explorar Chile"
+      },
+      "brasil": {
+        "description": "Acesse cursos, makerspaces e uma rede de espaços maker para aplicar STEM em projetos reais.",
+        "cta": "Explorar Brasil"
+      }
     }
   }
 }
