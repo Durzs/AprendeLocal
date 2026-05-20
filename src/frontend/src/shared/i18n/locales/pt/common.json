@@ -339,6 +339,25 @@
       "button": "Começar Jornada Maker",
       "buttonAria": "Começar Jornada Maker"
     },
+    "puzzle": {
+      "title": "Monte sua estação STEM",
+      "subtitle": "Arraste cada componente para o seu lugar no painel para construir uma estação de monitoramento ambiental.",
+      "progress": "Progresso",
+      "pieces": {
+        "trayLabel": "Componentes",
+        "solar": "Painel Solar",
+        "sensor": "Sensor",
+        "board": "Microcontrolador",
+        "antenna": "Antena",
+        "battery": "Bateria"
+      },
+      "completed": {
+        "title": "Projeto concluído!",
+        "subtitle": "Sua estação de monitoramento está pronta para La Araucanía e São Paulo",
+        "badge": "Maker Iniciante",
+        "retry": "Tentar novamente"
+      }
+    },
     "country": {
       "title": "Escolha sua experiência",
       "subtitle": "O AprendeLocal opera em diferentes países com conteúdos e recursos adaptados a cada região.",

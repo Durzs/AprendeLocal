@@ -339,6 +339,25 @@
       "button": "Comenzar Viaje Maker",
       "buttonAria": "Comenzar Viaje Maker"
     },
+    "puzzle": {
+      "title": "Arma tu estación STEM",
+      "subtitle": "Arrastra cada componente a su lugar en el tablero para construir una estación de monitoreo ambiental.",
+      "progress": "Progreso",
+      "pieces": {
+        "trayLabel": "Componentes",
+        "solar": "Panel Solar",
+        "sensor": "Sensor",
+        "board": "Microcontrolador",
+        "antenna": "Antena",
+        "battery": "Batería"
+      },
+      "completed": {
+        "title": "¡Proyecto completado!",
+        "subtitle": "Tu estación de monitoreo está lista para La Araucanía y São Paulo",
+        "badge": "Maker Novato",
+        "retry": "Intentar de nuevo"
+      }
+    },
     "country": {
       "title": "Elige tu experiencia",
       "subtitle": "AprendeLocal opera en distintos países con contenidos y recursos adaptados a cada región.",
