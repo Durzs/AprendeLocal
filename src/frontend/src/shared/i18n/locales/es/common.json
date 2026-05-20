@@ -38,6 +38,7 @@
     "about": "Sobre",
     "support": "Soporte",
     "links": {
+      "instructorAccess": "Acceso para profesores",
       "mission": "Nuestra Misión",
       "team": "Equipo",
       "partners": "Socios",
@@ -295,7 +296,7 @@
           "title": "Aprendizaje Adaptativo",
           "description": "Contenido personalizado que se ajusta a tu ritmo y nivel de conocimiento."
         },
-        "gamified": {
+        "gamification": {
           "title": "Gamificación Completa",
           "description": "Gana puntos, insignias y conquista desafíos mientras aprendes."
         },
@@ -315,6 +316,7 @@
       "loading": "Cargando cursos...",
       "errorPrefix": "Error al cargar cursos:",
       "empty": "No se encontraron cursos.",
+      "viewAll": "Todos los Cursos",
       "allCourses": "Todos los Cursos",
       "category": "Categoría",
       "level": "Nivel"

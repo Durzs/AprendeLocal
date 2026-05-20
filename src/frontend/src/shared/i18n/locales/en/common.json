@@ -38,6 +38,7 @@
     "about": "About",
     "support": "Support",
     "links": {
+      "instructorAccess": "Instructor Access",
       "mission": "Our Mission",
       "team": "Team",
       "partners": "Partners",
@@ -295,7 +296,7 @@
           "title": "Adaptive Learning",
           "description": "Personalized content that adjusts to your pace and knowledge level."
         },
-        "gamified": {
+        "gamification": {
           "title": "Full Gamification",
           "description": "Earn points, badges and complete challenges while learning."
         },
@@ -315,6 +316,7 @@
       "loading": "Loading courses...",
       "errorPrefix": "Error loading courses:",
       "empty": "No courses found.",
+      "viewAll": "All Courses",
       "allCourses": "All Courses",
       "category": "Category",
       "level": "Level"

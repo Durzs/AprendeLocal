@@ -1,60 +1,44 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-gray-300 p-6 text-sm text-black">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <h3 className="font-semibold">{t("footer.brand")}</h3>
-          <p>{t("footer.tagline")}</p>
+    <footer className="border-t border-slate-100 bg-white px-4 py-10 text-slate-600">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
+          <div>
+            <h3 className="text-base font-semibold text-slate-950">AprendeLocal</h3>
+            <p className="mt-1 text-sm text-slate-500">{t("footer.tagline")}</p>
+          </div>
+
+          <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
+            <Link to="/instructor/login" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.instructorAccess")}
+            </Link>
+            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.team")}
+            </a>
+            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.partners")}
+            </a>
+            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.faq")}
+            </a>
+            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.contact")}
+            </a>
+            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.terms")}
+            </a>
+          </nav>
         </div>
 
-        <div>
-          <h3 className="font-semibold">{t("footer.about")}</h3>
-          <ul>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.mission")}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.team")}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.partners")}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="font-semibold">{t("footer.support")}</h3>
-          <ul>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.faq")}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.contact")}
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                {t("footer.links.terms")}
-              </a>
-            </li>
-          </ul>
+        <div className="mt-8 text-xs text-slate-400">
+          {t("footer.copyright")}
         </div>
       </div>
-
-      <p className="text-center mt-6">{t("footer.copyright")}</p>
     </footer>
   );
 }

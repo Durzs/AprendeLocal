@@ -1,38 +1,61 @@
 import { useTranslation } from "react-i18next";
-import type { HeroSectionProps } from "../types";
+import { Play, ArrowRight, Sparkles } from "lucide-react";
+import homeBg from "../../../assets/images/home-bg.png";
 
-export default function HeroSection({
-  onStart,
-  onExplore,
-}: HeroSectionProps) {
+interface HeroSectionProps {
+  onStart: () => void;
+  onExplore: () => void;
+}
+
+export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
 
   return (
-    <section className="relative text-center py-20 px-6">
-      <div className="max-w-5xl mx-auto rounded-3xl bg-white/35 backdrop-blur border border-white/40 shadow p-10 md:p-14">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white drop-shadow">
+    <section className="relative isolate min-h-[720px] overflow-hidden px-4 pb-20 pt-24 text-center md:min-h-[860px] md:pb-28 md:pt-32">
+      {/* Background illustration */}
+      <div
+        className="absolute inset-0 -z-20 bg-no-repeat"
+        style={{
+          backgroundImage: `url(${homeBg})`,
+          backgroundSize: "100%",
+          backgroundPosition: "center top",
+        }}
+      />
+
+      <div className="mx-auto max-w-6xl">
+        {/* Badge */}
+        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
+          <Sparkles className="h-4 w-4 text-blue-600" />
+          AprendeLocal
+        </div>
+
+        {/* Title with typing cursor */}
+        <h1 className="mx-auto max-w-5xl text-5xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] md:text-7xl lg:text-8xl">
           {t("home.hero.title")}
+          <span className="ml-1 inline-block animate-pulse text-blue-600">|</span>
         </h1>
 
-        <p className="max-w-3xl mx-auto text-base md:text-lg text-white/85 mb-10">
+        {/* Subtitle */}
+        <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-slate-600 md:text-xl">
           {t("home.hero.subtitle")}
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        {/* CTA buttons */}
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
-            aria-label={t("home.hero.ctaStartAria")}
-            className="bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold shadow hover:bg-white/90 transition"
             onClick={onStart}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl"
           >
+            <Play className="h-4 w-4" fill="currentColor" />
             {t("home.hero.ctaStart")}
           </button>
 
           <button
-            aria-label={t("home.hero.ctaExploreAria")}
-            className="bg-white/25 text-blue-700 px-6 py-3 rounded-lg font-semibold backdrop-blur border border-white/40 hover:bg-white/30 transition"
             onClick={onExplore}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
           >
             {t("home.hero.ctaExplore")}
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </div>

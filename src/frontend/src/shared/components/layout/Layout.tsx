@@ -9,14 +9,10 @@ export default function Layout() {
   const hideHeader = hideHeaderPages.includes(location.pathname);
 
   return (
-    <>
-      {!hideHeader && <Header userRole="student" />}
-
-      <main className="flex-1 min-h-screen bg-gray-50">
-        <Outlet />
-      </main>
-
+    <div className="min-h-screen bg-white text-[#111217]">
+      {!hideHeader && <Header />}
+      <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
