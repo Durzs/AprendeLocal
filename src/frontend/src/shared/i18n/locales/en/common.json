@@ -1,0 +1,329 @@
+{
+  "geminiChat": {
+    "ui": {
+      "title": "Ask the AprendeLocal AI tutor.",
+      "placeholder": "Type your question about the material here...",
+      "ask": "Ask",
+      "thinking": "Thinking...",
+      "answerTitle": "Answer:",
+      "disabledTitle": "AI disabled",
+      "disabledDesc1": "Missing configuration:",
+      "disabledDesc2": "After editing the",
+      "disabledDesc3": "restart the server."
+    },
+    "errors": {
+      "missingKey": "Missing configuration: set VITE_GEMINI_API_KEY in your .env and restart the dev server.",
+      "emptyResponse": "I couldn't generate an answer (empty response).",
+      "generic": "Failed to call the AI. Check the API key, permissions, and the browser console."
+    },
+    "fallback": {
+      "noModule": "No module",
+      "noTitle": "No title",
+      "emptyContent": "Empty content."
+    },
+    "prompt": {
+      "role": "You are an AprendeLocal tutor (interdisciplinary STEM content). Answer in language: {{lang}}.",
+      "rulesTitle": "RULES",
+      "rule1": "Answer using ONLY the provided material.",
+      "rule2": "If the answer is not in the material, respond exactly: \"I cannot answer your question.\"",
+      "moduleTitle": "MODULE TITLE:",
+      "materialTitle": "MATERIAL TITLE:",
+      "materialBody": "MATERIAL (text extracted from HTML):",
+      "question": "QUESTION:"
+    }
+  },
+  "footer": {
+    "brand": "AprendeLocal",
+    "tagline": "STEM education for everyone",
+    "about": "About",
+    "support": "Support",
+    "links": {
+      "mission": "Our Mission",
+      "team": "Team",
+      "partners": "Partners",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "terms": "Terms of Use"
+    },
+    "copyright": "© 2025 AprendeLocal. A platform dedicated to STEM education."
+  },
+  "header": {
+    "brandName": "AprendeLocal",
+    "brandTagline": "Learn. Evolve. Achieve.",
+    "logoAlt": "AprendeLocal site logo",
+    "nav": {
+      "courses": "Courses",
+      "makerspaces": "Makerspaces",
+      "profile": "Profile"
+    },
+    "mobile": {
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "user": {
+      "myAccount": "My account",
+      "account": "Account",
+      "myProfile": "My Profile",
+      "communities": "Communities",
+      "signOut": "Sign out",
+      "roleAdmin": "Admin",
+      "roleTeacher": "Teacher",
+      "roleStudent": "Student",
+      "language": "Language"
+    },
+    "actions": {
+      "signIn": "Sign in",
+      "loading": "Loading..."
+    }
+  },
+  "coursePage": {
+    "courseCompletedFallback": "Course completed",
+    "errors": {
+      "loadCourseState": "Error loading course state.",
+      "completeMaterial": "Error completing material."
+    },
+    "progress": {
+      "title": "Progress",
+      "courseCompleted": "Course completed ✅",
+      "current": "Current: {{module}} • {{title}}",
+      "loading": "Loading..."
+    },
+    "sidebar": {
+      "content": "Content",
+      "noModules": "No modules found.",
+      "doneOfTotal": "{{done}}/{{total}} completed",
+      "noMaterials": "No materials in this module."
+    },
+    "materialStatus": {
+      "done": "Completed ✅",
+      "available": "Available",
+      "locked": "Locked 🔒",
+      "inProgress": "In progress"
+    },
+    "materialType": {
+      "default": "material"
+    },
+    "main": {
+      "selectMaterial": "Select an unlocked material to start.",
+      "courseCompletedTitle": "Course completed ✅",
+      "courseCompletedDesc": "You can keep reading the materials anytime.",
+      "type": "Type",
+      "emptyContent": "Empty content."
+    },
+    "buttons": {
+      "back": "Back",
+      "backToCourses": "Back to courses",
+      "markCompleted": "Mark as completed",
+      "courseCompleted": "Course completed"
+    },
+    "pointer": {
+      "label": "Pointer"
+    }
+  },
+  "courseLocal": {
+    "errorTitle": "Error",
+    "back": "Back",
+    "notFound": "Course not found.",
+    "congrats": "Congratulations! 🎉",
+    "completedSuccess": "You have successfully completed the course!",
+    "badgeEarned": "Badge Earned",
+    "allModulesCompleted": "All modules completed",
+    "exercisesCompleted": "Practical exercises finished",
+    "continueLearning": "Continue Learning"
+  },
+  "courses": {
+    "title": "Courses",
+    "subtitle": "Choose a course to start or continue your journey",
+    "searchPlaceholder": "Search courses...",
+    "loading": "Loading courses...",
+    "noneFound": "No courses found.",
+    "courseImageAlt": "Course image {{title}}",
+    "tags": {
+      "noCategory": "No category",
+      "noLevel": "No level",
+      "noBadge": "No badge"
+    },
+    "status": {
+      "completed": "Completed",
+      "enrolled": "In progress",
+      "new": "New"
+    },
+    "buttons": {
+      "review": "Review",
+      "continue": "Continue",
+      "start": "Start"
+    }
+  },
+  "avatarModal": {
+    "title": "Choose avatar",
+    "subtitle": "Select an avatar from the catalog",
+    "closeAria": "Close",
+    "loading": "Loading avatars...",
+    "cancel": "Cancel",
+    "errorLoad": "Failed to load avatars",
+    "errorUpdate": "Failed to update avatar",
+    "userNotLogged": "User not logged in.",
+    "avatarFallback": "avatar",
+    "avatarWithId": "Avatar {{id}}"
+  },
+  "communities": {
+    "title": "My Communities",
+    "viewAll": "View all",
+    "loading": "Loading...",
+    "empty": "You are not part of any community yet.",
+    "join": "Join a community",
+    "open": "Open",
+    "noDescription": "No description.",
+    "members": "{{count}} members",
+    "loadError": "Error loading communities.",
+    "imageAlt": "Image of the community {{name}}",
+    "dash": "—",
+    "pageTitle": "Communities",
+    "pageSubtitle": "Find and join communities that interest you.",
+    "tabAll": "All",
+    "tabMine": "Mine",
+    "searchPlaceholder": "Search community...",
+    "joinAction": "Join",
+    "leave": "Leave",
+    "memberBadge": "Member",
+    "noneFound": "No communities found."
+  },
+  "badges": {
+    "title": "My Achievements",
+    "loading": "Loading badges...",
+    "imageAltPrefix": "Badge image",
+    "fallbackName": "Badge"
+  },
+  "activeCourses": {
+    "title": "Active Courses",
+    "subtitle": "Continue where you left off",
+    "empty": "You haven't started any courses yet.",
+    "viewAll": "View All Courses",
+    "progressLabel": "Progress",
+    "loadingError": "Error loading active courses.",
+    "noTitle": "Untitled course"
+  },
+  "profileCard": {
+    "notInformed": "Not provided",
+    "loading": "Loading...",
+    "yearsSuffix": "years",
+    "cepLabel": "ZIP code"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your info",
+    "loading": "Loading profile...",
+    "userFallback": "User",
+    "notInformed": "Not provided",
+    "cepInvalid": "Invalid ZIP code",
+    "cepFetchFail": "Failed to fetch ZIP code",
+    "cepNotFound": "ZIP code not found"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Fill in the fields below to register on AprendeLocal",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "cep": "ZIP Code",
+      "age": "Age"
+    },
+    "placeholders": {
+      "name": "Your full name",
+      "email": "youremail@example.com",
+      "password": "********",
+      "cep": "00000-000"
+    },
+    "button": {
+      "register": "Register",
+      "loading": "Registering..."
+    },
+    "validation": {
+      "required": "Please fill in name, email and password."
+    },
+    "success": "Account created! Please log in.",
+    "error": "Registration error.",
+    "loginText": "Already have an account?",
+    "loginAction": "Log in to continue.",
+    "heroTitle": "Join AprendeLocal",
+    "heroSubtitle": "Sign up to start your journey of innovation and creativity.",
+    "backHome": "Back to home"
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Enter your details to access your AprendeLocal account",
+    "email": "Email",
+    "emailPlaceholder": "youremail@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "********",
+    "submit": "Sign in",
+    "loading": "Signing in...",
+    "validation": {
+      "required": "Please enter email and password."
+    }
+  },
+  "makerspaces": {
+    "title": "Makerspaces",
+    "subtitle": "Connect with local maker spaces to apply what you learned in the courses. Access equipment, join events, and collaborate with other makers.",
+    "tabs": {
+      "locals": "Meeting Places",
+      "map": "Map"
+    },
+    "map": {
+      "placeholder": "Interactive map not implemented yet"
+    },
+    "cta": {
+      "title": "Ready to transform your learning?",
+      "subtitle": "Join thousands of students applying STEM in real projects through maker culture!"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Learn STEM in an adaptive and gamified way",
+      "subtitle": "Connect theory and practice through maker culture. Learn STEM by solving real problems in local makerspaces with an adaptive and gamified methodology.",
+      "ctaStart": "Start Now",
+      "ctaExplore": "Explore Makerspaces",
+      "ctaStartAria": "Start now",
+      "ctaExploreAria": "Explore Makerspaces"
+    },
+    "features": {
+      "title": "Why choose AprendeLocal?",
+      "subtitle": "We connect theory and practice with maker culture to transform your STEM journey.",
+      "items": {
+        "adaptive": {
+          "title": "Adaptive Learning",
+          "description": "Personalized content that adjusts to your pace and knowledge level."
+        },
+        "gamified": {
+          "title": "Full Gamification",
+          "description": "Earn points, badges and complete challenges while learning."
+        },
+        "theoryPractice": {
+          "title": "Theory and Practice",
+          "description": "A bridge between theoretical content and real practical maker problems."
+        },
+        "makerspaces": {
+          "title": "Makerspaces",
+          "description": "Connect with local makerspaces to practice what you learned."
+        }
+      }
+    },
+    "courses": {
+      "title": "Popular Courses",
+      "subtitle": "Start your learning journey",
+      "loading": "Loading courses...",
+      "errorPrefix": "Error loading courses:",
+      "empty": "No courses found.",
+      "allCourses": "All Courses",
+      "category": "Category",
+      "level": "Level"
+    },
+    "cta": {
+      "title": "Ready to transform your learning?",
+      "subtitle": "Join thousands of students applying STEM in real projects through maker culture",
+      "button": "Start Maker Journey",
+      "buttonAria": "Start Maker Journey"
+    }
+  }
+}

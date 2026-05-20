@@ -1,0 +1,329 @@
+{
+  "geminiChat": {
+    "ui": {
+      "title": "Pergunte para o tutor IA do AprendeLocal.",
+      "placeholder": "Digite sua pergunta sobre o material aqui...",
+      "ask": "Perguntar",
+      "thinking": "Pensando...",
+      "answerTitle": "Resposta:",
+      "disabledTitle": "IA desativada",
+      "disabledDesc1": "Falta configurar",
+      "disabledDesc2": "Depois de ajustar o",
+      "disabledDesc3": "reinicie o servidor."
+    },
+    "errors": {
+      "missingKey": "Configuração ausente: defina VITE_GEMINI_API_KEY no seu .env e reinicie o dev server.",
+      "emptyResponse": "Não consegui gerar uma resposta (resposta vazia).",
+      "generic": "Falha ao chamar a IA. Verifique a API key, permissões e o console do navegador."
+    },
+    "fallback": {
+      "noModule": "Sem módulo",
+      "noTitle": "Sem título",
+      "emptyContent": "Conteúdo vazio."
+    },
+    "prompt": {
+      "role": "Você é um tutor do AprendeLocal (conteúdo interdisciplinar STEM). Responda no idioma: {{lang}}.",
+      "rulesTitle": "REGRAS",
+      "rule1": "Responda usando APENAS o material fornecido.",
+      "rule2": "Se a resposta não estiver no material, responda exatamente: \"Não é possível responder sua pergunta.\"",
+      "moduleTitle": "TÍTULO DO MÓDULO:",
+      "materialTitle": "TÍTULO DO MATERIAL:",
+      "materialBody": "MATERIAL (texto extraído do HTML):",
+      "question": "PERGUNTA:"
+    }
+  },
+  "footer": {
+    "brand": "AprendeLocal",
+    "tagline": "Educação STEM para todos",
+    "about": "Sobre",
+    "support": "Suporte",
+    "links": {
+      "mission": "Nossa Missão",
+      "team": "Equipe",
+      "partners": "Parceiros",
+      "faq": "FAQ",
+      "contact": "Contato",
+      "terms": "Termos de Uso"
+    },
+    "copyright": "© 2025 AprendeLocal. Plataforma dedicada à educação STEM."
+  },
+  "header": {
+    "brandName": "AprendeLocal",
+    "brandTagline": "Aprenda. Evolua. Conquiste.",
+    "logoAlt": "Logo do site AprendeLocal",
+    "nav": {
+      "courses": "Cursos",
+      "makerspaces": "Makerspaces",
+      "profile": "Perfil"
+    },
+    "mobile": {
+      "openMenu": "Abrir menu",
+      "closeMenu": "Fechar menu"
+    },
+    "user": {
+      "myAccount": "Minha conta",
+      "account": "Conta",
+      "myProfile": "Meu Perfil",
+      "communities": "Comunidades",
+      "signOut": "Sair",
+      "roleAdmin": "Admin",
+      "roleTeacher": "Professor",
+      "roleStudent": "Aluno",
+      "language": "Idioma"
+    },
+    "actions": {
+      "signIn": "Entrar",
+      "loading": "Carregando..."
+    }
+  },
+  "coursePage": {
+    "courseCompletedFallback": "Curso concluído",
+    "errors": {
+      "loadCourseState": "Erro ao carregar estado do curso.",
+      "completeMaterial": "Erro ao concluir material."
+    },
+    "progress": {
+      "title": "Progresso",
+      "courseCompleted": "Curso concluído ✅",
+      "current": "Atual: {{module}} • {{title}}",
+      "loading": "Carregando..."
+    },
+    "sidebar": {
+      "content": "Conteúdo",
+      "noModules": "Nenhum módulo encontrado.",
+      "doneOfTotal": "{{done}}/{{total}} concluídos",
+      "noMaterials": "Nenhum material neste módulo."
+    },
+    "materialStatus": {
+      "done": "Concluído ✅",
+      "available": "Disponível",
+      "locked": "Bloqueado 🔒",
+      "inProgress": "Em andamento"
+    },
+    "materialType": {
+      "default": "material"
+    },
+    "main": {
+      "selectMaterial": "Selecione um material liberado para começar.",
+      "courseCompletedTitle": "Curso concluído ✅",
+      "courseCompletedDesc": "Você pode continuar lendo os materiais quando quiser.",
+      "type": "Tipo",
+      "emptyContent": "Conteúdo vazio."
+    },
+    "buttons": {
+      "back": "Voltar",
+      "backToCourses": "Voltar para cursos",
+      "markCompleted": "Marcar como concluído",
+      "courseCompleted": "Curso concluído"
+    },
+    "pointer": {
+      "label": "Ponteiro"
+    }
+  },
+  "courseLocal": {
+    "errorTitle": "Erro",
+    "back": "Voltar",
+    "notFound": "Curso não encontrado.",
+    "congrats": "Parabéns! 🎉",
+    "completedSuccess": "Você completou o curso com sucesso!",
+    "badgeEarned": "Badge Conquistado",
+    "allModulesCompleted": "Todos os módulos concluídos",
+    "exercisesCompleted": "Exercícios práticos finalizados",
+    "continueLearning": "Continuar Aprendendo"
+  },
+  "courses": {
+    "title": "Cursos",
+    "subtitle": "Escolha um curso para começar ou continuar sua jornada",
+    "searchPlaceholder": "Buscar cursos...",
+    "loading": "Carregando cursos...",
+    "noneFound": "Nenhum curso encontrado.",
+    "courseImageAlt": "Imagem do curso {{title}}",
+    "tags": {
+      "noCategory": "Sem categoria",
+      "noLevel": "Sem nível",
+      "noBadge": "Sem badge"
+    },
+    "status": {
+      "completed": "Concluído",
+      "enrolled": "Em andamento",
+      "new": "Novo"
+    },
+    "buttons": {
+      "review": "Revisar",
+      "continue": "Continuar",
+      "start": "Começar"
+    }
+  },
+  "avatarModal": {
+    "title": "Escolher avatar",
+    "subtitle": "Selecione um avatar do catálogo",
+    "closeAria": "Fechar",
+    "loading": "Carregando avatares...",
+    "cancel": "Cancelar",
+    "errorLoad": "Erro ao carregar avatares",
+    "errorUpdate": "Erro ao atualizar avatar",
+    "userNotLogged": "Usuário não logado.",
+    "avatarFallback": "avatar",
+    "avatarWithId": "Avatar {{id}}"
+  },
+  "communities": {
+    "title": "Minhas Comunidades",
+    "viewAll": "Ver todas",
+    "loading": "Carregando...",
+    "empty": "Você ainda não participa de nenhuma comunidade.",
+    "join": "Entrar em uma comunidade",
+    "open": "Abrir",
+    "noDescription": "Sem descrição.",
+    "members": "{{count}} membros",
+    "loadError": "Erro ao carregar comunidades.",
+    "imageAlt": "Imagem da comunidade {{name}}",
+    "dash": "—",
+    "pageTitle": "Comunidades",
+    "pageSubtitle": "Encontre e participe de comunidades do seu interesse.",
+    "tabAll": "Todas",
+    "tabMine": "Minhas",
+    "searchPlaceholder": "Buscar comunidade...",
+    "joinAction": "Participar",
+    "leave": "Sair",
+    "memberBadge": "Membro",
+    "noneFound": "Nenhuma comunidade encontrada."
+  },
+  "badges": {
+    "title": "Minhas Conquistas",
+    "loading": "Carregando badges...",
+    "imageAltPrefix": "Imagem da badge",
+    "fallbackName": "Badge"
+  },
+  "activeCourses": {
+    "title": "Cursos Ativos",
+    "subtitle": "Continue de onde parou",
+    "empty": "Você ainda não iniciou nenhum curso.",
+    "viewAll": "Ver Todos os Cursos",
+    "progressLabel": "Progresso",
+    "loadingError": "Erro ao carregar cursos ativos.",
+    "noTitle": "Curso sem título"
+  },
+  "profileCard": {
+    "notInformed": "Não informado",
+    "loading": "Carregando...",
+    "yearsSuffix": "anos",
+    "cepLabel": "CEP"
+  },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Gerencie suas informações",
+    "loading": "Carregando perfil...",
+    "userFallback": "Usuário",
+    "notInformed": "Não informado",
+    "cepInvalid": "CEP inválido",
+    "cepFetchFail": "Falha ao consultar CEP",
+    "cepNotFound": "CEP não encontrado"
+  },
+  "register": {
+    "title": "Criar Conta",
+    "subtitle": "Preencha os campos abaixo para se cadastrar no AprendeLocal",
+    "fields": {
+      "name": "Nome",
+      "email": "Email",
+      "password": "Senha",
+      "cep": "CEP",
+      "age": "Idade"
+    },
+    "placeholders": {
+      "name": "Seu nome completo",
+      "email": "seuemail@exemplo.com",
+      "password": "********",
+      "cep": "00000-000"
+    },
+    "button": {
+      "register": "Cadastrar",
+      "loading": "Cadastrando..."
+    },
+    "validation": {
+      "required": "Preencha nome, email e senha."
+    },
+    "success": "Cadastro criado! Faça o login.",
+    "error": "Erro ao cadastrar.",
+    "loginText": "Já possui conta?",
+    "loginAction": "Faça login para continuar.",
+    "heroTitle": "Junte-se ao AprendeLocal",
+    "heroSubtitle": "Cadastre-se para começar sua jornada de inovação e criatividade.",
+    "backHome": "Voltar para o início"
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "Digite seus dados para acessar sua conta do AprendeLocal",
+    "email": "E-mail",
+    "emailPlaceholder": "seuemail@exemplo.com",
+    "password": "Senha",
+    "passwordPlaceholder": "********",
+    "submit": "Entrar",
+    "loading": "Entrando...",
+    "validation": {
+      "required": "Preencha email e senha."
+    }
+  },
+  "makerspaces": {
+    "title": "Makerspaces",
+    "subtitle": "Conecte-se com espaços makers locais para aplicar o conhecimento aprendido nos cursos. Acesse equipamentos, participe de eventos e colabore com outros makers.",
+    "tabs": {
+      "locals": "Locais de Encontro",
+      "map": "Mapa"
+    },
+    "map": {
+      "placeholder": "Mapa interativo ainda não implementado"
+    },
+    "cta": {
+      "title": "Pronto para transformar seu aprendizado?",
+      "subtitle": "Junte-se a milhares de estudantes aplicando STEM em projetos reais através da cultura maker!"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Aprenda STEM de forma adaptativa e gamificada",
+      "subtitle": "Conecte teoria e prática através da cultura maker. Aprenda STEM resolvendo problemas reais em makerspaces locais com metodologia adaptativa e gamificada.",
+      "ctaStart": "Começar Agora",
+      "ctaExplore": "Explorar Makerspaces",
+      "ctaStartAria": "Começar agora",
+      "ctaExploreAria": "Explorar Makerspaces"
+    },
+    "features": {
+      "title": "Por que escolher o AprendeLocal?",
+      "subtitle": "Conectamos teoria e prática com cultura maker para transformar sua jornada STEM.",
+      "items": {
+        "adaptive": {
+          "title": "Aprendizagem Adaptativa",
+          "description": "Conteúdo personalizado que se ajusta ao seu ritmo e nível de conhecimento."
+        },
+        "gamified": {
+          "title": "Gamificação Completa",
+          "description": "Ganhe pontos, badges e conquiste desafios enquanto aprende."
+        },
+        "theoryPractice": {
+          "title": "Teoria e Prática",
+          "description": "Ponte entre conteúdo teórico e problemas práticos reais da cultura maker."
+        },
+        "makerspaces": {
+          "title": "Makerspaces",
+          "description": "Conecte-se com espaços makers locais para praticar o que aprendeu."
+        }
+      }
+    },
+    "courses": {
+      "title": "Cursos Populares",
+      "subtitle": "Comece sua jornada de aprendizado",
+      "loading": "Carregando cursos...",
+      "errorPrefix": "Erro ao carregar cursos:",
+      "empty": "Nenhum curso encontrado.",
+      "allCourses": "Todos os Cursos",
+      "category": "Categoria",
+      "level": "Nível"
+    },
+    "cta": {
+      "title": "Pronto para transformar seu aprendizado?",
+      "subtitle": "Junte-se a milhares de estudantes aplicando STEM em projetos reais através da cultura maker",
+      "button": "Começar Jornada Maker",
+      "buttonAria": "Começar Jornada Maker"
+    }
+  }
+}

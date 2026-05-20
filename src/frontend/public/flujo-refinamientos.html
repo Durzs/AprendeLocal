@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AprendeLocal — Flujo Real y Refinamientos</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 2rem;
+    line-height: 1.6;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #4ade80;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+  }
+
+  /* ── Diagrama de flujo ── */
+  .flow-container {
+    display: flex;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+  }
+  .flow-column {
+    flex: 1;
+    min-width: 0;
+  }
+  .flow-column h2 {
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .col-teacher h2 {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: white;
+  }
+  .col-connection h2 {
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    color: white;
+  }
+  .col-student h2 {
+    background: linear-gradient(135deg, #059669, #34d399);
+    color: white;
+  }
+
+  .step {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #334155;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .step:hover {
+    transform: translateX(4px);
+    border-left-color: #4ade80;
+  }
+  .step-number {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+  }
+  .col-teacher .step-number { background: #3b82f6; color: white; }
+  .col-connection .step-number { background: #8b5cf6; color: white; }
+  .col-student .step-number { background: #10b981; color: white; }
+
+  .step-title {
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline;
+  }
+  .step-desc {
+    color: #94a3b8;
+    font-size: 0.88rem;
+    margin-top: 0.4rem;
+    padding-left: 2.3rem;
+  }
+  .step-current {
+    color: #64748b;
+    font-size: 0.78rem;
+    font-style: italic;
+    margin-top: 0.3rem;
+    padding-left: 2.3rem;
+  }
+
+  /* Flechas entre pasos */
+  .arrow-down {
+    text-align: center;
+    color: #475569;
+    font-size: 1.2rem;
+    margin: -0.2rem 0;
+  }
+
+  /* ── Sección refinamientos ── */
+  .refine-section {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .refine-section > h2 {
+    color: #f59e0b;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .refine-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.2rem;
+  }
+  .refine-card {
+    background: #1e293b;
+    border-radius: 14px;
+    padding: 1.4rem;
+    border: 1px solid #334155;
+    transition: all 0.2s;
+  }
+  .refine-card:hover {
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+  }
+  .refine-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+  }
+  .refine-card .icon {
+    font-size: 1.4rem;
+  }
+  .priority {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+  .priority-alta { background: #dc2626; color: white; }
+  .priority-media { background: #f59e0b; color: #1e293b; }
+  .priority-baja { background: #22c55e; color: #1e293b; }
+
+  .refine-card p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+  }
+  .refine-card .context {
+    color: #64748b;
+    font-size: 0.82rem;
+    font-style: italic;
+    border-top: 1px solid #334155;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 0.3rem;
+    margin-top: 0.3rem;
+  }
+  .tag-ux { background: #312e81; color: #a5b4fc; }
+  .tag-tech { background: #1e3a5f; color: #7dd3fc; }
+  .tag-pedagogy { background: #3f2d1e; color: #fbbf24; }
+  .tag-infra { background: #1a2e1a; color: #86efac; }
+
+  /* ── Escenario narrativo ── */
+  .scenario {
+    max-width: 1400px;
+    margin: 3rem auto 2rem;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .scenario h2 {
+    color: #4ade80;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+  .scenario-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .scenario-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #334155;
+  }
+  .scene {
+    position: relative;
+    margin-bottom: 1.2rem;
+    padding-left: 1.5rem;
+  }
+  .scene::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4ade80;
+    border: 2px solid #0f172a;
+  }
+  .scene-time {
+    color: #f59e0b;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .scene-text {
+    color: #cbd5e1;
+    font-size: 0.92rem;
+  }
+  .scene-pain {
+    color: #fb7185;
+    font-size: 0.82rem;
+    margin-top: 0.2rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>AprendeLocal — Flujo Real Profesor + Estudiante</h1>
+<p class="subtitle">Escuela Rural Los Laureles, Cunco, La Araucania</p>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ESCENARIO NARRATIVO -->
+<!-- ══════════════════════════════════════════ -->
+<div class="scenario">
+  <h2>Escenario real: La profesora Carmen y sus alumnos de 6to basico</h2>
+  <div class="scenario-timeline">
+    <div class="scene">
+      <div class="scene-time">Domingo en la tarde — Casa de Carmen</div>
+      <div class="scene-text">Carmen abre AprendeLocal en su celular con WiFi de casa. Quiere preparar un proyecto para la semana sobre el humedal cercano a la escuela.</div>
+      <div class="scene-pain">Dolor: Internet lento, pantalla chica, necesita que cargue rapido</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Domingo — Planificacion</div>
+      <div class="scene-text">Selecciona su escuela, ve el mapa, hace clic en "Vega Los Notros". Genera un proyecto STEM con Claude. Lo guarda en "Mis Proyectos". Expande la planificacion (sesiones, guia, fichas).</div>
+      <div class="scene-pain">Dolor: La expansion con Claude tarda 15-20 seg. No puede editar lo generado si algo no le gusta.</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Domingo — Compartir</div>
+      <div class="scene-text">Hace clic en "Compartir con estudiantes". Obtiene el codigo "HK7M2P". Copia el link y lo pega en el grupo de WhatsApp del curso.</div>
+      <div class="scene-pain">Dolor: No hay opcion de compartir directo a WhatsApp. Tiene que copiar manualmente.</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Lunes 8:30am — Sala de clases</div>
+      <div class="scene-text">Carmen proyecta la pantalla. Los alumnos abren AprendeLocal en las 4 tablets de la escuela (compartidas). Ingresan su nombre y el codigo.</div>
+      <div class="scene-pain">Dolor: Tablets compartidas = el localStorage se mezcla entre alumnos. No hay selector "Quien eres?" al volver.</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Lunes 9:00am — Terreno (humedal)</div>
+      <div class="scene-text">Los alumnos van al humedal en grupos. Marcan actividades completadas, escriben notas de campo sobre lo que observan.</div>
+      <div class="scene-pain">Dolor: Sin internet en el humedal. Todo se pierde si no hay offline. Las notas son solo texto (no fotos).</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Lunes 10:30am — Vuelta al aula</div>
+      <div class="scene-text">Regresan con WiFi. Carmen abre el dashboard de progreso para ver quien completo que. Los alumnos responden el quiz.</div>
+      <div class="scene-pain">Dolor: El progreso no se sincronizo offline. Carmen no ve notas de campo en su dashboard.</div>
+    </div>
+    <div class="scene">
+      <div class="scene-time">Semana siguiente</div>
+      <div class="scene-text">Carmen quiere reusar el proyecto con ajustes para otro curso. Tambien quiere imprimir las fichas para alumnos sin tablet.</div>
+      <div class="scene-pain">Dolor: No hay opcion de duplicar proyecto, ni exportar a PDF para imprimir.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- DIAGRAMA DE FLUJO EN 3 COLUMNAS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="flow-container">
+
+  <!-- COLUMNA PROFESOR -->
+  <div class="flow-column col-teacher">
+    <h2>Profesor/a</h2>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-title">Elige rol "Soy Profesor/a"</span>
+      <div class="step-desc">Selecciona su escuela de la lista</div>
+      <div class="step-current">Hoy: OK, funciona bien</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <span class="step-title">Explora el mapa</span>
+      <div class="step-desc">Ve puntos de interes cercanos a su escuela en el radio de 20km</div>
+      <div class="step-current">Hoy: OK, pero dificil hacer clic en puntos cercanos entre si</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <span class="step-title">Genera proyecto STEM</span>
+      <div class="step-desc">Claude genera titulo, objetivos, materiales, pasos alineados al curriculo</div>
+      <div class="step-current">Hoy: OK, pero sin opciones de curso/OA/duracion en sidebar</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <span class="step-title">Guarda en "Mis Proyectos"</span>
+      <div class="step-desc">El proyecto se guarda en localStorage + BD</div>
+      <div class="step-current">Hoy: OK, pero no puede editar ni duplicar</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">5</span>
+      <span class="step-title">Expande planificacion</span>
+      <div class="step-desc">Claude genera sesiones, guia docente, fichas alumno, rubrica</div>
+      <div class="step-current">Hoy: OK, tarda ~20s. No editable despues.</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">6</span>
+      <span class="step-title">Comparte codigo</span>
+      <div class="step-desc">Genera codigo de 6 letras + link directo</div>
+      <div class="step-current">Hoy: OK, pero solo copia manual</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">7</span>
+      <span class="step-title">Monitorea progreso</span>
+      <div class="step-desc">Ve tabla con estudiantes, actividades completadas, notas, quizzes</div>
+      <div class="step-current">Hoy: Basico. No ve detalle de notas ni quiz individual.</div>
+    </div>
+  </div>
+
+  <!-- COLUMNA CONEXION -->
+  <div class="flow-column col-connection">
+    <h2>Conexion</h2>
+
+    <div class="step" style="margin-top: 14.5rem;">
+      <span class="step-number">A</span>
+      <span class="step-title">Codigo de 6 caracteres</span>
+      <div class="step-desc">Ej: "HK7M2P" — se comparte por WhatsApp, pizarra, o voz</div>
+      <div class="step-current">Hoy: OK, funcional</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">B</span>
+      <span class="step-title">Link directo con ?code=</span>
+      <div class="step-desc">localhost:5174/?code=HK7M2P — entra directo como estudiante</div>
+      <div class="step-current">Hoy: OK, pero URL localhost no sirve fuera de la red local</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">C</span>
+      <span class="step-title">Inscripcion automatica</span>
+      <div class="step-desc">Al ingresar codigo, el estudiante queda inscrito en el proyecto</div>
+      <div class="step-current">Hoy: OK, funcional</div>
+    </div>
+    <div class="arrow-down" style="font-size: 2rem; color: #8b5cf6;">⟷</div>
+
+    <div class="step">
+      <span class="step-number">D</span>
+      <span class="step-title">Progreso sincronizado</span>
+      <div class="step-desc">Actividades completadas, notas y quizzes fluyen al dashboard del profesor</div>
+      <div class="step-current">Hoy: Solo online. Sin sincronizacion offline.</div>
+    </div>
+  </div>
+
+  <!-- COLUMNA ESTUDIANTE -->
+  <div class="flow-column col-student">
+    <h2>Estudiante</h2>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-title">Elige rol "Soy Estudiante"</span>
+      <div class="step-desc">O entra directo via link con codigo</div>
+      <div class="step-current">Hoy: OK</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <span class="step-title">Ingresa su nombre</span>
+      <div class="step-desc">Solo nombre, sin cuenta ni contrasena. Se guarda en localStorage.</div>
+      <div class="step-current">Hoy: OK, pero problematico en tablets compartidas</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <span class="step-title">Ingresa codigo del proyecto</span>
+      <div class="step-desc">Escribe el codigo de 6 letras que dio el profesor</div>
+      <div class="step-current">Hoy: OK, funcional</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <span class="step-title">Ve sus proyectos inscritos</span>
+      <div class="step-desc">Lista de proyectos con titulo y fecha de inscripcion</div>
+      <div class="step-current">Hoy: OK, pero sin progreso visual (% completado)</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">5</span>
+      <span class="step-title">Completa actividades</span>
+      <div class="step-desc">Checklist de actividades por sesion. Marca cuando termina.</div>
+      <div class="step-current">Hoy: OK, pero solo checkbox sin instrucciones</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">6</span>
+      <span class="step-title">Escribe notas de campo</span>
+      <div class="step-desc">Texto libre sobre sus observaciones en terreno</div>
+      <div class="step-current">Hoy: Solo texto. No fotos, no audio, no dibujos.</div>
+    </div>
+    <div class="arrow-down">▼</div>
+
+    <div class="step">
+      <span class="step-number">7</span>
+      <span class="step-title">Responde quiz</span>
+      <div class="step-desc">5 preguntas generadas por IA, resultado inmediato</div>
+      <div class="step-current">Hoy: OK, pero no puede reintentar ni ver retroalimentacion</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- ASPECTOS A REFINAR -->
+<!-- ══════════════════════════════════════════ -->
+<div class="refine-section">
+  <h2>Aspectos a Refinar</h2>
+
+  <div class="refine-grid">
+
+    <!-- 1 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">📱</span>
+        Tablets compartidas
+        <span class="priority priority-alta">Alta</span>
+      </h3>
+      <p>En escuelas rurales, 4-6 alumnos comparten una tablet. El localStorage guarda UN solo estudiante. Cuando otro alumno usa la misma tablet, sobrescribe la identidad del anterior.</p>
+      <p><strong>Solucion:</strong> Agregar pantalla "Quien eres?" al inicio con lista de estudiantes registrados en ese dispositivo. Permitir cambiar de perfil sin perder datos.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-tech">Frontend</span>
+      </div>
+      <div class="context">Carmen tiene 28 alumnos y 4 tablets. Cada tablet la usan 7 ninos diferentes durante la semana.</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">📡</span>
+        Modo offline / sin conexion
+        <span class="priority priority-alta">Alta</span>
+      </h3>
+      <p>Las actividades de campo se hacen en terreno SIN WiFi. Actualmente todo requiere conexion: marcar progreso, escribir notas, responder quiz. Si no hay internet, se pierde el trabajo.</p>
+      <p><strong>Solucion:</strong> Service Worker + IndexedDB para cachear proyecto/fichas y guardar progreso localmente. Sincronizar cuando vuelva la conexion.</p>
+      <div>
+        <span class="tag tag-tech">Frontend</span>
+        <span class="tag tag-infra">Infra</span>
+      </div>
+      <div class="context">El humedal "Vega Los Notros" esta a 300m de la escuela pero sin cobertura WiFi ni datos moviles.</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">✏️</span>
+        Edicion de planificacion generada
+        <span class="priority priority-alta">Alta</span>
+      </h3>
+      <p>Claude genera sesiones, guia y fichas, pero el profesor NO puede editarlas. Si una actividad no le sirve o quiere ajustar tiempos, no tiene forma de hacerlo.</p>
+      <p><strong>Solucion:</strong> Hacer editables los campos de texto (inline editing). Guardar versiones editadas en BD separado del original generado.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-pedagogy">Pedagogia</span>
+      </div>
+      <div class="context">Carmen sabe que sus alumnos necesitan mas tiempo en la actividad 2, pero no puede cambiar "20 min" por "35 min".</div>
+    </div>
+
+    <!-- 4 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">🖨️</span>
+        Exportar fichas a PDF / imprimir
+        <span class="priority priority-alta">Alta</span>
+      </h3>
+      <p>No todos los alumnos tienen acceso a tablet. Carmen necesita imprimir las fichas de trabajo para que todos puedan participar. Actualmente no hay exportacion.</p>
+      <p><strong>Solucion:</strong> Boton "Exportar PDF" en la vista de fichas. Formato limpio, blanco y negro, optimizado para impresion.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-tech">Frontend</span>
+      </div>
+      <div class="context">De 28 alumnos, solo 4 tendran tablet. Los otros 24 necesitan fichas impresas.</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">📸</span>
+        Notas de campo con fotos
+        <span class="priority priority-media">Media</span>
+      </h3>
+      <p>Las notas de campo son solo texto. En ciencias, la observacion visual es fundamental: fotos de plantas, animales, muestras de agua, fenomenos.</p>
+      <p><strong>Solucion:</strong> Permitir adjuntar fotos desde la camara de la tablet. Almacenar en Supabase Storage con thumbnail.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-infra">Infra</span>
+        <span class="tag tag-pedagogy">Pedagogia</span>
+      </div>
+      <div class="context">Un alumno encuentra un insecto en el humedal. Hoy solo puede escribir "vi un insecto verde". Con foto, el profesor puede identificarlo despues.</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">📊</span>
+        Dashboard de progreso enriquecido
+        <span class="priority priority-media">Media</span>
+      </h3>
+      <p>El dashboard del profesor muestra tabla basica con % y conteos. Falta ver las notas de campo de cada alumno, respuestas del quiz, y tendencias del grupo.</p>
+      <p><strong>Solucion:</strong> Vista expandible por alumno. Grafico de progreso del grupo. Exportar informe para la direccion de la escuela.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-pedagogy">Pedagogia</span>
+      </div>
+      <div class="context">Carmen necesita presentar un informe al jefe de UTP mostrando el impacto del proyecto STEM.</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">🔗</span>
+        Compartir directo a WhatsApp
+        <span class="priority priority-media">Media</span>
+      </h3>
+      <p>El codigo se copia al portapapeles, pero el profesor tiene que abrir WhatsApp, pegar, y enviar manualmente. WhatsApp es el canal #1 de comunicacion en escuelas rurales chilenas.</p>
+      <p><strong>Solucion:</strong> Boton "Compartir por WhatsApp" que use la Web Share API o el deeplink wa.me con mensaje pre-armado.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+      </div>
+      <div class="context">El 95% de la comunicacion escuela-apoderado en zonas rurales es por WhatsApp.</div>
+    </div>
+
+    <!-- 8 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">🗺️</span>
+        Marcadores del mapa: clustering
+        <span class="priority priority-media">Media</span>
+      </h3>
+      <p>Los puntos de interes cercanos se superponen y es dificil hacer clic en el correcto. En zonas con muchos recursos (rios + bosques + patrimonio), los marcadores se tapan.</p>
+      <p><strong>Solucion:</strong> Usar Leaflet.markercluster para agrupar puntos cercanos. Al hacer zoom, se separan. Tambien mejorar el hitbox de cada marcador.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-tech">Frontend</span>
+      </div>
+      <div class="context">Cerca de la escuela hay 5 puntos en un radio de 2km que se superponen en el zoom por defecto.</div>
+    </div>
+
+    <!-- 9 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">📋</span>
+        Duplicar y adaptar proyectos
+        <span class="priority priority-media">Media</span>
+      </h3>
+      <p>Carmen quiere usar el mismo proyecto del humedal con 5to basico, pero ajustando el nivel. Hoy tendria que generar todo de cero.</p>
+      <p><strong>Solucion:</strong> Boton "Duplicar proyecto" que copie todo y permita editar nivel, duracion, actividades antes de re-expandir.</p>
+      <div>
+        <span class="tag tag-ux">UX</span>
+        <span class="tag tag-pedagogy">Pedagogia</span>
+      </div>
+      <div class="context">Carmen ensena Ciencias a 5to y 6to. El mismo humedal sirve para ambos pero con distinta profundidad.</div>
+    </div>
+
+    <!-- 10 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">🔄</span>
+        Quiz: reintentos y retroalimentacion
+        <span class="priority priority-baja">Baja</span>
+      </h3>
+      <p>El quiz muestra resultado pero no explica POR QUE cada respuesta es correcta o incorrecta. Tampoco permite reintentar.</p>
+      <p><strong>Solucion:</strong> Mostrar explicacion por pregunta tras enviar. Permitir 1 reintento. Guardar mejor puntaje.</p>
+      <div>
+        <span class="tag tag-pedagogy">Pedagogia</span>
+        <span class="tag tag-tech">Frontend</span>
+      </div>
+      <div class="context">El quiz es formativo, no sumativo. El objetivo es que el alumno aprenda de sus errores.</div>
+    </div>
+
+    <!-- 11 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">⚡</span>
+        Velocidad de generacion con Claude
+        <span class="priority priority-baja">Baja</span>
+      </h3>
+      <p>Generar proyecto tarda ~8s. Expandir planificacion ~20s. En internet rural lento, esto se siente eterno. No hay indicador de progreso real.</p>
+      <p><strong>Solucion:</strong> Streaming de la respuesta de Claude (mostrar texto mientras se genera). Barra de progreso estimada. Pre-cachear expansiones populares.</p>
+      <div>
+        <span class="tag tag-tech">Frontend</span>
+        <span class="tag tag-infra">Infra</span>
+      </div>
+      <div class="context">La conexion WiFi de la escuela es de 5-10 Mbps compartida entre toda la escuela.</div>
+    </div>
+
+    <!-- 12 -->
+    <div class="refine-card">
+      <h3>
+        <span class="icon">🔒</span>
+        Autenticacion ligera para profesores
+        <span class="priority priority-baja">Baja</span>
+      </h3>
+      <p>Actualmente no hay autenticacion. Cualquiera puede entrar como profesor de cualquier escuela. Para MVP esta bien, pero para piloto real necesitamos al menos login basico.</p>
+      <p><strong>Solucion:</strong> Login con Google/correo via Supabase Auth. Solo para profesores. Estudiantes siguen sin cuenta (codigo + nombre).</p>
+      <div>
+        <span class="tag tag-infra">Infra</span>
+        <span class="tag tag-tech">Backend</span>
+      </div>
+      <div class="context">Para el piloto con 3 escuelas, necesitamos saber QUIEN es cada profesor para asociar sus proyectos.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- RESUMEN DE PRIORIDADES -->
+<!-- ══════════════════════════════════════════ -->
+<div style="max-width: 1400px; margin: 2.5rem auto 1rem;">
+  <h2 style="color: #4ade80; text-align: center; margin-bottom: 1rem; font-size: 1.4rem;">Resumen de prioridades</h2>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+    <div style="background: #1e293b; border-radius: 12px; padding: 1.2rem; border-top: 4px solid #dc2626;">
+      <div style="font-size: 2rem; margin-bottom: 0.3rem;">🔴</div>
+      <div style="color: #dc2626; font-weight: 700; font-size: 1.1rem;">Alta prioridad</div>
+      <div style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">
+        Tablets compartidas<br>
+        Modo offline<br>
+        Edicion de planificacion<br>
+        Exportar PDF
+      </div>
+      <div style="color: #64748b; font-size: 0.8rem; margin-top: 0.5rem;">Bloquean el uso real en escuelas</div>
+    </div>
+    <div style="background: #1e293b; border-radius: 12px; padding: 1.2rem; border-top: 4px solid #f59e0b;">
+      <div style="font-size: 2rem; margin-bottom: 0.3rem;">🟡</div>
+      <div style="color: #f59e0b; font-weight: 700; font-size: 1.1rem;">Media prioridad</div>
+      <div style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">
+        Fotos en notas<br>
+        Dashboard enriquecido<br>
+        Compartir a WhatsApp<br>
+        Clustering de mapa<br>
+        Duplicar proyectos
+      </div>
+      <div style="color: #64748b; font-size: 0.8rem; margin-top: 0.5rem;">Mejoran mucho la experiencia</div>
+    </div>
+    <div style="background: #1e293b; border-radius: 12px; padding: 1.2rem; border-top: 4px solid #22c55e;">
+      <div style="font-size: 2rem; margin-bottom: 0.3rem;">🟢</div>
+      <div style="color: #22c55e; font-weight: 700; font-size: 1.1rem;">Baja prioridad</div>
+      <div style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.5rem;">
+        Quiz con retroalimentacion<br>
+        Streaming de Claude<br>
+        Autenticacion de profesores
+      </div>
+      <div style="color: #64748b; font-size: 0.8rem; margin-top: 0.5rem;">Importantes pero no urgentes</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

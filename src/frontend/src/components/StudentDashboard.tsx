@@ -1,11 +1,13 @@
 /**
  * StudentDashboard.tsx — Panel principal del estudiante
  *
+ * REFINAMIENTO: Soporte multi-perfil para tablets compartidas.
  * Flujo:
- * 1. Si no tiene nombre → pedir nombre
- * 2. Si tiene pendingCode → inscribirse automáticamente
- * 3. Mostrar proyectos inscritos + campo para ingresar código
- * 4. Al seleccionar un proyecto → StudentProjectView
+ * 1. Si hay perfiles en el dispositivo → "¿Quién eres?" (selector)
+ * 2. Si no hay perfil activo → crear nuevo
+ * 3. Si tiene pendingCode → inscribirse automáticamente
+ * 4. Mostrar proyectos inscritos + campo para ingresar código
+ * 5. Al seleccionar un proyecto → StudentProjectView
  */
 import { useState, useEffect } from "react";
 import type { StudentEnrollment } from "../types";
@@ -13,6 +15,13 @@ import {
   getStudentId,
   getStudentName,
   setStudentName as saveStudentName,
+  getAllProfiles,
+  getActiveProfile,
+  setActiveProfile,
+  createProfile,
+  logoutActiveProfile,
+  removeProfile,
+  type StudentProfile,
 } from "../utils/studentStorage";
 import {
   registerStudent,
@@ -33,8 +42,14 @@ export default function StudentDashboard({
   onCodeUsed,
   onBack,
 }: Props) {
-  const [name, setName] = useState(getStudentName() || "");
-  const [registered, setRegistered] = useState(!!getStudentName());
+  // Multi-perfil
+  const [profiles, setProfiles] = useState<StudentProfile[]>(getAllProfiles());
+  const [activeProfile, setActiveProfileState] = useState<StudentProfile | null>(getActiveProfile());
+  const [showProfileSelector, setShowProfileSelector] = useState(false);
+  const [showNewProfile, setShowNewProfile] = useState(false);
+
+  const [name, setName] = useState("");
+  const [registered, setRegistered] = useState(false);
   const [enrollments, setEnrollments] = useState<StudentEnrollment[]>([]);
   const [codeInput, setCodeInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,30 +57,72 @@ export default function StudentDashboard({
   const [activeEnrollment, setActiveEnrollment] =
     useState<StudentEnrollment | null>(null);
 
-  const studentId = getStudentId();
+  // Al montar, decidir qué pantalla mostrar
+  useEffect(() => {
+    const active = getActiveProfile();
+    const allProfiles = getAllProfiles();
+
+    if (active) {
+      // Tiene perfil activo → directo al dashboard
+      setActiveProfileState(active);
+      setRegistered(true);
+    } else if (allProfiles.length > 0) {
+      // Hay perfiles pero ninguno activo → "¿Quién eres?"
+      setShowProfileSelector(true);
+    } else {
+      // Sin perfiles → crear nuevo
+      setShowNewProfile(true);
+    }
+  }, []);
 
   // Al registrarse, cargar proyectos
   useEffect(() => {
-    if (registered) {
+    if (registered && activeProfile) {
       loadProjects();
     }
-  }, [registered]);
+  }, [registered, activeProfile]);
 
   // Si hay pendingCode, intentar inscribirse tras registro
   useEffect(() => {
-    if (registered && pendingCode) {
+    if (registered && pendingCode && activeProfile) {
       handleEnrollWithCode(pendingCode);
       onCodeUsed();
     }
-  }, [registered, pendingCode]);
+  }, [registered, pendingCode, activeProfile]);
 
   async function loadProjects() {
     try {
-      const list = await fetchStudentProjects(studentId);
+      const list = await fetchStudentProjects(getStudentId());
       setEnrollments(list);
     } catch {
-      // Sin proyectos aún
+      // Sin proyectos aún — cargar desde cache offline
+      const cached = localStorage.getItem(`offline_enrollments_${getStudentId()}`);
+      if (cached) {
+        try { setEnrollments(JSON.parse(cached)); } catch { /* noop */ }
+      }
     }
+  }
+
+  // Guardar enrollments en cache local para offline
+  useEffect(() => {
+    if (enrollments.length > 0) {
+      localStorage.setItem(
+        `offline_enrollments_${getStudentId()}`,
+        JSON.stringify(enrollments)
+      );
+    }
+  }, [enrollments]);
+
+  function handleSelectProfile(profile: StudentProfile) {
+    setActiveProfile(profile.id);
+    setActiveProfileState(profile);
+    setShowProfileSelector(false);
+    setRegistered(true);
+  }
+
+  function handleStartNewProfile() {
+    setShowProfileSelector(false);
+    setShowNewProfile(true);
   }
 
   async function handleRegister() {
@@ -73,30 +130,54 @@ export default function StudentDashboard({
     setLoading(true);
     setError(null);
     try {
-      saveStudentName(name.trim());
-      await registerStudent(studentId, name.trim());
+      const profile = createProfile(name.trim());
+      setActiveProfileState(profile);
+      setProfiles(getAllProfiles());
+      await registerStudent(profile.id, name.trim());
+      setShowNewProfile(false);
       setRegistered(true);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al registrarse");
+      // Registrar localmente aunque falle la API (modo offline)
+      const profile = getActiveProfile();
+      if (profile) {
+        setActiveProfileState(profile);
+        setProfiles(getAllProfiles());
+        setShowNewProfile(false);
+        setRegistered(true);
+      } else {
+        setError(err instanceof Error ? err.message : "Error al registrarse");
+      }
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSwitchProfile() {
+    logoutActiveProfile();
+    setActiveProfileState(null);
+    setRegistered(false);
+    setEnrollments([]);
+    setActiveEnrollment(null);
+    setProfiles(getAllProfiles());
+    setShowProfileSelector(true);
+  }
+
+  function handleRemoveProfile(profileId: string) {
+    removeProfile(profileId);
+    setProfiles(getAllProfiles());
   }
 
   async function handleEnrollWithCode(code: string) {
     setLoading(true);
     setError(null);
     try {
-      // Verificar que el código existe
       await lookupShareCode(code);
-      // Inscribirse
-      await enrollStudent(studentId, code);
-      // Recargar proyectos
+      await enrollStudent(getStudentId(), code);
       await loadProjects();
       setCodeInput("");
     } catch (err: unknown) {
       setError(
-        err instanceof Error ? err.message : "Código no válido"
+        err instanceof Error ? err.message : "Codigo no valido"
       );
     } finally {
       setLoading(false);
@@ -116,8 +197,50 @@ export default function StudentDashboard({
     );
   }
 
-  // Paso 1: Pedir nombre si no está registrado
-  if (!registered) {
+  // ── Pantalla 1: "¿Quién eres?" (selector de perfiles) ──
+  if (showProfileSelector) {
+    return (
+      <div className="student-dashboard">
+        <div className="student-register">
+          <div className="student-register-icon">📱</div>
+          <h1>¿Quien eres?</h1>
+          <p>Selecciona tu nombre para continuar</p>
+
+          <div className="profile-selector">
+            {profiles.map((profile) => (
+              <div key={profile.id} className="profile-option">
+                <button
+                  className="profile-btn"
+                  onClick={() => handleSelectProfile(profile)}
+                >
+                  <span className="profile-avatar">🧑‍🔬</span>
+                  <span className="profile-name">{profile.name}</span>
+                </button>
+                <button
+                  className="profile-remove"
+                  onClick={() => handleRemoveProfile(profile.id)}
+                  title="Eliminar perfil"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <button className="btn-new-profile" onClick={handleStartNewProfile}>
+            + Soy alguien nuevo
+          </button>
+
+          <button className="back-to-role" onClick={onBack}>
+            ← Cambiar rol
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Pantalla 2: Crear nuevo perfil ──
+  if (showNewProfile || !registered) {
     return (
       <div className="student-dashboard">
         <div className="student-register">
@@ -143,6 +266,17 @@ export default function StudentDashboard({
             </button>
           </div>
           {error && <p className="student-error">{error}</p>}
+          {profiles.length > 0 && (
+            <button
+              className="btn-secondary back-to-profiles"
+              onClick={() => {
+                setShowNewProfile(false);
+                setShowProfileSelector(true);
+              }}
+            >
+              ← Volver a perfiles
+            </button>
+          )}
           <button className="back-to-role" onClick={onBack}>
             ← Cambiar rol
           </button>
@@ -151,7 +285,7 @@ export default function StudentDashboard({
     );
   }
 
-  // Paso 2: Dashboard principal
+  // ── Pantalla 3: Dashboard principal ──
   return (
     <div className="student-dashboard">
       <div className="student-topbar">
@@ -162,16 +296,21 @@ export default function StudentDashboard({
             <span className="student-role-label">Estudiante</span>
           </div>
         </div>
-        <button className="btn-change-school" onClick={onBack}>
-          Cambiar rol
-        </button>
+        <div className="student-topbar-actions">
+          <button className="btn-switch-profile" onClick={handleSwitchProfile}>
+            👤 Cambiar perfil
+          </button>
+          <button className="btn-change-school" onClick={onBack}>
+            Cambiar rol
+          </button>
+        </div>
       </div>
 
       <div className="student-content">
         {/* Ingresar código */}
         <div className="student-code-section">
           <h3>Unirse a un proyecto</h3>
-          <p>Ingresa el código que te dio tu profesor/a</p>
+          <p>Ingresa el codigo que te dio tu profesor/a</p>
           <div className="student-code-row">
             <input
               type="text"
@@ -202,7 +341,7 @@ export default function StudentDashboard({
             <div className="student-empty">
               <div className="student-empty-icon">📚</div>
               <p>
-                Aún no estás inscrito en ningún proyecto. Pide un código a tu
+                Aun no estas inscrito en ningun proyecto. Pide un codigo a tu
                 profesor/a para comenzar.
               </p>
             </div>

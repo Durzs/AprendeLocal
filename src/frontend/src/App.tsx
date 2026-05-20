@@ -1,98 +1,53 @@
 /**
- * App.tsx — Punto de entrada de AprendeLocal
+ * App.tsx — Punto de entrada unificado de AprendeLocal
  *
- * Máquina de estados:
- * ┌─────────────────┐
- * │  Sin rol         │ → RoleSelector
- * ├─────────────────┤
- * │  Profesor        │ → SchoolSelector → SchoolDashboard
- * ├─────────────────┤
- * │  Estudiante      │ → StudentCodeEntry / SchoolSelector → StudentDashboard
- * └─────────────────┘
+ * Rutas:
+ * /              → Landing page (web-aprende)
+ * /plataforma    → Herramienta STEM (mapa, proyectos, roles)
+ * /cursos        → Catálogo de cursos
+ * /cursos/:id    → Curso individual
+ * /makerspaces   → Makerspaces
+ * /comunidades   → Comunidades
+ * /perfil        → Perfil del usuario
+ * /entrar        → Login
+ * /cadastrar     → Registro
  */
-import { useState, useEffect } from "react";
-import RoleSelector from "./components/RoleSelector";
-import SchoolSelector from "./components/SchoolSelector";
-import SchoolDashboard from "./components/SchoolDashboard";
-import StudentDashboard from "./components/StudentDashboard";
-import type { School, UserRole } from "./types";
-import { getSavedRole, clearRole } from "./utils/studentStorage";
-import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./shared/components/layout/Layout";
+import HomePage from "./modules/home/pages/HomePage";
+import PlataformaApp from "./PlataformaApp";
+import MakerspacesPage from "./modules/makerspaces/pages/MakerspacesPage";
+import LoginPage from "./modules/auth/pages/LoginPage";
+import RegisterPage from "./modules/auth/pages/RegisterPage";
+import ProfilePage from "./modules/profile/pages/ProfilePage";
+import CoursesCatalogPage from "./modules/courses/pages/CoursesCatalogPage";
+import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
+import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
+import "./shared/i18n";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "makerspaces", element: <MakerspacesPage /> },
+      { path: "entrar", element: <LoginPage /> },
+      { path: "cadastrar", element: <RegisterPage /> },
+      { path: "perfil", element: <ProfilePage /> },
+      { path: "cursos", element: <CoursesCatalogPage /> },
+      { path: "cursos/:cursoId", element: <CourseLearningPage /> },
+      { path: "comunidades", element: <CommunitiesPage /> },
+    ],
+  },
+  {
+    // La herramienta STEM vive fuera del layout de web-aprende
+    // para mantener su propio CSS y estilo dark
+    path: "/plataforma",
+    element: <PlataformaApp />,
+  },
+]);
 
 export default function App() {
-  // ── Estado principal ──
-  const [role, setRole] = useState<UserRole | null>(null);
-  const [school, setSchool] = useState<School | null>(null);
-  // Código compartido ingresado por estudiante (opcional)
-  const [pendingCode, setPendingCode] = useState<string | null>(null);
-
-  // Al montar, restaurar rol guardado y leer ?code= de la URL
-  useEffect(() => {
-    const saved = getSavedRole();
-    if (saved) setRole(saved);
-
-    // Si la URL tiene ?code=ABC123, entrar directo como estudiante
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code) {
-      setRole("estudiante");
-      setPendingCode(code.toUpperCase());
-      // Limpiar la URL para que no quede visible el código
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
-
-  // Callback cuando se elige rol en el selector
-  const handleSelectRole = (selectedRole: UserRole, shareCode?: string) => {
-    setRole(selectedRole);
-    if (shareCode) setPendingCode(shareCode);
-  };
-
-  // Cambiar rol (volver al inicio)
-  const handleChangeRole = () => {
-    clearRole();
-    setRole(null);
-    setSchool(null);
-    setPendingCode(null);
-  };
-
-  // ── Renderizado según estado ──
-
-  // 1. Sin rol → mostrar selector de rol
-  if (!role) {
-    return <RoleSelector onSelectRole={handleSelectRole} />;
-  }
-
-  // 2. Profesor sin escuela → selector de escuela
-  if (role === "profesor" && !school) {
-    return (
-      <SchoolSelector
-        onSelectSchool={setSchool}
-        onBack={handleChangeRole}
-      />
-    );
-  }
-
-  // 3. Profesor con escuela → dashboard del profesor
-  if (role === "profesor" && school) {
-    return (
-      <SchoolDashboard
-        school={school}
-        onChangeSchool={() => setSchool(null)}
-      />
-    );
-  }
-
-  // 4. Estudiante → dashboard del estudiante
-  if (role === "estudiante") {
-    return (
-      <StudentDashboard
-        pendingCode={pendingCode}
-        onCodeUsed={() => setPendingCode(null)}
-        onBack={handleChangeRole}
-      />
-    );
-  }
-
-  return null;
+  return <RouterProvider router={router} />;
 }
