@@ -79,7 +79,7 @@ export default function CountrySection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 max-w-4xl md:mb-16">
-          <h2 className="text-4xl font-semibold leading-[0.95] tracking-[-0.055em] text-[#111217] md:text-6xl">
+          <h2 className="text-3xl font-semibold leading-[0.95] tracking-[-0.055em] text-[#111217] sm:text-4xl md:text-6xl">
             {t("home.country.title")}
           </h2>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">

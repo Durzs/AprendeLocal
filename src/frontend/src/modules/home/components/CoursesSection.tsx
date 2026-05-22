@@ -18,7 +18,7 @@ export default function CoursesSection({ courses, loading, error }: CoursesSecti
         {/* Header */}
         <div className="mb-12 flex flex-col justify-between gap-6 md:mb-16 md:flex-row md:items-end">
           <div className="max-w-3xl">
-            <h2 className="text-4xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] md:text-6xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] sm:text-4xl md:text-6xl">
               {t("home.courses.title")}
             </h2>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">

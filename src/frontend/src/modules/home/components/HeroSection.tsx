@@ -29,7 +29,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   }, [fullTitle]);
 
   return (
-    <section className="relative isolate min-h-[720px] overflow-hidden px-4 pb-20 pt-24 text-center md:min-h-[860px] md:pb-28 md:pt-32">
+    <section className="relative isolate min-h-[560px] overflow-hidden px-4 pb-16 pt-20 text-center sm:min-h-[720px] sm:pb-20 sm:pt-24 md:min-h-[860px] md:pb-28 md:pt-32">
       {/* Background illustration */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat"
@@ -48,7 +48,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* Title with typewriter effect */}
-        <h1 className="mx-auto max-w-5xl text-5xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] md:text-7xl lg:text-8xl">
+        <h1 className="mx-auto max-w-5xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
           {displayedText}
           <span className="ml-1 inline-block animate-pulse text-blue-600">|</span>
         </h1>

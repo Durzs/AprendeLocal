@@ -10,7 +10,7 @@ export default function CallToAction({ onStart }: CallToActionProps) {
   return (
     <section className="bg-white px-4 py-20 md:py-28">
       <div className="mx-auto max-w-4xl text-center">
-        <h2 className="text-4xl font-semibold tracking-[-0.055em] text-[#111217] md:text-6xl leading-[0.95]">
+        <h2 className="text-3xl font-semibold tracking-[-0.055em] text-[#111217] sm:text-4xl md:text-6xl leading-[0.95]">
           {t("home.cta.title")}
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
