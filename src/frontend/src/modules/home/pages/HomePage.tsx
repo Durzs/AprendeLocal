@@ -27,7 +27,7 @@ export default function HomePage() {
 
       const { data, error } = await supabase
         .from("courses")
-        .select("id, titulo, categoria, nivel, imagen_url, descripcion")
+        .select("id, titulo, categoria, nivel, url_img, descricao")
         .order("id", { ascending: true })
         .limit(3);
 

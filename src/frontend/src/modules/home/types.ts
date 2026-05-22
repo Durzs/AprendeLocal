@@ -5,8 +5,8 @@ export type Course = {
   titulo: TranslatedField;
   categoria: TranslatedField;
   nivel: TranslatedField;
-  imagen_url?: string;
-  descripcion?: TranslatedField;
+  url_img?: string;
+  descricao?: TranslatedField;
 };
 
 export type HeroSectionProps = {

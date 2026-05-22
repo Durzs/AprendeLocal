@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import type { Course } from "../types";
+import { pickLang } from "../utils";
 
 interface CoursesSectionProps {
   courses: Course[];
@@ -10,7 +11,8 @@ interface CoursesSectionProps {
 }
 
 export default function CoursesSection({ courses, loading, error }: CoursesSectionProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = (i18n.resolvedLanguage?.slice(0, 2) || "pt") as "pt" | "en" | "es";
 
   return (
     <section className="bg-[#f7f8fb] py-20 md:py-28">
@@ -51,10 +53,10 @@ export default function CoursesSection({ courses, loading, error }: CoursesSecti
                 key={course.id}
                 className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
               >
-                {course.imagen_url ? (
+                {course.url_img ? (
                   <img
-                    src={course.imagen_url}
-                    alt={course.titulo}
+                    src={course.url_img}
+                    alt={pickLang(course.titulo, lang)}
                     className="h-44 w-full object-cover"
                   />
                 ) : (
@@ -65,18 +67,18 @@ export default function CoursesSection({ courses, loading, error }: CoursesSecti
                 <div className="p-5">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                      {course.categoria || "STEM"}
+                      {pickLang(course.categoria, lang) || "STEM"}
                     </span>
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
-                      {course.nivel || "Media"}
+                      {pickLang(course.nivel, lang) || "Media"}
                     </span>
                   </div>
                   <h3 className="mb-2 text-lg font-semibold leading-snug text-slate-950">
-                    {course.titulo}
+                    {pickLang(course.titulo, lang)}
                   </h3>
-                  {course.descripcion && (
+                  {course.descricao && (
                     <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">
-                      {course.descripcion}
+                      {pickLang(course.descricao, lang)}
                     </p>
                   )}
                 </div>
