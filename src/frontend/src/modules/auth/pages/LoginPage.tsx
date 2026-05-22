@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../../../shared/lib/supabaseClient";
@@ -15,7 +15,11 @@ type Particle = {
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
+
+  // Si el usuario fue redirigido desde una ruta protegida, volver allá después del login
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
 
   const emailRef = useRef<HTMLInputElement>(null);
   const senhaRef = useRef<HTMLInputElement>(null);
@@ -62,7 +66,7 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("token", data.session.access_token);
-      navigate("/");
+      navigate(from, { replace: true });
     } catch (err: any) {
       alert(err?.message || "Erro");
     } finally {

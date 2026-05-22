@@ -279,6 +279,11 @@
       "subtitle": "Join thousands of students applying STEM in real projects through maker culture!"
     }
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to home"
+  },
   "home": {
     "hero": {
       "title": "Learn STEM in an adaptive and gamified way",
