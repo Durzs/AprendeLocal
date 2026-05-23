@@ -3,26 +3,26 @@
  *
  * Rutas:
  * /              → Landing page (pública)
- * /plataforma    → Herramienta STEM (mapa, proyectos, roles)
- * /cursos        → Catálogo de cursos (público)
+ * /plataforma    → Plataforma unificada (cursos + mapa + makerspaces)
+ * /plataforma-legacy → Herramienta STEM legacy (mapa, proyectos, roles)
+ * /cursos        → Redirige a /plataforma?tab=courses
+ * /makerspaces   → Redirige a /plataforma?tab=makerspaces
  * /cursos/:id    → Curso individual (requiere auth)
- * /makerspaces   → Makerspaces (público)
  * /comunidades   → Comunidades (requiere auth)
  * /perfil        → Perfil del usuario (requiere auth)
  * /entrar        → Login
  * /cadastrar     → Registro
  * *              → 404
  */
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
 import HomePage from "./modules/home/pages/HomePage";
+import PlatformPage from "./modules/platform/pages/PlatformPage";
 import PlataformaApp from "./PlataformaApp";
-import MakerspacesPage from "./modules/makerspaces/pages/MakerspacesPage";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
-import CoursesCatalogPage from "./modules/courses/pages/CoursesCatalogPage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
 import NotFoundPage from "./modules/errors/pages/NotFoundPage";
@@ -34,10 +34,16 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "makerspaces", element: <MakerspacesPage /> },
       { path: "entrar", element: <LoginPage /> },
       { path: "cadastrar", element: <RegisterPage /> },
-      { path: "cursos", element: <CoursesCatalogPage /> },
+      { path: "registro", element: <RegisterPage /> },
+
+      /* ── Plataforma unificada ── */
+      { path: "plataforma", element: <PlatformPage /> },
+
+      /* ── Redirects de rutas antiguas ── */
+      { path: "cursos", element: <Navigate to="/plataforma?tab=courses" replace /> },
+      { path: "makerspaces", element: <Navigate to="/plataforma?tab=makerspaces" replace /> },
 
       /* ── Rutas protegidas ── */
       {
@@ -70,7 +76,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/plataforma",
+    path: "/plataforma-legacy",
     element: <PlataformaApp />,
   },
 ]);

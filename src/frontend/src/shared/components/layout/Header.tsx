@@ -49,19 +49,39 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 md:flex">
-            {user && (
-              <Link
-                to="/plataforma"
-                className={[
-                  "rounded-full px-4 py-2 text-sm font-medium transition",
-                  isActive("/plataforma")
-                    ? "bg-slate-100 text-slate-950"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-                ].join(" ")}
-              >
-                Plataforma STEM
-              </Link>
-            )}
+            <Link
+              to="/plataforma?tab=courses"
+              className={[
+                "rounded-full px-4 py-2 text-sm font-medium transition",
+                location.pathname === "/plataforma" && location.search.includes("courses")
+                  ? "bg-slate-100 text-slate-950"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+              ].join(" ")}
+            >
+              {t("header.nav.courses")}
+            </Link>
+            <Link
+              to="/plataforma?tab=map"
+              className={[
+                "rounded-full px-4 py-2 text-sm font-medium transition",
+                location.pathname === "/plataforma" && location.search.includes("map")
+                  ? "bg-slate-100 text-slate-950"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+              ].join(" ")}
+            >
+              {t("header.nav.makerspaces").replace("Makerspaces", "Mapa STEM")}
+            </Link>
+            <Link
+              to="/plataforma?tab=makerspaces"
+              className={[
+                "rounded-full px-4 py-2 text-sm font-medium transition",
+                location.pathname === "/plataforma" && location.search.includes("makerspaces")
+                  ? "bg-slate-100 text-slate-950"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+              ].join(" ")}
+            >
+              Makerspaces
+            </Link>
           </nav>
 
           {/* Right side */}
@@ -163,39 +183,38 @@ export default function Header() {
               <LanguageSwitcher />
             </div>
 
+            <Link
+              to="/plataforma?tab=courses"
+              onClick={closeMobile}
+              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              {t("header.nav.courses")}
+            </Link>
+            <Link
+              to="/plataforma?tab=map"
+              onClick={closeMobile}
+              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              Mapa STEM
+            </Link>
+            <Link
+              to="/plataforma?tab=makerspaces"
+              onClick={closeMobile}
+              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            >
+              Makerspaces
+            </Link>
             {user && (
-              <>
-                <Link
-                  to="/plataforma"
-                  onClick={closeMobile}
-                  className={[
-                    "rounded-xl px-4 py-3 text-sm font-medium transition",
-                    isActive("/plataforma") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
-                  ].join(" ")}
-                >
-                  Plataforma STEM
-                </Link>
-                <Link
-                  to="/cursos"
-                  onClick={closeMobile}
-                  className={[
-                    "rounded-xl px-4 py-3 text-sm font-medium transition",
-                    isActive("/cursos") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
-                  ].join(" ")}
-                >
-                  {t("header.nav.courses")}
-                </Link>
-                <Link
-                  to="/perfil"
-                  onClick={closeMobile}
-                  className={[
-                    "rounded-xl px-4 py-3 text-sm font-medium transition",
-                    isActive("/perfil") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
-                  ].join(" ")}
-                >
-                  {t("header.nav.profile")}
-                </Link>
-              </>
+              <Link
+                to="/perfil"
+                onClick={closeMobile}
+                className={[
+                  "rounded-xl px-4 py-3 text-sm font-medium transition",
+                  isActive("/perfil") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
+                ].join(" ")}
+              >
+                {t("header.nav.profile")}
+              </Link>
             )}
 
             {!user && (

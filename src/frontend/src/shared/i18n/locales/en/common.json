@@ -444,5 +444,34 @@
         "cta": "Explore Brazil"
       }
     }
+  },
+  "platform": {
+    "title": "Platform",
+    "subtitle": "Courses, STEM map and makerspaces in one place",
+    "tabs": {
+      "courses": "Courses",
+      "map": "STEM Map",
+      "makerspaces": "Makerspaces"
+    },
+    "map": {
+      "selectSchool": "Select a school",
+      "searchSchool": "Search school by name or commune...",
+      "allCommunes": "All",
+      "students": "{{count}} students",
+      "radius": "Radius",
+      "km": "km",
+      "loading": "Loading schools...",
+      "loadingPois": "Searching for points of interest...",
+      "poisFound": "{{count}} points of interest found",
+      "noPois": "No points found in this radius.",
+      "noSchools": "No schools found.",
+      "explore": "Explore projects",
+      "poiTypes": {
+        "natural": "Natural",
+        "geological": "Geological",
+        "hydrological": "Hydrological",
+        "cultural": "Cultural"
+      }
+    }
   }
 }

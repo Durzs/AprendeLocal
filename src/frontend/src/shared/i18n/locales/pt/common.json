@@ -444,5 +444,34 @@
         "cta": "Explorar Brasil"
       }
     }
+  },
+  "platform": {
+    "title": "Plataforma",
+    "subtitle": "Cursos, mapa STEM e makerspaces em um só lugar",
+    "tabs": {
+      "courses": "Cursos",
+      "map": "Mapa STEM",
+      "makerspaces": "Makerspaces"
+    },
+    "map": {
+      "selectSchool": "Selecione uma escola",
+      "searchSchool": "Buscar escola por nome ou comuna...",
+      "allCommunes": "Todas",
+      "students": "{{count}} estudantes",
+      "radius": "Raio",
+      "km": "km",
+      "loading": "Carregando escolas...",
+      "loadingPois": "Buscando pontos de interesse...",
+      "poisFound": "{{count}} pontos de interesse encontrados",
+      "noPois": "Nenhum ponto encontrado neste raio.",
+      "noSchools": "Nenhuma escola encontrada.",
+      "explore": "Explorar projetos",
+      "poiTypes": {
+        "natural": "Natural",
+        "geological": "Geológico",
+        "hydrological": "Hidrológico",
+        "cultural": "Cultural"
+      }
+    }
   }
 }

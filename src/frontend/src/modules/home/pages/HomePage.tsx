@@ -64,11 +64,11 @@ export default function HomePage() {
   }, []);
 
   const goStart = () => {
-    navigate(isLogged ? "/cursos" : "/entrar");
+    navigate("/plataforma?tab=courses");
   };
 
   const goExplore = () => {
-    navigate("/makerspaces");
+    navigate("/plataforma?tab=makerspaces");
   };
 
   return (
