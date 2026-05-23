@@ -292,6 +292,9 @@
       "ctaExplore": "Ver Makerspaces",
       "ctaStartAria": "Explorar cursos disponibles",
       "ctaExploreAria": "Ver makerspaces cercanos",
+      "ctaContact": "Contáctanos",
+      "ctaSignup": "Crear cuenta gratis",
+      "contactLine": "¿Quieres llevar AprendeLocal a tu escuela o comunidad?",
       "steps": {
         "explore": {
           "label": "Explora",

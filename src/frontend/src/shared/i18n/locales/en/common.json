@@ -292,6 +292,9 @@
       "ctaExplore": "View Makerspaces",
       "ctaStartAria": "Explore available courses",
       "ctaExploreAria": "View nearby makerspaces",
+      "ctaContact": "Contact Us",
+      "ctaSignup": "Create free account",
+      "contactLine": "Want to bring AprendeLocal to your school or community?",
       "steps": {
         "explore": {
           "label": "Explore",
