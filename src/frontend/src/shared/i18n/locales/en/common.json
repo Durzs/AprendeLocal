@@ -286,12 +286,29 @@
   },
   "home": {
     "hero": {
-      "title": "Learn STEM in an adaptive and gamified way",
-      "subtitle": "Connect theory and practice through maker culture. Learn STEM by solving real problems in local makerspaces with an adaptive and gamified methodology.",
-      "ctaStart": "Start Now",
-      "ctaExplore": "Explore Makerspaces",
-      "ctaStartAria": "Start now",
-      "ctaExploreAria": "Explore Makerspaces"
+      "title": "Your territory is your best STEM lab",
+      "subtitle": "Discover how the rivers, forests and communities around you become science, technology and engineering projects. Learn by creating real solutions for your territory.",
+      "ctaStart": "Explore Courses",
+      "ctaExplore": "View Makerspaces",
+      "ctaStartAria": "Explore available courses",
+      "ctaExploreAria": "View nearby makerspaces",
+      "steps": {
+        "explore": {
+          "label": "Explore",
+          "title": "Know your territory",
+          "desc": "Identify ecosystems, communities and local challenges as a starting point for your projects."
+        },
+        "learn": {
+          "label": "Learn",
+          "title": "Connect with STEM",
+          "desc": "Courses that bridge science, technology and engineering with the real problems around you."
+        },
+        "create": {
+          "label": "Create",
+          "title": "Build solutions",
+          "desc": "Design prototypes in local makerspaces that positively impact your community."
+        }
+      }
     },
     "features": {
       "title": "Why choose AprendeLocal?",

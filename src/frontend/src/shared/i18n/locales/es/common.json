@@ -286,12 +286,29 @@
   },
   "home": {
     "hero": {
-      "title": "Aprende STEM de forma adaptativa y gamificada",
-      "subtitle": "Conecta teoría y práctica a través de la cultura maker. Aprende STEM resolviendo problemas reales en makerspaces locales con una metodología adaptativa y gamificada.",
-      "ctaStart": "Comenzar Ahora",
-      "ctaExplore": "Explorar Makerspaces",
-      "ctaStartAria": "Comenzar ahora",
-      "ctaExploreAria": "Explorar Makerspaces"
+      "title": "Tu territorio es tu mejor laboratorio STEM",
+      "subtitle": "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio.",
+      "ctaStart": "Explorar Cursos",
+      "ctaExplore": "Ver Makerspaces",
+      "ctaStartAria": "Explorar cursos disponibles",
+      "ctaExploreAria": "Ver makerspaces cercanos",
+      "steps": {
+        "explore": {
+          "label": "Explora",
+          "title": "Conoce tu territorio",
+          "desc": "Identifica ecosistemas, comunidades y desafíos locales como punto de partida para tus proyectos."
+        },
+        "learn": {
+          "label": "Aprende",
+          "title": "Conecta con STEM",
+          "desc": "Cursos que unen ciencia, tecnología e ingeniería con los problemas reales de tu entorno."
+        },
+        "create": {
+          "label": "Crea",
+          "title": "Construye soluciones",
+          "desc": "Diseña prototipos en makerspaces locales que impacten positivamente tu comunidad."
+        }
+      }
     },
     "features": {
       "title": "¿Por qué elegir AprendeLocal?",
