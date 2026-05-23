@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronRight, CheckCircle2, Lock, Circle, ArrowLeft } from "lucide-react";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { pickLang } from "../utils";
@@ -10,9 +11,6 @@ import {
   completeMaterialFromSupabase,
 } from "../services/courseProgress";
 import { BadgeModal } from "../components/BadgeModal";
-import { ErrorScreen } from "../components/ErrorScreen";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { NotFoundScreen } from "../components/NotFoundScreen";
 import type { Course, TranslatedField } from "../types";
 import GeminiAIChat from "../../ai/components/GeminiAIChat";
 
@@ -56,18 +54,11 @@ function resolveCourse(course: Course | null, lang: string) {
 }
 
 function resolveModule(mod: ModuleItem, lang: string) {
-  return {
-    ...mod,
-    title: pickLang(mod.title, lang),
-  };
+  return { ...mod, title: pickLang(mod.title, lang) };
 }
 
 function resolveMaterial(mat: MaterialItem, lang: string) {
-  return {
-    ...mat,
-    title: pickLang(mat.title, lang),
-    content: pickLang(mat.content, lang),
-  };
+  return { ...mat, title: pickLang(mat.title, lang), content: pickLang(mat.content, lang) };
 }
 
 export default function CourseLearningPage() {
@@ -106,11 +97,7 @@ export default function CourseLearningPage() {
   const unlockedSet = useMemo(() => new Set(unlockedIds.map(String)), [unlockedIds]);
 
   const courseView = useMemo(() => resolveCourse(course, lang), [course, lang]);
-
-  const modulesView = useMemo(
-    () => (modules || []).map((m) => resolveModule(m, lang)),
-    [modules, lang]
-  );
+  const modulesView = useMemo(() => (modules || []).map((m) => resolveModule(m, lang)), [modules, lang]);
 
   const materialsByModuleView = useMemo(() => {
     const out: Record<string, MaterialItem[]> = {};
@@ -132,18 +119,12 @@ export default function CourseLearningPage() {
   const orderedAllMaterials = useMemo(() => {
     if (!modulesView?.length) return [];
     const all: Array<MaterialItem & { module_id: string; module_title: string }> = [];
-
     for (const m of [...modulesView].sort(sortByOrder)) {
       const list = (materialsByModuleView[String(m.id)] || []).slice().sort(sortByOrder);
       for (const it of list) {
-        all.push({
-          ...it,
-          module_id: String(m.id),
-          module_title: String(m.title || ""),
-        });
+        all.push({ ...it, module_id: String(m.id), module_title: String(m.title || "") });
       }
     }
-
     return all;
   }, [modulesView, materialsByModuleView]);
 
@@ -156,59 +137,42 @@ export default function CourseLearningPage() {
 
   async function fetchState() {
     const data = await fetchCourseStateFromSupabase(courseId);
-
     setCourse((data.course as Course) || null);
     setModules((data.modules as ModuleItem[]) || []);
     setMaterialsByModule((data.materialsByModule as Record<string, MaterialItem[]>) || {});
     setPointer((data.pointer as CoursePointer) || null);
-
     setCompletedIds(data.completedMaterialIds || []);
     setUnlockedIds(data.unlockedMaterialIds || []);
-
     setCompletedCount(data.completedCount || 0);
     setTotalMaterials(data.totalMaterials || 0);
     setProgressPercent(data.progressPercent || 0);
-
     setCurrentMaterial((data.currentMaterial as MaterialItem) || null);
     setIsCourseCompleted(Boolean(data.isCourseCompleted));
-
     return data;
   }
 
   useEffect(() => {
     let alive = true;
-
     async function load() {
       setLoading(true);
       setErro("");
-
       try {
         const { data: sData } = await supabase.auth.getSession();
-        if (!sData?.session?.access_token) {
-          navigate("/entrar");
-          return;
-        }
-
+        if (!sData?.session?.access_token) { navigate("/entrar"); return; }
         if (!alive) return;
         await fetchState();
       } catch (e: any) {
         if (!alive) return;
         const msg = e?.message || t("coursePage.errors.loadCourseState");
-        if (String(msg).toLowerCase().includes("token")) {
-          navigate("/entrar");
-          return;
-        }
+        if (String(msg).toLowerCase().includes("token")) { navigate("/entrar"); return; }
         setErro(msg);
       } finally {
         if (!alive) return;
         setLoading(false);
       }
     }
-
     load();
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, [courseId, navigate, t]);
 
   function openMaterial(moduleId: string | number, materialId: string | number) {
@@ -220,17 +184,11 @@ export default function CourseLearningPage() {
   async function markCompleted() {
     if (!openMaterialId) return;
     setErro("");
-
     try {
       await completeMaterialFromSupabase(courseId, openMaterialId);
       const data = await fetchState();
-
       if (data?.isCourseCompleted) {
-        const name =
-          pickLang((data?.course as Course)?.titulo, lang) ||
-          pickLang(course?.titulo, lang) ||
-          t("coursePage.courseCompletedFallback");
-
+        const name = pickLang((data?.course as Course)?.titulo, lang) || pickLang(course?.titulo, lang) || t("coursePage.courseCompletedFallback");
         setBadgeCourseName(name);
         setShowBadgeModal(true);
       }
@@ -250,41 +208,99 @@ export default function CourseLearningPage() {
     return list.find((x) => String(x.id) === String(openMaterialObj.id)) || null;
   }, [openMaterialObj, materialsByModuleView]);
 
-  if (loading) return <LoadingScreen />;
-  if (erro) return <ErrorScreen erro={erro} onBack={() => navigate(-1)} />;
-  if (!courseView) return <NotFoundScreen />;
+  // Loading state
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#f7f8fb] pt-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse space-y-6">
+            <div className="h-32 rounded-[2rem] border border-slate-200 bg-white" />
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+              <div className="h-96 rounded-[2rem] border border-slate-200 bg-white lg:col-span-4" />
+              <div className="h-96 rounded-[2rem] border border-slate-200 bg-white lg:col-span-8" />
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state
+  if (erro) {
+    return (
+      <main className="min-h-screen bg-[#f7f8fb] pt-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[2rem] border border-red-200 bg-red-50 p-8">
+            <h2 className="text-xl font-semibold text-red-800">{t("courseLocal.errorTitle")}</h2>
+            <p className="mt-2 text-sm text-red-600">{erro}</p>
+            <button
+              onClick={() => navigate(-1)}
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {t("courseLocal.back")}
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Not found state
+  if (!courseView) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#f7f8fb] px-4 text-center">
+        <p className="text-6xl font-black text-slate-300">404</p>
+        <p className="mt-4 text-lg text-slate-500">{t("courseLocal.notFound")}</p>
+        <button
+          onClick={() => navigate("/cursos")}
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#111217] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          {t("coursePage.buttons.backToCourses")}
+        </button>
+      </main>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-700 to-blue-400 p-4 md:p-8 text-white">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="rounded-3xl bg-white/10 border border-white/15 shadow p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <main className="min-h-screen bg-[#f7f8fb] pb-16 pt-24 text-[#111217]">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
+        {/* Course header */}
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <div className="text-sm text-white/75">
-                {courseView.categoria} • {courseView.nivel}
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                  {courseView.categoria}
+                </span>
+                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+                  {courseView.nivel}
+                </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold">{courseView.titulo}</h1>
-              {courseView.descricao ? (
-                <p className="mt-2 text-white/80 max-w-3xl">{courseView.descricao}</p>
-              ) : null}
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
+                {courseView.titulo}
+              </h1>
+              {courseView.descricao && (
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">
+                  {courseView.descricao}
+                </p>
+              )}
             </div>
 
             <div className="min-w-[240px]">
-              <div className="flex items-center justify-between text-sm text-white/80 mb-2">
+              <div className="mb-2 flex items-center justify-between text-sm text-slate-500">
                 <span>{t("coursePage.progress.title")}</span>
-                <span>
-                  {completedCount}/{totalMaterials} • {progressPercent}%
+                <span className="font-semibold text-slate-950">
+                  {completedCount}/{totalMaterials} · {progressPercent}%
                 </span>
               </div>
-
-              <div className="h-3 rounded-full bg-white/15 overflow-hidden border border-white/15">
+              <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
                 <div
-                  className="h-full bg-white/70 transition-all duration-500"
+                  className="h-full rounded-full bg-[#111217] transition-all duration-500"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-
-              <div className="mt-3 text-xs text-white/70">
+              <div className="mt-2 text-xs text-slate-400">
                 {isCourseCompleted
                   ? t("coursePage.progress.courseCompleted")
                   : currentMaterialView
@@ -298,218 +314,194 @@ export default function CourseLearningPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Sidebar */}
           <aside className="lg:col-span-4">
-            <div className="rounded-3xl bg-white/10 border border-white/15 shadow p-4 md:p-5">
-              <div className="text-lg font-semibold mb-3">{t("coursePage.sidebar.content")}</div>
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 className="mb-4 text-base font-semibold text-slate-950">
+                {t("coursePage.sidebar.content")}
+              </h3>
 
               {!modulesView.length ? (
-                <div className="rounded-2xl bg-white/10 border border-white/15 p-4 text-white/85">
-                  {t("coursePage.sidebar.noModules")}
-                </div>
+                <p className="text-sm text-slate-500">{t("coursePage.sidebar.noModules")}</p>
               ) : (
-                <div className="space-y-3">
-                  {modulesView
-                    .slice()
-                    .sort(sortByOrder)
-                    .map((mod) => {
-                      const modId = String(mod.id);
-                      const mats = (materialsByModuleView[modId] || []).slice().sort(sortByOrder);
-                      const isOpen = String(openModuleId) === modId;
+                <div className="space-y-2">
+                  {modulesView.slice().sort(sortByOrder).map((mod) => {
+                    const modId = String(mod.id);
+                    const mats = (materialsByModuleView[modId] || []).slice().sort(sortByOrder);
+                    const isOpen = String(openModuleId) === modId;
+                    const modDone = mats.filter((x) => completedSet.has(String(x.id))).length;
 
-                      const modTotal = mats.length;
-                      const modDone = mats.filter((x) => completedSet.has(String(x.id))).length;
-
-                      return (
-                        <div
-                          key={modId}
-                          className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden"
+                    return (
+                      <div key={modId} className="overflow-hidden rounded-2xl border border-slate-100">
+                        <button
+                          className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-slate-50"
+                          onClick={() => setOpenModuleId(isOpen ? null : modId)}
                         >
-                          <button
-                            className="w-full text-left px-4 py-3 hover:bg-white/5 transition flex items-center justify-between gap-3"
-                            onClick={() => setOpenModuleId(isOpen ? null : modId)}
-                          >
-                            <div>
-                              <div className="font-medium">{mod.title}</div>
-                              <div className="text-xs text-white/70">
-                                {t("coursePage.sidebar.doneOfTotal", {
-                                  done: modDone,
-                                  total: modTotal,
-                                })}
-                              </div>
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium text-slate-900">{mod.title}</div>
+                            <div className="text-xs text-slate-400">
+                              {t("coursePage.sidebar.doneOfTotal", { done: modDone, total: mats.length })}
                             </div>
-                            <div className="text-white/70 text-sm">{isOpen ? "−" : "+"}</div>
-                          </button>
-
+                          </div>
                           {isOpen ? (
-                            <div className="px-3 pb-3">
-                              {!mats.length ? (
-                                <div className="px-2 py-3 text-sm text-white/70">
-                                  {t("coursePage.sidebar.noMaterials")}
-                                </div>
-                              ) : (
-                                <div className="space-y-2">
-                                  {mats.map((mat) => {
-                                    const matId = String(mat.id);
-                                    const done = completedSet.has(matId);
-                                    const unlocked = unlockedSet.has(matId);
-                                    const active = String(openMaterialId) === matId;
+                            <ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                          )}
+                        </button>
 
-                                    return (
-                                      <button
-                                        key={matId}
-                                        onClick={() => openMaterial(modId, matId)}
-                                        disabled={!unlocked}
-                                        className={[
-                                          "w-full text-left rounded-xl px-3 py-2 border transition",
-                                          active
-                                            ? "bg-white/15 border-white/25"
-                                            : "bg-white/5 border-white/10",
-                                          unlocked
-                                            ? "hover:bg-white/10"
-                                            : "opacity-50 cursor-not-allowed",
-                                        ].join(" ")}
-                                      >
-                                        <div className="flex items-center justify-between gap-3">
-                                          <div className="min-w-0">
-                                            <div className="text-sm font-medium truncate">
-                                              {String(mat.title || "")}
-                                            </div>
-                                            <div className="text-xs text-white/70">
-                                              {done
-                                                ? t("coursePage.materialStatus.done")
-                                                : unlocked
-                                                ? t("coursePage.materialStatus.available")
-                                                : t("coursePage.materialStatus.locked")}
-                                            </div>
-                                          </div>
-                                          <div className="text-xs text-white/70">
-                                            {mat.type && mat.type !== "EMPTY"
-                                              ? mat.type
-                                              : t("coursePage.materialType.default")}
-                                          </div>
-                                        </div>
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          ) : null}
-                        </div>
-                      );
-                    })}
+                        {isOpen && (
+                          <div className="space-y-1 px-3 pb-3">
+                            {!mats.length ? (
+                              <p className="px-2 py-2 text-xs text-slate-400">
+                                {t("coursePage.sidebar.noMaterials")}
+                              </p>
+                            ) : (
+                              mats.map((mat) => {
+                                const matId = String(mat.id);
+                                const done = completedSet.has(matId);
+                                const unlocked = unlockedSet.has(matId);
+                                const active = String(openMaterialId) === matId;
+
+                                return (
+                                  <button
+                                    key={matId}
+                                    onClick={() => openMaterial(modId, matId)}
+                                    disabled={!unlocked}
+                                    className={[
+                                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm transition",
+                                      active
+                                        ? "border border-slate-200 bg-slate-50 font-medium text-slate-950"
+                                        : "text-slate-600 hover:bg-slate-50",
+                                      !unlocked && "cursor-not-allowed opacity-40",
+                                    ].join(" ")}
+                                  >
+                                    {done ? (
+                                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+                                    ) : unlocked ? (
+                                      <Circle className="h-4 w-4 shrink-0 text-slate-300" />
+                                    ) : (
+                                      <Lock className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+                                    )}
+                                    <span className="truncate">{String(mat.title || "")}</span>
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
           </aside>
 
-          <main className="lg:col-span-8">
-            <div className="rounded-3xl bg-white/10 border border-white/15 shadow p-6 md:p-8">
+          {/* Main content */}
+          <section className="lg:col-span-8">
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
               {!openMaterialFull ? (
-                <div className="text-white/85">{t("coursePage.main.selectMaterial")}</div>
+                <p className="py-12 text-center text-slate-400">
+                  {t("coursePage.main.selectMaterial")}
+                </p>
               ) : (
-                <div className="space-y-5">
-                  {isCourseCompleted ? (
-                    <div className="rounded-2xl bg-white/10 border border-white/15 p-4">
-                      <div className="font-semibold text-lg">
+                <div className="space-y-6">
+                  {isCourseCompleted && (
+                    <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+                      <h3 className="text-lg font-semibold text-emerald-800">
                         {t("coursePage.main.courseCompletedTitle")}
-                      </div>
-                      <div className="text-white/80 text-sm mt-1">
+                      </h3>
+                      <p className="mt-1 text-sm text-emerald-600">
                         {t("coursePage.main.courseCompletedDesc")}
-                      </div>
-
+                      </p>
                       <button
-                        className="mt-3 rounded-xl bg-white/15 hover:bg-white/20 border border-white/20 px-4 py-2 transition"
+                        className="mt-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
                         onClick={() => navigate("/cursos")}
                       >
                         {t("coursePage.buttons.backToCourses")}
                       </button>
                     </div>
-                  ) : null}
+                  )}
 
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="text-sm text-white/70">{openMaterialObj?.module_title}</div>
-                      <h2 className="text-2xl md:text-3xl font-bold">
-  {String(openMaterialFull.title || "")}
-</h2>
-                      <div className="mt-1 text-sm text-white/70">
+                  {/* Material header */}
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                      {openMaterialObj?.module_title}
+                    </p>
+                    <h2 className="mt-1 text-xl font-semibold text-slate-950 md:text-2xl">
+                      {String(openMaterialFull.title || "")}
+                    </h2>
+                    <div className="mt-1 flex items-center gap-3 text-xs text-slate-400">
+                      <span>
                         {t("coursePage.main.type")}:{" "}
                         {openMaterialFull.type && openMaterialFull.type !== "EMPTY"
                           ? openMaterialFull.type
                           : t("coursePage.materialType.default")}
-                      </div>
-                    </div>
-
-                    <div className="text-right text-sm text-white/70">
-                      {completedSet.has(String(openMaterialFull.id))
-                        ? t("coursePage.materialStatus.done")
-                        : t("coursePage.materialStatus.inProgress")}
+                      </span>
+                      <span>·</span>
+                      <span>
+                        {completedSet.has(String(openMaterialFull.id))
+                          ? t("coursePage.materialStatus.done")
+                          : t("coursePage.materialStatus.inProgress")}
+                      </span>
                     </div>
                   </div>
 
+                  {/* Content */}
                   <div
                     className="
-                      rounded-2xl bg-white/5 border border-white/10 p-6 text-white/90
-                      [&>figure]:my-10 [&>p]:my-7 [&>ul]:my-8 [&>ol]:my-8 [&>blockquote]:my-10
-                      [&>h2]:mt-12 [&>h2]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold
-                      [&>h3]:mt-10 [&>h3]:mb-5 [&>h3]:text-xl [&>h3]:font-bold
-                      [&>h4]:mt-8 [&>h4]:mb-4 [&>h4]:text-lg [&>h4]:font-semibold
-                      [&>ul]:list-disc [&>ul]:pl-7 [&>ol]:list-decimal [&>ol]:pl-7
-                      [&>ul>li]:my-3 [&>ol>li]:my-3
-                      [&_p]:leading-8 [&_li]:leading-8
-                      [&_strong]:text-white [&_strong]:font-semibold
-                      [&_img]:rounded-2xl [&_img]:mx-auto
-                      [&>blockquote]:pl-6 [&>blockquote]:border-l-4 [&>blockquote]:border-white/30
+                      prose prose-slate max-w-none
+                      rounded-2xl border border-slate-100 bg-[#f7f8fb] p-6
+                      prose-headings:text-slate-950 prose-headings:font-semibold
+                      prose-p:leading-8 prose-p:text-slate-600
+                      prose-li:leading-8 prose-li:text-slate-600
+                      prose-strong:text-slate-900
+                      prose-img:rounded-2xl
+                      prose-blockquote:border-slate-300
                     "
                     dangerouslySetInnerHTML={{
-                      __html:
-                        openMaterialFull.content || `<p>${t("coursePage.main.emptyContent")}</p>`,
+                      __html: openMaterialFull.content || `<p>${t("coursePage.main.emptyContent")}</p>`,
                     }}
                   />
 
-                   <GeminiAIChat
+                  <GeminiAIChat
                     moduleTitle={String(openMaterialObj?.module_title || "")}
                     title={String(openMaterialFull.title || "")}
                     content={String(openMaterialFull.content || "")}
                   />
-                  
 
-                  <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+                  {/* Actions */}
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <button
-                      className="rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 px-4 py-2 transition"
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
                       onClick={() => navigate(-1)}
                     >
+                      <ArrowLeft className="h-4 w-4" />
                       {t("coursePage.buttons.back")}
                     </button>
 
                     <button
                       className={[
-                        "rounded-xl px-5 py-2 border transition",
+                        "inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold shadow-sm transition",
                         completedSet.has(String(openMaterialFull.id)) || isCourseCompleted
-                          ? "bg-white/10 border-white/15 opacity-70 cursor-not-allowed"
-                          : "bg-white/20 hover:bg-white/25 border-white/25",
+                          ? "cursor-not-allowed border border-slate-200 bg-slate-50 text-slate-400"
+                          : "bg-[#111217] text-white hover:-translate-y-0.5 hover:shadow-lg",
                       ].join(" ")}
                       onClick={markCompleted}
                       disabled={completedSet.has(String(openMaterialFull.id)) || isCourseCompleted}
                     >
+                      <CheckCircle2 className="h-4 w-4" />
                       {isCourseCompleted
                         ? t("coursePage.buttons.courseCompleted")
                         : t("coursePage.buttons.markCompleted")}
                     </button>
                   </div>
-
-                  <div className="text-xs text-white/60">
-                    {t("coursePage.pointer.label")}:{" "}
-                    {pointer?.current_module_id
-                      ? `${pointer.current_module_id}/${pointer.current_material_id || "-"}`
-                      : "—"}
-                  </div>
                 </div>
               )}
             </div>
-          </main>
+          </section>
         </div>
       </div>
 
@@ -522,6 +514,6 @@ export default function CourseLearningPage() {
           navigate("/cursos");
         }}
       />
-    </div>
+    </main>
   );
 }

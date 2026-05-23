@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { MapPin, Clock, Star } from "lucide-react";
 
 import { pickLang } from "../utils";
-import type { Makerspace, Particle } from "../types";
+import type { Makerspace } from "../types";
 
 export default function MakerspacesPage() {
   const { t, i18n } = useTranslation();
@@ -67,141 +67,99 @@ export default function MakerspacesPage() {
     []
   );
 
-  const particles = useMemo<Particle[]>(() => {
-    if (typeof window === "undefined") return [];
-
-    return [...Array(20)].map(() => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      scale: Math.random() * 0.5 + 0.5,
-      dy: Math.random() * -100 - 50,
-      dx: Math.random() * 100 - 50,
-      duration: Math.random() * 10 + 10,
-    }));
-  }, []);
-
   return (
-    <div
-      className="
-        min-h-screen
-        bg-gradient-to-br
-        from-blue-950 via-blue-600 to-blue-300
-        dark:from-blue-950 dark:via-blue-600 dark:to-blue-300
-        relative overflow-hidden
-      "
-    >
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
-        <motion.div
-          initial={{ y: -25, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.45 }}
-          className="mb-6"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow mb-2">
+    <main className="min-h-screen bg-white text-[#111217]">
+      {/* Header */}
+      <section className="bg-[#f7f8fb] pb-12 pt-28 md:pt-32">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#111217] sm:text-4xl md:text-5xl">
             {t("makerspaces.title")}
           </h1>
-          <p className="text-white/80 max-w-2xl">{t("makerspaces.subtitle")}</p>
-        </motion.div>
-
-        <div className="flex gap-2 mb-8">
-          <button
-            onClick={() => setActiveTab("locais")}
-            className={`px-4 py-2 rounded-full font-medium transition ${
-              activeTab === "locais"
-                ? "bg-white/80 text-slate-900 shadow backdrop-blur"
-                : "bg-white/30 text-white hover:bg-white/40 backdrop-blur"
-            }`}
-          >
-            {t("makerspaces.tabs.locals")}
-          </button>
-        </div>
-
-        {activeTab === "locais" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.35 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-10"
-          >
-            {makerspaces.map((space) => (
-              <div
-                key={space.id}
-                className="rounded-2xl overflow-hidden bg-white/85 backdrop-blur border border-white/40 shadow hover:shadow-lg transition"
-              >
-                <img
-                  src={space.image}
-                  alt={pickLang(space.name, lang)}
-                  className="h-48 w-full object-cover"
-                />
-
-                <div className="p-5 space-y-3">
-                  <div className="flex justify-between items-start gap-4">
-                    <h3 className="font-semibold text-lg text-slate-900">
-                      {pickLang(space.name, lang)}
-                    </h3>
-                    <span className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded-full whitespace-nowrap">
-                      ⭐ {space.rating}
-                    </span>
-                  </div>
-
-                  <p className="text-slate-700 text-sm">
-                    {pickLang(space.description, lang)}
-                  </p>
-
-                  <div className="text-sm text-slate-600 space-y-1">
-                    <div>📍 {pickLang(space.location, lang)}</div>
-                    <div>🕒 {pickLang(space.hours, lang)}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
-
-        {activeTab === "mapa" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.35 }}
-            className="w-full h-96 rounded-2xl bg-white/60 backdrop-blur border border-white/40 flex items-center justify-center shadow"
-          >
-            <p className="text-slate-800">{t("makerspaces.map.placeholder")}</p>
-          </motion.div>
-        )}
-
-        <motion.div
-          initial={{ y: 25, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.45 }}
-          className="mt-10 rounded-3xl bg-white/35 backdrop-blur border border-white/40 p-8 md:p-10 shadow"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white drop-shadow mb-3 text-center">
-            {t("makerspaces.cta.title")}
-          </h2>
-
-          <p className="max-w-2xl mx-auto mb-6 text-lg text-white/85 text-center">
-            {t("makerspaces.cta.subtitle")}
+          <p className="mt-4 max-w-2xl text-lg text-slate-500">
+            {t("makerspaces.subtitle")}
           </p>
 
-          <div className="flex justify-center" />
-        </motion.div>
-      </div>
+          {/* Tabs */}
+          <div className="mt-8 flex gap-2">
+            <button
+              onClick={() => setActiveTab("locais")}
+              className={[
+                "rounded-full px-5 py-2.5 text-sm font-semibold transition",
+                activeTab === "locais"
+                  ? "bg-[#111217] text-white shadow-sm"
+                  : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
+              ].join(" ")}
+            >
+              {t("makerspaces.tabs.locals")}
+            </button>
+          </div>
+        </div>
+      </section>
 
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: p.x, y: p.y, scale: p.scale }}
-            animate={{ y: [null, p.dy], x: [null, p.dx] }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-            className="absolute w-2 h-2 bg-blue-300 dark:bg-white rounded-full opacity-30"
-          />
-        ))}
-      </div>
-    </div>
+      {/* Content */}
+      <section className="py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {activeTab === "locais" && (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              {makerspaces.map((space) => (
+                <article
+                  key={space.id}
+                  className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
+                >
+                  <img
+                    src={space.image}
+                    alt={pickLang(space.name, lang)}
+                    className="h-48 w-full object-cover"
+                  />
+
+                  <div className="p-6 space-y-3">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-lg font-semibold text-slate-950">
+                        {pickLang(space.name, lang)}
+                      </h3>
+                      <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 whitespace-nowrap">
+                        <Star className="h-3 w-3" />
+                        {space.rating}
+                      </span>
+                    </div>
+
+                    <p className="text-sm leading-relaxed text-slate-600">
+                      {pickLang(space.description, lang)}
+                    </p>
+
+                    <div className="space-y-1.5 text-sm text-slate-500">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-3.5 w-3.5" />
+                        {pickLang(space.location, lang)}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3.5 w-3.5" />
+                        {pickLang(space.hours, lang)}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {activeTab === "mapa" && (
+            <div className="flex h-96 items-center justify-center rounded-[2rem] border border-slate-200 bg-slate-50">
+              <p className="text-slate-500">{t("makerspaces.map.placeholder")}</p>
+            </div>
+          )}
+
+          {/* CTA */}
+          <div className="mt-16 rounded-[2rem] border border-slate-200 bg-[#111217] p-8 text-center shadow-sm md:p-12">
+            <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
+              {t("makerspaces.cta.title")}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
+              {t("makerspaces.cta.subtitle")}
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

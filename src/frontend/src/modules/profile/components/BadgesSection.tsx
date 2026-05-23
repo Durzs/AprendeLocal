@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Trophy, Star } from "lucide-react";
+import { Trophy, Star, Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
@@ -25,23 +24,18 @@ export function BadgesSection() {
   const normalizeStoragePath = (value: string | null) => {
     if (!value) return null;
     if (value.startsWith("http")) return value;
-
     const prefix = `buckets/${BADGE_BUCKET}/`;
     if (value.startsWith(prefix)) return value.replace(prefix, "");
-
     const prefix2 = `${BADGE_BUCKET}/`;
     if (value.startsWith(prefix2)) return value.replace(prefix2, "");
-
     return value;
   };
 
   const getBadgeImageUrl = (imageUrl: string | null) => {
     if (!imageUrl) return null;
     if (imageUrl.startsWith("http")) return imageUrl;
-
     const cleanPath = normalizeStoragePath(imageUrl);
     if (!cleanPath) return null;
-
     const { data } = supabase.storage.from(BADGE_BUCKET).getPublicUrl(cleanPath);
     return data?.publicUrl ?? null;
   };
@@ -55,85 +49,50 @@ export function BadgesSection() {
 
       const { data: userData, error: userErr } = await supabase.auth.getUser();
       const user = userData?.user;
-
       if (!mounted) return;
-
-      if (userErr || !user) {
-        setBadges([]);
-        setEarnedIds(new Set());
-        setLoading(false);
-        return;
-      }
+      if (userErr || !user) { setBadges([]); setEarnedIds(new Set()); setLoading(false); return; }
 
       const { data: badgesData, error: badgesErr } = await supabase
-        .from("badges")
-        .select("id, name, description, image_url")
-        .order("id", { ascending: true });
-
+        .from("badges").select("id, name, description, image_url").order("id", { ascending: true });
       if (!mounted) return;
-
-      if (badgesErr) {
-        setErro(badgesErr.message);
-        setBadges([]);
-        setEarnedIds(new Set());
-        setLoading(false);
-        return;
-      }
+      if (badgesErr) { setErro(badgesErr.message); setBadges([]); setEarnedIds(new Set()); setLoading(false); return; }
 
       const { data: earnedData, error: earnedErr } = await supabase
-        .from("user_badges")
-        .select("badge_id")
-        .eq("user_id", user.id);
-
+        .from("user_badges").select("badge_id").eq("user_id", user.id);
       if (!mounted) return;
-
-      if (earnedErr) {
-        setErro(earnedErr.message);
-        setBadges((badgesData as Badge[]) ?? []);
-        setEarnedIds(new Set());
-        setLoading(false);
-        return;
-      }
-
-      const earnedSet = new Set((earnedData ?? []).map((x) => x.badge_id));
+      if (earnedErr) { setErro(earnedErr.message); setBadges((badgesData as Badge[]) ?? []); setEarnedIds(new Set()); setLoading(false); return; }
 
       setBadges((badgesData as Badge[]) ?? []);
-      setEarnedIds(earnedSet);
+      setEarnedIds(new Set((earnedData ?? []).map((x) => x.badge_id)));
       setLoading(false);
     }
 
     carregarBadges();
-
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className="bg-white dark:bg-gray-300 rounded-3xl p-6 shadow-lg"
-    >
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="w-6 h-6 text-blue-800" />
-        <h3 className="text-xl font-bold text-gray-800 dark:text-black">
-          {t("badges.title")}
-        </h3>
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-5 flex items-center gap-2">
+        <Trophy className="h-5 w-5 text-slate-400" />
+        <h3 className="text-base font-semibold text-slate-950">{t("badges.title")}</h3>
       </div>
 
-      {erro ? (
-        <div className="mb-4 p-3 rounded bg-red-50 text-red-700 border border-red-200">
+      {erro && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
           {erro}
         </div>
-      ) : null}
+      )}
 
       {loading ? (
-        <p className="text-sm text-gray-600">{t("badges.loading")}</p>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-slate-50" />
+          ))}
+        </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {badges.map((badge, index) => {
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {badges.map((badge) => {
             const active = earnedIds.has(badge.id);
             const imgSrc = getBadgeImageUrl(badge.image_url);
             const badgeName = badge?.name || "";
@@ -141,65 +100,44 @@ export function BadgesSection() {
             const fallbackName = t("badges.fallbackName");
 
             return (
-              <motion.div
+              <div
                 key={badge.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: active ? 1.1 : 1.05, y: -5 }}
-                className="relative group"
+                className={[
+                  "relative flex flex-col items-center gap-2 rounded-2xl border p-4 transition",
+                  active
+                    ? "border-slate-200 bg-white shadow-sm"
+                    : "border-slate-100 bg-slate-50 opacity-50",
+                ].join(" ")}
               >
-                <div
-                  className={[
-                    "relative rounded-2xl p-4 flex flex-col items-center gap-2 cursor-pointer transition-all",
-                    active
-                      ? "bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg"
-                      : "bg-gray-200 dark:bg-gray-800 opacity-40",
-                  ].join(" ")}
-                >
-                  {active && (
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 2,
-                        delay: index * 0.1,
-                      }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center"
-                    >
-                      <Star className="w-3 h-3 text-white fill-current" />
-                    </motion.div>
-                  )}
+                {active && (
+                  <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400">
+                    <Star className="h-2.5 w-2.5 text-white" fill="currentColor" />
+                  </div>
+                )}
 
-                  {imgSrc ? (
-                    <img
-                      src={imgSrc}
-                      alt={`${altPrefix} ${badgeName || fallbackName}`}
-                      className={[
-                        "w-40 h-24 object-cover rounded-xl",
-                        active ? "" : "grayscale opacity-60",
-                      ].join(" ")}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className={active ? "text-white" : "text-gray-400"}>
-                      <Trophy className="w-10 h-10" />
-                    </div>
-                  )}
+                {imgSrc ? (
+                  <img
+                    src={imgSrc}
+                    alt={`${altPrefix} ${badgeName || fallbackName}`}
+                    className={["h-20 w-full rounded-xl object-cover", !active && "grayscale"].join(" ")}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className={active ? "text-slate-400" : "text-slate-300"}>
+                    <Trophy className="h-10 w-10" />
+                  </div>
+                )}
 
-                  {!active && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-4xl opacity-20" aria-hidden="true">
-                        🔒
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
+                {!active && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Lock className="h-5 w-5 text-slate-300" />
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

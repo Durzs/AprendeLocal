@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { UserPlus } from "lucide-react";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { useTranslation } from "react-i18next";
+import logo from "../../../assets/images/logo.png";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -65,75 +66,85 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-600 to-blue-300 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-10 min-h-screen flex items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6"
-        >
-          <div className="rounded-3xl bg-white/85 backdrop-blur border border-white/40 shadow p-8 md:p-10">
-            <div className="space-y-2 text-center">
-              <h2 className="text-3xl font-bold text-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4 py-10">
+      <div className="w-full max-w-5xl">
+        {/* Logo */}
+        <div className="mb-8 flex flex-col items-center">
+          <Link to="/">
+            <img
+              src={logo}
+              alt="AprendeLocal"
+              className="h-12 w-12 rounded-full border border-slate-200 object-cover"
+            />
+          </Link>
+          <span className="mt-3 text-lg font-semibold tracking-tight text-slate-950">
+            AprendeLocal
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Form card */}
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+            <div className="text-center">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
                 {t("register.title")}
               </h2>
-              <p className="text-slate-600">{t("register.subtitle")}</p>
+              <p className="mt-2 text-sm text-slate-500">{t("register.subtitle")}</p>
             </div>
 
-            <form className="space-y-6 mt-8" onSubmit={handleCadastro}>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
+            <form className="mt-8 space-y-5" onSubmit={handleCadastro}>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
                   {t("register.fields.name")}
                 </label>
                 <input
                   ref={nomeRef}
                   type="text"
                   placeholder={t("register.placeholders.name")}
-                  className="w-full px-5 py-3 border border-slate-200 rounded-lg"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
                   {t("register.fields.email")}
                 </label>
                 <input
                   ref={emailRef}
                   type="email"
                   placeholder={t("register.placeholders.email")}
-                  className="w-full px-5 py-3 border border-slate-200 rounded-lg"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
                   {t("register.fields.password")}
                 </label>
                 <input
                   ref={senhaRef}
                   type="password"
                   placeholder={t("register.placeholders.password")}
-                  className="w-full px-5 py-3 border border-slate-200 rounded-lg"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
                   {t("register.fields.cep")}
                 </label>
                 <input
                   ref={cepRef}
                   type="text"
                   placeholder={t("register.placeholders.cep")}
-                  className="w-full px-5 py-3 border border-slate-200 rounded-lg"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-700">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
                   {t("register.fields.age")}:{" "}
-                  <span className="font-semibold text-blue-700">{idade}</span>
+                  <span className="font-semibold text-slate-950">{idade}</span>
                 </label>
                 <input
                   type="range"
@@ -141,46 +152,47 @@ export default function RegisterPage() {
                   max={100}
                   value={idade}
                   onChange={(e) => setIdade(Number(e.target.value))}
-                  className="w-full accent-blue-600"
+                  className="w-full accent-slate-950"
                 />
               </div>
 
               <button
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
               >
+                <UserPlus className="h-4 w-4" />
                 {loading ? t("register.button.loading") : t("register.button.register")}
               </button>
             </form>
 
-            <div className="text-center mt-6">
-              <Link to="/entrar" className="text-sm text-slate-600">
-                {t("register.loginText")}{" "}
-                <span className="font-semibold text-blue-700 hover:underline">
-                  {t("register.loginAction")}
-                </span>
+            <p className="mt-6 text-center text-sm text-slate-500">
+              {t("register.loginText")}{" "}
+              <Link to="/entrar" className="font-semibold text-slate-950 hover:underline">
+                {t("register.loginAction")}
               </Link>
-            </div>
+            </p>
           </div>
 
-          <div className="rounded-3xl bg-white/25 backdrop-blur border border-white/40 shadow relative p-10 text-white text-center lg:text-left">
-            <h1 className="text-4xl md:text-5xl font-extrabold">
+          {/* Hero side */}
+          <div className="flex flex-col items-center justify-center rounded-[2rem] border border-slate-200 bg-[#111217] p-10 text-center lg:text-left">
+            <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl">
               {t("register.heroTitle")}
             </h1>
 
-            <p className="mt-5 text-lg text-white/85">
+            <p className="mt-5 text-base leading-relaxed text-slate-400">
               {t("register.heroSubtitle")}
             </p>
 
             <div className="mt-8">
-              <Link to="/">
-                <button className="px-6 py-3 rounded-lg font-semibold shadow bg-white text-blue-700">
-                  {t("register.backHome")}
-                </button>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-white px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                {t("register.backHome")}
               </Link>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

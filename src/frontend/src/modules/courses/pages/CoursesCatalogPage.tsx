@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Search, ArrowRight } from "lucide-react";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { normalize, pickLang } from "../utils";
-import type { Course, Particle } from "../types";
+import type { Course } from "../types";
 
 export default function CoursesCatalogPage() {
   const navigate = useNavigate();
@@ -123,139 +123,135 @@ export default function CoursesCatalogPage() {
   const cursosFiltrados = useMemo(() => {
     return cursos.filter((curso) => {
       const palavrasBusca = normalize(busca).split(" ").filter(Boolean);
-
       const textoCurso = `${pickLang(curso.titulo, lang)} ${pickLang(curso.descricao, lang)} ${pickLang(curso.categoria, lang)}`;
       const textoNormalizado = normalize(textoCurso);
-
       return palavrasBusca.every((palavra) => textoNormalizado.includes(palavra));
     });
   }, [cursos, busca, lang]);
 
-  const particles = useMemo<Particle[]>(() => {
-    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-    const h = typeof window !== "undefined" ? window.innerHeight : 800;
-
-    return [...Array(20)].map(() => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      scale: Math.random() * 0.5 + 0.5,
-      dy: Math.random() * -100 - 50,
-      dx: Math.random() * 100 - 50,
-      duration: Math.random() * 10 + 10,
-    }));
-  }, []);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
-        <motion.div
-          initial={{ y: -25, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.45 }}
-          className="mb-6"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-white drop-shadow mb-2">
+    <main className="min-h-screen bg-white text-[#111217]">
+      {/* Header section */}
+      <section className="bg-[#f7f8fb] pb-12 pt-28 md:pt-32">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#111217] sm:text-4xl md:text-5xl">
             {t("courses.title")}
           </h1>
-          <p className="text-white/80 max-w-2xl">{t("courses.subtitle")}</p>
-        </motion.div>
+          <p className="mt-4 max-w-2xl text-lg text-slate-500">
+            {t("courses.subtitle")}
+          </p>
 
-        {erro ? (
-          <div className="mb-6 p-4 rounded-2xl bg-red-50/90 text-red-700 border border-red-200 shadow">
-            {erro}
+          {/* Search bar */}
+          <div className="relative mt-8 max-w-xl">
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder={t("courses.searchPlaceholder")}
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="w-full rounded-full border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+            />
           </div>
-        ) : null}
+        </div>
+      </section>
 
-        <input
-          type="text"
-          placeholder={t("courses.searchPlaceholder")}
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-          className="w-full mb-8 px-4 py-3 rounded-2xl bg-white/70 backdrop-blur border border-white/40 shadow focus:outline-none"
-        />
+      {/* Content */}
+      <section className="py-12 md:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {erro && (
+            <div className="mb-8 rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-600">
+              {erro}
+            </div>
+          )}
 
-        {loading ? (
-          <p className="text-white/80">{t("courses.loading")}</p>
-        ) : cursosFiltrados.length === 0 ? (
-          <p className="text-white/80">{t("courses.noneFound")}</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-10">
-            {cursosFiltrados.map((curso) => {
-              const concluido = concluidosIds.has(curso.id);
-              const matriculado = matriculadosIds.has(curso.id);
+          {loading ? (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-80 animate-pulse rounded-[2rem] border border-slate-200 bg-slate-50" />
+              ))}
+            </div>
+          ) : cursosFiltrados.length === 0 ? (
+            <p className="py-16 text-center text-slate-500">{t("courses.noneFound")}</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {cursosFiltrados.map((curso) => {
+                const concluido = concluidosIds.has(curso.id);
+                const matriculado = matriculadosIds.has(curso.id);
 
-              const titulo = pickLang(curso.titulo, lang);
-              const descricao = pickLang(curso.descricao, lang);
-              const categoria = pickLang(curso.categoria, lang) || t("courses.tags.noCategory");
-              const nivel = pickLang(curso.nivel, lang) || t("courses.tags.noLevel");
-              const badge = pickLang(curso.badge, lang) || t("courses.tags.noBadge");
+                const titulo = pickLang(curso.titulo, lang);
+                const descricao = pickLang(curso.descricao, lang);
+                const categoria = pickLang(curso.categoria, lang) || t("courses.tags.noCategory");
+                const nivel = pickLang(curso.nivel, lang) || t("courses.tags.noLevel");
+                const badge = pickLang(curso.badge, lang) || t("courses.tags.noBadge");
 
-              const statusTexto = concluido
-                ? t("courses.status.completed")
-                : matriculado
-                ? t("courses.status.enrolled")
-                : t("courses.status.new");
+                const statusTexto = concluido
+                  ? t("courses.status.completed")
+                  : matriculado
+                  ? t("courses.status.enrolled")
+                  : t("courses.status.new");
 
-              const buttonText = concluido
-                ? t("courses.buttons.review")
-                : matriculado
-                ? t("courses.buttons.continue")
-                : t("courses.buttons.start");
+                const buttonText = concluido
+                  ? t("courses.buttons.review")
+                  : matriculado
+                  ? t("courses.buttons.continue")
+                  : t("courses.buttons.start");
 
-              return (
-                <div
-                  key={curso.id}
-                  className="rounded-2xl overflow-hidden bg-white/85 backdrop-blur border border-white/40 shadow hover:shadow-lg transition"
-                >
-                  <img
-                    src={curso.url_img}
-                    alt={t("courses.courseImageAlt", { title: titulo || "—" })}
-                    className="h-44 w-full object-cover"
-                  />
+                return (
+                  <article
+                    key={curso.id}
+                    className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
+                  >
+                    {curso.url_img ? (
+                      <img
+                        src={curso.url_img}
+                        alt={t("courses.courseImageAlt", { title: titulo || "—" })}
+                        className="h-44 w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-44 items-center justify-center bg-slate-100 text-slate-400">
+                        <span className="text-4xl">📚</span>
+                      </div>
+                    )}
 
-                  <div className="p-6 space-y-3">
-                    <div className="flex justify-between items-start gap-4">
-                      <div className="min-w-0">
-                        <h2 className="font-semibold text-lg text-black truncate">{titulo}</h2>
-                        <div className="mt-1 flex flex-wrap gap-2">
-                          <span className="text-xs bg-blue-100 text-blue-900 px-2 py-1 rounded-full">{categoria}</span>
-                          <span className="text-xs bg-slate-100 text-slate-900 px-2 py-1 rounded-full">{nivel}</span>
-                          <span className="text-xs bg-green-300 text-slate-900 px-2 py-1 rounded-full">{badge}</span>
-                        </div>
+                    <div className="p-5">
+                      <div className="mb-3 flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                          {categoria}
+                        </span>
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+                          {nivel}
+                        </span>
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                          {badge}
+                        </span>
+                        <span className="ml-auto rounded-full bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-500">
+                          {statusTexto}
+                        </span>
                       </div>
 
-                      <span className="text-xs px-2 py-1 rounded-full whitespace-nowrap bg-white/70 text-slate-800">
-                        {statusTexto}
-                      </span>
+                      <h2 className="mb-2 text-lg font-semibold leading-snug text-slate-950">
+                        {titulo}
+                      </h2>
+
+                      <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">
+                        {descricao}
+                      </p>
+
+                      <button
+                        onClick={() => iniciarOuContinuar(curso.id)}
+                        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+                      >
+                        {buttonText}
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
                     </div>
-
-                    <p className="text-slate-700 text-sm line-clamp-3">{descricao}</p>
-
-                    <button
-                      onClick={() => iniciarOuContinuar(curso.id)}
-                      className="w-full mt-2 font-semibold px-4 py-3 rounded-xl shadow bg-blue-700 text-white hover:opacity-90 transition"
-                    >
-                      {buttonText}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: p.x, y: p.y, scale: p.scale }}
-            animate={{ y: [null, p.dy], x: [null, p.dx] }}
-            transition={{ duration: p.duration, repeat: Infinity, repeatType: "reverse" }}
-            className="absolute w-2 h-2 bg-blue-300 rounded-full opacity-30"
-          />
-        ))}
-      </div>
-    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }

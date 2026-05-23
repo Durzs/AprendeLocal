@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { BookOpen, Clock, TrendingUp } from "lucide-react";
+import { BookOpen, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -24,7 +23,6 @@ type ActiveCourseItem = {
 export function ActiveCourses({ userId: userIdProp = null }: ActiveCoursesProps) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-
   const lang = (i18n.resolvedLanguage || "pt").split("-")[0];
 
   const [loading, setLoading] = useState(true);
@@ -40,49 +38,27 @@ export function ActiveCourses({ userId: userIdProp = null }: ActiveCoursesProps)
 
       try {
         let userId = userIdProp;
-
         if (!userId) {
           const { data: userData, error: userErr } = await supabase.auth.getUser();
           if (userErr) throw userErr;
           userId = userData?.user?.id ?? null;
         }
-
-        if (!userId) {
-          if (!alive) return;
-          setActiveCourses([]);
-          return;
-        }
+        if (!userId) { if (!alive) return; setActiveCourses([]); return; }
 
         const { data: enrolls, error: enrollErr } = await supabase
-          .from("enrollments")
-          .select("course_id")
-          .eq("user_id", userId);
-
+          .from("enrollments").select("course_id").eq("user_id", userId);
         if (enrollErr) throw enrollErr;
 
-        const courseIds = Array.from(
-          new Set((enrolls || []).map((r) => r.course_id).filter(Boolean))
-        );
-
-        if (!courseIds.length) {
-          if (!alive) return;
-          setActiveCourses([]);
-          return;
-        }
+        const courseIds = Array.from(new Set((enrolls || []).map((r) => r.course_id).filter(Boolean)));
+        if (!courseIds.length) { if (!alive) return; setActiveCourses([]); return; }
 
         const { data: coursesData, error: coursesErr } = await supabase
-          .from("courses")
-          .select("id,titulo,descricao")
-          .in("id", courseIds)
-          .order("id", { ascending: true });
-
+          .from("courses").select("id,titulo,descricao").in("id", courseIds).order("id", { ascending: true });
         if (coursesErr) throw coursesErr;
-
-        const noTitleFallback = t("activeCourses.noTitle");
 
         const cursos: ActiveCourseItem[] = (coursesData || []).map((c) => ({
           id: String(c.id),
-          title: pickLang(c.titulo, lang) || noTitleFallback,
+          title: pickLang(c.titulo, lang) || t("activeCourses.noTitle"),
           description: pickLang(c.descricao, lang) || "",
           progress: 0,
           timeRemaining: "—",
@@ -101,101 +77,77 @@ export function ActiveCourses({ userId: userIdProp = null }: ActiveCoursesProps)
     }
 
     carregar();
-
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, [userIdProp, lang, t]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="rounded-3xl bg-white/85 backdrop-blur border border-white/40 shadow p-6"
-    >
-      <div className="flex items-center justify-between mb-5">
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-blue-700" />
-          <h3 className="text-lg font-bold text-blue-950">
-            {t("activeCourses.title")}
-          </h3>
+          <BookOpen className="h-5 w-5 text-slate-400" />
+          <h3 className="text-base font-semibold text-slate-950">{t("activeCourses.title")}</h3>
         </div>
-
-        <div className="flex items-center gap-2 text-xs text-gray-700">
-          <TrendingUp className="w-4 h-4" />
+        <div className="flex items-center gap-1.5 text-xs text-slate-400">
+          <TrendingUp className="h-3.5 w-3.5" />
           <span>{t("activeCourses.subtitle")}</span>
         </div>
       </div>
 
       {loading ? (
         <div className="animate-pulse space-y-3">
-          <div className="h-14 rounded-2xl bg-black/5" />
-          <div className="h-14 rounded-2xl bg-black/5" />
+          <div className="h-20 rounded-2xl bg-slate-50" />
+          <div className="h-20 rounded-2xl bg-slate-50" />
         </div>
       ) : erro ? (
-        <div className="text-sm text-red-600">{erro}</div>
+        <div className="text-sm text-red-500">{erro}</div>
       ) : activeCourses.length === 0 ? (
-        <div className="text-sm text-gray-700">{t("activeCourses.empty")}</div>
+        <p className="text-sm text-slate-500">{t("activeCourses.empty")}</p>
       ) : (
         <>
-          <div className="grid gap-3">
+          <div className="space-y-3">
             {activeCourses.map((course) => (
-              <motion.button
+              <button
                 type="button"
                 key={course.id}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full text-left rounded-2xl border border-black/10 bg-white shadow-sm hover:shadow transition p-4"
+                className="w-full rounded-2xl border border-slate-100 bg-white p-4 text-left transition hover:border-slate-200 hover:shadow-sm"
                 onClick={() => navigate(`/cursos/${course.id}`)}
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center text-xl">
-                      {course.icon}
-                    </div>
-
-                    <div>
-                      <div className="font-semibold text-blue-950">{course.title}</div>
-                      <div className="text-xs text-gray-700 line-clamp-2">
-                        {course.description}
-                      </div>
-
-                      <div className="mt-2 flex items-center gap-2 text-xs text-gray-700">
-                        <Clock className="w-4 h-4" />
-                        <span>{course.timeRemaining}</span>
-                      </div>
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-lg">
+                    {course.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-slate-950">{course.title}</div>
+                    <div className="mt-0.5 line-clamp-1 text-xs text-slate-500">{course.description}</div>
+                    <div className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-400">
+                      <Clock className="h-3.5 w-3.5" />
+                      <span>{course.timeRemaining}</span>
                     </div>
                   </div>
-
-                  <div className="text-xs text-gray-700 font-medium">
-                    {course.progress}%
-                  </div>
+                  <span className="text-xs font-semibold text-slate-400">{course.progress}%</span>
                 </div>
 
                 <div className="mt-3">
-                  <div className="flex items-center justify-between text-xs text-gray-700 mb-1 w-full">
+                  <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
                     <span>{t("activeCourses.progressLabel")}</span>
-                    <span className="font-bold">{course.progress}%</span>
+                    <span className="font-semibold text-slate-600">{course.progress}%</span>
                   </div>
-
-                  <Progress value={course.progress} className="h-2 w-full" />
+                  <Progress value={course.progress} className="h-1.5 w-full" />
                 </div>
-              </motion.button>
+              </button>
             ))}
           </div>
 
-          <motion.button
+          <button
             type="button"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className="w-full mt-4 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:opacity-95 transition"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
             onClick={() => navigate("/cursos")}
           >
             {t("activeCourses.viewAll")}
-          </motion.button>
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </>
       )}
-    </motion.div>
+    </div>
   );
 }

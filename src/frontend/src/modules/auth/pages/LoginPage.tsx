@@ -1,44 +1,21 @@
-import React, { useMemo, useRef, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { LogIn } from "lucide-react";
 import { supabase } from "../../../shared/lib/supabaseClient";
-
-type Particle = {
-  x: number;
-  y: number;
-  scale: number;
-  dx: number;
-  dy: number;
-  duration: number;
-};
+import logo from "../../../assets/images/logo.png";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
 
-  // Si el usuario fue redirigido desde una ruta protegida, volver allá después del login
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
 
   const emailRef = useRef<HTMLInputElement>(null);
   const senhaRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(false);
-
-  const particles = useMemo<Particle[]>(() => {
-    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-    const h = typeof window !== "undefined" ? window.innerHeight : 800;
-
-    return [...Array(20)].map(() => ({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      scale: Math.random() * 0.5 + 0.5,
-      dy: Math.random() * -100 - 50,
-      dx: Math.random() * 100 - 50,
-      duration: Math.random() * 10 + 10,
-    }));
-  }, []);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -75,41 +52,50 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-600 to-blue-300 relative overflow-hidden">
-      <div className="max-w-md mx-auto px-4 py-16 relative z-10">
-        <motion.div
-          initial={{ y: 24, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="rounded-3xl bg-white/85 backdrop-blur border border-white/40 shadow p-6 md:p-8"
-        >
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="mb-8 flex flex-col items-center">
+          <Link to="/">
+            <img
+              src={logo}
+              alt="AprendeLocal"
+              className="h-12 w-12 rounded-full border border-slate-200 object-cover"
+            />
+          </Link>
+          <span className="mt-3 text-lg font-semibold tracking-tight text-slate-950">
+            AprendeLocal
+          </span>
+        </div>
+
+        {/* Card */}
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+          <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
             {t("login.title")}
           </h1>
+          <p className="mt-2 text-sm text-slate-500">{t("login.subtitle")}</p>
 
-          <p className="text-slate-600 mb-6">{t("login.subtitle")}</p>
-
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="mt-8 space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
                 {t("login.email")}
               </label>
               <input
                 ref={emailRef}
                 type="email"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 placeholder={t("login.emailPlaceholder")}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
                 {t("login.password")}
               </label>
               <input
                 ref={senhaRef}
                 type="password"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 placeholder={t("login.passwordPlaceholder")}
               />
             </div>
@@ -117,28 +103,23 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-blue-600 text-white py-3 font-medium hover:bg-blue-700 transition disabled:opacity-60"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
             >
+              <LogIn className="h-4 w-4" />
               {loading ? t("login.loading") : t("login.submit")}
             </button>
           </form>
-        </motion.div>
-      </div>
 
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: p.x, y: p.y, scale: p.scale }}
-            animate={{ y: [null, p.dy], x: [null, p.dx] }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-            className="absolute w-2 h-2 bg-blue-300 rounded-full opacity-30"
-          />
-        ))}
+          <p className="mt-6 text-center text-sm text-slate-500">
+            {t("register.loginText", "Don't have an account?")}{" "}
+            <Link
+              to="/cadastrar"
+              className="font-semibold text-slate-950 hover:underline"
+            >
+              {t("register.button.register", "Register")}
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

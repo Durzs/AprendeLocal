@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { User, Cake, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -24,9 +23,7 @@ export function UserInfoCard({
   const { t } = useTranslation();
 
   const isNotInformed =
-    age === null ||
-    age === undefined ||
-    age === "" ||
+    age === null || age === undefined || age === "" ||
     (typeof age === "string" && age.trim().length === 0);
 
   const idadeText = isNotInformed
@@ -41,75 +38,42 @@ export function UserInfoCard({
   const altAvatar = name || t("profileCard.notInformed");
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 via-blue-300 to-blue-100 p-1"
-    >
-      <div className="bg-white dark:bg-gray-300 rounded-3xl p-6">
-        <div className="flex items-center gap-4">
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-            className="relative"
-          >
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={altAvatar}
-                className="w-20 h-20 rounded-full object-cover ring-4 ring-purple-100"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-purple-500 flex items-center justify-center ring-4 ring-purple-100">
-                <User className="w-10 h-10 text-white" />
-              </div>
-            )}
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex items-center gap-4">
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={altAvatar}
+            className="h-16 w-16 rounded-full border-2 border-slate-100 object-cover"
+          />
+        ) : (
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
+            <User className="h-7 w-7 text-slate-400" />
+          </div>
+        )}
 
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="absolute -top-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-4 border-white"
-            />
-          </motion.div>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl font-semibold text-slate-950">
+            {name || t("profileCard.notInformed")}
+          </h2>
 
-          <div className="flex-1">
-            <motion.h2
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-900 bg-clip-text text-transparent"
-            >
-              {name || t("profileCard.notInformed")}
-            </motion.h2>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+            <span className="flex items-center gap-1.5">
+              <Cake className="h-3.5 w-3.5" />
+              {idadeText}
+            </span>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex items-center gap-2 mt-1 text-gray-600 dark:text-gray-900"
-            >
-              <Cake className="w-4 h-4" />
-              <span className="text-sm">{idadeText}</span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.38 }}
-              className="flex items-center gap-2 mt-2 text-gray-600 dark:text-gray-900"
-            >
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm font-semibold">{cidadeText}</span>
-
-              <span className="text-sm opacity-70">
-                • {t("profileCard.cepLabel")}: {cepFinal}
-                {bairroText ? ` • ${bairroText}` : ""}
+            <span className="flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5" />
+              {cidadeText}
+              <span className="text-slate-400">
+                · {t("profileCard.cepLabel")}: {cepFinal}
+                {bairroText ? ` · ${bairroText}` : ""}
               </span>
-            </motion.div>
+            </span>
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

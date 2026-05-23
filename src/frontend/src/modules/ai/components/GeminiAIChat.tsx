@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Sparkles, Send } from "lucide-react";
 
 type GeminiAIChatProps = {
   title?: string;
@@ -14,7 +15,7 @@ function stripHtml(html = "") {
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
     .replace(/<\/(p|div|br|li|h1|h2|h3|h4|h5|h6)>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
-    .replace(/\u00a0/g, " ")
+    .replace(/ /g, " ")
     .replace(/\s+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .replace(/[ \t]{2,}/g, " ")
@@ -48,9 +49,7 @@ export default function GeminiAIChat({
 
   const canUseAI = Boolean(apiKey && model);
 
-  const safeTextContent = useMemo(() => {
-    return truncate(stripHtml(content), 14000);
-  }, [content]);
+  const safeTextContent = useMemo(() => truncate(stripHtml(content), 14000), [content]);
 
   const prompt = useMemo(() => {
     const mTitle = moduleTitle || t("geminiChat.fallback.noModule");
@@ -102,52 +101,56 @@ ${safeTextContent || t("geminiChat.fallback.emptyContent")}
   }
 
   return (
-    <div className="mt-8 rounded-3xl bg-black/20 backdrop-blur border border-white/30 p-8 md:p-10 shadow">
-      <h3 className="text-center text-white text-2xl font-semibold mb-4">
-        {t("geminiChat.ui.title")}
-      </h3>
+    <div className="rounded-2xl border border-slate-200 bg-[#f7f8fb] p-6">
+      <div className="mb-4 flex items-center gap-2">
+        <Sparkles className="h-5 w-5 text-slate-400" />
+        <h3 className="text-base font-semibold text-slate-950">
+          {t("geminiChat.ui.title")}
+        </h3>
+      </div>
 
-      {!canUseAI ? (
-        <div className="mb-5 rounded-2xl border border-white/25 bg-white/10 p-4 text-white/85 text-sm">
-          <div className="font-semibold mb-1">
+      {!canUseAI && (
+        <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">
+          <div className="font-semibold text-slate-700">
             {t("geminiChat.ui.disabledTitle")}
           </div>
-          <div>
+          <div className="mt-1">
             {t("geminiChat.ui.disabledDesc1")}{" "}
-            <code className="text-white">VITE_GEMINI_API_KEY</code>.{" "}
+            <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">VITE_GEMINI_API_KEY</code>.{" "}
             {t("geminiChat.ui.disabledDesc2")}{" "}
-            <code className="text-white">.env</code>,{" "}
+            <code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">.env</code>,{" "}
             {t("geminiChat.ui.disabledDesc3")}
           </div>
         </div>
-      ) : null}
+      )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-center">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t("geminiChat.ui.placeholder")}
-          rows={4}
-          className="w-full p-2.5 rounded bg-white/10 border border-white/30 text-white placeholder-white/70 mb-4 focus:ring-2 focus:ring-white/50 focus:outline-none transition"
+          rows={3}
+          className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
         />
 
         <button
           type="submit"
           disabled={loading || !question.trim() || !canUseAI}
-          className="bg-white text-blue-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-white/90 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 rounded-full bg-[#111217] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
+          <Send className="h-4 w-4" />
           {loading ? t("geminiChat.ui.thinking") : t("geminiChat.ui.ask")}
         </button>
       </form>
 
-      {answer ? (
-        <div className="mt-5 p-4 border border-white/30 rounded bg-black/20">
-          <h4 className="font-bold mb-2 text-white">
+      {answer && (
+        <div className="mt-5 rounded-xl border border-slate-200 bg-white p-5">
+          <h4 className="mb-2 text-sm font-semibold text-slate-950">
             {t("geminiChat.ui.answerTitle")}
           </h4>
-          <p className="whitespace-pre-wrap text-white/90">{answer}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-600">{answer}</p>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
