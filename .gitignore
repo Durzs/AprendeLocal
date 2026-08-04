@@ -10,3 +10,11 @@ data/cache/
 .DS_Store
 node_modules/
 dist/
+
+# Volcados de base de datos: contienen hashes de contraseñas y refresh
+# tokens de usuarios reales. Nunca deben llegar al repositorio.
+backupDB/
+*.sql.gz
+backup.sql
+data.sql
+

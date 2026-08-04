@@ -1,0 +1,13 @@
+# Dependencias mínimas para ejecutar la API en producción.
+#
+# requirements.txt incluye el stack geoespacial y de ML completo (geopandas,
+# rasterio, scikit-learn...) que se usa para análisis offline en data/, pero
+# que src/api y src/ml NO importan en tiempo de ejecución. Instalarlo en el
+# servidor obligaría a compilar GDAL sin ninguna ganancia.
+
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.9.0
+supabase>=2.10.0
+anthropic>=0.40.0
+python-dotenv>=1.0.0

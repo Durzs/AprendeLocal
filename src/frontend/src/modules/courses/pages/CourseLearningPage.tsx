@@ -75,7 +75,7 @@ export default function CourseLearningPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [modules, setModules] = useState<ModuleItem[]>([]);
   const [materialsByModule, setMaterialsByModule] = useState<Record<string, MaterialItem[]>>({});
-  const [pointer, setPointer] = useState<CoursePointer | null>(null);
+  const [, setPointer] = useState<CoursePointer | null>(null);
 
   const [completedIds, setCompletedIds] = useState<Array<string | number>>([]);
   const [unlockedIds, setUnlockedIds] = useState<Array<string | number>>([]);

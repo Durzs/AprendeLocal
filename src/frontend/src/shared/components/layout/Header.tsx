@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { User, ChevronDown, LogIn, Menu, X, Globe } from "lucide-react";
+import { User, ChevronDown, LogIn, Menu, X } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 
