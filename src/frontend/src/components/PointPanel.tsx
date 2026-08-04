@@ -37,7 +37,7 @@ export default function PointPanel({ point, onClose }: Props) {
   const [generating, setGenerating] = useState(false);
   const [genError, setGenError] = useState<string | null>(null);
   const [generatedOptions, setGeneratedOptions] = useState<STEMProject[]>([]);
-  const [currentSpecs, setCurrentSpecs] = useState<ProjectSpecs | null>(null);
+  const [, setCurrentSpecs] = useState<ProjectSpecs | null>(null);
 
   const pointId = point?.properties.id;
 

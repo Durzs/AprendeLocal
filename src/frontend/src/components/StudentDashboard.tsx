@@ -14,7 +14,6 @@ import type { StudentEnrollment } from "../types";
 import {
   getStudentId,
   getStudentName,
-  setStudentName as saveStudentName,
   getAllProfiles,
   getActiveProfile,
   setActiveProfile,

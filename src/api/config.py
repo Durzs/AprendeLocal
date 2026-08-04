@@ -17,5 +17,13 @@ class Settings:
         self.database_url = os.getenv("DATABASE_URL", "")
         self.redis_url = os.getenv("REDIS_URL", "")
 
+        # Orígenes permitidos por CORS, separados por coma.
+        # Vacío = "*" (solo apropiado en desarrollo).
+        self.cors_origins = [
+            origin.strip()
+            for origin in os.getenv("CORS_ORIGINS", "").split(",")
+            if origin.strip()
+        ] or ["*"]
+
 
 settings = Settings()

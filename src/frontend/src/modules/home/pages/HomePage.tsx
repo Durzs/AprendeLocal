@@ -16,7 +16,7 @@ export default function HomePage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [errorCourses, setErrorCourses] = useState<string>("");
-  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [, setIsLogged] = useState<boolean>(false);
 
   useEffect(() => {
     let mounted = true;
