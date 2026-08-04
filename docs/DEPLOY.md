@@ -87,6 +87,41 @@ En el registrador donde está `aprendelocal.com`:
 4. La propagación DNS suele tardar minutos, pero puede llegar a 48 h.
    Los certificados HTTPS se emiten solos una vez propagado.
 
+### Migrar el dominio desde el GitHub Pages antiguo
+
+`aprendelocal.com` lo sirve hoy un repositorio de GitHub Pages ajeno y
+desactualizado, al que no tenemos acceso. **No hace falta su
+cooperación:** la exclusividad del dominio solo aplica *dentro* de
+GitHub Pages. Al apuntar el DNS a Vercel, ese repositorio deja de
+recibir tráfico aunque conserve el dominio en su configuración.
+
+Lo que sí hay que hacer con cuidado en el registrador:
+
+1. **Elimina los registros `A` que apuntan a GitHub Pages.** Son estas
+   cuatro IPs:
+
+   ```
+   185.199.108.153
+   185.199.109.153
+   185.199.110.153
+   185.199.111.153
+   ```
+
+   Si se dejan conviviendo con el registro de Vercel, el DNS reparte
+   las visitas entre ambos y el sitio carga a veces el nuevo y a veces
+   el viejo, de forma intermitente y muy difícil de diagnosticar.
+
+2. Borra también el `CNAME` de `www` si apunta a `<usuario>.github.io`.
+
+3. Recién entonces crea los registros que indique el panel de Vercel.
+
+Para comprobar a quién resuelve el dominio en cada momento:
+
+```bash
+dig +short aprendelocal.com          # no debe devolver ninguna 185.199.x.x
+curl -sI https://aprendelocal.com | grep -i server
+```
+
 Verificación final:
 
 ```bash
