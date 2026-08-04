@@ -87,38 +87,48 @@ En el registrador donde está `aprendelocal.com`:
 4. La propagación DNS suele tardar minutos, pero puede llegar a 48 h.
    Los certificados HTTPS se emiten solos una vez propagado.
 
-### Migrar el dominio desde el GitHub Pages antiguo
+### Migrar el dominio desde la cuenta de Vercel actual
 
-`aprendelocal.com` lo sirve hoy un repositorio de GitHub Pages ajeno y
-desactualizado, al que no tenemos acceso. **No hace falta su
-cooperación:** la exclusividad del dominio solo aplica *dentro* de
-GitHub Pages. Al apuntar el DNS a Vercel, ese repositorio deja de
-recibir tráfico aunque conserve el dominio en su configuración.
+`aprendelocal.com` lo sirve hoy un proyecto alojado en **una cuenta de
+Vercel ajena**, con una versión desactualizada del sitio.
 
-Lo que sí hay que hacer con cuidado en el registrador:
+El detalle que confunde: como el destino también es Vercel, **los
+registros DNS son los mismos** en ambas cuentas (la misma IP para la
+raíz, el mismo `cname.vercel-dns.com` para `www`). Borrarlos y volver a
+crearlos idénticos no cambia nada.
 
-1. **Elimina los registros `A` que apuntan a GitHub Pages.** Son estas
-   cuatro IPs:
+**El bloqueo no está en el DNS, está en Vercel:** un dominio solo puede
+pertenecer a un proyecto a la vez, y esa asignación vive en la cuenta,
+no en los registros. Mientras el proyecto antiguo lo tenga asignado, el
+nuestro lo rechazará por mucho que el DNS ya apunte bien.
 
-   ```
-   185.199.108.153
-   185.199.109.153
-   185.199.110.153
-   185.199.111.153
-   ```
+Primero hay que averiguar quién gestiona el DNS:
 
-   Si se dejan conviviendo con el registro de Vercel, el DNS reparte
-   las visitas entre ambos y el sitio carga a veces el nuevo y a veces
-   el viejo, de forma intermitente y muy difícil de diagnosticar.
+```bash
+dig +short NS aprendelocal.com
+```
 
-2. Borra también el `CNAME` de `www` si apunta a `<usuario>.github.io`.
+- **Devuelve `ns1.vercel-dns.com` / `ns2.vercel-dns.com`** → el DNS lo
+  gestiona Vercel desde la cuenta ajena y no podemos crear ningún
+  registro. Hay que cambiar los nameservers en el registrador a los del
+  propio registrador antes de cualquier otra cosa.
+- **Devuelve los nameservers del registrador** → tenemos el control y se
+  puede continuar.
 
-3. Recién entonces crea los registros que indique el panel de Vercel.
+Con el control del DNS confirmado, hay dos formas de liberar el dominio:
+
+1. **Que lo quiten** desde el proyecto antiguo (Settings → Domains →
+   Remove). Es instantáneo, pero depende de un tercero.
+2. **Verificación por TXT**, que *no* depende de nadie: al añadir el
+   dominio, Vercel detecta que está en uso y ofrece verificar la
+   propiedad mediante un registro `TXT` llamado `_vercel` con el valor
+   que muestre el panel. Creado ese registro en el registrador, Vercel
+   traslada el dominio a nuestro proyecto.
 
 Para comprobar a quién resuelve el dominio en cada momento:
 
 ```bash
-dig +short aprendelocal.com          # no debe devolver ninguna 185.199.x.x
+dig +short aprendelocal.com
 curl -sI https://aprendelocal.com | grep -i server
 ```
 
