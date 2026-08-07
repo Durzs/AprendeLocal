@@ -38,11 +38,22 @@ export default function LoginPage() {
       });
 
       if (error) {
-        alert(error.message);
+        // "Email not confirmed" es el error más frecuente justo después de
+        // registrarse, y por sí solo no dice qué hacer.
+        const sinConfirmar = /confirm/i.test(error.message);
+        alert(
+          sinConfirmar ? `${error.message}\n\n${t("login.notConfirmed")}` : error.message
+        );
         return;
       }
 
-      localStorage.setItem("token", data.session.access_token);
+      // La sesión sólo falta si Supabase exige un segundo paso; leerla sin
+      // comprobar reventaba con un TypeError en lugar de explicar el motivo.
+      if (!data.session) {
+        alert(t("login.notConfirmed"));
+        return;
+      }
+
       navigate(from, { replace: true });
     } catch (err: any) {
       alert(err?.message || "Erro");

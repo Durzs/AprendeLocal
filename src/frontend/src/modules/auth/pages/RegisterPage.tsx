@@ -16,6 +16,9 @@ export default function RegisterPage() {
 
   const [idade, setIdade] = useState(18);
   const [loading, setLoading] = useState(false);
+  const [aviso, setAviso] = useState<{ tipo: "error" | "info"; texto: string } | null>(
+    null
+  );
 
   async function handleCadastro(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,8 +29,17 @@ export default function RegisterPage() {
     const senha = senhaRef.current?.value;
     const cep = cepRef.current?.value?.trim();
 
+    setAviso(null);
+
     if (!nome || !email || !senha) {
-      alert(t("register.validation.required"));
+      setAviso({ tipo: "error", texto: t("register.validation.required") });
+      return;
+    }
+
+    // Supabase rechaza contraseñas de menos de seis caracteres. Avisar aquí
+    // ahorra el viaje al servidor y un mensaje de error en inglés.
+    if (senha.length < 6) {
+      setAviso({ tipo: "error", texto: t("register.validation.passwordLength") });
       return;
     }
 
@@ -43,23 +55,46 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        alert(error.message);
+        setAviso({ tipo: "error", texto: error.message });
         return;
       }
 
-      const userId = data?.user?.id;
-
-      if (userId) {
-        await supabase.from("profiles").upsert(
-          { id: userId, nome, cep, idade },
-          { onConflict: "id" }
-        );
+      // Con un correo ya registrado, Supabase devuelve un éxito falso —para no
+      // revelar qué direcciones existen— y lo delata dejando `identities` vacío.
+      if (data.user && data.user.identities && data.user.identities.length === 0) {
+        setAviso({ tipo: "error", texto: t("register.emailTaken") });
+        return;
       }
 
-      alert(t("register.success"));
-      navigate("/entrar");
+      // Sin sesión, la cuenta existe pero todavía no sirve: falta confirmar el
+      // correo. Mandar al login aquí es lo que hacía parecer que el registro
+      // funcionaba, cuando en realidad dejaba al usuario sin poder entrar.
+      if (!data.session) {
+        setAviso({ tipo: "info", texto: t("register.confirmEmail", { email }) });
+        return;
+      }
+
+      // Solo con sesión activa el JWT permite escribir el perfil bajo RLS. Si el
+      // disparador de base de datos está instalado, la fila ya existe y esto se
+      // limita a completarla.
+      const { error: perfilError } = await supabase
+        .from("profiles")
+        .upsert({ id: data.session.user.id, nome, cep, idade }, { onConflict: "id" });
+
+      if (perfilError) {
+        // La cuenta ya está creada, así que no tiene sentido bloquear al
+        // usuario. Pero tampoco callar el fallo, como se hacía antes.
+        console.error("No se pudo guardar el perfil:", perfilError);
+        setAviso({
+          tipo: "info",
+          texto: t("register.profileWarning", { motivo: perfilError.message }),
+        });
+        return;
+      }
+
+      navigate("/", { replace: true });
     } catch (err: any) {
-      alert(err?.message || t("register.error"));
+      setAviso({ tipo: "error", texto: err?.message || t("register.error") });
     } finally {
       setLoading(false);
     }
@@ -91,6 +126,20 @@ export default function RegisterPage() {
               </h2>
               <p className="mt-2 text-sm text-slate-500">{t("register.subtitle")}</p>
             </div>
+
+            {aviso && (
+              <div
+                role="alert"
+                aria-live="polite"
+                className={
+                  aviso.tipo === "error"
+                    ? "mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+                    : "mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
+                }
+              >
+                {aviso.texto}
+              </div>
+            )}
 
             <form className="mt-8 space-y-5" onSubmit={handleCadastro}>
               <div>

@@ -241,7 +241,8 @@
       "loading": "Cadastrando..."
     },
     "validation": {
-      "required": "Preencha nome, email e senha."
+      "required": "Preencha nome, email e senha.",
+      "passwordLength": "A senha deve ter pelo menos 6 caracteres."
     },
     "success": "Cadastro criado! Faça o login.",
     "error": "Erro ao cadastrar.",
@@ -249,7 +250,10 @@
     "loginAction": "Faça login para continuar.",
     "heroTitle": "Junte-se ao AprendeLocal",
     "heroSubtitle": "Cadastre-se para começar sua jornada de inovação e criatividade.",
-    "backHome": "Voltar para o início"
+    "backHome": "Voltar para o início",
+    "emailTaken": "Esse email já está cadastrado. Faça login ou recupere sua senha.",
+    "confirmEmail": "Conta criada. Enviamos um email para {{email}}: confirme pelo link e depois faça login. Se não chegar em alguns minutos, verifique a caixa de spam.",
+    "profileWarning": "Sua conta foi criada, mas não conseguimos salvar os dados do perfil ({{motivo}}). Você pode fazer login e completá-los no seu perfil."
   },
   "login": {
     "title": "Login",
@@ -262,7 +266,8 @@
     "loading": "Entrando...",
     "validation": {
       "required": "Preencha email e senha."
-    }
+    },
+    "notConfirmed": "Se você acabou de se cadastrar, confirme seu email pelo link que enviamos."
   },
   "makerspaces": {
     "title": "Makerspaces",

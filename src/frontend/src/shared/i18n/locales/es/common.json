@@ -241,7 +241,8 @@
       "loading": "Registrando..."
     },
     "validation": {
-      "required": "Completa nombre, correo y contraseña."
+      "required": "Completa nombre, correo y contraseña.",
+      "passwordLength": "La contraseña debe tener al menos 6 caracteres."
     },
     "success": "¡Cuenta creada! Inicia sesión.",
     "error": "Error al registrarse.",
@@ -249,7 +250,10 @@
     "loginAction": "Inicia sesión para continuar.",
     "heroTitle": "Únete a AprendeLocal",
     "heroSubtitle": "Regístrate para comenzar tu camino de innovación y creatividad.",
-    "backHome": "Volver al inicio"
+    "backHome": "Volver al inicio",
+    "emailTaken": "Ese correo ya está registrado. Inicia sesión o recupera tu contraseña.",
+    "confirmEmail": "Cuenta creada. Te enviamos un correo a {{email}}: confirma desde ese enlace y después inicia sesión. Si no llega en unos minutos, revisa la carpeta de spam.",
+    "profileWarning": "Tu cuenta quedó creada, pero no pudimos guardar tus datos de perfil ({{motivo}}). Puedes iniciar sesión y completarlos desde tu perfil."
   },
   "login": {
     "title": "Iniciar sesión",
@@ -262,7 +266,8 @@
     "loading": "Entrando...",
     "validation": {
       "required": "Completa correo y contraseña."
-    }
+    },
+    "notConfirmed": "Si acabas de registrarte, primero confirma tu correo con el enlace que te enviamos."
   },
   "makerspaces": {
     "title": "Makerspaces",
