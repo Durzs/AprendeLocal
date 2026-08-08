@@ -242,7 +242,8 @@
     },
     "validation": {
       "required": "Preencha nome, email e senha.",
-      "passwordLength": "A senha deve ter pelo menos 6 caracteres."
+      "passwordLength": "A senha deve ter pelo menos 6 caracteres.",
+      "ageRange": "Informe uma idade entre {{min}} e {{max}} anos."
     },
     "success": "Cadastro criado! Faça o login.",
     "error": "Erro ao cadastrar.",

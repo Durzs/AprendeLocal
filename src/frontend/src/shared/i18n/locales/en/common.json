@@ -242,7 +242,8 @@
     },
     "validation": {
       "required": "Please fill in name, email and password.",
-      "passwordLength": "Password must be at least 6 characters long."
+      "passwordLength": "Password must be at least 6 characters long.",
+      "ageRange": "Enter an age between {{min}} and {{max}}."
     },
     "success": "Account created! Please log in.",
     "error": "Registration error.",

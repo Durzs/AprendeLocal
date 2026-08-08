@@ -242,7 +242,8 @@
     },
     "validation": {
       "required": "Completa nombre, correo y contraseña.",
-      "passwordLength": "La contraseña debe tener al menos 6 caracteres."
+      "passwordLength": "La contraseña debe tener al menos 6 caracteres.",
+      "ageRange": "Indica una edad entre {{min}} y {{max}} años."
     },
     "success": "¡Cuenta creada! Inicia sesión.",
     "error": "Error al registrarse.",

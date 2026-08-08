@@ -5,6 +5,11 @@ import { supabase } from "../../../shared/lib/supabaseClient";
 import { useTranslation } from "react-i18next";
 import logo from "../../../assets/images/logo.png";
 
+// La plataforma la usan estudiantes de enseñanza básica y media y sus
+// docentes; fuera de este rango el dato no es plausible.
+const EDAD_MIN = 5;
+const EDAD_MAX = 99;
+
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -14,7 +19,9 @@ export default function RegisterPage() {
   const senhaRef = useRef<HTMLInputElement>(null);
   const cepRef = useRef<HTMLInputElement>(null);
 
-  const [idade, setIdade] = useState(18);
+  // Se guarda como texto para que el campo pueda quedar vacío mientras se
+  // escribe; se valida y convierte al enviar.
+  const [idade, setIdade] = useState("18");
   const [loading, setLoading] = useState(false);
   const [aviso, setAviso] = useState<{ tipo: "error" | "info"; texto: string } | null>(
     null
@@ -43,6 +50,16 @@ export default function RegisterPage() {
       return;
     }
 
+    const edad = Number(idade);
+
+    if (!Number.isInteger(edad) || edad < EDAD_MIN || edad > EDAD_MAX) {
+      setAviso({
+        tipo: "error",
+        texto: t("register.validation.ageRange", { min: EDAD_MIN, max: EDAD_MAX }),
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -50,7 +67,7 @@ export default function RegisterPage() {
         email,
         password: senha,
         options: {
-          data: { nome, cep, idade: String(idade) },
+          data: { nome, cep, idade: String(edad) },
         },
       });
 
@@ -79,7 +96,7 @@ export default function RegisterPage() {
       // limita a completarla.
       const { error: perfilError } = await supabase
         .from("profiles")
-        .upsert({ id: data.session.user.id, nome, cep, idade }, { onConflict: "id" });
+        .upsert({ id: data.session.user.id, nome, cep, idade: edad }, { onConflict: "id" });
 
       if (perfilError) {
         // La cuenta ya está creada, así que no tiene sentido bloquear al
@@ -191,17 +208,22 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  {t("register.fields.age")}:{" "}
-                  <span className="font-semibold text-slate-950">{idade}</span>
+                <label
+                  htmlFor="idade"
+                  className="mb-1.5 block text-sm font-medium text-slate-700"
+                >
+                  {t("register.fields.age")}
                 </label>
                 <input
-                  type="range"
-                  min={1}
-                  max={100}
+                  id="idade"
+                  type="number"
+                  inputMode="numeric"
+                  min={EDAD_MIN}
+                  max={EDAD_MAX}
+                  step={1}
                   value={idade}
-                  onChange={(e) => setIdade(Number(e.target.value))}
-                  className="w-full accent-slate-950"
+                  onChange={(e) => setIdade(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
