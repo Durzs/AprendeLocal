@@ -16,6 +16,19 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const MODELO = "claude-sonnet-5";
 
+/**
+ * Seis etapas completas —con el ejemplo resuelto paso a paso— no caben en 4000
+ * tokens: se cortaba a mitad del JSON y el fallo aparecía como «no devolvió
+ * JSON válido», que no dice nada de la causa real.
+ */
+const MAX_TOKENS = 8000;
+
+/**
+ * Por debajo del límite del entorno, para poder responder con un motivo en vez
+ * de que la ejecución muera sin dejar respuesta.
+ */
+const TIEMPO_MAXIMO_MS = 110_000;
+
 const ETAPAS = [
   "instruccion_explicita",
   "ejemplo_resuelto",
@@ -82,6 +95,21 @@ function parsear(texto: string): Record<string, unknown> {
 }
 
 /**
+ * Los campos vienen con nombre de variable (`tiempo_flotador_s`) y estos avisos
+ * los lee el docente. Es la misma conversión que hace la pantalla; aquí va
+ * repetida en corto porque una Edge Function no comparte código con el bundle.
+ */
+function legible(campo: string): string {
+  const partes = String(campo).trim().split(/[_\s-]+/).filter(Boolean);
+  if (partes.length === 0) return campo;
+  if (partes.length > 1 && /^(m|cm|mm|km|m2|m3|ha|l|ml|kg|g|s|seg|min|h|c|pct)$/i.test(partes[partes.length - 1])) {
+    partes.pop();
+  }
+  const texto = partes.join(" ");
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+/**
  * Comprueba lo que sostiene el diseño, no la mera presencia de claves. Los
  * mensajes van redactados para el docente, que es quien los lee.
  */
@@ -114,7 +142,9 @@ function validar(s: Record<string, any>): string[] {
   for (const campo of protocolo) {
     if (!String(campo?.campo ?? "").trim()) problemas.push("Una de las mediciones no tiene nombre");
     if (campo?.tipo === "numero" && !String(campo?.unidad ?? "").trim()) {
-      problemas.push(`La medición «${campo?.campo ?? "?"}» no dice en qué unidad anotarla`);
+      problemas.push(
+        `La medición «${legible(campo?.campo ?? "?")}» no dice en qué unidad anotarla`,
+      );
     }
   }
 
@@ -198,20 +228,40 @@ Deno.serve(async (req: Request) => {
     .filter(Boolean)
     .join("\n");
 
-  const respuestaIA = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": claveAnthropic,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: MODELO,
-      max_tokens: 4000,
-      system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-      messages: [{ role: "user", content: prompt }],
-    }),
-  });
+  // Corte propio antes del límite de la plataforma: si se agota el tiempo del
+  // entorno, el docente recibe un fallo opaco. Así recibe una explicación y
+  // sabe que puede reintentar.
+  const reloj = AbortSignal.timeout(TIEMPO_MAXIMO_MS);
+
+  let respuestaIA: Response;
+  try {
+    respuestaIA = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      signal: reloj,
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": claveAnthropic,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: MODELO,
+        max_tokens: MAX_TOKENS,
+        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+  } catch (e) {
+    const porTiempo = e instanceof DOMException && e.name === "TimeoutError";
+    return responder(
+      {
+        error: porTiempo
+          ? "La secuencia tardó demasiado en generarse y se cortó. " +
+            "Vuelve a intentarlo, o pide menos sesiones."
+          : `No se pudo contactar al generador: ${e}`,
+      },
+      504,
+    );
+  }
 
   if (!respuestaIA.ok) {
     const detalle = await respuestaIA.text();
@@ -219,6 +269,21 @@ Deno.serve(async (req: Request) => {
   }
 
   const datos = await respuestaIA.json();
+
+  // Una respuesta cortada por longitud llega como JSON incompleto, y el error
+  // de parseo no dice por qué. Conviene distinguirlo: la salida es pedir menos
+  // sesiones, no reintentar lo mismo.
+  if (datos.stop_reason === "max_tokens") {
+    return responder(
+      {
+        error:
+          "La secuencia salió más larga de lo que cabe en una respuesta y quedó " +
+          "incompleta. Prueba con menos sesiones.",
+      },
+      502,
+    );
+  }
+
   let secuencia: Record<string, any>;
   try {
     secuencia = parsear(datos.content?.[0]?.text ?? "");

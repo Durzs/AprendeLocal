@@ -25,6 +25,7 @@ import type {
 } from "../../../types";
 import EtapaSecuencia from "../components/EtapaSecuencia";
 import RielEtapas, { type ResumenEtapa } from "../components/RielEtapas";
+import { enPalabras, nombreLegible } from "../lib/etiquetas";
 import {
   OBJETIVOS_DEMO,
   PUNTOS_DEMO,
@@ -364,7 +365,7 @@ export default function PrepararPage() {
             {s.procedencia && (
               <p className="mt-4 font-mono text-[11px] text-slate-500">
                 lugar: {s.procedencia.de_datos.punto} · {s.procedencia.de_datos.comuna} ·
-                ecosistema: {s.procedencia.de_datos.ecosistema} · modelo:{" "}
+                ecosistema: {enPalabras(s.procedencia.de_datos.ecosistema ?? "")} · modelo:{" "}
                 {s.procedencia.modelo}
               </p>
             )}
@@ -506,15 +507,19 @@ export default function PrepararPage() {
               <table className="w-full min-w-[420px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 font-mono text-[11px] uppercase tracking-wider text-slate-500">
-                    <th className="py-2 pr-3">Campo</th>
-                    <th className="py-2 pr-3">Qué medir</th>
+                    <th className="py-2 pr-3">Qué anotan</th>
+                    <th className="py-2 pr-3">Cómo se mide</th>
                     <th className="py-2">Unidad</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(s.salida_terreno?.protocolo ?? []).map((c) => (
                     <tr key={c.campo} className="border-b border-slate-100 align-top">
-                      <td className="py-2 pr-3 font-mono text-xs">{c.campo}</td>
+                      {/* El nombre técnico queda en el title por si hay que
+                          cruzar estos datos con los que quedan guardados. */}
+                      <td className="py-2 pr-3 font-medium text-slate-900" title={c.campo}>
+                        {nombreLegible(c.campo, c.unidad)}
+                      </td>
                       <td className="py-2 pr-3">{c.instruccion}</td>
                       <td className="py-2 font-mono text-xs">{c.unidad ?? "—"}</td>
                     </tr>

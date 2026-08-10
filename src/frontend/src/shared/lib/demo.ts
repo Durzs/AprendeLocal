@@ -239,7 +239,7 @@ export const SECUENCIA_DEMO: RespuestaSecuencia = {
   },
   resumen: {},
   // A propósito: enseña cómo la pantalla avisa de lo que hay que revisar.
-  problemas: ["La medición «tiempo_flotador_s» no dice en qué unidad anotarla"],
+  problemas: ["La medición «Tiempo flotador» no dice en qué unidad anotarla"],
   utilizable: false,
 };
 
