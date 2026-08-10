@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Search,
@@ -200,6 +200,31 @@ export default function PlatformPage() {
           <p className="mt-2 max-w-2xl text-base text-slate-500">
             {t("platform.subtitle")}
           </p>
+
+
+          {/* Entrada del docente.
+              El diseño instruccional baja el mapa de puerta principal a capa de
+              consulta: quien enseña empieza por el objetivo de aprendizaje, no
+              explorando. Por eso esto va sobre las pestañas y no dentro de una. */}
+          <Link
+            to="/preparar"
+            className="mt-6 flex flex-col gap-3 rounded-2xl border border-emerald-600/30 bg-emerald-50/60 p-5 transition hover:border-emerald-600/60 hover:bg-emerald-50 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-emerald-700">
+                {t("platform.teacherEntry.eyebrow")}
+              </p>
+              <p className="mt-1 text-lg font-semibold tracking-tight text-slate-950">
+                {t("platform.teacherEntry.title")}
+              </p>
+              <p className="mt-1 max-w-xl text-sm text-slate-600">
+                {t("platform.teacherEntry.body")}
+              </p>
+            </div>
+            <span className="shrink-0 rounded-full bg-[#111217] px-5 py-2.5 text-center text-sm font-semibold text-white">
+              {t("platform.teacherEntry.cta")}
+            </span>
+          </Link>
 
           {/* Tabs */}
           <div className="mt-6 flex gap-2">
