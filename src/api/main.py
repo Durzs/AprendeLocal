@@ -30,6 +30,19 @@ class GenerateRequest(BaseModel):
     duration: str = ""  # Duración deseada (1_semana, 2_semanas, etc.)
 
 
+class SequenceRequest(BaseModel):
+    """Petición de una secuencia de enseñanza anclada a un lugar.
+
+    A diferencia de GenerateRequest, la entrada es el objetivo de aprendizaje:
+    el docente parte de lo que le toca enseñar, y el lugar se elige para
+    servirlo. Es la inversión que pide el diseño instruccional.
+    """
+    objective_code: str
+    point_id: str
+    sesiones: int = 4
+    notas_docente: str = ""
+
+
 # ── Endpoints existentes ─────────────────────────────────────────────
 
 @app.get("/health")
@@ -275,6 +288,96 @@ async def generate_project(req: GenerateRequest):
 class BatchRequest(BaseModel):
     """IDs de proyectos a recuperar (para el hub 'Mis Proyectos')."""
     project_ids: list[str]
+
+
+@app.post("/sequences")
+async def generar_secuencia(req: SequenceRequest):
+    """Genera una secuencia de enseñanza para un objetivo de aprendizaje.
+
+    Se diferencia de /generate-project en el orden pedagógico: aquella entrega
+    un proyecto para que el estudiante investigue por su cuenta; esta entrega
+    instrucción explícita, ejemplo resuelto ambientado en el lugar, práctica
+    con guía decreciente, salida a terreno DESPUÉS de la práctica, y
+    recuperación espaciada.
+
+    /generate-project se mantiene para no romper lo que ya está desplegado.
+    """
+    if not settings.anthropic_api_key:
+        raise HTTPException(
+            status_code=503,
+            detail="Generador no configurado: falta ANTHROPIC_API_KEY",
+        )
+
+    sb = get_supabase()
+
+    objetivo_res = (
+        sb.table("curriculum_objectives")
+        .select("*")
+        .eq("code", req.objective_code)
+        .execute()
+    )
+    if not objetivo_res.data:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Objetivo de aprendizaje {req.objective_code} no encontrado",
+        )
+    oa = objetivo_res.data[0]
+
+    poi_res = (
+        sb.table("points_of_interest").select("*").eq("id", req.point_id).execute()
+    )
+    if not poi_res.data:
+        raise HTTPException(status_code=404, detail="Punto de interés no encontrado")
+    poi = poi_res.data[0]
+
+    from ..ml.sequence_generator import (
+        GeneradorSecuencias,
+        ObjetivoAprendizaje,
+        SolicitudSecuencia,
+        resumen_para_docente,
+        validar_secuencia,
+    )
+    from ..ml.stem_generator import TerritorialContext
+
+    solicitud = SolicitudSecuencia(
+        objetivo=ObjetivoAprendizaje(
+            codigo=oa["code"],
+            descripcion=oa.get("description", ""),
+            asignatura=oa.get("subject", ""),
+            nivel=oa.get("level", ""),
+        ),
+        contexto=TerritorialContext(
+            name=poi["name"],
+            ecosystem_type=poi.get("ecosystem_type", "desconocido"),
+            commune=poi["commune"],
+            description=poi.get("description", ""),
+            stem_areas=poi.get("stem_areas", []),
+            heritage_type=poi.get("heritage_type", ""),
+            threats=poi.get("threats", []),
+        ),
+        sesiones=req.sesiones,
+        notas_docente=req.notas_docente,
+    )
+
+    generador = GeneradorSecuencias(api_key=settings.anthropic_api_key)
+
+    try:
+        secuencia = await generador.generar(solicitud)
+    except ValueError as exc:
+        # El modelo devolvió algo inservible. Se responde 502 en vez de guardar
+        # una secuencia rota que el docente descubriría delante del curso.
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    problemas = validar_secuencia(secuencia)
+
+    return {
+        "secuencia": secuencia,
+        "resumen": resumen_para_docente(secuencia),
+        # Se devuelven en lugar de ocultarse: el docente edita antes de usar, y
+        # necesita saber qué le falta a lo que recibió.
+        "problemas": problemas,
+        "utilizable": not problemas,
+    }
 
 
 @app.post("/projects/batch")

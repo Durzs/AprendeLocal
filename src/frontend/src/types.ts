@@ -236,3 +236,75 @@ export interface StudentProgressSummary {
   field_notes_count: number;
   quiz_scores: number[];
 }
+
+// ── Secuencias de enseñanza ──────────────────────────────────────────
+// Las seis etapas van en orden de guía decreciente: la salida a terreno
+// ocurre en la quinta, no en la primera.
+
+export interface PasoResuelto {
+  paso: number;
+  accion: string;
+  razonamiento: string;
+  resultado: string;
+}
+
+export interface CampoProtocolo {
+  campo: string;
+  instruccion: string;
+  unidad?: string;
+  tipo?: string;
+}
+
+export interface MomentoRecuperacion {
+  semanas_despues: number;
+  pregunta: string;
+  respuesta_esperada: string;
+}
+
+export interface Secuencia {
+  titulo: string;
+  objetivo_codigo: string;
+  objetivo_descripcion?: string;
+  sesiones?: number;
+  sintesis_docente?: string;
+  instruccion_explicita?: {
+    duracion_min?: number;
+    notas_para_el_docente?: string[];
+    conceptos_clave?: string[];
+    errores_frecuentes?: string[];
+  };
+  ejemplo_resuelto?: {
+    situacion?: string;
+    pasos?: PasoResuelto[];
+    respuesta?: string;
+  };
+  practica_guiada?: {
+    instrucciones_docente?: string;
+    ejercicios?: { enunciado: string; apoyo?: string; respuesta_esperada?: string }[];
+  };
+  practica_autonoma?: {
+    ejercicios?: { enunciado: string; respuesta_esperada?: string }[];
+  };
+  salida_terreno?: {
+    duracion_min?: number;
+    preparacion?: string[];
+    protocolo?: CampoProtocolo[];
+    seguridad?: string[];
+  };
+  recuperacion_espaciada?: MomentoRecuperacion[];
+  materiales?: string[];
+  requiere_consulta?: boolean;
+  procedencia?: {
+    de_datos: Record<string, string>;
+    generado_por_modelo: string[];
+    modelo: string;
+  };
+}
+
+export interface RespuestaSecuencia {
+  secuencia: Secuencia;
+  resumen: Record<string, unknown>;
+  /** Lo que le falta a la secuencia. Se muestra al docente, no se oculta. */
+  problemas: string[];
+  utilizable: boolean;
+}

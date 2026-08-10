@@ -24,3 +24,13 @@ body {
   height: 100%;
   width: 100%;
 }
+
+/* Impresión de secuencias.
+   En escuelas sin conexión estable el papel es la interfaz real, así que la
+   secuencia tiene que salir legible en blanco y negro y sin cortar etapas. */
+@media print {
+  body { background: #fff; }
+  nav, footer { display: none !important; }
+  section { break-inside: avoid; border-color: #999 !important; }
+  a[href]::after { content: ""; }
+}
