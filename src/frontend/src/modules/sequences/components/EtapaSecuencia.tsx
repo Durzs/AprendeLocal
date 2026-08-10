@@ -11,12 +11,14 @@ import type { ReactNode } from "react";
 
 type Props = {
   numero: number;
-  total: number;
   titulo: string;
   subtitulo?: string;
   /** Quién ejecuta esta etapa. Hace visible que la plataforma no enseña. */
   actor: "docente" | "plataforma" | "estudiantes";
   destacada?: boolean;
+  /** Fuera de la etapa activa se oculta en pantalla, pero sigue en el DOM
+   *  para que al imprimir salga la secuencia entera y seguida. */
+  activa?: boolean;
   children: ReactNode;
 };
 
@@ -28,21 +30,19 @@ const ETIQUETA_ACTOR: Record<Props["actor"], string> = {
 
 export default function EtapaSecuencia({
   numero,
-  total,
   titulo,
   subtitulo,
   actor,
   destacada = false,
+  activa = true,
   children,
 }: Props) {
-  // La guía va del 100 % en la primera etapa a un mínimo en la última.
-  const guia = Math.round(100 - ((numero - 1) / Math.max(total - 1, 1)) * 82);
-
   return (
     <section
       className={[
         "break-inside-avoid rounded-2xl border bg-white p-5 md:p-6",
         destacada ? "border-emerald-300 ring-1 ring-emerald-200" : "border-slate-200",
+        activa ? "" : "hidden print:block print:mt-4",
       ].join(" ")}
     >
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -56,18 +56,6 @@ export default function EtapaSecuencia({
       </header>
 
       {subtitulo && <p className="mt-1 text-sm text-slate-500">{subtitulo}</p>}
-
-      <div className="mt-3 flex items-center gap-2" aria-hidden="true">
-        <div className="h-1 flex-1 overflow-hidden rounded-full bg-slate-100">
-          <div
-            className={destacada ? "h-1 bg-emerald-500" : "h-1 bg-slate-400"}
-            style={{ width: `${guia}%` }}
-          />
-        </div>
-        <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400">
-          guía {guia}%
-        </span>
-      </div>
 
       <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-700">
         {children}

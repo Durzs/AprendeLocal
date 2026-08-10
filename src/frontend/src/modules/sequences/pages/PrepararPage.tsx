@@ -20,6 +20,7 @@ import type {
   Secuencia,
 } from "../../../types";
 import EtapaSecuencia from "../components/EtapaSecuencia";
+import RielEtapas, { type ResumenEtapa } from "../components/RielEtapas";
 import {
   OBJETIVOS_DEMO,
   PUNTOS_DEMO,
@@ -27,8 +28,6 @@ import {
   esperar,
   modoDemo,
 } from "../../../shared/lib/demo";
-
-const TOTAL_ETAPAS = 6;
 
 /** Distintivo que separa el dato real del texto generado por el modelo. */
 function Procedencia({ tipo }: { tipo: "dato" | "generado" }) {
@@ -63,6 +62,8 @@ export default function PrepararPage() {
   const [sesiones, setSesiones] = useState(4);
   const [notas, setNotas] = useState("");
 
+  const [etapaActiva, setEtapaActiva] = useState(1);
+  const [formAbierto, setFormAbierto] = useState(true);
   const [generando, setGenerando] = useState(false);
   const [resultado, setResultado] = useState<RespuestaSecuencia | null>(null);
   const [errorGeneracion, setErrorGeneracion] = useState<string | null>(null);
@@ -114,6 +115,8 @@ export default function PrepararPage() {
       if (modoDemo()) {
         await esperar(900); // la generación real tampoco es instantánea
         setResultado(SECUENCIA_DEMO);
+        setFormAbierto(false);
+        setEtapaActiva(1);
         return;
       }
       const r = await generarSecuencia({
@@ -123,6 +126,8 @@ export default function PrepararPage() {
         notasDocente: notas,
       });
       setResultado(r);
+      setFormAbierto(false);
+      setEtapaActiva(1);
     } catch (err: unknown) {
       setErrorGeneracion(
         err instanceof Error ? err.message : "No se pudo generar la secuencia"
@@ -134,8 +139,25 @@ export default function PrepararPage() {
 
   const s: Secuencia | undefined = resultado?.secuencia;
 
+  // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
+  // el conjunto antes de leerlo entero.
+  const etapas: ResumenEtapa[] = [
+    { numero: 1, titulo: "Instrucción explícita", actor: "docente",
+      piezas: s?.instruccion_explicita?.notas_para_el_docente?.length },
+    { numero: 2, titulo: "Ejemplo resuelto", actor: "plataforma",
+      piezas: s?.ejemplo_resuelto?.pasos?.length },
+    { numero: 3, titulo: "Práctica guiada", actor: "docente",
+      piezas: s?.practica_guiada?.ejercicios?.length },
+    { numero: 4, titulo: "Práctica autónoma", actor: "estudiantes",
+      piezas: s?.practica_autonoma?.ejercicios?.length },
+    { numero: 5, titulo: "Salida a terreno", actor: "estudiantes",
+      piezas: s?.salida_terreno?.protocolo?.length },
+    { numero: 6, titulo: "Recuperación espaciada", actor: "estudiantes",
+      piezas: s?.recuperacion_espaciada?.length },
+  ];
+
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 py-10">
       <header className="print:hidden">
         <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
           Preparar una unidad
@@ -158,8 +180,33 @@ export default function PrepararPage() {
         </p>
       )}
 
+      {/* Barra compacta: sustituye al formulario una vez hay resultado */}
+      {resultado && !formAbierto && (
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm print:hidden">
+          <span className="font-mono text-xs text-slate-500">{objetivoCode}</span>
+          <span className="text-slate-300">·</span>
+          <span className="text-slate-700">
+            {puntos.find((p) => String(p.properties.id) === pointId)?.properties.name}
+          </span>
+          <span className="text-slate-300">·</span>
+          <span className="text-slate-600">{sesiones} sesiones</span>
+          <button
+            type="button"
+            onClick={() => setFormAbierto(true)}
+            className="ml-auto rounded-full border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            Cambiar
+          </button>
+        </div>
+      )}
+
       {/* ── Formulario ── */}
-      <div className="mt-8 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 print:hidden">
+      <div
+        className={[
+          "mt-8 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 print:hidden",
+          resultado && !formAbierto ? "hidden" : "",
+        ].join(" ")}
+      >
         {errorCatalogos && (
           <p
             role="alert"
@@ -277,7 +324,7 @@ export default function PrepararPage() {
 
       {/* ── Secuencia ── */}
       {s && (
-        <article className="mt-10 space-y-4">
+        <article className="mt-8">
           <header className="rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
               {s.titulo}
@@ -336,9 +383,13 @@ export default function PrepararPage() {
             </div>
           )}
 
+          <div className="mt-6 grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+            <RielEtapas etapas={etapas} activa={etapaActiva} onCambiar={setEtapaActiva} />
+
+            <div className="min-w-0 space-y-4 print:space-y-0">
           <EtapaSecuencia
             numero={1}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 1}
             titulo="Instrucción explícita"
             subtitulo={
               s.instruccion_explicita?.duracion_min
@@ -362,7 +413,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             numero={2}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 2}
             titulo="Ejemplo resuelto de este lugar"
             subtitulo={s.ejemplo_resuelto?.situacion}
             actor="plataforma"
@@ -392,7 +443,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             numero={3}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 3}
             titulo="Práctica guiada"
             subtitulo={s.practica_guiada?.instrucciones_docente}
             actor="docente"
@@ -411,7 +462,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             numero={4}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 4}
             titulo="Práctica autónoma"
             actor="estudiantes"
           >
@@ -424,7 +475,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             numero={5}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 5}
             titulo="Salida a terreno"
             subtitulo="Ahora sí: la clase ya sabe qué mirar y por qué"
             actor="estudiantes"
@@ -464,7 +515,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             numero={6}
-            total={TOTAL_ETAPAS}
+            activa={etapaActiva === 6}
             titulo="Recuperación espaciada"
             subtitulo="Con los datos que midieron ellos mismos"
             actor="estudiantes"
@@ -482,7 +533,32 @@ export default function PrepararPage() {
             </ul>
           </EtapaSecuencia>
 
-          <p className="pt-2 text-sm text-slate-500">
+              {/* Avance secuencial, para quien prefiere recorrerla en orden */}
+              <div className="flex items-center justify-between gap-3 print:hidden">
+                <button
+                  type="button"
+                  onClick={() => setEtapaActiva((n) => Math.max(1, n - 1))}
+                  disabled={etapaActiva === 1}
+                  className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
+                >
+                  Anterior
+                </button>
+                <span className="font-mono text-xs text-slate-400">
+                  {etapaActiva} de {etapas.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setEtapaActiva((n) => Math.min(etapas.length, n + 1))}
+                  disabled={etapaActiva === etapas.length}
+                  className="rounded-full bg-[#111217] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p className="pt-6 text-sm text-slate-500">
             Todo lo marcado como <Procedencia tipo="generado" /> lo redactó un modelo.
             Revísalo y edítalo: quien enseña eres tú.
           </p>
