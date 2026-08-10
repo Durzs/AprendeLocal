@@ -1,0 +1,258 @@
+/**
+ * Generación de secuencias de enseñanza — Edge Function.
+ *
+ * Sustituye al endpoint `POST /sequences` de la API FastAPI. Era lo único que
+ * de verdad necesitaba un servidor: la clave de Anthropic no puede viajar al
+ * navegador. Todo lo demás —objetivos, puntos, progreso— lo sirve Supabase
+ * directamente con sus políticas de lectura, así que con esto desaparece la
+ * necesidad de desplegar y mantener un servicio aparte.
+ *
+ * Se consulta la base con el token de quien llama, no con la clave de
+ * servicio: así siguen aplicándose las políticas RLS en lugar de saltárselas,
+ * que era el problema de la API anterior.
+ */
+
+import { createClient } from "jsr:@supabase/supabase-js@2";
+
+const MODELO = "claude-sonnet-5";
+
+const ETAPAS = [
+  "instruccion_explicita",
+  "ejemplo_resuelto",
+  "practica_guiada",
+  "practica_autonoma",
+  "salida_terreno",
+  "recuperacion_espaciada",
+] as const;
+
+const NOMBRE_VISIBLE: Record<string, string> = {
+  instruccion_explicita: "lo que explicas tú en la clase 1",
+  ejemplo_resuelto: "el ejemplo que muestras en la clase 1",
+  practica_guiada: "los ejercicios que resuelven contigo",
+  practica_autonoma: "los ejercicios que resuelven solos",
+  salida_terreno: "la salida a medir",
+  recuperacion_espaciada: "las preguntas de las semanas siguientes",
+};
+
+const SYSTEM_PROMPT =
+  `Eres un diseñador instruccional que prepara material para docentes rurales del sur de Chile (La Araucanía), muchos de ellos a cargo de aulas multigrado donde un solo profesor atiende varios cursos a la vez.
+
+Tu trabajo NO es diseñar un proyecto para que el estudiante descubra por su cuenta. Es preparar una secuencia de enseñanza en la que la guía empieza alta y se retira progresivamente, siguiendo la evidencia sobre carga cognitiva y ejemplos resueltos.
+
+Reglas que no puedes romper:
+
+1. EL LUGAR ES EL CONTEXTO, NO EL MÉTODO. El territorio es el material del que están hechos el ejemplo y la práctica, no el punto de partida de una exploración libre.
+2. EL EJEMPLO RESUELTO ES EL CENTRO. Debe estar completamente desarrollado, paso a paso, con los números o las observaciones ya hechas y explicadas.
+3. LA SALIDA A TERRENO VA DESPUÉS de la práctica guiada, nunca antes.
+4. HABLAS AL DOCENTE. La instrucción explícita se redacta como notas para que el profesor las explique él.
+5. MATERIALES DE ZONA RURAL: cuaderno, huincha, lupa, termómetro, botellas recicladas, agua del estero.
+6. EL PROTOCOLO DE TERRENO LLEVA CAMPOS CONCRETOS Y MEDIBLES, con unidad.
+7. LA RECUPERACIÓN ESPACIADA USA LOS DATOS QUE LOS PROPIOS ESTUDIANTES TOMARON, con marcadores {dato_del_estudiante}.
+8. CULTURA MAPUCHE: solo si es pertinente, como fuente de conocimiento y nunca como adorno. Si la incluyes, márcalo en requiere_consulta.
+
+Responde SOLO con un JSON válido, sin markdown, con esta forma:
+{"titulo":"","objetivo_codigo":"","sesiones":4,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"instrucciones_docente":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}`;
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function responder(cuerpo: unknown, status = 200): Response {
+  return new Response(JSON.stringify(cuerpo), {
+    status,
+    headers: { ...CORS, "Content-Type": "application/json" },
+  });
+}
+
+/** Tolera que el modelo envuelva el JSON en un bloque de código. */
+function parsear(texto: string): Record<string, unknown> {
+  let limpio = texto.trim();
+  if (limpio.startsWith("```")) {
+    limpio = limpio.slice(limpio.indexOf("\n") + 1);
+    limpio = limpio.slice(0, limpio.lastIndexOf("```")).trim();
+    if (limpio.startsWith("json")) limpio = limpio.slice(4).trim();
+  }
+  const datos = JSON.parse(limpio);
+  if (typeof datos !== "object" || datos === null || Array.isArray(datos)) {
+    throw new Error("el modelo no devolvió un objeto");
+  }
+  return datos as Record<string, unknown>;
+}
+
+/**
+ * Comprueba lo que sostiene el diseño, no la mera presencia de claves. Los
+ * mensajes van redactados para el docente, que es quien los lee.
+ */
+function validar(s: Record<string, any>): string[] {
+  const problemas: string[] = [];
+
+  for (const etapa of ETAPAS) {
+    if (!(etapa in s)) problemas.push(`Falta ${NOMBRE_VISIBLE[etapa]}`);
+  }
+
+  const pasos = s.ejemplo_resuelto?.pasos ?? [];
+  if (pasos.length === 0) {
+    problemas.push("El ejemplo no trae los pasos resueltos");
+  } else {
+    const sinPorque = pasos
+      .map((p: any, i: number) => (String(p?.razonamiento ?? "").trim() ? null : p?.paso ?? i + 1))
+      .filter((x: unknown) => x !== null);
+    if (sinPorque.length > 0) {
+      problemas.push(
+        `En el ejemplo, ${sinPorque.length > 1 ? "los pasos" : "el paso"} ${sinPorque.join(", ")} no explican por qué se hacen así`,
+      );
+    }
+  }
+  if (!String(s.ejemplo_resuelto?.respuesta ?? "").trim()) {
+    problemas.push("El ejemplo no termina en un resultado");
+  }
+
+  const protocolo = s.salida_terreno?.protocolo ?? [];
+  if (protocolo.length === 0) problemas.push("La salida no dice qué hay que medir");
+  for (const campo of protocolo) {
+    if (!String(campo?.campo ?? "").trim()) problemas.push("Una de las mediciones no tiene nombre");
+    if (campo?.tipo === "numero" && !String(campo?.unidad ?? "").trim()) {
+      problemas.push(`La medición «${campo?.campo ?? "?"}» no dice en qué unidad anotarla`);
+    }
+  }
+
+  const recuperacion = s.recuperacion_espaciada ?? [];
+  if (recuperacion.length < 2) {
+    problemas.push("Hay que volver a preguntar al menos en dos momentos distintos");
+  }
+  const semanas = recuperacion.map((r: any) => r?.semanas_despues);
+  if (semanas.length !== new Set(semanas).size) {
+    problemas.push("Hay dos rondas de preguntas en la misma semana");
+  }
+
+  return problemas;
+}
+
+Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return responder({ error: "Usa POST" }, 405);
+
+  const claveAnthropic = Deno.env.get("ANTHROPIC_API_KEY");
+  if (!claveAnthropic) {
+    // Mensaje explícito en vez de un 500 opaco: sin la clave no hay generación
+    // posible, y conviene que se sepa por qué.
+    return responder(
+      {
+        error:
+          "Falta configurar ANTHROPIC_API_KEY en los secretos del proyecto. " +
+          "Sin ella no se puede generar la secuencia.",
+      },
+      503,
+    );
+  }
+
+  let cuerpo: { objective_code?: string; point_id?: string; sesiones?: number; notas_docente?: string };
+  try {
+    cuerpo = await req.json();
+  } catch {
+    return responder({ error: "El cuerpo de la petición no es JSON válido" }, 400);
+  }
+
+  const { objective_code, point_id, sesiones = 4, notas_docente = "" } = cuerpo;
+  if (!objective_code || !point_id) {
+    return responder({ error: "Faltan objective_code y point_id" }, 400);
+  }
+
+  // Con el token de quien llama: se respetan las políticas RLS.
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } },
+  );
+
+  const [{ data: oa }, { data: poi }] = await Promise.all([
+    supabase.from("curriculum_objectives").select("*").eq("code", objective_code).maybeSingle(),
+    supabase.from("points_of_interest").select("*").eq("id", point_id).maybeSingle(),
+  ]);
+
+  if (!oa) return responder({ error: `No existe el objetivo ${objective_code}` }, 404);
+  if (!poi) return responder({ error: "No existe ese punto de interés" }, 404);
+
+  const prompt = [
+    `OBJETIVO DE APRENDIZAJE (${oa.code}): ${oa.description}`,
+    oa.subject ? `Asignatura: ${oa.subject}` : "",
+    oa.level ? `Nivel: ${oa.level}` : "",
+    "",
+    "LUGAR DONDE SE ANCLA LA ENSEÑANZA",
+    `Nombre: ${poi.name}`,
+    `Comuna: ${poi.commune}`,
+    `Ecosistema: ${poi.ecosystem_type ?? "desconocido"}`,
+    `Descripción: ${poi.description ?? ""}`,
+    poi.threats?.length ? `Amenazas locales: ${poi.threats.join(", ")}` : "",
+    poi.heritage_type ? `Patrimonio: ${poi.heritage_type}` : "",
+    "",
+    `Sesiones disponibles: ${sesiones}`,
+    notas_docente ? `Notas del docente: ${notas_docente}` : "",
+    "",
+    "Genera la secuencia completa. El ejemplo resuelto debe estar totalmente " +
+      "desarrollado y ambientado en este lugar, y la salida a terreno va después " +
+      "de la práctica, no antes.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const respuestaIA = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": claveAnthropic,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: MODELO,
+      max_tokens: 4000,
+      system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!respuestaIA.ok) {
+    const detalle = await respuestaIA.text();
+    return responder({ error: `La generación falló: ${detalle.slice(0, 300)}` }, 502);
+  }
+
+  const datos = await respuestaIA.json();
+  let secuencia: Record<string, any>;
+  try {
+    secuencia = parsear(datos.content?.[0]?.text ?? "");
+  } catch (e) {
+    // 502 en vez de guardar una secuencia rota que el docente descubriría
+    // delante del curso.
+    return responder({ error: `El modelo no devolvió JSON válido: ${e}` }, 502);
+  }
+
+  // La procedencia la pone el servidor, no el modelo: es dato, no texto generado.
+  secuencia.procedencia = {
+    de_datos: {
+      punto: poi.name,
+      comuna: poi.commune,
+      ecosistema: poi.ecosystem_type ?? "",
+      objetivo: oa.code,
+    },
+    generado_por_modelo: [...ETAPAS],
+    modelo: MODELO,
+  };
+  secuencia.objetivo_descripcion = oa.description;
+
+  const problemas = validar(secuencia);
+
+  return responder({
+    secuencia,
+    resumen: {
+      titulo: secuencia.titulo ?? "",
+      pasos_del_ejemplo: secuencia.ejemplo_resuelto?.pasos?.length ?? 0,
+      campos_de_terreno: secuencia.salida_terreno?.protocolo?.length ?? 0,
+      momentos_de_recuperacion: secuencia.recuperacion_espaciada?.length ?? 0,
+    },
+    // Se devuelven al docente en lugar de ocultarse: él edita antes de usar.
+    problemas,
+    utilizable: problemas.length === 0,
+  });
+});

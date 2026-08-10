@@ -12,7 +12,11 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { fetchCurriculum, fetchPoints, generarSecuencia } from "../../../api";
+import {
+  generarSecuencia,
+  leerObjetivos,
+  leerPuntos,
+} from "../../../shared/lib/catalogos";
 import type {
   CurriculumObjective,
   POIFeature,
@@ -78,10 +82,12 @@ export default function PrepararPage() {
           setPuntos(PUNTOS_DEMO);
           return;
         }
-        const [oas, geo] = await Promise.all([fetchCurriculum(), fetchPoints()]);
+        // Directo a Supabase: estas tablas tienen lectura pública y no
+        // necesitan la API intermedia.
+        const [oas, puntos] = await Promise.all([leerObjetivos(), leerPuntos()]);
         if (!vigente) return;
-        setObjetivos(oas ?? []);
-        setPuntos(geo?.features ?? []);
+        setObjetivos(oas);
+        setPuntos(puntos);
       } catch (err: unknown) {
         if (!vigente) return;
         // Sin VITE_API_URL las rutas quedan relativas y esto falla en silencio
@@ -214,8 +220,8 @@ export default function PrepararPage() {
           >
             <p className="font-semibold">No se pudo cargar el catálogo</p>
             <p className="mt-1">
-              La aplicación no está conectada con el servicio que guarda los objetivos
-              de aprendizaje y los lugares.
+              No se pudieron leer los objetivos de aprendizaje ni los lugares desde la
+              base de datos.
             </p>
             {/* Salida inmediata: quien solo quiere ver la pantalla no debería
                 quedarse ante un muro sin siguiente paso. */}
@@ -227,7 +233,7 @@ export default function PrepararPage() {
             {/* El detalle técnico queda, pero en segundo plano: lo necesita quien
                 mantiene el sitio, no quien va a dar la clase. */}
             <p className="mt-2.5 text-xs opacity-70">
-              Detalle: {errorCatalogos}. Suele faltar VITE_API_URL en el proveedor.
+              Detalle: {errorCatalogos}
             </p>
           </div>
         )}
