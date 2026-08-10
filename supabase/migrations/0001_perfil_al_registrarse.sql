@@ -16,10 +16,26 @@
 -- Supabase → SQL Editor → pegar y ejecutar. Es idempotente: se puede volver a
 -- correr sin romper nada.
 --
--- Antes de ejecutar, confirma que `public.profiles` tiene las columnas `id`,
--- `nome`, `cep` e `idade`. Si alguna se llama distinto, ajústala abajo.
+-- APLICADA el 10 de agosto de 2026 sobre el proyecto fbpspmecvrcfnubqxslf.
+--
+-- Al conectar el proyecto se descubrió que `public.profiles` **no existía**:
+-- el `upsert` del registro fallaba con «relation does not exist» y ese error
+-- se descartaba sin comprobarlo. Por eso la migración ahora crea la tabla; sus
+-- columnas se derivan del uso real del frontend (registro, perfil y selector
+-- de avatar).
 
--- 1. Función que traduce los metadatos del registro a una fila de perfil.
+-- 1. La tabla que faltaba.
+create table if not exists public.profiles (
+  id         uuid primary key references auth.users (id) on delete cascade,
+  nome       text,
+  cep        text,
+  idade      integer,
+  avatar_url text,
+  avatar_id  text,
+  created_at timestamptz not null default now()
+);
+
+-- 2. Función que traduce los metadatos del registro a una fila de perfil.
 --    SECURITY DEFINER para que corra con permisos del propietario y no quede
 --    sujeta a las políticas RLS que se definen más abajo.
 create or replace function public.handle_new_user()
@@ -44,7 +60,7 @@ begin
 end;
 $$;
 
--- 2. Disparador sobre el alta de usuario.
+-- 3. Disparador sobre el alta de usuario.
 drop trigger if exists on_auth_user_created on auth.users;
 
 create trigger on_auth_user_created
@@ -52,7 +68,7 @@ create trigger on_auth_user_created
   for each row
   execute function public.handle_new_user();
 
--- 3. Políticas RLS de `profiles`.
+-- 4. Políticas RLS de `profiles`.
 --    Sin ellas, el frontend no puede leer ni completar su propio perfil.
 alter table public.profiles enable row level security;
 
@@ -72,7 +88,7 @@ create policy "perfil propio: actualizar"
   using (auth.uid() = id)
   with check (auth.uid() = id);
 
--- 4. Reparar las cuentas que quedaron sin perfil mientras el fallo estuvo vivo.
+-- 5. Reparar las cuentas que quedaron sin perfil mientras el fallo estuvo vivo.
 insert into public.profiles (id, nome, cep, idade)
 select
   u.id,
