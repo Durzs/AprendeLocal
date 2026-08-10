@@ -1,21 +1,26 @@
 /**
- * Riel de navegación entre etapas.
+ * Riel de navegación entre los momentos de la unidad.
  *
- * Hace dos cosas a la vez, y por eso existe en lugar de unas pestañas
- * cualquiera: permite saltar de etapa sin recorrer seis tarjetas apiladas, y
- * dibuja el desvanecimiento de la guía. La barra de cada paso es más corta que
- * la del anterior, así que la pedagogía del diseño se lee en la navegación
- * misma en vez de quedar sepultada en el contenido.
+ * Antes mostraba la taxonomía del diseño instruccional —instrucción explícita,
+ * práctica guiada, recuperación espaciada— con barras de porcentaje de guía.
+ * Eso es vocabulario de justificación, no la lengua de trabajo de un docente,
+ * y le cargaba con teoría que no necesita para dar la clase del lunes.
  *
- * No aparece al imprimir: en papel se quiere la secuencia completa y seguida.
+ * Ahora se lee como su calendario: qué clase, y qué hace en ella. El orden
+ * sigue siendo el que sostiene la evidencia; simplemente ya no se explica a
+ * quien no lo pidió.
  */
 
 export type ResumenEtapa = {
   numero: number;
+  /** Cuándo ocurre: «Clase 1», «Semanas 1, 3 y 6»… */
+  momento: string;
+  /** Qué pasa, en voz de docente: «Explicas tú», «Salen a medir»… */
   titulo: string;
-  actor: "docente" | "plataforma" | "estudiantes";
-  /** Cuántas piezas tiene: pasos, ejercicios, campos… */
+  /** Cuántas piezas trae, para juzgar el peso de un vistazo. */
   piezas?: number;
+  /** Unidad de esas piezas: «pasos», «ejercicios», «mediciones»… */
+  unidad?: string;
 };
 
 type Props = {
@@ -24,34 +29,40 @@ type Props = {
   onCambiar: (numero: number) => void;
 };
 
-const COLOR_ACTOR: Record<ResumenEtapa["actor"], string> = {
-  docente: "bg-slate-400",
-  plataforma: "bg-emerald-500",
-  estudiantes: "bg-sky-400",
-};
+/** «1 ejercicios» chirría en una interfaz que quiere sonar a persona. */
+function contar(n: number, plural: string): string {
+  if (n !== 1) return `${n} ${plural}`;
+  const singular = plural.endsWith("ones")
+    ? plural.slice(0, -4) + "ón"
+    : plural.endsWith("es")
+      ? plural.slice(0, -2)
+      : plural.replace(/s$/, "");
+  return `${n} ${singular}`;
+}
 
 export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
-  const total = etapas.length;
-
   return (
     <nav
-      aria-label="Etapas de la secuencia"
+      aria-label="Momentos de la unidad"
       // `min-w-0` es imprescindible: como hijo de una rejilla su ancho mínimo
       // es automático, y sin esto la fila de chips estira el contenedor y hace
       // que toda la página se desplace en horizontal en el móvil.
       className="min-w-0 max-w-full print:hidden lg:sticky lg:top-24"
     >
-      <p className="mb-3 hidden font-mono text-[11px] uppercase tracking-widest text-slate-400 lg:block">
-        La guía se retira
-      </p>
-
       <ol className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:gap-1 lg:overflow-visible lg:pb-0">
-        {etapas.map((e) => {
+        {etapas.map((e, i) => {
           const esActiva = e.numero === activa;
-          const guia = Math.round(100 - ((e.numero - 1) / Math.max(total - 1, 1)) * 82);
+          // Solo se repite la cabecera de momento cuando cambia, para que se
+          // lea «Clase 1» una vez y no cuatro.
+          const momentoNuevo = i === 0 || etapas[i - 1].momento !== e.momento;
 
           return (
             <li key={e.numero} className="shrink-0 lg:shrink">
+              {momentoNuevo && (
+                <p className="mb-1 mt-3 hidden font-mono text-[11px] uppercase tracking-widest text-slate-400 first:mt-0 lg:block">
+                  {e.momento}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={() => onCambiar(e.numero)}
@@ -60,52 +71,34 @@ export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
                   "w-full rounded-xl border px-3 py-2.5 text-left transition",
                   esActiva
                     ? "border-slate-900 bg-slate-900 text-white"
-                    : "border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-50",
+                    : "border-transparent text-slate-700 hover:border-slate-200 hover:bg-slate-50",
                 ].join(" ")}
               >
                 <span className="flex items-baseline gap-2">
-                  <span
-                    className={[
-                      "font-mono text-[11px]",
-                      esActiva ? "text-slate-400" : "text-slate-400",
-                    ].join(" ")}
-                  >
-                    {String(e.numero).padStart(2, "0")}
-                  </span>
                   <span className="whitespace-nowrap text-sm font-medium lg:whitespace-normal">
                     {e.titulo}
                   </span>
                   {typeof e.piezas === "number" && e.piezas > 0 && (
                     <span
                       className={[
-                        "ml-auto hidden font-mono text-[11px] lg:inline",
+                        "ml-auto hidden text-[11px] lg:inline",
                         esActiva ? "text-slate-400" : "text-slate-400",
                       ].join(" ")}
                     >
-                      {e.piezas}
+                      {contar(e.piezas, e.unidad ?? "")}
                     </span>
                   )}
                 </span>
-
-                {/* La barra encoge etapa a etapa: es el desvanecimiento de la guía */}
-                <span
-                  aria-hidden="true"
-                  className="mt-2 hidden h-1 w-full overflow-hidden rounded-full bg-slate-200/70 lg:block"
-                >
-                  <span
-                    className={["block h-1 rounded-full", COLOR_ACTOR[e.actor]].join(" ")}
-                    style={{ width: `${guia}%` }}
-                  />
-                </span>
+                <span className="text-[11px] text-slate-400 lg:hidden"> · {e.momento}</span>
               </button>
             </li>
           );
         })}
       </ol>
 
-      <p className="mt-4 hidden text-[11px] leading-relaxed text-slate-400 lg:block">
-        La salida a terreno va en la quinta etapa, no en la primera: cuando la clase
-        sale, ya sabe qué mirar.
+      <p className="mt-5 hidden text-[11px] leading-relaxed text-slate-400 lg:block">
+        Salen a terreno después de practicar, no antes: así llegan sabiendo qué
+        mirar.
       </p>
     </nav>
   );

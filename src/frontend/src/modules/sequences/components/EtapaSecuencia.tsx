@@ -10,7 +10,6 @@
 import type { ReactNode } from "react";
 
 type Props = {
-  numero: number;
   titulo: string;
   subtitulo?: string;
   /** Quién ejecuta esta etapa. Hace visible que la plataforma no enseña. */
@@ -22,14 +21,16 @@ type Props = {
   children: ReactNode;
 };
 
+// En voz de docente, no en jerga de diseño instruccional. Sigue marcando la
+// frontera del acompañante —la plataforma no enseña— sin decirlo con esas
+// palabras.
 const ETIQUETA_ACTOR: Record<Props["actor"], string> = {
-  docente: "Lo conduce el docente",
-  plataforma: "Lo prepara la plataforma",
-  estudiantes: "Lo hacen los estudiantes",
+  docente: "Lo haces tú",
+  plataforma: "Te lo dejamos preparado",
+  estudiantes: "Lo hacen ellos",
 };
 
 export default function EtapaSecuencia({
-  numero,
   titulo,
   subtitulo,
   actor,
@@ -46,9 +47,6 @@ export default function EtapaSecuencia({
       ].join(" ")}
     >
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="font-mono text-xs tracking-widest text-slate-400">
-          {String(numero).padStart(2, "0")}
-        </span>
         <h3 className="text-lg font-semibold tracking-tight text-slate-950">{titulo}</h3>
         <span className="ml-auto font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {ETIQUETA_ACTOR[actor]}

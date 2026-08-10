@@ -138,7 +138,8 @@ def test_secuencia_correcta_no_reporta_problemas():
 def test_detecta_cualquier_etapa_ausente(etapa):
     s = secuencia_valida()
     del s[etapa]
-    assert any(etapa in p for p in validar_secuencia(s))
+    from src.ml.sequence_generator import NOMBRE_VISIBLE
+    assert any(NOMBRE_VISIBLE[etapa] in p for p in validar_secuencia(s))
 
 
 def test_ejemplo_resuelto_sin_razonamiento_no_es_ejemplo_resuelto():
@@ -146,20 +147,20 @@ def test_ejemplo_resuelto_sin_razonamiento_no_es_ejemplo_resuelto():
     s = secuencia_valida()
     s["ejemplo_resuelto"]["pasos"][1]["razonamiento"] = ""
     problemas = validar_secuencia(s)
-    assert any("sin razonamiento" in p for p in problemas)
+    assert any("no explican por qué" in p for p in problemas)
     assert any("2" in p for p in problemas)
 
 
 def test_ejemplo_resuelto_sin_respuesta_final():
     s = secuencia_valida()
     s["ejemplo_resuelto"]["respuesta"] = "   "
-    assert any("respuesta" in p for p in validar_secuencia(s))
+    assert any("no termina en un resultado" in p for p in validar_secuencia(s))
 
 
 def test_campo_numerico_sin_unidad_no_se_puede_medir():
     s = secuencia_valida()
     del s["salida_terreno"]["protocolo"][0]["unidad"]
-    assert any("unidad" in p for p in validar_secuencia(s))
+    assert any("en qué unidad" in p for p in validar_secuencia(s))
 
 
 def test_campo_de_texto_no_necesita_unidad():
@@ -172,19 +173,19 @@ def test_campo_de_texto_no_necesita_unidad():
 def test_protocolo_vacio_deja_la_salida_sin_captura():
     s = secuencia_valida()
     s["salida_terreno"]["protocolo"] = []
-    assert any("protocolo" in p for p in validar_secuencia(s))
+    assert any("qué hay que medir" in p for p in validar_secuencia(s))
 
 
 def test_un_solo_momento_de_recuperacion_no_es_espaciamiento():
     s = secuencia_valida()
     s["recuperacion_espaciada"] = s["recuperacion_espaciada"][:1]
-    assert any("al menos dos" in p for p in validar_secuencia(s))
+    assert any("al menos en dos momentos" in p for p in validar_secuencia(s))
 
 
 def test_momentos_de_recuperacion_repetidos():
     s = secuencia_valida()
     s["recuperacion_espaciada"][1]["semanas_despues"] = 1
-    assert any("repetidos" in p for p in validar_secuencia(s))
+    assert any("misma semana" in p for p in validar_secuencia(s))
 
 
 # ── Resumen ──────────────────────────────────────────────────────────

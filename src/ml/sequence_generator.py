@@ -235,6 +235,19 @@ def parsear_secuencia(respuesta: str) -> dict:
     return datos
 
 
+#: Cómo se llama cada etapa cuando se le habla al docente. Los avisos los lee
+#: quien va a dar la clase, no quien escribió el código, así que ni los nombres
+#: internos ni la jerga de diseño instruccional tienen sitio ahí.
+NOMBRE_VISIBLE = {
+    "instruccion_explicita": "lo que explicas tú en la clase 1",
+    "ejemplo_resuelto": "el ejemplo que muestras en la clase 1",
+    "practica_guiada": "los ejercicios que resuelven contigo",
+    "practica_autonoma": "los ejercicios que resuelven solos",
+    "salida_terreno": "la salida a medir",
+    "recuperacion_espaciada": "las preguntas de las semanas siguientes",
+}
+
+
 def validar_secuencia(secuencia: dict) -> list[str]:
     """Comprueba que la secuencia sirva de verdad para dar clase.
 
@@ -242,17 +255,19 @@ def validar_secuencia(secuencia: dict) -> list[str]:
     valida lo que sostiene el diseño, no la mera presencia de claves: un
     ejemplo resuelto sin razonamiento en sus pasos deja de ser un ejemplo
     resuelto, y un protocolo sin unidades no se puede medir.
+
+    Los mensajes están redactados para el docente, que es quien los ve.
     """
     problemas: list[str] = []
 
     for etapa in ETAPAS:
         if etapa not in secuencia:
-            problemas.append(f"falta la etapa '{etapa}'")
+            problemas.append(f"Falta {NOMBRE_VISIBLE[etapa]}")
 
     ejemplo = secuencia.get("ejemplo_resuelto") or {}
     pasos = ejemplo.get("pasos") or []
     if not pasos:
-        problemas.append("el ejemplo resuelto no tiene pasos")
+        problemas.append("El ejemplo no trae los pasos resueltos")
     else:
         sin_razonamiento = [
             p.get("paso", i + 1)
@@ -261,29 +276,31 @@ def validar_secuencia(secuencia: dict) -> list[str]:
         ]
         if sin_razonamiento:
             problemas.append(
-                "el ejemplo resuelto tiene pasos sin razonamiento: "
+                "En el ejemplo, "
+                + ("los pasos " if len(sin_razonamiento) > 1 else "el paso ")
                 + ", ".join(str(p) for p in sin_razonamiento)
+                + " no explican por qué se hacen así"
             )
     if not str(ejemplo.get("respuesta", "")).strip():
-        problemas.append("el ejemplo resuelto no llega a una respuesta")
+        problemas.append("El ejemplo no termina en un resultado")
 
     protocolo = (secuencia.get("salida_terreno") or {}).get("protocolo") or []
     if not protocolo:
-        problemas.append("la salida a terreno no tiene protocolo de captura")
+        problemas.append("La salida no dice qué hay que medir")
     for campo in protocolo:
         if not str(campo.get("campo", "")).strip():
-            problemas.append("hay un campo del protocolo sin nombre")
+            problemas.append("Una de las mediciones no tiene nombre")
         if campo.get("tipo") == "numero" and not str(campo.get("unidad", "")).strip():
             problemas.append(
-                f"el campo numérico '{campo.get('campo', '?')}' no declara unidad"
+                f"La medición «{campo.get('campo', '?')}» no dice en qué unidad anotarla"
             )
 
     recuperacion = secuencia.get("recuperacion_espaciada") or []
     if len(recuperacion) < 2:
-        problemas.append("la recuperación espaciada necesita al menos dos momentos")
+        problemas.append("Hay que volver a preguntar al menos en dos momentos distintos")
     semanas = [r.get("semanas_despues") for r in recuperacion]
     if semanas and len(set(semanas)) != len(semanas):
-        problemas.append("hay momentos de recuperación repetidos en la misma semana")
+        problemas.append("Hay dos rondas de preguntas en la misma semana")
 
     return problemas
 

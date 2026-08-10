@@ -142,17 +142,17 @@ export default function PrepararPage() {
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
   const etapas: ResumenEtapa[] = [
-    { numero: 1, titulo: "Instrucción explícita", actor: "docente",
+    { numero: 1, momento: "Clase 1", titulo: "Explicas tú", unidad: "puntos",
       piezas: s?.instruccion_explicita?.notas_para_el_docente?.length },
-    { numero: 2, titulo: "Ejemplo resuelto", actor: "plataforma",
+    { numero: 2, momento: "Clase 1", titulo: "Muestras este ejemplo", unidad: "pasos",
       piezas: s?.ejemplo_resuelto?.pasos?.length },
-    { numero: 3, titulo: "Práctica guiada", actor: "docente",
+    { numero: 3, momento: "Clase 2", titulo: "Resuelven contigo", unidad: "ejercicios",
       piezas: s?.practica_guiada?.ejercicios?.length },
-    { numero: 4, titulo: "Práctica autónoma", actor: "estudiantes",
+    { numero: 4, momento: "Clase 2", titulo: "Resuelven solos", unidad: "ejercicios",
       piezas: s?.practica_autonoma?.ejercicios?.length },
-    { numero: 5, titulo: "Salida a terreno", actor: "estudiantes",
+    { numero: 5, momento: "Clase 3", titulo: "Salen a medir", unidad: "mediciones",
       piezas: s?.salida_terreno?.protocolo?.length },
-    { numero: 6, titulo: "Recuperación espaciada", actor: "estudiantes",
+    { numero: 6, momento: "Semanas 1, 3 y 6", titulo: "Vuelves a preguntar", unidad: "preguntas",
       piezas: s?.recuperacion_espaciada?.length },
   ];
 
@@ -388,9 +388,8 @@ export default function PrepararPage() {
 
             <div className="min-w-0 space-y-4 print:space-y-0">
           <EtapaSecuencia
-            numero={1}
             activa={etapaActiva === 1}
-            titulo="Instrucción explícita"
+            titulo="Explicas tú"
             subtitulo={
               s.instruccion_explicita?.duracion_min
                 ? `${s.instruccion_explicita.duracion_min} minutos`
@@ -412,9 +411,8 @@ export default function PrepararPage() {
           </EtapaSecuencia>
 
           <EtapaSecuencia
-            numero={2}
             activa={etapaActiva === 2}
-            titulo="Ejemplo resuelto de este lugar"
+            titulo="Muestras este ejemplo"
             subtitulo={s.ejemplo_resuelto?.situacion}
             actor="plataforma"
             destacada
@@ -442,9 +440,8 @@ export default function PrepararPage() {
           </EtapaSecuencia>
 
           <EtapaSecuencia
-            numero={3}
             activa={etapaActiva === 3}
-            titulo="Práctica guiada"
+            titulo="Resuelven contigo"
             subtitulo={s.practica_guiada?.instrucciones_docente}
             actor="docente"
           >
@@ -461,9 +458,8 @@ export default function PrepararPage() {
           </EtapaSecuencia>
 
           <EtapaSecuencia
-            numero={4}
             activa={etapaActiva === 4}
-            titulo="Práctica autónoma"
+            titulo="Resuelven solos"
             actor="estudiantes"
           >
             <ol className="list-decimal space-y-2 pl-5">
@@ -474,10 +470,9 @@ export default function PrepararPage() {
           </EtapaSecuencia>
 
           <EtapaSecuencia
-            numero={5}
             activa={etapaActiva === 5}
-            titulo="Salida a terreno"
-            subtitulo="Ahora sí: la clase ya sabe qué mirar y por qué"
+            titulo="Salen a medir"
+            subtitulo="Ya practicaron: llegan sabiendo qué mirar"
             actor="estudiantes"
             destacada
           >
@@ -514,10 +509,9 @@ export default function PrepararPage() {
           </EtapaSecuencia>
 
           <EtapaSecuencia
-            numero={6}
             activa={etapaActiva === 6}
-            titulo="Recuperación espaciada"
-            subtitulo="Con los datos que midieron ellos mismos"
+            titulo="Vuelves a preguntar"
+            subtitulo="Con lo que ellos mismos midieron en el estero"
             actor="estudiantes"
           >
             <ul className="space-y-2">
