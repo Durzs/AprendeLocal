@@ -254,7 +254,11 @@
     "backHome": "Volver al inicio",
     "emailTaken": "Ese correo ya está registrado. Inicia sesión o recupera tu contraseña.",
     "confirmEmail": "Cuenta creada. Te enviamos un correo a {{email}}: confirma desde ese enlace y después inicia sesión. Si no llega en unos minutos, revisa la carpeta de spam.",
-    "profileWarning": "Tu cuenta quedó creada, pero no pudimos guardar tus datos de perfil ({{motivo}}). Puedes iniciar sesión y completarlos desde tu perfil."
+    "profileWarning": "Tu cuenta quedó creada, pero no pudimos guardar tus datos de perfil ({{motivo}}). Puedes iniciar sesión y completarlos desde tu perfil.",
+    "resend": "Reenviar el correo de confirmación",
+    "resending": "Reenviando...",
+    "resendOk": "Enlace reenviado a {{email}}. Revisa también la carpeta de spam.",
+    "resendError": "No pudimos reenviar el correo ({{motivo}})."
   },
   "login": {
     "title": "Iniciar sesión",
@@ -478,6 +482,24 @@
         "hydrological": "Hidrológico",
         "cultural": "Cultural"
       }
+    }
+  },
+  "auth": {
+    "callback": {
+      "verifying": "Confirmando tu cuenta...",
+      "wait": "Esto tarda un momento. No cierres la pestaña.",
+      "success": "¡Cuenta confirmada!",
+      "redirecting": "Te estamos llevando a AprendeLocal.",
+      "enterNow": "Entrar ahora",
+      "failed": "No pudimos confirmar tu cuenta",
+      "noCredentials": "Este enlace no trae datos de confirmación. Ábrelo directamente desde el correo que te enviamos, sin copiarlo a mano.",
+      "timeout": "El enlace no pudo validarse. Suele pasar cuando ya se usó una vez o cuando pasó demasiado tiempo desde el registro.",
+      "resendLabel": "Escribe tu correo y te mandamos un enlace nuevo",
+      "resend": "Enviar enlace nuevo",
+      "resending": "Enviando...",
+      "resendOk": "Listo. Revisa tu correo, y también la carpeta de spam.",
+      "resendError": "No pudimos reenviarlo ({{motivo}}).",
+      "backToLogin": "Volver a iniciar sesión"
     }
   }
 }

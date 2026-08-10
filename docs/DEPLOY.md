@@ -96,6 +96,26 @@ Hay dos configuraciones válidas, y hay que elegir una:
 > funcionar y nadie consigue iniciar sesión. Es el estado por defecto, así que
 > conviene verificarlo explícitamente.
 
+### URLs de retorno
+
+Si dejas la confirmación activada, el enlace del correo devuelve al usuario a
+`/auth/callback`. Esa ruta **tiene que estar permitida** en Supabase →
+Authentication → URL Configuration, o Supabase rechaza el retorno:
+
+| Campo | Valor |
+|---|---|
+| Site URL | `https://www.aprendelocal.com` |
+| Redirect URLs | `https://www.aprendelocal.com/auth/callback`<br>`http://localhost:5173/auth/callback` |
+
+El registro pasa `emailRedirectTo` explícitamente, así que no depende solo del
+Site URL —que es el ajuste que suele quedarse apuntando a `localhost`—, pero la
+URL debe figurar igualmente en la lista blanca.
+
+> El cliente usa el flujo **implícito** a propósito, no PKCE. PKCE exige que el
+> verificador guardado al registrarse siga en el mismo navegador, y aquí es
+> corriente registrarse en el computador de la escuela y abrir el correo en el
+> teléfono. Con PKCE ese caso falla siempre.
+
 Además, el perfil del usuario lo crea un disparador de base de datos, no el
 navegador. Aplica `supabase/migrations/0001_perfil_al_registrarse.sql` desde el
 SQL Editor: crea la función y el disparador, define las políticas RLS de

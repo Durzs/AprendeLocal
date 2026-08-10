@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserPlus } from "lucide-react";
-import { supabase } from "../../../shared/lib/supabaseClient";
+import { supabase, urlDeRetorno } from "../../../shared/lib/supabaseClient";
+import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
 import { useTranslation } from "react-i18next";
 import logo from "../../../assets/images/logo.png";
 
@@ -26,6 +27,10 @@ export default function RegisterPage() {
   const [aviso, setAviso] = useState<{ tipo: "error" | "info"; texto: string } | null>(
     null
   );
+  // Correo a la espera de confirmación, para poder reenviar el enlace sin
+  // obligar a rellenar el formulario otra vez.
+  const [emailPendiente, setEmailPendiente] = useState<string | null>(null);
+  const [reenviando, setReenviando] = useState(false);
 
   async function handleCadastro(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,6 +42,7 @@ export default function RegisterPage() {
     const cep = cepRef.current?.value?.trim();
 
     setAviso(null);
+    setEmailPendiente(null);
 
     if (!nome || !email || !senha) {
       setAviso({ tipo: "error", texto: t("register.validation.required") });
@@ -68,6 +74,9 @@ export default function RegisterPage() {
         password: senha,
         options: {
           data: { nome, cep, idade: String(edad) },
+          // Sin esto el enlace vuelve al Site URL configurado en Supabase,
+          // que es justo el ajuste que suele quedar apuntando a localhost.
+          emailRedirectTo: urlDeRetorno(),
         },
       });
 
@@ -87,6 +96,7 @@ export default function RegisterPage() {
       // correo. Mandar al login aquí es lo que hacía parecer que el registro
       // funcionaba, cuando en realidad dejaba al usuario sin poder entrar.
       if (!data.session) {
+        setEmailPendiente(email);
         setAviso({ tipo: "info", texto: t("register.confirmEmail", { email }) });
         return;
       }
@@ -115,6 +125,19 @@ export default function RegisterPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleReenviar() {
+    if (!emailPendiente || reenviando) return;
+    setReenviando(true);
+    const { error } = await reenviarConfirmacion(emailPendiente);
+    setReenviando(false);
+    setAviso({
+      tipo: error ? "error" : "info",
+      texto: error
+        ? t("register.resendError", { motivo: error.message })
+        : t("register.resendOk", { email: emailPendiente }),
+    });
   }
 
   return (
@@ -155,6 +178,16 @@ export default function RegisterPage() {
                 }
               >
                 {aviso.texto}
+                {emailPendiente && (
+                  <button
+                    type="button"
+                    onClick={handleReenviar}
+                    disabled={reenviando}
+                    className="mt-3 block font-semibold underline underline-offset-2 disabled:opacity-60"
+                  >
+                    {reenviando ? t("register.resending") : t("register.resend")}
+                  </button>
+                )}
               </div>
             )}
 
