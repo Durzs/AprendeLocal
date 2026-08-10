@@ -49,6 +49,20 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden items-center gap-1 md:flex">
+            {/* Entrada del docente. Va primera y con borde propio porque es una
+                puerta distinta: se empieza por el objetivo, no por explorar. */}
+            <Link
+              to="/preparar"
+              className={[
+                "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                location.pathname === "/preparar"
+                  ? "border-emerald-600 bg-emerald-600 text-white"
+                  : "border-emerald-600/40 text-emerald-800 hover:bg-emerald-50",
+              ].join(" ")}
+            >
+              {t("header.nav.prepare")}
+            </Link>
+            <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden="true" />
             <Link
               to="/plataforma?tab=courses"
               className={[
@@ -183,6 +197,13 @@ export default function Header() {
               <LanguageSwitcher />
             </div>
 
+            <Link
+              to="/preparar"
+              onClick={closeMobile}
+              className="rounded-xl border border-emerald-600/40 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50"
+            >
+              {t("header.nav.prepare")}
+            </Link>
             <Link
               to="/plataforma?tab=courses"
               onClick={closeMobile}

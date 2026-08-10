@@ -55,7 +55,8 @@
     "nav": {
       "courses": "Cursos",
       "makerspaces": "Makerspaces",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "prepare": "Preparar clase"
     },
     "mobile": {
       "openMenu": "Abrir menú",
@@ -482,6 +483,12 @@
         "hydrological": "Hidrológico",
         "cultural": "Cultural"
       }
+    },
+    "teacherEntry": {
+      "eyebrow": "Para docentes",
+      "title": "Prepara una unidad desde tu objetivo de aprendizaje",
+      "body": "Instrucción explícita, un ejemplo resuelto de un lugar cercano a tu escuela, práctica y salida a terreno — en ese orden.",
+      "cta": "Preparar clase"
     }
   },
   "auth": {

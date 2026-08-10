@@ -55,7 +55,8 @@
     "nav": {
       "courses": "Courses",
       "makerspaces": "Makerspaces",
-      "profile": "Profile"
+      "profile": "Profile",
+      "prepare": "Prepare a lesson"
     },
     "mobile": {
       "openMenu": "Open menu",
@@ -482,6 +483,12 @@
         "hydrological": "Hydrological",
         "cultural": "Cultural"
       }
+    },
+    "teacherEntry": {
+      "eyebrow": "For teachers",
+      "title": "Prepare a unit from your curriculum objective",
+      "body": "Explicit instruction, a worked example from a place near your school, practice and fieldwork — in that order.",
+      "cta": "Prepare a lesson"
     }
   },
   "auth": {
