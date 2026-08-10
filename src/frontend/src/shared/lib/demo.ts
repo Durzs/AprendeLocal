@@ -20,7 +20,19 @@ import type { CurriculumObjective, POIFeature, RespuestaSecuencia } from "../../
 import type { Course } from "../../modules/courses/types";
 
 export function modoDemo(): boolean {
-  return import.meta.env.DEV || import.meta.env.VITE_DEMO === "1";
+  // Siempre en desarrollo, y en cualquier build si se compiló con VITE_DEMO=1.
+  if (import.meta.env.DEV) return true;
+  if (import.meta.env.VITE_DEMO === "1") return true;
+
+  // Y a petición explícita en la URL: `?demo=1`. Existe para poder revisar la
+  // interfaz en el sitio desplegado sin terminal, sin claves y sin backend.
+  // Es opt-in —nadie llega aquí por accidente— y la pantalla avisa con un
+  // rótulo permanente de que los datos son de ejemplo.
+  if (typeof window !== "undefined") {
+    return new URLSearchParams(window.location.search).has("demo");
+  }
+
+  return false;
 }
 
 export const OBJETIVOS_DEMO: CurriculumObjective[] = [
