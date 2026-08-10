@@ -208,13 +208,28 @@ export default function PrepararPage() {
         ].join(" ")}
       >
         {errorCatalogos && (
-          <p
+          <div
             role="alert"
             className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
           >
-            {errorCatalogos}. Si el resto del sitio funciona, suele faltar{" "}
-            <code className="font-mono">VITE_API_URL</code> en el proveedor.
-          </p>
+            <p className="font-semibold">No se pudo cargar el catálogo</p>
+            <p className="mt-1">
+              La aplicación no está conectada con el servicio que guarda los objetivos
+              de aprendizaje y los lugares.
+            </p>
+            {/* Salida inmediata: quien solo quiere ver la pantalla no debería
+                quedarse ante un muro sin siguiente paso. */}
+            <p className="mt-2.5">
+              <a href="?demo=1" className="font-semibold underline underline-offset-2">
+                Ver la pantalla con datos de ejemplo
+              </a>
+            </p>
+            {/* El detalle técnico queda, pero en segundo plano: lo necesita quien
+                mantiene el sitio, no quien va a dar la clase. */}
+            <p className="mt-2.5 text-xs opacity-70">
+              Detalle: {errorCatalogos}. Suele faltar VITE_API_URL en el proveedor.
+            </p>
+          </div>
         )}
 
         <div>
