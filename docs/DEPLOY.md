@@ -72,6 +72,57 @@ El `Dockerfile` de la raíz ya está listo y Railway lo detecta solo.
 
 ---
 
+## 2.b Autenticación: lo que rompe el registro
+
+Dos ajustes de Supabase deciden si un usuario nuevo puede entrar. Por defecto
+están en el estado que **impide** completar el registro.
+
+1. **Confirmación por correo** (Authentication → Providers → Email). Si está
+   activada, `signUp` no devuelve sesión: la cuenta existe pero no sirve hasta
+   que el usuario pulse el enlace del correo.
+2. **SMTP propio** (Authentication → Emails → SMTP Settings). El remitente
+   integrado de Supabase está limitado a unos pocos envíos por hora y es solo
+   para pruebas: en producción, la mayoría de los correos de confirmación
+   nunca llegan.
+
+Hay dos configuraciones válidas, y hay que elegir una:
+
+| Opción | Qué hacer | Cuándo conviene |
+|---|---|---|
+| Sin confirmación | Desactivar *Confirm email* | Piloto con docentes, donde cada minuto de fricción cuesta |
+| Con confirmación | Configurar SMTP propio (Resend, SendGrid) y fijar **Site URL** y **Redirect URLs** a `https://www.aprendelocal.com` | Producción abierta |
+
+> Si se deja la confirmación activada **sin** SMTP propio, el registro parece
+> funcionar y nadie consigue iniciar sesión. Es el estado por defecto, así que
+> conviene verificarlo explícitamente.
+
+### URLs de retorno
+
+Si dejas la confirmación activada, el enlace del correo devuelve al usuario a
+`/auth/callback`. Esa ruta **tiene que estar permitida** en Supabase →
+Authentication → URL Configuration, o Supabase rechaza el retorno:
+
+| Campo | Valor |
+|---|---|
+| Site URL | `https://www.aprendelocal.com` |
+| Redirect URLs | `https://www.aprendelocal.com/auth/callback`<br>`http://localhost:5173/auth/callback` |
+
+El registro pasa `emailRedirectTo` explícitamente, así que no depende solo del
+Site URL —que es el ajuste que suele quedarse apuntando a `localhost`—, pero la
+URL debe figurar igualmente en la lista blanca.
+
+> El cliente usa el flujo **implícito** a propósito, no PKCE. PKCE exige que el
+> verificador guardado al registrarse siga en el mismo navegador, y aquí es
+> corriente registrarse en el computador de la escuela y abrir el correo en el
+> teléfono. Con PKCE ese caso falla siempre.
+
+Además, el perfil del usuario lo crea un disparador de base de datos, no el
+navegador. Aplica `supabase/migrations/0001_perfil_al_registrarse.sql` desde el
+SQL Editor: crea la función y el disparador, define las políticas RLS de
+`profiles` y rellena los perfiles de las cuentas que quedaron sin él.
+
+---
+
 ## 3. Conectar el dominio
 
 En el registrador donde está `aprendelocal.com`:

@@ -241,7 +241,9 @@
       "loading": "Registering..."
     },
     "validation": {
-      "required": "Please fill in name, email and password."
+      "required": "Please fill in name, email and password.",
+      "passwordLength": "Password must be at least 6 characters long.",
+      "ageRange": "Enter an age between {{min}} and {{max}}."
     },
     "success": "Account created! Please log in.",
     "error": "Registration error.",
@@ -249,7 +251,14 @@
     "loginAction": "Log in to continue.",
     "heroTitle": "Join AprendeLocal",
     "heroSubtitle": "Sign up to start your journey of innovation and creativity.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "emailTaken": "That email is already registered. Log in or reset your password.",
+    "confirmEmail": "Account created. We sent an email to {{email}}: confirm from that link and then log in. If it doesn't arrive within a few minutes, check your spam folder.",
+    "profileWarning": "Your account was created, but we couldn't save your profile details ({{motivo}}). You can log in and complete them from your profile.",
+    "resend": "Resend the confirmation email",
+    "resending": "Resending...",
+    "resendOk": "Link resent to {{email}}. Check your spam folder too.",
+    "resendError": "We couldn't resend the email ({{motivo}})."
   },
   "login": {
     "title": "Sign in",
@@ -262,7 +271,8 @@
     "loading": "Signing in...",
     "validation": {
       "required": "Please enter email and password."
-    }
+    },
+    "notConfirmed": "If you just signed up, confirm your email using the link we sent you first."
   },
   "makerspaces": {
     "title": "Makerspaces",
@@ -472,6 +482,24 @@
         "hydrological": "Hydrological",
         "cultural": "Cultural"
       }
+    }
+  },
+  "auth": {
+    "callback": {
+      "verifying": "Confirming your account...",
+      "wait": "This takes a moment. Don't close this tab.",
+      "success": "Account confirmed!",
+      "redirecting": "Taking you to AprendeLocal.",
+      "enterNow": "Enter now",
+      "failed": "We couldn't confirm your account",
+      "noCredentials": "This link carries no confirmation data. Open it straight from the email we sent, without copying it by hand.",
+      "timeout": "The link couldn't be validated. This usually means it was already used or too much time has passed since you signed up.",
+      "resendLabel": "Enter your email and we'll send a new link",
+      "resend": "Send a new link",
+      "resending": "Sending...",
+      "resendOk": "Done. Check your inbox, and your spam folder too.",
+      "resendError": "We couldn't resend it ({{motivo}}).",
+      "backToLogin": "Back to log in"
     }
   }
 }

@@ -16,10 +16,33 @@ export const missingSupabaseEnvVars: string[] = [
   ...(supabaseAnonKey ? [] : ["VITE_SUPABASE_ANON_KEY"]),
 ];
 
+/** Ruta que recibe la vuelta del enlace de confirmación. */
+export const RUTA_CALLBACK = "/auth/callback";
+
+/** URL absoluta a la que Supabase debe devolver al usuario tras confirmar. */
+export function urlDeRetorno(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  return `${window.location.origin}${RUTA_CALLBACK}`;
+}
+
 // Con la configuración incompleta se crea el cliente con valores de
 // marcador para que los módulos que lo importan sigan cargando. Nunca
 // llega a usarse: main.tsx corta antes de renderizar la aplicación.
 export const supabase = createClient(
   supabaseUrl || "https://missing-config.invalid",
   supabaseAnonKey || "missing-config",
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      // Necesario para que el enlace de confirmación establezca la sesión al
+      // volver: los tokens llegan en el fragmento de la URL.
+      detectSessionInUrl: true,
+      // Se mantiene el flujo implícito a propósito. PKCE exige que el
+      // verificador guardado al registrarse siga en el mismo navegador, y aquí
+      // es corriente registrarse en el computador de la escuela y abrir el
+      // correo en el teléfono. Con PKCE ese caso falla siempre.
+      flowType: "implicit",
+    },
+  }
 );

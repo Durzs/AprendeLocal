@@ -22,6 +22,7 @@ import PlatformPage from "./modules/platform/pages/PlatformPage";
 import PlataformaApp from "./PlataformaApp";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
+import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
@@ -74,6 +75,11 @@ const router = createBrowserRouter([
       /* ── 404 ── */
       { path: "*", element: <NotFoundPage /> },
     ],
+  },
+  {
+    // Retorno del enlace de confirmación de Supabase.
+    path: "/auth/callback",
+    element: <AuthCallbackPage />,
   },
   {
     path: "/plataforma-legacy",
