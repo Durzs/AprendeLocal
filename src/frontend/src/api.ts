@@ -15,6 +15,7 @@ import type {
   QuizQuestion,
   QuizResult,
   StudentProgressSummary,
+  RespuestaSecuencia,
 } from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -101,7 +102,9 @@ export async function fetchCurriculum(params?: {
   const res = await fetch(`${API_URL}/curriculum${query}`);
   if (!res.ok) throw new Error(`Error ${res.status}`);
   const data = await res.json();
-  return data.objectives;
+  // La anotación promete un array y TypeScript se fía de ella; si la respuesta
+  // no trae `objectives`, quien la consuma revienta al hacer .find o .map.
+  return data.objectives ?? [];
 }
 
 export async function fetchProjectsForObjective(
@@ -335,4 +338,42 @@ export async function fetchStudentProgress(
   if (!res.ok) throw new Error(`Error ${res.status}`);
   const data = await res.json();
   return data.students;
+}
+
+/**
+ * Pide una secuencia de enseñanza para un objetivo de aprendizaje anclada a un
+ * lugar. La entrada es el objetivo, no el mapa: el docente parte de lo que le
+ * toca enseñar y el lugar se elige para servirlo.
+ */
+export async function generarSecuencia(params: {
+  objectiveCode: string;
+  pointId: string;
+  sesiones?: number;
+  notasDocente?: string;
+}): Promise<RespuestaSecuencia> {
+  const res = await fetch(`${API_URL}/sequences`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      objective_code: params.objectiveCode,
+      point_id: params.pointId,
+      sesiones: params.sesiones ?? 4,
+      notas_docente: params.notasDocente ?? "",
+    }),
+  });
+
+  if (!res.ok) {
+    // El 502 lo devuelve la API cuando el modelo entregó algo inservible; el
+    // mensaje del servidor es más útil que un "error de red" genérico.
+    let detalle = `Error ${res.status}`;
+    try {
+      const cuerpo = await res.json();
+      if (cuerpo?.detail) detalle = String(cuerpo.detail);
+    } catch {
+      /* la respuesta no era JSON */
+    }
+    throw new Error(detalle);
+  }
+
+  return res.json();
 }

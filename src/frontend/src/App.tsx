@@ -23,6 +23,7 @@ import PlataformaApp from "./PlataformaApp";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
+import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
@@ -41,6 +42,8 @@ const router = createBrowserRouter([
 
       /* ── Plataforma unificada ── */
       { path: "plataforma", element: <PlatformPage /> },
+      // Entrada del docente: empieza por el objetivo de aprendizaje, no por el mapa.
+      { path: "preparar", element: <PrepararPage /> },
 
       /* ── Redirects de rutas antiguas ── */
       { path: "cursos", element: <Navigate to="/plataforma?tab=courses" replace /> },
