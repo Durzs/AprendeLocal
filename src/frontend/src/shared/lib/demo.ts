@@ -17,6 +17,7 @@
  */
 
 import type { CurriculumObjective, POIFeature, RespuestaSecuencia } from "../../types";
+import type { Course } from "../../modules/courses/types";
 
 export function modoDemo(): boolean {
   return import.meta.env.DEV || import.meta.env.VITE_DEMO === "1";
@@ -234,3 +235,67 @@ export const SECUENCIA_DEMO: RespuestaSecuencia = {
 export function esperar(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/**
+ * Cursos de ejemplo para la plataforma.
+ *
+ * Sin sesión iniciada, PlatformPage ni siquiera pide los cursos —corta antes,
+ * en la comprobación de usuario—, así que en local el catálogo salía vacío y
+ * no había forma de revisar su maquetación.
+ */
+export const CURSOS_DEMO: Course[] = [
+  {
+    id: "demo-c1",
+    titulo: "Agua y territorio: cuencas del Elqui al Toltén",
+    descricao: "Medir, comparar y explicar el caudal de un cauce cercano a la escuela.",
+    categoria: "Ciencias Naturales",
+    nivel: "8º básico",
+    badge: "Hidrología",
+    url_img: "",
+  },
+  {
+    id: "demo-c2",
+    titulo: "Bosque valdiviano: quién vive aquí",
+    descricao: "Inventario de especies del entorno y las amenazas que las afectan.",
+    categoria: "Ciencias Naturales",
+    nivel: "7º básico",
+    badge: "Biodiversidad",
+    url_img: "",
+  },
+  {
+    id: "demo-c3",
+    titulo: "Cielos del sur: observación sin telescopio",
+    descricao: "Registro sistemático del cielo nocturno con instrumentos caseros.",
+    categoria: "Física",
+    nivel: "1º medio",
+    badge: "Astronomía",
+    url_img: "",
+  },
+  {
+    id: "demo-c4",
+    titulo: "Energía en la escuela rural",
+    descricao: "Auditoría del consumo del establecimiento y propuestas de mejora.",
+    categoria: "Tecnología",
+    nivel: "8º básico",
+    badge: "Energía",
+    url_img: "",
+  },
+  {
+    id: "demo-c5",
+    titulo: "Suelos y erosión en laderas",
+    descricao: "Medición de pendiente y cobertura vegetal en terreno cercano.",
+    categoria: "Ciencias Naturales",
+    nivel: "2º medio",
+    badge: "Geología",
+    url_img: "",
+  },
+  {
+    id: "demo-c6",
+    titulo: "Patrimonio vivo: memoria del lugar",
+    descricao: "Entrevistas a la comunidad y registro de saberes locales.",
+    categoria: "Historia",
+    nivel: "7º básico",
+    badge: "Patrimonio",
+    url_img: "",
+  },
+];

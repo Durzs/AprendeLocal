@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
+import { CURSOS_DEMO, modoDemo } from "../../../shared/lib/demo";
 import { pickLang } from "../../../shared/i18n/pickLang";
 import MapView from "../../../components/MapView";
 import PointPanel from "../../../components/PointPanel";
@@ -97,6 +98,15 @@ export default function PlatformPage() {
     async function load() {
       setLoadingCourses(true);
       setErroCourses("");
+
+      // En demostración se puebla el catálogo sin sesión: si no, la comprobación
+      // de usuario corta antes de pedir nada y la pestaña queda vacía en local.
+      if (modoDemo()) {
+        if (!alive) return;
+        setCursos(CURSOS_DEMO);
+        setLoadingCourses(false);
+        return;
+      }
 
       const { data: userData } = await supabase.auth.getUser();
       const user = userData?.user;
@@ -226,8 +236,12 @@ export default function PlatformPage() {
             </span>
           </Link>
 
-          {/* Tabs */}
-          <div className="mt-6 flex gap-2">
+          {/* Tabs.
+              `flex-wrap` no es cosmético: en 390 px los tres botones suman 437
+              y sin envolver hacían que la página entera se desplazara en
+              horizontal. Envolver a dos líneas los deja todos visibles, que es
+              mejor que una fila con scroll donde el tercero se esconde. */}
+          <div className="mt-6 flex flex-wrap gap-2">
             {TABS.map(({ key, icon: Icon }) => (
               <button
                 key={key}
