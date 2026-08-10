@@ -20,6 +20,13 @@ import type {
   Secuencia,
 } from "../../../types";
 import EtapaSecuencia from "../components/EtapaSecuencia";
+import {
+  OBJETIVOS_DEMO,
+  PUNTOS_DEMO,
+  SECUENCIA_DEMO,
+  esperar,
+  modoDemo,
+} from "../../../shared/lib/demo";
 
 const TOTAL_ETAPAS = 6;
 
@@ -64,6 +71,12 @@ export default function PrepararPage() {
     let vigente = true;
     (async () => {
       try {
+        if (modoDemo()) {
+          if (!vigente) return;
+          setObjetivos(OBJETIVOS_DEMO);
+          setPuntos(PUNTOS_DEMO);
+          return;
+        }
         const [oas, geo] = await Promise.all([fetchCurriculum(), fetchPoints()]);
         if (!vigente) return;
         setObjetivos(oas ?? []);
@@ -98,6 +111,11 @@ export default function PrepararPage() {
     setErrorGeneracion(null);
     setResultado(null);
     try {
+      if (modoDemo()) {
+        await esperar(900); // la generación real tampoco es instantánea
+        setResultado(SECUENCIA_DEMO);
+        return;
+      }
       const r = await generarSecuencia({
         objectiveCode: objetivoCode,
         pointId,
@@ -131,6 +149,14 @@ export default function PrepararPage() {
           práctica y salida a terreno — en ese orden.
         </p>
       </header>
+
+      {modoDemo() && (
+        <p className="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <strong>Datos de demostración.</strong> No hay API detrás: los objetivos, los
+          lugares y la secuencia son de ejemplo, para poder revisar la interfaz sin
+          levantar el backend.
+        </p>
+      )}
 
       {/* ── Formulario ── */}
       <div className="mt-8 space-y-5 rounded-2xl border border-slate-200 bg-white p-6 print:hidden">
