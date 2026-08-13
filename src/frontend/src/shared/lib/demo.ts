@@ -38,49 +38,103 @@ export function modoDemo(): boolean {
 export const OBJETIVOS_DEMO: CurriculumObjective[] = [
   {
     id: "demo-oa-1",
-    code: "CN08-OA05",
-    subject: "Ciencias Naturales",
-    level: "8vo_basico",
-    axis: "Tierra y Universo",
-    oa_number: 5,
+    code: "OA12_CN_5",
+    subject: "ciencias_naturales",
+    level: "5to_basico",
+    axis: "ciencias_tierra",
+    oa_number: 12,
     description:
-      "Explicar el ciclo del agua y su relación con la disponibilidad hídrica local",
-    keywords: ["agua", "caudal", "cuenca"],
+      "Describir la distribución del agua dulce y salada en la Tierra, considerando océanos, glaciares, ríos y lagos, aguas subterráneas, nubes, vapor de agua, etc. y comparar sus volúmenes.",
+    keywords: ["agua", "océanos", "glaciares", "ríos", "lagos", "hidrología"],
     project_count: 0,
   },
   {
     id: "demo-oa-2",
-    code: "CN07-OA01",
-    subject: "Ciencias Naturales",
+    code: "OA10_CN_7",
+    subject: "ciencias_naturales",
     level: "7mo_basico",
-    axis: "Organismos y ambiente",
-    oa_number: 1,
+    axis: "fisica",
+    oa_number: 10,
     description:
-      "Investigar la biodiversidad de un ecosistema cercano y las amenazas que lo afectan",
-    keywords: ["biodiversidad", "bosque"],
+      "Explicar, sobre la base de evidencias y por medio de modelos, la actividad volcánica y sus consecuencias en la naturaleza y la sociedad.",
+    keywords: ["volcanes", "vulcanología", "erupciones", "riesgos naturales", "geología"],
+    project_count: 0,
+  },
+  {
+    id: "demo-oa-3",
+    code: "OA03_CN_6",
+    subject: "ciencias_naturales",
+    level: "6to_basico",
+    axis: "ciencias_vida",
+    oa_number: 3,
+    description: "Analizar los efectos de la actividad humana sobre las redes alimentarias.",
+    keywords: [
+      "actividad humana",
+      "redes alimentarias",
+      "impacto ambiental",
+      "ecología",
+      "conservación",
+    ],
+    project_count: 0,
+  },
+  {
+    // A propósito: es el caso que enseña que la plataforma sabe decir que no.
+    // Ningún lugar del catálogo aporta a esto, y la pantalla lo dice en vez de
+    // ofrecer una cancha de palín para enseñar el aparato digestivo.
+    id: "demo-oa-4",
+    code: "OA02_CN_5",
+    subject: "ciencias_naturales",
+    level: "5to_basico",
+    axis: "ciencias_vida",
+    oa_number: 2,
+    description:
+      "Identificar y describir por medio de modelos las estructuras básicas del sistema digestivo y sus funciones en la digestión, la absorción de alimentos y la eliminación de desechos.",
+    keywords: ["sistema digestivo", "digestión", "absorción", "alimentos", "nutrición"],
     project_count: 0,
   },
 ];
 
+/**
+ * Lugares de ejemplo. Son los datos reales de Cunco —con su ecosistema, sus
+ * amenazas y sus áreas STEM— porque sin esos campos la afinidad no tiene de qué
+ * agarrarse y la pantalla se revisaría en falso.
+ */
+function lugarDemo(
+  id: string,
+  name: string,
+  commune: string,
+  type: string,
+  ecosystem: string,
+  stem_areas: string[],
+  threats: string[],
+  description: string
+): POIFeature {
+  return {
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [-72.0, -38.9] },
+    properties: { id, name, commune, type, ecosystem, stem_areas, threats, description },
+  } as unknown as POIFeature;
+}
+
 export const PUNTOS_DEMO: POIFeature[] = [
-  {
-    type: "Feature",
-    geometry: { type: "Point", coordinates: [-71.61, -39.23] },
-    properties: {
-      id: "demo-poi-1",
-      name: "Estero Trancura",
-      commune: "Curarrehue",
-    },
-  } as POIFeature,
-  {
-    type: "Feature",
-    geometry: { type: "Point", coordinates: [-71.72, -38.85] },
-    properties: {
-      id: "demo-poi-2",
-      name: "Bosque de araucarias del Cañi",
-      commune: "Melipeuco",
-    },
-  } as POIFeature,
+  lugarDemo("demo-poi-1", "Estero Mahuidanche", "Cunco", "hydrological", "fluvial",
+    ["biologia", "quimica", "ecologia"], ["contaminacion_agricola"],
+    "Estero de aguas limpias que baja de la cordillera. Presencia de fauna bentónica indicadora de calidad."),
+  lugarDemo("demo-poi-2", "Lago Colico", "Cunco", "hydrological", "lacustre",
+    ["biologia", "ecologia", "geologia"], ["eutrofizacion", "turismo_no_regulado"],
+    "Lago precordillerano rodeado de bosque nativo. Importante para la comunidad mapuche local."),
+  lugarDemo("demo-poi-3", "Bosque de Coigüe Mahuidanche", "Cunco", "natural", "bosque_nativo",
+    ["biologia", "ecologia"], ["tala", "plantaciones_forestales"],
+    "Bosque adulto de coigüe con sotobosque de helechos y nalcas. Presencia de monito del monte."),
+  lugarDemo("demo-poi-4", "Suelo Volcánico Los Laureles", "Cunco", "geological", "volcanico",
+    ["geologia", "quimica", "biologia"], ["erosion"],
+    "Perfil de suelo trumaos (ceniza volcánica) visible en corte de camino. Ideal para estudiar edafología."),
+  lugarDemo("demo-poi-5", "Volcán Villarrica (Rukapillán)", "Curarrehue", "geological", "zona_volcanica",
+    ["geologia", "vulcanologia", "fisica", "cultura_mapuche"], ["erupciones", "deshielo_glaciar"],
+    "Uno de los volcanes más activos de Sudamérica. Nombre mapuche: Rukapillán (casa del espíritu)."),
+  lugarDemo("demo-poi-6", "Cancha de Palín Los Laureles", "Cunco", "cultural", "cultural_mapuche",
+    ["historia", "matematica", "fisica"], ["perdida_tradiciones", "cambio_uso_suelo"],
+    "Campo tradicional donde se juega palín (chueca mapuche). Espacio de encuentro comunitario."),
 ];
 
 /**
@@ -91,7 +145,7 @@ export const PUNTOS_DEMO: POIFeature[] = [
 export const SECUENCIA_DEMO: RespuestaSecuencia = {
   secuencia: {
     titulo: "El caudal del estero Trancura y el consumo de la escuela",
-    objetivo_codigo: "CN08-OA05",
+    objetivo_codigo: "OA12_CN_5",
     objetivo_descripcion:
       "Explicar el ciclo del agua y su relación con la disponibilidad hídrica local",
     sesiones: 4,
@@ -224,7 +278,7 @@ export const SECUENCIA_DEMO: RespuestaSecuencia = {
         punto: "Estero Trancura",
         comuna: "Curarrehue",
         ecosistema: "bosque_templado_valdiviano",
-        objetivo: "CN08-OA05",
+        objetivo: "OA12_CN_5",
       },
       generado_por_modelo: [
         "instruccion_explicita",

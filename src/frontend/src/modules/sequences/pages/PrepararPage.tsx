@@ -25,6 +25,8 @@ import type {
 } from "../../../types";
 import EtapaSecuencia from "../components/EtapaSecuencia";
 import RielEtapas, { type ResumenEtapa } from "../components/RielEtapas";
+import SelectorObjetivo from "../components/SelectorObjetivo";
+import SelectorLugar from "../components/SelectorLugar";
 import { enPalabras, nombreLegible } from "../lib/etiquetas";
 import {
   OBJETIVOS_DEMO,
@@ -240,54 +242,43 @@ export default function PrepararPage() {
         )}
 
         <div>
-          <label
-            htmlFor="objetivo"
-            className="mb-1.5 block text-sm font-medium text-slate-700"
-          >
-            Objetivo de aprendizaje
-          </label>
-          <select
-            id="objetivo"
-            value={objetivoCode}
-            onChange={(e) => setObjetivoCode(e.target.value)}
-            disabled={cargandoCatalogos}
-            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
-          >
-            <option value="">
-              {cargandoCatalogos ? "Cargando…" : "Elige un objetivo"}
-            </option>
-            {objetivos.map((o) => (
-              <option key={o.code} value={o.code}>
-                {o.code} · {o.description.slice(0, 90)}
-              </option>
-            ))}
-          </select>
+          <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
+            <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+              1
+            </span>
+            Qué tienes que enseñar
+          </p>
+          <SelectorObjetivo
+            objetivos={objetivos}
+            valor={objetivoCode}
+            onElegir={(code) => {
+              setObjetivoCode(code);
+              // El lugar se eligió para servir a otro objetivo: si cambia el
+              // objetivo, la elección anterior deja de tener fundamento.
+              setPointId("");
+            }}
+            cargando={cargandoCatalogos}
+          />
         </div>
 
-        <div>
-          <label
-            htmlFor="lugar"
-            className="mb-1.5 block text-sm font-medium text-slate-700"
-          >
-            Lugar donde anclar la enseñanza
-          </label>
-          <select
-            id="lugar"
-            value={pointId}
-            onChange={(e) => setPointId(e.target.value)}
-            disabled={cargandoCatalogos}
-            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
-          >
-            <option value="">
-              {cargandoCatalogos ? "Cargando…" : "Elige un punto cercano"}
-            </option>
-            {puntos.map((p) => (
-              <option key={String(p.properties.id)} value={String(p.properties.id)}>
-                {p.properties.name} — {p.properties.commune}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* El lugar aparece después del objetivo, no a la vez: se elige PARA
+            servirlo, y sin objetivo no hay nada contra lo que juzgarlo. */}
+        {objetivoCode && (
+          <div>
+            <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
+              <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+                2
+              </span>
+              Dónde anclarla
+            </p>
+            <SelectorLugar
+              objetivo={objetivoElegido}
+              lugares={puntos}
+              valor={pointId}
+              onElegir={setPointId}
+            />
+          </div>
+        )}
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
