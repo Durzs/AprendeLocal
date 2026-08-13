@@ -190,18 +190,38 @@ Deno.serve(async (req: Request) => {
     return responder({ error: "Faltan objective_code y point_id" }, 400);
   }
 
-  // Con el token de quien llama: se respetan las políticas RLS.
+  // Se reenvía el token de quien llama —así siguen aplicándose las políticas
+  // RLS— pero SOLO si es un JWT. Con las claves publicables nuevas
+  // (`sb_publishable_…`) el encabezado no lo es, PostgREST rechaza la consulta
+  // y el resultado llegaba como «No existe el objetivo», que señala al sitio
+  // equivocado. Ambas tablas son de lectura pública, así que cuando no hay JWT
+  // se consulta con la clave anónima y no se pierde ninguna restricción.
+  const autorizacion = req.headers.get("Authorization") ?? "";
+  const esJwt = /^Bearer\s+[\w-]+\.[\w-]+\.[\w-]+$/.test(autorizacion);
+
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
     Deno.env.get("SUPABASE_ANON_KEY")!,
-    { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } },
+    esJwt ? { global: { headers: { Authorization: autorizacion } } } : undefined,
   );
 
-  const [{ data: oa }, { data: poi }] = await Promise.all([
+  const [oaRes, poiRes] = await Promise.all([
     supabase.from("curriculum_objectives").select("*").eq("code", objective_code).maybeSingle(),
     supabase.from("points_of_interest").select("*").eq("id", point_id).maybeSingle(),
   ]);
 
+  // Un fallo de lectura no es un «no existe». Confundirlos fue justo lo que
+  // mandó a buscar el problema al lado contrario.
+  const falloLectura = oaRes.error ?? poiRes.error;
+  if (falloLectura) {
+    return responder(
+      { error: `No se pudo leer el catálogo: ${falloLectura.message}` },
+      502,
+    );
+  }
+
+  const oa = oaRes.data;
+  const poi = poiRes.data;
   if (!oa) return responder({ error: `No existe el objetivo ${objective_code}` }, 404);
   if (!poi) return responder({ error: "No existe ese punto de interés" }, 404);
 
