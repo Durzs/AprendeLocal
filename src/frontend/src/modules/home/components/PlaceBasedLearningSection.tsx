@@ -107,7 +107,7 @@ export default function PlaceBasedLearningSection() {
                     Desarrollado por{" "}
                     <strong className="text-slate-800">{story.school}</strong>
                   </span>
-                  <span className="font-semibold text-emerald-700">
+                  <span className="font-semibold text-blue-600">
                     📍 {story.location}
                   </span>
                 </div>
@@ -116,14 +116,14 @@ export default function PlaceBasedLearningSection() {
           ))}
         </div>
 
-        {/* CTA Button */}
+        {/* CTA Button in vibrant Blue with Orange highlight */}
         <div className="mt-14 text-center">
           <Link
             to="/plataforma"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#709c2a] px-8 py-3.5 text-base font-bold text-white shadow-md transition hover:bg-[#5e8522] hover:shadow-lg hover:-translate-y-0.5"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#0a0047]/30 transition hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
           >
             <span>{t("home.placeBased.cta", "Ver más proyectos e historias")}</span>
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5 text-amber-300" />
           </Link>
         </div>
       </div>

@@ -12,8 +12,8 @@ export default function CountrySection() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-widest px-3.5 py-1">
-            <MapPin className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-900 text-xs font-bold uppercase tracking-widest px-3.5 py-1 border border-blue-200">
+            <MapPin className="w-3.5 h-3.5 text-orange-500" />
             {t("home.country.badge", "Territorios en Acción")}
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-4 mb-3 leading-[0.95]">
@@ -26,14 +26,14 @@ export default function CountrySection() {
             )}
           </p>
 
-          {/* Selector de País (Pills interactivos) */}
+          {/* Selector de País (Pills interactivos con Azul y Naranja) */}
           <div className="inline-flex p-1.5 bg-white rounded-full border border-slate-200 shadow-sm mt-8 gap-2">
             <button
               onClick={() => setSelectedCountry("chile")}
               className={[
                 "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition cursor-pointer",
                 selectedCountry === "chile"
-                  ? "bg-emerald-600 text-white shadow-md"
+                  ? "bg-[#0a0047] text-white shadow-md shadow-[#0a0047]/25"
                   : "text-slate-600 hover:text-slate-900",
               ].join(" ")}
             >
@@ -45,7 +45,7 @@ export default function CountrySection() {
               className={[
                 "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition cursor-pointer",
                 selectedCountry === "brasil"
-                  ? "bg-emerald-600 text-white shadow-md"
+                  ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
                   : "text-slate-600 hover:text-slate-900",
               ].join(" ")}
             >

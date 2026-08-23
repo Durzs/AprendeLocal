@@ -21,7 +21,7 @@ export default function CallToAction({ onStart }: CallToActionProps) {
         </p>
         <button
           onClick={onStart}
-          className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+          className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-[#0a0047] hover:bg-[#140066] px-9 py-4 text-sm font-bold text-white shadow-lg shadow-[#0a0047]/30 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
         >
           {t("home.cta.button", "Comenzar en mi Territorio")}
         </button>
