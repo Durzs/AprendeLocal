@@ -10,7 +10,6 @@ import {
   MapPin,
   Clock,
   Star,
-  GraduationCap,
   ChevronRight,
 } from "lucide-react";
 
@@ -73,6 +72,9 @@ export default function PlatformPage() {
     setSearchParams({ tab });
   };
 
+  /* ── User Teacher profile state ── */
+  const [userProfile, setUserProfile] = useState<{ role?: string; school_id?: string } | null>(null);
+
   /* ── COURSES state ── */
   const [busca, setBusca] = useState("");
   const [cursos, setCursos] = useState<Course[]>([]);
@@ -91,6 +93,31 @@ export default function PlatformPage() {
   const [loadingPois, setLoadingPois] = useState(false);
   const [radius, setRadius] = useState(20);
   const [selectedPoi, setSelectedPoi] = useState<POIFeature | null>(null);
+
+  /* ── Load user profile for teacher's school ── */
+  useEffect(() => {
+    async function loadUserSchool() {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+      if (!user) return;
+
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("role, school_id")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (prof) {
+        setUserProfile(prof);
+      } else if (user.user_metadata?.school_id) {
+        setUserProfile({
+          role: user.user_metadata.role || "profesor",
+          school_id: user.user_metadata.school_id,
+        });
+      }
+    }
+    loadUserSchool();
+  }, []);
 
   /* ── Load courses ── */
   useEffect(() => {
@@ -138,10 +165,30 @@ export default function PlatformPage() {
   /* ── Load schools ── */
   useEffect(() => {
     fetchSchools()
-      .then(setSchools)
-      .catch(console.error)
+      .then((data) => {
+        setSchools(data);
+      })
+      .catch((err) => {
+        console.error("Error al cargar escuelas vía API:", err);
+        supabase
+          .from("schools")
+          .select("id, rbd, name, commune, dependency, rural")
+          .then(({ data: sbData }) => {
+            if (sbData) setSchools(sbData as unknown as School[]);
+          });
+      })
       .finally(() => setLoadingSchools(false));
   }, []);
+
+  /* ── Auto-select teacher's assigned school when schools load ── */
+  useEffect(() => {
+    if (schools.length > 0 && userProfile?.school_id && !selectedSchool) {
+      const match = schools.find((s) => s.id === userProfile.school_id);
+      if (match) {
+        setSelectedSchool(match);
+      }
+    }
+  }, [schools, userProfile?.school_id, selectedSchool]);
 
   /* ── Load POIs when school/radius changes ── */
   useEffect(() => {
@@ -155,7 +202,7 @@ export default function PlatformPage() {
   }, [selectedSchool?.id, radius]);
 
   /* ── derived ── */
-  const communes = useMemo(() => [...new Set(schools.map((s) => s.commune))].sort(), [schools]);
+  const communes = useMemo(() => [...new Set(schools.map((s) => s.commune))].filter(Boolean).sort(), [schools]);
 
   const filteredSchools = useMemo(() => {
     let result = schools;
@@ -198,6 +245,8 @@ export default function PlatformPage() {
 
   const TYPE_COLORS: Record<string, string> = { natural: "bg-emerald-500", geological: "bg-red-500", hydrological: "bg-blue-500", cultural: "bg-purple-500" };
 
+  const isUserAssignedSchool = selectedSchool && userProfile?.school_id === selectedSchool.id;
+
   /* ════════════════════════════════════════════════════ */
   return (
     <main className="min-h-screen bg-white text-[#111217]">
@@ -211,11 +260,7 @@ export default function PlatformPage() {
             {t("platform.subtitle")}
           </p>
 
-
-          {/* Entrada del docente.
-              El diseño instruccional baja el mapa de puerta principal a capa de
-              consulta: quien enseña empieza por el objetivo de aprendizaje, no
-              explorando. Por eso esto va sobre las pestañas y no dentro de una. */}
+          {/* Entrada del docente */}
           <Link
             to="/preparar"
             className="mt-6 flex flex-col gap-3 rounded-2xl border border-emerald-600/30 bg-emerald-50/60 p-5 transition hover:border-emerald-600/60 hover:bg-emerald-50 sm:flex-row sm:items-center sm:justify-between"
@@ -236,11 +281,7 @@ export default function PlatformPage() {
             </span>
           </Link>
 
-          {/* Tabs.
-              `flex-wrap` no es cosmético: en 390 px los tres botones suman 437
-              y sin envolver hacían que la página entera se desplazara en
-              horizontal. Envolver a dos líneas los deja todos visibles, que es
-              mejor que una fila con scroll donde el tercero se esconde. */}
+          {/* Tabs */}
           <div className="mt-6 flex flex-wrap gap-2">
             {TABS.map(({ key, icon: Icon }) => (
               <button
@@ -299,32 +340,39 @@ export default function PlatformPage() {
                     const matriculado = matriculadosIds.has(curso.id);
                     const titulo = pickLang(curso.titulo, lang);
                     const descricao = pickLang(curso.descricao, lang);
-                    const categoria = pickLang(curso.categoria, lang) || t("courses.tags.noCategory");
-                    const nivel = pickLang(curso.nivel, lang) || t("courses.tags.noLevel");
-
-                    const statusText = concluido ? t("courses.status.completed") : matriculado ? t("courses.status.enrolled") : t("courses.status.new");
-                    const btnText = concluido ? t("courses.buttons.review") : matriculado ? t("courses.buttons.continue") : t("courses.buttons.start");
+                    const categoria = pickLang(curso.categoria, lang);
+                    const nivel = pickLang(curso.nivel, lang);
 
                     return (
-                      <article key={curso.id} className="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10">
-                        {curso.url_img ? (
-                          <img src={curso.url_img} alt={titulo || ""} className="h-44 w-full object-cover" />
-                        ) : (
-                          <div className="flex h-44 items-center justify-center bg-slate-100 text-slate-400"><GraduationCap className="h-12 w-12" /></div>
-                        )}
-                        <div className="p-5">
-                          <div className="mb-3 flex flex-wrap items-center gap-2">
-                            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">{categoria}</span>
-                            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">{nivel}</span>
-                            <span className="ml-auto rounded-full bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-500">{statusText}</span>
+                      <article
+                        key={curso.id}
+                        className="flex flex-col justify-between overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
+                      >
+                        <div className="space-y-4">
+                          {curso.url_img && (
+                            <img
+                              src={curso.url_img}
+                              alt={titulo}
+                              className="h-40 w-full rounded-2xl object-cover"
+                            />
+                          )}
+                          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                            {categoria && <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{categoria}</span>}
+                            {nivel && <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{nivel}</span>}
+                            {concluido && <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">{t("courses.statusCompleted")}</span>}
                           </div>
-                          <h2 className="mb-2 text-lg font-semibold leading-snug text-slate-950">{titulo}</h2>
-                          <p className="line-clamp-2 text-sm leading-relaxed text-slate-600">{descricao}</p>
+                          <div>
+                            <h3 className="text-lg font-semibold tracking-tight text-slate-950">{titulo}</h3>
+                            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-600">{descricao}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-6 border-t border-slate-100 pt-4">
                           <button
                             onClick={() => iniciarCurso(curso.id)}
-                            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                           >
-                            {btnText}
+                            {concluido ? t("courses.reviewAction") : matriculado ? t("courses.continueAction") : t("courses.startAction")}
                             <ArrowRight className="h-4 w-4" />
                           </button>
                         </div>
@@ -403,17 +451,25 @@ export default function PlatformPage() {
                   /* ── Selected school + POI panel ── */
                   <div className="space-y-4">
                     {/* School header */}
-                    <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-3">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-50 text-lg">🏫</span>
+                    <div className={`flex items-start gap-3 rounded-2xl border p-3.5 ${isUserAssignedSchool ? "border-emerald-300 bg-emerald-50/70" : "border-slate-200 bg-white"}`}>
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white shadow-sm text-lg">🏫</span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-slate-900">{selectedSchool.name}</p>
-                        <p className="text-xs text-slate-500">{selectedSchool.commune}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-semibold text-slate-900 truncate">{selectedSchool.name}</p>
+                        </div>
+                        <p className="text-xs text-slate-500">📍 {selectedSchool.commune}</p>
+                        {isUserAssignedSchool && (
+                          <span className="inline-flex items-center gap-1 mt-1 rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
+                            ✓ Tu Escuela Asignada
+                          </span>
+                        )}
                       </div>
                       <button
                         onClick={() => { setSelectedSchool(null); setPois([]); setSelectedPoi(null); }}
-                        className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-slate-500 transition hover:bg-slate-100"
+                        title="Cambiar de escuela"
+                        className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-slate-500 transition hover:bg-slate-200/60"
                       >
-                        ✕
+                        Cambiar
                       </button>
                     </div>
 
@@ -427,7 +483,7 @@ export default function PlatformPage() {
                         step={5}
                         value={radius}
                         onChange={(e) => setRadius(Number(e.target.value))}
-                        className="flex-1 accent-slate-950"
+                        className="flex-1 accent-emerald-600"
                       />
                       <span className="w-12 text-right text-xs font-semibold text-slate-700">{radius} {t("platform.map.km")}</span>
                     </div>
@@ -438,13 +494,14 @@ export default function PlatformPage() {
                     ) : pois.length === 0 ? (
                       <p className="py-4 text-center text-sm text-slate-400">{t("platform.map.noPois")}</p>
                     ) : (
-                      <p className="text-xs font-medium text-slate-500">
-                        {t("platform.map.poisFound", { count: pois.length })}
-                      </p>
+                      <div className="flex items-center justify-between text-xs font-medium text-slate-600">
+                        <span>Lugares para proyectos ({pois.length})</span>
+                        <span className="text-[11px] text-slate-400">Radio: {radius} km</span>
+                      </div>
                     )}
 
                     {/* POI list */}
-                    <div className="max-h-[50vh] space-y-1.5 overflow-y-auto pr-1">
+                    <div className="max-h-[48vh] space-y-1.5 overflow-y-auto pr-1">
                       {pois.map((poi) => {
                         const dotColor = TYPE_COLORS[poi.type] || "bg-slate-400";
                         const isActive = selectedPoi?.properties.id === poi.id;
@@ -461,14 +518,15 @@ export default function PlatformPage() {
                             }}
                             className={[
                               "flex w-full items-center gap-2.5 rounded-xl border p-2.5 text-left transition",
-                              isActive ? "border-slate-300 bg-slate-50 shadow-sm" : "border-transparent hover:border-slate-200 hover:bg-white",
+                              isActive ? "border-emerald-600 bg-emerald-50 shadow-sm" : "border-slate-200/80 bg-white hover:border-slate-300",
                             ].join(" ")}
                           >
                             <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${dotColor}`} />
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-medium text-slate-900">{poi.name}</p>
-                              <p className="text-xs text-slate-400">{t(`platform.map.poiTypes.${poi.type}`, poi.type)} · {poi.distance_km?.toFixed(1)} km</p>
+                              <p className="text-xs text-slate-500">{t(`platform.map.poiTypes.${poi.type}`, poi.type)} · {poi.distance_km?.toFixed(1)} km</p>
                             </div>
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-300 shrink-0" />
                           </button>
                         );
                       })}

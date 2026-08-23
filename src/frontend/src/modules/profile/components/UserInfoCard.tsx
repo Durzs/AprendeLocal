@@ -1,4 +1,4 @@
-import { User, Cake, MapPin } from "lucide-react";
+import { User, Cake, MapPin, School, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 type UserInfoCardProps = {
@@ -9,6 +9,11 @@ type UserInfoCardProps = {
   locationText?: string;
   cepText?: string;
   bairroText?: string;
+  role?: string | null;
+  schoolName?: string | null;
+  schoolCommune?: string | null;
+  subject?: string | null;
+  onEditSchool?: () => void;
 };
 
 export function UserInfoCard({
@@ -19,6 +24,11 @@ export function UserInfoCard({
   locationText = "",
   cepText = "",
   bairroText = "",
+  role,
+  schoolName,
+  schoolCommune,
+  subject,
+  onEditSchool,
 }: UserInfoCardProps) {
   const { t } = useTranslation();
 
@@ -37,9 +47,11 @@ export function UserInfoCard({
   const cepFinal = cepText || t("profileCard.notInformed");
   const altAvatar = name || t("profileCard.notInformed");
 
+  const isTeacher = role === "profesor" || !role;
+
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         {avatarUrl ? (
           <img
             src={avatarUrl}
@@ -53,9 +65,22 @@ export function UserInfoCard({
         )}
 
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-semibold text-slate-950">
-            {name || t("profileCard.notInformed")}
-          </h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-xl font-semibold text-slate-950">
+              {name || t("profileCard.notInformed")}
+            </h2>
+
+            {/* Badge de Rol */}
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                isTeacher
+                  ? "bg-emerald-100 text-emerald-800"
+                  : "bg-blue-100 text-blue-800"
+              }`}
+            >
+              {isTeacher ? "👩‍🏫 Docente / Profesor" : "🧑‍🎓 Estudiante"}
+            </span>
+          </div>
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
             <span className="flex items-center gap-1.5">
@@ -72,6 +97,40 @@ export function UserInfoCard({
               </span>
             </span>
           </div>
+
+          {/* Información de Escuela Asignada para Profesores */}
+          {isTeacher && (
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 p-2.5 border border-slate-200/80 text-xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <School className="h-4 w-4 shrink-0 text-emerald-600" />
+                <span className="text-slate-600">Escuela:</span>
+                <span className="font-semibold text-slate-900 truncate">
+                  {schoolName || "Sin escuela asignada"}
+                </span>
+                {schoolCommune && (
+                  <span className="rounded-md bg-white px-2 py-0.5 text-slate-600 border border-slate-200 text-[11px]">
+                    📍 {schoolCommune}
+                  </span>
+                )}
+                {subject && (
+                  <span className="flex items-center gap-1 text-slate-500 text-[11px]">
+                    <BookOpen className="h-3 w-3" />
+                    {subject}
+                  </span>
+                )}
+              </div>
+
+              {onEditSchool && (
+                <button
+                  type="button"
+                  onClick={onEditSchool}
+                  className="shrink-0 font-medium text-emerald-700 hover:text-emerald-800 underline underline-offset-2 text-xs"
+                >
+                  {schoolName ? "Cambiar escuela" : "Asignar escuela"}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
