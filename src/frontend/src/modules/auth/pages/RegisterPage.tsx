@@ -20,7 +20,6 @@ export default function RegisterPage() {
   const nomeRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const senhaRef = useRef<HTMLInputElement>(null);
-  const cepRef = useRef<HTMLInputElement>(null);
 
   // Rol del usuario: 'profesor' o 'estudiante'
   const [role, setRole] = useState<"profesor" | "estudiante">("profesor");
@@ -98,7 +97,6 @@ export default function RegisterPage() {
     const nome = nomeRef.current?.value?.trim();
     const email = emailRef.current?.value?.trim();
     const senha = senhaRef.current?.value;
-    const cep = cepRef.current?.value?.trim();
 
     setAviso(null);
     setEmailPendiente(null);
@@ -130,7 +128,6 @@ export default function RegisterPage() {
     try {
       const metadata = {
         nome,
-        cep,
         idade: String(edad),
         role,
         school_id: selectedSchoolId || null,
@@ -178,7 +175,6 @@ export default function RegisterPage() {
           {
             id: data.session.user.id,
             nome,
-            cep,
             idade: edad,
             role,
             school_id: selectedSchoolId || null,
@@ -424,38 +420,24 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    {t("register.fields.cep")}
-                  </label>
-                  <input
-                    ref={cepRef}
-                    type="text"
-                    placeholder={t("register.placeholders.cep")}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="idade"
-                    className="mb-1.5 block text-sm font-medium text-slate-700"
-                  >
-                    {t("register.fields.age")}
-                  </label>
-                  <input
-                    id="idade"
-                    type="number"
-                    inputMode="numeric"
-                    min={EDAD_MIN}
-                    max={EDAD_MAX}
-                    step={1}
-                    value={idade}
-                    onChange={(e) => setIdade(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
-                  />
-                </div>
+              <div>
+                <label
+                  htmlFor="idade"
+                  className="mb-1.5 block text-sm font-medium text-slate-700"
+                >
+                  {t("register.fields.age")}
+                </label>
+                <input
+                  id="idade"
+                  type="number"
+                  inputMode="numeric"
+                  min={EDAD_MIN}
+                  max={EDAD_MAX}
+                  step={1}
+                  value={idade}
+                  onChange={(e) => setIdade(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+                />
               </div>
 
               <button

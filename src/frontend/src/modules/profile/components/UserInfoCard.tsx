@@ -5,10 +5,6 @@ type UserInfoCardProps = {
   name: string;
   age: string | number;
   avatarUrl?: string;
-  locationLoading?: boolean;
-  locationText?: string;
-  cepText?: string;
-  bairroText?: string;
   role?: string | null;
   schoolName?: string | null;
   schoolCommune?: string | null;
@@ -20,10 +16,6 @@ export function UserInfoCard({
   name,
   age,
   avatarUrl = "",
-  locationLoading = false,
-  locationText = "",
-  cepText = "",
-  bairroText = "",
   role,
   schoolName,
   schoolCommune,
@@ -40,14 +32,10 @@ export function UserInfoCard({
     ? t("profileCard.notInformed")
     : `${age} ${t("profileCard.yearsSuffix")}`;
 
-  const cidadeText = locationLoading
-    ? t("profileCard.loading")
-    : locationText || t("profileCard.notInformed");
-
-  const cepFinal = cepText || t("profileCard.notInformed");
   const altAvatar = name || t("profileCard.notInformed");
 
   const isTeacher = role === "profesor" || !role;
+  const regionText = schoolCommune ? `${schoolCommune}, La Araucanía` : "La Araucanía, Chile";
 
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
@@ -90,11 +78,7 @@ export function UserInfoCard({
 
             <span className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" />
-              {cidadeText}
-              <span className="text-slate-400">
-                · {t("profileCard.cepLabel")}: {cepFinal}
-                {bairroText ? ` · ${bairroText}` : ""}
-              </span>
+              {regionText}
             </span>
           </div>
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { School as SchoolIcon, X, Check, ArrowRight } from "lucide-react";
@@ -8,8 +8,8 @@ import { UserInfoCard } from "../components/UserInfoCard";
 import { BadgesSection } from "../components/BadgesSection";
 import { CommunitiesSection } from "../components/CommunitiesSection";
 import { ActiveCourses } from "../components/ActiveCourses";
-import { pickLang, limparCep, formatarCep } from "../utils";
-import type { CepLookupResult, ProfileData } from "../types";
+import { pickLang } from "../utils";
+import type { ProfileData } from "../types";
 import type { School } from "../../../types";
 import { fetchSchools } from "../../../api";
 
@@ -25,9 +25,6 @@ export default function ProfilePage() {
       loading: t("profile.loading"),
       userFallback: t("profile.userFallback"),
       notInformed: t("profile.notInformed"),
-      cepInvalid: t("profile.cepInvalid"),
-      cepFetchFail: t("profile.cepFetchFail"),
-      cepNotFound: t("profile.cepNotFound"),
     },
   };
 
@@ -39,7 +36,6 @@ export default function ProfilePage() {
     name: "",
     age: null,
     avatarUrl: "",
-    cep: "",
     role: "profesor",
     school_id: null,
     school_name: null,
@@ -53,34 +49,6 @@ export default function ProfilePage() {
   const [selectedModalSchoolId, setSelectedModalSchoolId] = useState<string>("");
   const [modalSchoolSearch, setModalSchoolSearch] = useState("");
   const [savingSchool, setSavingSchool] = useState(false);
-
-  const [locationLoading, setLocationLoading] = useState(false);
-  const [locationText, setLocationText] = useState("");
-  const [bairro, setBairro] = useState("");
-
-  const buscarCidadeUFPorCep = useCallback(
-    async (cep: string): Promise<CepLookupResult> => {
-      const cepLimpo = limparCep(cep);
-      if (cepLimpo.length !== 8) return { ok: false, error: msg.profile.cepInvalid, data: null };
-
-      const cacheKey = `cep:${cepLimpo}`;
-      const cached = localStorage.getItem(cacheKey);
-      if (cached) {
-        try { return { ok: true, error: null, data: JSON.parse(cached) }; } catch { localStorage.removeItem(cacheKey); }
-      }
-
-      const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-      if (!res.ok) return { ok: false, error: msg.profile.cepFetchFail, data: null };
-
-      const json = await res.json();
-      if (json?.erro) return { ok: false, error: msg.profile.cepNotFound, data: null };
-
-      const data = { cidade: json.localidade || "", uf: json.uf || "", bairro: json.bairro || "" };
-      localStorage.setItem(cacheKey, JSON.stringify(data));
-      return { ok: true, error: null, data };
-    },
-    [msg.profile.cepFetchFail, msg.profile.cepInvalid, msg.profile.cepNotFound]
-  );
 
   useEffect(() => {
     let isMounted = true;
@@ -96,7 +64,7 @@ export default function ProfilePage() {
 
       const { data: prof, error: profErr } = await supabase
         .from("profiles")
-        .select("nome, idade, avatar_url, cep, role, school_id, subject")
+        .select("nome, idade, avatar_url, role, school_id, subject")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -129,7 +97,6 @@ export default function ProfilePage() {
           name: nomeMeta || user.email || msg.profile.userFallback,
           age: null,
           avatarUrl: avatarMeta || "",
-          cep: "",
           role: roleMeta,
           school_id: schoolIdMeta,
           school_name: schoolName,
@@ -145,7 +112,6 @@ export default function ProfilePage() {
           id: user.id,
           nome: nomeMeta || (user.email ?? msg.profile.userFallback),
           avatar_url: avatarMeta || null,
-          cep: null,
           role: roleMeta,
           school_id: schoolIdMeta,
           subject: subjectMeta,
@@ -154,7 +120,6 @@ export default function ProfilePage() {
           name: nomeMeta || user.email || msg.profile.userFallback,
           age: null,
           avatarUrl: avatarMeta || "",
-          cep: "",
           role: roleMeta,
           school_id: schoolIdMeta,
           school_name: schoolName,
@@ -169,7 +134,6 @@ export default function ProfilePage() {
         name: prof.nome || user.email || msg.profile.userFallback,
         age: prof.idade ?? null,
         avatarUrl: prof.avatar_url || "",
-        cep: prof.cep || "",
         role: prof.role || roleMeta,
         school_id: prof.school_id || schoolIdMeta,
         school_name: schoolName,
@@ -223,37 +187,6 @@ export default function ProfilePage() {
     }
   };
 
-  useEffect(() => {
-    let alive = true;
-
-    async function loadLocalizacao() {
-      setLocationText("");
-      setBairro("");
-      const cepRaw = pickLang(profile.cep, lang);
-      const cepLimpo = limparCep(cepRaw);
-      if (!cepLimpo || cepLimpo.length !== 8) return;
-
-      setLocationLoading(true);
-      try {
-        const result = await buscarCidadeUFPorCep(cepLimpo);
-        if (!alive) return;
-        if (result.ok) {
-          const { ciudad, uf, barrio } = (result.data as any) || {};
-          setLocationText(ciudad && uf ? `${ciudad}/${uf}` : "");
-          setBairro(barrio || "");
-        }
-      } catch {
-        if (!alive) return;
-      } finally {
-        if (!alive) return;
-        setLocationLoading(false);
-      }
-    }
-
-    loadLocalizacao();
-    return () => { alive = false; };
-  }, [profile.cep, lang, buscarCidadeUFPorCep]);
-
   if (loading) {
     return (
       <main className="min-h-screen bg-[#f7f8fb] pt-24">
@@ -266,8 +199,6 @@ export default function ProfilePage() {
 
   const nameText = pickLang(profile.name, lang) || msg.profile.userFallback;
   const avatarText = pickLang(profile.avatarUrl, lang) || "";
-  const cepTextRaw = pickLang(profile.cep, lang) || "";
-  const cepText = formatarCep(cepTextRaw) || msg.profile.notInformed;
   const ageText = profile.age ?? msg.profile.notInformed;
 
   const filteredModalSchools = schools.filter((s) => {
@@ -305,10 +236,6 @@ export default function ProfilePage() {
                 name={nameText}
                 age={ageText}
                 avatarUrl={avatarText}
-                locationLoading={locationLoading}
-                locationText={locationText}
-                cepText={cepText}
-                bairroText={bairro}
                 role={profile.role}
                 schoolName={profile.school_name}
                 schoolCommune={profile.school_commune}
