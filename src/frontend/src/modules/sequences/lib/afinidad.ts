@@ -236,6 +236,41 @@ export function afinidad(oa: CurriculumObjective, lugar: POIFeature): Afinidad {
 
 export type LugarPuntuado = { lugar: POIFeature; afinidad: Afinidad };
 
+export type ObjetivoPuntuado = { objetivo: CurriculumObjective; afinidad: Afinidad };
+
+/**
+ * El mismo cálculo, leído al revés: qué objetivos sostiene este lugar.
+ *
+ * `afinidad` recibe los dos términos y no privilegia ninguno, así que la
+ * dirección la ponía únicamente el orden de la lista. Partir del lugar es lo
+ * que necesita el docente que ya sabe adónde puede llevar al curso y no sabe
+ * qué código del currículum le corresponde a lo que va a ver ahí.
+ */
+export function ordenarObjetivosPorAfinidad(
+  lugar: POIFeature | undefined,
+  objetivos: CurriculumObjective[]
+): ObjetivoPuntuado[] {
+  if (!lugar) {
+    return objetivos.map((objetivo) => ({
+      objetivo,
+      afinidad: { puntos: 0, banda: "no_aporta" as const, motivos: [] },
+    }));
+  }
+
+  return objetivos
+    .map((objetivo) => ({ objetivo, afinidad: afinidad(objetivo, lugar) }))
+    .sort((a, b) => {
+      if (b.afinidad.puntos !== a.afinidad.puntos) {
+        return b.afinidad.puntos - a.afinidad.puntos;
+      }
+      // A igualdad, por nivel y número de OA: es el orden en que el docente
+      // los tiene en el programa, y evita que la lista baile entre cargas.
+      const nivel = String(a.objetivo.level).localeCompare(String(b.objetivo.level), "es");
+      if (nivel !== 0) return nivel;
+      return String(a.objetivo.code).localeCompare(String(b.objetivo.code), "es");
+    });
+}
+
 /** Ordena de más a menos afín; a igualdad, alfabético para que no baile. */
 export function ordenarPorAfinidad(
   oa: CurriculumObjective | undefined,

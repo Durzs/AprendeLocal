@@ -5,10 +5,34 @@
  * docente no busca «OA02_CN_5»: busca lo que le toca en 6º, o busca «agua».
  * Así que se filtra por curso —que es como está organizado su horario— y se
  * busca por palabras.
+ *
+ * Cuando se entra por el lugar, además, la lista se ordena por lo que ese
+ * lugar sostiene de verdad y lo dice: buscar por palabras exigía saber de
+ * antemano de qué trataba el objetivo, que es justo lo que no sabe quien parte
+ * del sitio al que puede llevar al curso.
  */
 
 import { useMemo, useState } from "react";
-import type { CurriculumObjective } from "../../../types";
+import type { CurriculumObjective, POIFeature } from "../../../types";
+import { ordenarObjetivosPorAfinidad, type Banda } from "../lib/afinidad";
+
+const ESTILO: Record<Banda, { borde: string; etiqueta: string; texto: string }> = {
+  sirve: {
+    borde: "border-emerald-300 bg-emerald-50/40",
+    etiqueta: "bg-emerald-600 text-white",
+    texto: "Sirve",
+  },
+  quizas: {
+    borde: "border-slate-200",
+    etiqueta: "bg-slate-200 text-slate-700",
+    texto: "Puede servir",
+  },
+  no_aporta: {
+    borde: "border-slate-200",
+    etiqueta: "bg-slate-100 text-slate-500",
+    texto: "Sin relación",
+  },
+};
 
 /** `6to_basico` → `6º`. El dato viene con la forma de la base, no de la sala. */
 export function nivelCorto(level: string): string {
@@ -25,11 +49,20 @@ type Props = {
   valor: string;
   onElegir: (code: string) => void;
   cargando: boolean;
+  /** Si se entró por el lugar, se ordena y se explica respecto de él. */
+  lugar?: POIFeature;
 };
 
-export default function SelectorObjetivo({ objetivos, valor, onElegir, cargando }: Props) {
+export default function SelectorObjetivo({
+  objetivos,
+  valor,
+  onElegir,
+  cargando,
+  lugar,
+}: Props) {
   const [busqueda, setBusqueda] = useState("");
   const [nivel, setNivel] = useState<string>("");
+  const [verTodos, setVerTodos] = useState(false);
 
   const niveles = useMemo(
     () => [...new Set(objetivos.map((o) => o.level))].sort(),
@@ -47,6 +80,20 @@ export default function SelectorObjetivo({ objetivos, valor, onElegir, cargando 
       return q.every((w) => texto.includes(w));
     });
   }, [objetivos, busqueda, nivel]);
+
+  // Con lugar, el orden lo decide lo que ese lugar sostiene; sin él, se
+  // conserva el orden del catálogo, que es el del programa de estudio.
+  const puntuados = useMemo(
+    () => (lugar ? ordenarObjetivosPorAfinidad(lugar, filtrados) : null),
+    [lugar, filtrados]
+  );
+
+  const utiles = puntuados
+    ? puntuados.filter((r) => r.afinidad.banda !== "no_aporta")
+    : [];
+  const resto = puntuados
+    ? puntuados.filter((r) => r.afinidad.banda === "no_aporta")
+    : [];
 
   const elegido = objetivos.find((o) => o.code === valor);
 
@@ -102,6 +149,19 @@ export default function SelectorObjetivo({ objetivos, valor, onElegir, cargando 
         />
       </div>
 
+      {/* Ningún objetivo se ancla aquí. Decirlo evita que el docente recorra
+          62 opciones buscando una que este lugar no puede sostener. */}
+      {puntuados && !cargando && utiles.length === 0 && filtrados.length > 0 && (
+        <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3.5 text-sm text-amber-900">
+          <p className="font-semibold">Este lugar no ancla ningún objetivo</p>
+          <p className="mt-1.5 leading-relaxed">
+            De los {filtrados.length} objetivos visibles, ninguno encuentra
+            materia aquí. Prueba con otro curso, quita la búsqueda, o elige otro
+            lugar.
+          </p>
+        </div>
+      )}
+
       <ul className="mt-3 max-h-72 divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200">
         {cargando && <li className="px-4 py-3 text-sm text-slate-500">Cargando…</li>}
         {!cargando && filtrados.length === 0 && (
@@ -109,21 +169,69 @@ export default function SelectorObjetivo({ objetivos, valor, onElegir, cargando 
             Ningún objetivo coincide con esa búsqueda.
           </li>
         )}
-        {filtrados.map((o) => (
-          <li key={o.code}>
-            <button
-              type="button"
-              onClick={() => onElegir(o.code)}
-              className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-slate-50"
-            >
-              <span className="mt-0.5 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-600">
-                {nivelCorto(o.level)}
-              </span>
-              <span className="min-w-0 text-sm text-slate-800">{o.description}</span>
-            </button>
-          </li>
-        ))}
+
+        {!puntuados &&
+          filtrados.map((o) => (
+            <li key={o.code}>
+              <button
+                type="button"
+                onClick={() => onElegir(o.code)}
+                className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-slate-50"
+              >
+                <span className="mt-0.5 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-600">
+                  {nivelCorto(o.level)}
+                </span>
+                <span className="min-w-0 text-sm text-slate-800">{o.description}</span>
+              </button>
+            </li>
+          ))}
+
+        {puntuados &&
+          (verTodos ? [...utiles, ...resto] : utiles).map(({ objetivo, afinidad }) => {
+            const estilo = ESTILO[afinidad.banda];
+            return (
+              <li key={objetivo.code}>
+                <button
+                  type="button"
+                  onClick={() => onElegir(objetivo.code)}
+                  className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-slate-50"
+                >
+                  <span className="mt-0.5 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-600">
+                    {nivelCorto(objetivo.level)}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm text-slate-800">
+                      {objetivo.description}
+                    </span>
+                    {afinidad.motivos.length > 0 && (
+                      <span className="mt-0.5 block text-xs text-slate-600">
+                        Coincide en {afinidad.motivos.slice(0, 3).join(" · ")}
+                      </span>
+                    )}
+                  </span>
+                  <span
+                    className={`mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${estilo.etiqueta}`}
+                  >
+                    {estilo.texto}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
       </ul>
+
+      {puntuados && resto.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setVerTodos(!verTodos)}
+          className="mt-2 text-xs font-semibold text-slate-500 underline underline-offset-2 hover:text-slate-800"
+        >
+          {verTodos
+            ? "Ocultar los que no se relacionan"
+            : `Ver también los ${resto.length} sin relación con este lugar`}
+        </button>
+      )}
+
       <p className="mt-1.5 text-xs text-slate-400">
         {filtrados.length} de {objetivos.length} objetivos
       </p>
