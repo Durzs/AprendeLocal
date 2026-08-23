@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Trees, Droplets, Sun, Sprout, Leaf, Zap, MapPin } from "lucide-react";
 
@@ -16,7 +16,7 @@ export default function CountrySection() {
             <MapPin className="w-3.5 h-3.5" />
             {t("home.country.badge", "Territorios en Acción")}
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#111217] mt-4 mb-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-4 mb-3 leading-[0.95]">
             {t("home.country.title", "Oportunidades STEM contextualizadas")}
           </h2>
           <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
