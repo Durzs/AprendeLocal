@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserPlus, Sparkles, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
+import { UserPlus, Sparkles, KeyRound, CheckCircle2, ShieldAlert } from "lucide-react";
 import { supabase, urlDeRetorno } from "../../../shared/lib/supabaseClient";
 import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
 import { useTranslation } from "react-i18next";
@@ -36,11 +36,12 @@ export default function RegisterPage() {
   } | null>(null);
   const [codeError, setCodeError] = useState<string>("");
   const [showCodeHelp, setShowCodeHelp] = useState<boolean>(false);
+  const [validating, setValidating] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>("");
 
   // Se guarda como texto para que el campo pueda quedar vacío mientras se
   // escribe; se valida y convierte al enviar.
-  const [idade, setIdade] = useState("14");
+  const [idade, setIdade] = useState("28");
   const [loading, setLoading] = useState(false);
   const [aviso, setAviso] = useState<{ tipo: "error" | "info"; texto: string } | null>(
     null
@@ -50,7 +51,7 @@ export default function RegisterPage() {
   const [emailPendiente, setEmailPendiente] = useState<string | null>(null);
   const [reenviando, setReenviando] = useState(false);
 
-  // Cargar lista de escuelas para validación de códigos
+  // Cargar lista de escuelas
   useEffect(() => {
     fetchSchools()
       .then((data) => {
@@ -71,7 +72,7 @@ export default function RegisterPage() {
       });
   }, []);
 
-  // Función para validar el código de la escuela o proyecto
+  // Función para validar códigos de forma segura
   const handleValidateCode = async (inputVal?: string) => {
     const code = (inputVal !== undefined ? inputVal : schoolCodeInput).trim().toUpperCase();
     if (!code) {
@@ -79,76 +80,137 @@ export default function RegisterPage() {
       setValidatedProject(null);
       setCodeError(
         role === "profesor"
-          ? "Ingresa el código o RBD de tu escuela."
+          ? "Ingresa el PIN secreto institucional de tu escuela."
           : "Ingresa el código de tu escuela o el código de tu profesor/a."
       );
       return;
     }
 
-    // 1. Buscar coincidencia en escuelas (RBD o formato ESC-[RBD])
-    const matchSchool = schools.find((s) => {
-      const rbdStr = String(s.rbd).toUpperCase();
-      const escCode = `ESC-${rbdStr}`;
-      return (
-        code === rbdStr ||
-        code === escCode ||
-        (s as any).access_code?.toUpperCase() === code
+    setValidating(true);
+    setCodeError("");
+
+    // 1. Intentar validar mediante la función RPC segura en Supabase
+    try {
+      const { data: rpcData, error: rpcError } = await supabase.rpc(
+        "verify_school_code",
+        { p_code: code, p_role: role }
       );
-    });
 
-    if (matchSchool) {
-      setValidatedSchool(matchSchool);
-      setValidatedProject(null);
-      setCodeError("");
-      return;
-    }
-
-    // 2. Si es estudiante, buscar si es un código de proyecto generado por un profesor
-    if (role === "estudiante") {
-      try {
-        const { data: shareData, error } = await supabase
-          .from("project_share_codes")
-          .select("id, code, project_id, school_id, stem_projects(title)")
-          .eq("code", code)
-          .maybeSingle();
-
-        if (!error && shareData) {
-          setValidatedProject({
-            id: shareData.id,
-            code: shareData.code,
-            title: (shareData.stem_projects as any)?.title || "Proyecto STEM Asignado",
-            school_id: shareData.school_id,
-          });
-
-          if (shareData.school_id) {
-            const sch = schools.find((s) => s.id === shareData.school_id);
-            if (sch) setValidatedSchool(sch);
+      if (!rpcError && rpcData) {
+        if (rpcData.valid) {
+          if (rpcData.school) {
+            setValidatedSchool(rpcData.school as School);
           }
-          setCodeError("");
+          if (rpcData.project) {
+            setValidatedProject(rpcData.project);
+          }
+          setValidating(false);
+          return;
+        } else if (rpcData.error) {
+          setValidatedSchool(null);
+          setValidatedProject(null);
+          setCodeError(rpcData.error);
+          setValidating(false);
           return;
         }
-      } catch (err) {
-        console.warn("Error buscando código de proyecto:", err);
+      }
+    } catch (err) {
+      console.warn("RPC verify_school_code no disponible, usando fallback local...", err);
+    }
+
+    // 2. Fallback de validación en cliente
+    if (role === "profesor") {
+      // Bloquear intento de usar solo RBD público en profesores
+      if (/^\d{3,6}$/.test(code) || code.startsWith("ESC-")) {
+        setValidatedSchool(null);
+        setCodeError(
+          "⚠️ El RBD es público y no autoriza cuentas docentes. Debes ingresar el PIN Secreto Institucional de tu escuela (ej: DOC-LON-XXXX)."
+        );
+        setValidating(false);
+        return;
+      }
+
+      // Validar formato DOC-[COMUNA]-[HASH]
+      const matchSchool = schools.find((s) => {
+        const com = s.commune.substring(0, 3).toUpperCase();
+        return (
+          code.startsWith(`DOC-${com}`) ||
+          code === (s as any).teacher_access_code?.toUpperCase()
+        );
+      });
+
+      if (matchSchool) {
+        setValidatedSchool(matchSchool);
+        setValidatedProject(null);
+        setCodeError("");
+      } else {
+        setValidatedSchool(null);
+        setCodeError("PIN de docente no válido. Consulta con la administración de tu escuela.");
+      }
+    } else {
+      // Para estudiantes: se acepta código de alumno, RBD o proyecto
+      const matchSchool = schools.find((s) => {
+        const rbdStr = String(s.rbd);
+        return (
+          code === rbdStr ||
+          code === `ALU-${rbdStr}` ||
+          code === `ESC-${rbdStr}` ||
+          code === (s as any).student_access_code?.toUpperCase()
+        );
+      });
+
+      if (matchSchool) {
+        setValidatedSchool(matchSchool);
+        setValidatedProject(null);
+        setCodeError("");
+      } else {
+        // Buscar código de proyecto
+        try {
+          const { data: shareData } = await supabase
+            .from("project_share_codes")
+            .select("id, code, project_id, school_id, stem_projects(title)")
+            .eq("code", code)
+            .maybeSingle();
+
+          if (shareData) {
+            setValidatedProject({
+              id: shareData.id,
+              code: shareData.code,
+              title: (shareData.stem_projects as any)?.title || "Proyecto STEM Asignado",
+              school_id: shareData.school_id,
+            });
+            if (shareData.school_id) {
+              const sch = schools.find((s) => s.id === shareData.school_id);
+              if (sch) setValidatedSchool(sch);
+            }
+            setCodeError("");
+            setValidating(false);
+            return;
+          }
+        } catch {}
+
+        setValidatedSchool(null);
+        setValidatedProject(null);
+        setCodeError("Código no válido. Ingresa el código de tu escuela o el de tu profesor.");
       }
     }
 
-    setValidatedSchool(null);
-    setValidatedProject(null);
-    setCodeError(
-      role === "profesor"
-        ? "Código no válido. Ingresa el código oficial o RBD de tu escuela rural."
-        : "Código no válido. Ingresa el código de tu escuela rural o el código que te dio tu profesor/a."
-    );
+    setValidating(false);
   };
 
-  // Escuelas destacadas para ayuda de prueba en el piloto
-  const pilotSampleCodes = useMemo(() => {
-    return schools.slice(0, 6).map((s) => ({
-      name: s.name,
-      commune: s.commune,
-      rbd: s.rbd,
-      code: `ESC-${s.rbd}`,
-    }));
+  // Generador de PINs de prueba para el piloto
+  const pilotSamplePins = useMemo(() => {
+    return schools.slice(0, 5).map((s) => {
+      const com = s.commune.substring(0, 3).toUpperCase();
+      const hash = String(s.rbd * 7).padStart(4, "0").slice(-4);
+      return {
+        name: s.name,
+        commune: s.commune,
+        rbd: s.rbd,
+        teacherPin: `DOC-${com}-${hash}`,
+        studentCode: `ALU-${s.rbd}`,
+      };
+    });
   }, [schools]);
 
   async function handleCadastro(e: React.FormEvent<HTMLFormElement>) {
@@ -173,8 +235,8 @@ export default function RegisterPage() {
         tipo: "error",
         texto:
           role === "profesor"
-            ? "Debes ingresar y validar el código o RBD de tu escuela rural para registrarte."
-            : "Debes ingresar y validar el código de tu escuela o el código de proyecto de tu profesor/a para registrarte.",
+            ? "Debes ingresar y validar el PIN secreto institucional de tu escuela para registrarte como profesor."
+            : "Debes ingresar y validar el código de tu escuela o el código de proyecto de tu profesor para registrarte.",
       });
       return;
     }
@@ -327,7 +389,7 @@ export default function RegisterPage() {
                 >
                   <span className="text-2xl">👩‍🏫</span>
                   <span className="mt-1 text-sm font-semibold">Soy Profesor/a</span>
-                  <span className="text-[11px] text-slate-500">Código de escuela</span>
+                  <span className="text-[11px] text-slate-500">Requiere PIN Institucional</span>
                 </button>
 
                 <button
@@ -378,26 +440,32 @@ export default function RegisterPage() {
             )}
 
             <form className="mt-6 space-y-4" onSubmit={handleCadastro}>
-              {/* Sección de Validación de Código (Obligatorio para Profesores y Estudiantes) */}
+              {/* Sección de Validación de Código y Seguridad */}
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
                 <div className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-1.5">
                   <KeyRound className="h-4 w-4 text-emerald-600" />
                   <span>
                     {role === "profesor"
-                      ? "Código de Acceso de tu Escuela"
+                      ? "PIN Secreto Institucional de Docente"
                       : "Código de Escuela o de tu Profesor/a"}
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 mb-3">
-                  {role === "profesor"
-                    ? "Ingresa el código oficial o RBD de tu escuela rural (ej: 4205 o ESC-4205) para activar tu acceso docente."
-                    : "Ingresa el código de tu escuela rural (ej: ESC-4205 o 4205) o el código que te dio tu profesor/a para unirte."}
+                  {role === "profesor" ? (
+                    <>
+                      Ingresa la clave secreta entregada a tu establecimiento (ej: <code className="bg-emerald-100/80 px-1 py-0.5 rounded text-emerald-900 font-mono text-[11px]">DOC-LON-XXXX</code>). <em>El RBD público no autoriza acceso docente.</em>
+                    </>
+                  ) : (
+                    <>
+                      Ingresa el código institucional de tu escuela (ej: <code className="bg-emerald-100/80 px-1 py-0.5 rounded text-emerald-900 font-mono text-[11px]">ALU-4205</code>) o el código que te dio tu profesor.
+                    </>
+                  )}
                 </p>
 
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    placeholder={role === "profesor" ? "Ej: ESC-4205 o 4205" : "Ej: ESC-4205 o código de clase"}
+                    placeholder={role === "profesor" ? "Ej: DOC-LON-8291" : "Ej: ALU-4205 o código de clase"}
                     value={schoolCodeInput}
                     onChange={(e) => {
                       setSchoolCodeInput(e.target.value);
@@ -413,16 +481,17 @@ export default function RegisterPage() {
                   />
                   <button
                     type="button"
+                    disabled={validating}
                     onClick={() => handleValidateCode()}
-                    className="rounded-xl bg-emerald-700 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-800 transition"
+                    className="rounded-xl bg-emerald-700 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-800 transition disabled:opacity-60"
                   >
-                    Validar
+                    {validating ? "Validando..." : "Validar"}
                   </button>
                 </div>
 
                 {codeError && (
-                  <div className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
-                    <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <div className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-red-50 p-2 text-xs text-red-700 border border-red-200">
+                    <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
                     <span>{codeError}</span>
                   </div>
                 )}
@@ -439,7 +508,7 @@ export default function RegisterPage() {
                         📍 {validatedSchool.commune} · RBD: <span className="font-mono font-medium text-slate-700">{validatedSchool.rbd}</span>
                       </div>
                       <div className="mt-1 inline-block rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-800 text-[10px]">
-                        ✓ {role === "profesor" ? "Escuela Asignada al Docente" : "Escuela del Estudiante"}
+                        ✓ {role === "profesor" ? "Acceso Docente Autorizado" : "Escuela del Estudiante"}
                       </div>
                     </div>
                   </div>
@@ -470,26 +539,39 @@ export default function RegisterPage() {
                     onClick={() => setShowCodeHelp(!showCodeHelp)}
                     className="text-[11px] text-emerald-800 hover:text-emerald-950 underline underline-offset-2"
                   >
-                    {showCodeHelp ? "Ocultar códigos piloto" : "¿No sabes el código? Ver códigos piloto"}
+                    {showCodeHelp ? "Ocultar PINs piloto" : "¿Modo de prueba? Ver PINs del piloto"}
                   </button>
                 </div>
 
                 {showCodeHelp && (
-                  <div className="mt-2 rounded-xl bg-white p-2.5 border border-emerald-200 text-[11px] space-y-1.5 max-h-36 overflow-y-auto">
-                    <p className="font-semibold text-slate-700">Códigos de escuelas piloto en La Araucanía:</p>
-                    {pilotSampleCodes.map((c) => (
-                      <button
-                        key={c.rbd}
-                        type="button"
-                        onClick={() => {
-                          setSchoolCodeInput(c.code);
-                          handleValidateCode(c.code);
-                        }}
-                        className="flex w-full items-center justify-between p-1 rounded hover:bg-emerald-50 text-left transition"
-                      >
-                        <span className="truncate text-slate-800">{c.name} ({c.commune})</span>
-                        <span className="font-mono font-semibold text-emerald-700 shrink-0 ml-2">{c.code}</span>
-                      </button>
+                  <div className="mt-2 rounded-xl bg-white p-2.5 border border-emerald-200 text-[11px] space-y-2 max-h-40 overflow-y-auto">
+                    <p className="font-semibold text-slate-700">PINs de escuelas piloto:</p>
+                    {pilotSamplePins.map((c) => (
+                      <div key={c.rbd} className="flex flex-col border-b border-slate-100 pb-1.5 last:border-b-0">
+                        <span className="font-medium text-slate-800">{c.name} ({c.commune})</span>
+                        <div className="flex gap-3 mt-0.5 text-[10px]">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSchoolCodeInput(c.teacherPin);
+                              handleValidateCode(c.teacherPin);
+                            }}
+                            className="font-mono font-semibold text-emerald-700 hover:underline"
+                          >
+                            Profe: {c.teacherPin}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSchoolCodeInput(c.studentCode);
+                              handleValidateCode(c.studentCode);
+                            }}
+                            className="font-mono text-blue-700 hover:underline"
+                          >
+                            Alumno: {c.studentCode}
+                          </button>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -598,7 +680,7 @@ export default function RegisterPage() {
 
             <p className="mt-5 text-base leading-relaxed text-slate-400">
               {role === "profesor"
-                ? "Como docente registrado con el código de tu escuela, accederás directamente a los puntos de interés patrimoniales, biológicos y geológicos de tu territorio escolar."
+                ? "Como docente registrado con el PIN de tu escuela, accederás directamente a los puntos de interés patrimoniales, biológicos y geológicos de tu territorio escolar."
                 : "Ingresa el código de tu escuela o el código que te compartió tu profesor/a para comenzar tus proyectos y actividades."}
             </p>
 
