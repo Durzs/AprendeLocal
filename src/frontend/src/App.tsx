@@ -40,6 +40,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "entrar", element: <LoginPage /> },
+      { path: "admin", element: <Navigate to="/entrar?admin=1" replace /> },
       { path: "cadastrar", element: <RegisterPage /> },
       { path: "registro", element: <RegisterPage /> },
       { path: "recuperar", element: <ForgotPasswordPage /> },
