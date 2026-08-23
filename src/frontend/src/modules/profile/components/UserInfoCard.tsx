@@ -1,4 +1,4 @@
-import { User, Cake, MapPin, School, BookOpen } from "lucide-react";
+import { User, Cake, MapPin, School, BookOpen, ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 type UserInfoCardProps = {
@@ -34,7 +34,8 @@ export function UserInfoCard({
 
   const altAvatar = name || t("profileCard.notInformed");
 
-  const isTeacher = role === "profesor" || !role;
+  const isAdmin = role === "admin";
+  const isTeacher = role === "profesor" || (!role && !isAdmin);
   const regionText = schoolCommune ? `${schoolCommune}, La Araucanía` : "La Araucanía, Chile";
 
   return (
@@ -59,15 +60,20 @@ export function UserInfoCard({
             </h2>
 
             {/* Badge de Rol */}
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                isTeacher
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-blue-100 text-blue-800"
-              }`}
-            >
-              {isTeacher ? "👩‍🏫 Docente / Profesor" : "🧑‍🎓 Estudiante"}
-            </span>
+            {isAdmin ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-800">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                👑 Administrador
+              </span>
+            ) : isTeacher ? (
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+                👩‍🏫 Docente / Profesor
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
+                🧑‍🎓 Estudiante
+              </span>
+            )}
           </div>
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
@@ -82,14 +88,14 @@ export function UserInfoCard({
             </span>
           </div>
 
-          {/* Información de Escuela Asignada para Profesores */}
-          {isTeacher && (
+          {/* Información de Escuela Asignada para Docentes o Admin */}
+          {(isTeacher || isAdmin) && (
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 p-2.5 border border-slate-200/80 text-xs">
               <div className="flex items-center gap-2 min-w-0">
                 <School className="h-4 w-4 shrink-0 text-emerald-600" />
-                <span className="text-slate-600">Escuela:</span>
+                <span className="text-slate-600">{isAdmin ? "Escuela activa:" : "Escuela:"}</span>
                 <span className="font-semibold text-slate-900 truncate">
-                  {schoolName || "Sin escuela asignada"}
+                  {schoolName || (isAdmin ? "Todas las escuelas (Acceso total)" : "Sin escuela asignada")}
                 </span>
                 {schoolCommune && (
                   <span className="rounded-md bg-white px-2 py-0.5 text-slate-600 border border-slate-200 text-[11px]">
@@ -110,7 +116,7 @@ export function UserInfoCard({
                   onClick={onEditSchool}
                   className="shrink-0 font-medium text-emerald-700 hover:text-emerald-800 underline underline-offset-2 text-xs"
                 >
-                  {schoolName ? "Cambiar escuela" : "Asignar escuela"}
+                  {schoolName ? "Cambiar escuela" : "Seleccionar escuela"}
                 </button>
               )}
             </div>
