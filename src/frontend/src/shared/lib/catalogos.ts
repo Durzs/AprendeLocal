@@ -88,6 +88,8 @@ export async function generarSecuencia(params: {
     // al genérico del cliente.
     let motivo = error.message;
     const respuesta = (error as { context?: Response }).context;
+    const estado = respuesta?.status;
+
     if (respuesta && typeof respuesta.json === "function") {
       try {
         const cuerpo = await respuesta.json();
@@ -96,6 +98,23 @@ export async function generarSecuencia(params: {
         /* la respuesta no traía JSON */
       }
     }
+
+    // La función existe en el repositorio pero puede no estar desplegada en el
+    // proyecto: es un paso manual que no deja rastro en el código, y el
+    // mensaje que llegaba entonces —«Failed to send a request to the Edge
+    // Function»— apuntaba a un problema de red y escondía la causa. Se nombra.
+    const noDesplegada =
+      estado === 404 ||
+      /failed to send a request|failed to fetch|not found/i.test(error.message);
+
+    if (noDesplegada) {
+      throw new Error(
+        "El generador de secuencias no está disponible: la función " +
+          "«generar-secuencia» no responde en este proyecto de Supabase. " +
+          "Suele significar que no se ha desplegado (ver docs/DEPLOY.md)."
+      );
+    }
+
     throw new Error(motivo);
   }
 

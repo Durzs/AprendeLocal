@@ -22,6 +22,59 @@ Es la variable que más fácil se olvida.
 
 ---
 
+## 0. La Edge Function, sin la cual no hay generación
+
+**Esto es lo que hay que hacer primero.** La generación de secuencias vive en
+`supabase/functions/generar-secuencia`, y estar en el repositorio no la pone en
+línea: hay que desplegarla al proyecto. Mientras no se despliegue, el sitio
+carga, los catálogos aparecen y el botón de generar falla siempre.
+
+### Automático
+
+`.github/workflows/desplegar-funciones.yml` la despliega en cada push a `main`
+que toque `supabase/functions/`. Necesita tres secretos en el repositorio
+(Settings → Secrets and variables → Actions):
+
+| Secreto | De dónde sale |
+|---|---|
+| `SUPABASE_ACCESS_TOKEN` | Supabase → Account → Access Tokens |
+| `SUPABASE_PROJECT_REF` | La referencia del proyecto, en su URL |
+| `SUPABASE_ANON_KEY` | Settings → API (solo para la comprobación posterior) |
+
+El flujo además llama a la función al terminar: un `400` ante un cuerpo vacío
+significa que está viva y validando; un `404`, que no se desplegó; un `503`,
+que le falta la clave de Anthropic.
+
+### A mano
+
+```bash
+supabase login
+supabase functions deploy generar-secuencia --project-ref <ref-del-proyecto>
+```
+
+### La clave de Anthropic
+
+La función la lee de los secretos del proyecto, no del repositorio:
+
+```bash
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-... --project-ref <ref>
+```
+
+Sin ella la función responde con un motivo explícito y no genera nada. Es
+deliberado: es preferible un mensaje claro a un error opaco delante de un curso.
+
+### Comprobar que quedó bien
+
+```bash
+curl -i -X POST "https://<ref>.supabase.co/functions/v1/generar-secuencia" \
+  -H "Authorization: Bearer <anon-key>" \
+  -H "Content-Type: application/json" -d '{}'
+```
+
+`400` con «Faltan los objetivos y el point_id» es la respuesta correcta.
+
+---
+
 ## 1. Backend: FastAPI en Railway
 
 El `Dockerfile` de la raíz ya está listo y Railway lo detecta solo.
