@@ -1,4 +1,5 @@
-﻿import { useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Mail, MapPin, Github, Send, CheckCircle2 } from "lucide-react";
 
@@ -12,7 +13,7 @@ export default function ContactSection() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
   };
