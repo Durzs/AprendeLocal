@@ -1,6 +1,6 @@
-﻿import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowRight, MapPin, BookOpen, Wrench, Mail, UserPlus, Compass } from "lucide-react";
+import { ArrowRight, Mail, UserPlus, Compass } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
 
 interface HeroSectionProps {
@@ -8,21 +8,18 @@ interface HeroSectionProps {
   onExplore: () => void;
 }
 
-const STEP_ICONS = [MapPin, BookOpen, Wrench] as const;
-const STEP_COLORS = [
-  { accent: "bg-emerald-500", iconBg: "bg-emerald-50", iconText: "text-emerald-600", iconRing: "ring-emerald-100", pill: "bg-emerald-100 text-emerald-700", num: "bg-emerald-50 text-emerald-600", connector: "bg-emerald-400" },
-  { accent: "bg-blue-500", iconBg: "bg-blue-50", iconText: "text-blue-600", iconRing: "ring-blue-100", pill: "bg-blue-100 text-blue-700", num: "bg-blue-50 text-blue-600", connector: "bg-blue-400" },
-  { accent: "bg-amber-500", iconBg: "bg-amber-50", iconText: "text-amber-600", iconRing: "ring-amber-100", pill: "bg-amber-100 text-amber-700", num: "bg-amber-50 text-amber-600", connector: "bg-amber-400" },
-];
-
-const CYCLE_MS = 5000;
+const CYCLE_MS = 4500;
 
 export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
   const fullTitle = t("home.hero.title", "Tu territorio es tu mejor laboratorio STEM");
   const [displayedText, setDisplayedText] = useState("");
   const [activeStep, setActiveStep] = useState(0);
-  const [animKey, setAnimKey] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const stepStartTimeRef = useRef<number>(Date.now());
+  const reqAnimRef = useRef<number | null>(null);
 
   // Typewriter effect
   useEffect(() => {
@@ -36,28 +33,176 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
     return () => window.clearInterval(interval);
   }, [fullTitle]);
 
+  // Jump to specific step
   const goToStep = useCallback((i: number) => {
     setActiveStep(i);
-    setAnimKey((k) => k + 1);
+    setProgress(0);
+    stepStartTimeRef.current = Date.now();
   }, []);
 
-  // Auto-cycle steps
+  // Continuous animation loop
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setActiveStep((prev) => {
-        const next = (prev + 1) % 3;
-        setAnimKey((k) => k + 1);
-        return next;
-      });
-    }, CYCLE_MS);
-    return () => window.clearInterval(interval);
-  }, []);
+    stepStartTimeRef.current = Date.now();
 
-  const steps = ["explore", "learn", "create"] as const;
+    const updateLoop = () => {
+      if (!isPaused) {
+        const elapsed = Date.now() - stepStartTimeRef.current;
+        const currentProgress = Math.min((elapsed / CYCLE_MS) * 100, 100);
+        setProgress(currentProgress);
+
+        if (elapsed >= CYCLE_MS) {
+          setActiveStep((prev) => (prev + 1) % 3);
+          stepStartTimeRef.current = Date.now();
+          setProgress(0);
+        }
+      } else {
+        stepStartTimeRef.current = Date.now() - (progress / 100) * CYCLE_MS;
+      }
+
+      reqAnimRef.current = requestAnimationFrame(updateLoop);
+    };
+
+    reqAnimRef.current = requestAnimationFrame(updateLoop);
+
+    return () => {
+      if (reqAnimRef.current) cancelAnimationFrame(reqAnimRef.current);
+    };
+  }, [isPaused, progress]);
+
+  // Data for the 3 steps with iNaturalist-styled illustrated SVGs
+  const steps = [
+    {
+      id: "explore",
+      num: 1,
+      label: t("home.hero.steps.explore.label", "Explora"),
+      title: t("home.hero.steps.explore.title", "Conoce tu territorio"),
+      desc: t(
+        "home.hero.steps.explore.desc",
+        "Identifica ecosistemas, cuencas hídricas y biodiversidad local como punto de partida."
+      ),
+      summary: "Fase 1: Mapeo y exploración del ecosistema territorial",
+      icon: (
+        <svg
+          className="w-12 h-12 text-emerald-800"
+          viewBox="0 0 100 100"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path
+            d="M22 35V24H35"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M65 24H78V35"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M22 65V76H35"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M65 76H78V65"
+            strokeWidth="4.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M50 32C38 32 34 46 36 64C54 66 68 62 68 50C68 38 58 32 50 32Z"
+            fill="#2d6a4f"
+            stroke="#1b4332"
+            strokeWidth="2"
+          />
+          <path
+            d="M36 64C48 54 56 46 64 36"
+            stroke="#d8f3dc"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        </svg>
+      ),
+    },
+    {
+      id: "learn",
+      num: 2,
+      label: t("home.hero.steps.learn.label", "Aprende"),
+      title: t("home.hero.steps.learn.title", "Conecta con STEM"),
+      desc: t(
+        "home.hero.steps.learn.desc",
+        "Cursos y herramientas que unen ciencia y sensores con los problemas reales de tu entorno."
+      ),
+      summary: "Fase 2: Conexión de hipótesis con sensores y metodología STEM",
+      icon: (
+        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
+          <circle
+            cx="34"
+            cy="50"
+            r="17"
+            fill="#52b788"
+            stroke="#1b4332"
+            strokeWidth="3.5"
+          />
+          <circle
+            cx="66"
+            cy="50"
+            r="17"
+            fill="#52b788"
+            stroke="#1b4332"
+            strokeWidth="3.5"
+          />
+          <rect x="44" y="46" width="12" height="8" rx="2" fill="#1b4332" />
+          <circle cx="34" cy="50" r="4" fill="#1b4332" />
+          <path
+            d="M34 42V40M34 60V58M26 50H24M44 50H42"
+            stroke="#1b4332"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M66 44L68 47L72 47L69 50L70 54L66 52L62 54L63 50L60 47L64 47Z"
+            fill="#d8f3dc"
+          />
+        </svg>
+      ),
+    },
+    {
+      id: "create",
+      num: 3,
+      label: t("home.hero.steps.create.label", "Crea"),
+      title: t("home.hero.steps.create.title", "Construye soluciones"),
+      desc: t(
+        "home.hero.steps.create.desc",
+        "Diseña proyectos y prototipos reales que impacten positivamente a tu comunidad."
+      ),
+      summary: "Fase 3: Construcción de prototipos y divulgación comunitaria",
+      icon: (
+        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="54" r="22" fill="#334155" />
+          <path
+            d="M36 46C40 44 45 48 48 44C52 40 56 42 60 46C64 50 68 52 64 58C60 64 52 68 46 68C40 68 34 62 36 54Z"
+            fill="#94a3b8"
+          />
+          <path
+            d="M58 16C52 16 48 20.5 48 26C48 33.5 58 43 58 43C58 43 68 33.5 68 26C68 20.5 64 16 58 16Z"
+            fill="#16a34a"
+          />
+          <circle cx="58" cy="25" r="3" fill="white" />
+        </svg>
+      ),
+    },
+  ];
+
+  // Calculate dynamic path progress width
+  const pathWidthPercent = activeStep === 0 ? 0 : activeStep === 1 ? 50 : 100;
 
   return (
-    <section className="relative isolate overflow-hidden px-4 pb-8 pt-20 text-center sm:pb-12 sm:pt-24 md:pb-16 md:pt-32">
-      {/* Background */}
+    <section className="relative isolate overflow-hidden px-4 pb-12 pt-20 text-center sm:pb-16 sm:pt-24 md:pb-20 md:pt-32">
+      {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat"
         style={{
@@ -71,7 +216,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
           <Compass className="h-4 w-4 text-emerald-600" />
-          {t("home.hero.steps.explore.label", "Explora")} · {t("home.hero.steps.learn.label", "Aprende")} · {t("home.hero.steps.create.label", "Crea")}
+          {steps.map((s) => s.label).join(" · ")}
         </div>
 
         {/* Title */}
@@ -82,10 +227,13 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
         {/* Subtitle */}
         <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-slate-500 md:text-lg">
-          {t("home.hero.subtitle", "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio.")}
+          {t(
+            "home.hero.subtitle",
+            "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio."
+          )}
         </p>
 
-        {/* CTA buttons (Sin referencias a makerspaces) */}
+        {/* CTA buttons */}
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
             onClick={onStart}
@@ -106,7 +254,9 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
         {/* Contact / signup line */}
         <div className="mt-6 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-4">
-          <span className="text-sm text-slate-400">{t("home.hero.contactLine", "¿Quieres llevar AprendeLocal a tu escuela o comunidad?")}</span>
+          <span className="text-sm text-slate-400">
+            {t("home.hero.contactLine", "¿Quieres llevar AprendeLocal a tu escuela o comunidad?")}
+          </span>
           <div className="flex items-center gap-3">
             <a
               href="/registro"
@@ -126,134 +276,145 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* ── Animated steps — how it works ── */}
-        <div className="mx-auto mt-16 max-w-4xl md:mt-20">
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            {steps.map((key, i) => {
-              const Icon = STEP_ICONS[i];
-              const colors = STEP_COLORS[i];
-              const isActive = activeStep === i;
+        {/* ========================================================================= */}
+        <!-- RUTA TERRITORIAL CONECTADA (OPCIÓN 2 REFINADA CON ANIMACIÓN Y ESTILO iNAT) -->
+        {/* ========================================================================= */}
+        <div
+          className="mx-auto mt-16 max-w-4xl md:mt-20 text-left"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <div className="relative rounded-[2.5rem] border border-slate-200/90 bg-white/90 p-6 sm:p-10 shadow-xl shadow-slate-950/5 backdrop-blur-md">
+            
+            <div className="relative">
+              {/* Connecting background pathway */}
+              <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 bg-slate-100 -translate-y-1/2 z-0 rounded-full" />
 
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => goToStep(i)}
-                  className={[
-                    "group relative cursor-pointer rounded-[1.5rem] border p-6 text-left transition-all duration-500",
-                    isActive
-                      ? "border-slate-200 bg-white shadow-xl shadow-slate-950/[0.06] scale-[1.02]"
-                      : "border-transparent bg-white/50 hover:border-slate-200 hover:bg-white hover:shadow-md",
-                  ].join(" ")}
-                >
-                  {/* Accent top bar */}
-                  <div
-                    className={[
-                      "absolute inset-x-6 top-0 h-[3px] rounded-b-full transition-all duration-500",
-                      isActive ? `${colors.accent} opacity-100` : "bg-slate-200 opacity-0 group-hover:opacity-40",
-                    ].join(" ")}
-                  />
-
-                  {/* Icon */}
-                  <div
-                    className={[
-                      "mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl ring-4 transition-all duration-500",
-                      isActive ? `${colors.iconBg} ${colors.iconText} ${colors.iconRing}` : "bg-slate-50 text-slate-400 ring-slate-50",
-                    ].join(" ")}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </div>
-
-                  {/* Step number + label pill */}
-                  <div className="mb-3 flex items-center gap-2">
-                    <span
-                      className={[
-                        "inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold transition-colors duration-500",
-                        isActive ? `${colors.num}` : "bg-slate-100 text-slate-300",
-                      ].join(" ")}
-                    >
-                      {i + 1}
-                    </span>
-                    <span
-                      className={[
-                        "rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider transition-all duration-500",
-                        isActive ? colors.pill : "bg-transparent text-slate-300",
-                      ].join(" ")}
-                    >
-                      {t(`home.hero.steps.${key}.label`)}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="mb-1.5 text-base font-semibold text-slate-950">
-                    {t(`home.hero.steps.${key}.title`)}
-                  </h3>
-
-                  {/* Description */}
-                  <p
-                    className={[
-                      "text-sm leading-relaxed transition-colors duration-500",
-                      isActive ? "text-slate-600" : "text-slate-400",
-                    ].join(" ")}
-                  >
-                    {t(`home.hero.steps.${key}.desc`)}
-                  </p>
-
-                  {/* Progress bar */}
-                  <div
-                    className={[
-                      "mt-5 h-1 overflow-hidden rounded-full bg-slate-100 transition-opacity duration-300",
-                      isActive ? "opacity-100" : "opacity-0",
-                    ].join(" ")}
-                  >
-                    <div
-                      key={animKey}
-                      className={`h-full rounded-full ${colors.accent}`}
-                      style={{
-                        animation: isActive ? `heroProgress ${CYCLE_MS}ms linear forwards` : "none",
-                        width: isActive ? undefined : "0%",
-                      }}
-                    />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Connector line (desktop) */}
-          <div className="mt-8 hidden items-center justify-center gap-0 md:flex">
-            {steps.map((_, i) => (
-              <div key={i} className="flex items-center">
+              {/* Dynamic filled pathway */}
+              <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 -translate-y-1/2 z-0 rounded-full overflow-hidden pointer-events-none">
                 <div
-                  className={[
-                    "flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-500",
-                    activeStep >= i
-                      ? `${STEP_COLORS[i].num}`
-                      : "bg-slate-100 text-slate-300",
-                  ].join(" ")}
-                >
-                  {i + 1}
-                </div>
-                {i < 2 && (
-                  <div className="relative h-0.5 w-24 bg-slate-100 lg:w-32">
-                    <div
-                      className={[
-                        "absolute inset-y-0 left-0 rounded-full transition-all duration-700",
-                        activeStep > i ? `${STEP_COLORS[i].connector} w-full` : "w-0",
-                      ].join(" ")}
-                    />
-                  </div>
-                )}
+                  className="h-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 rounded-full transition-all duration-700 ease-out"
+                  style={{ width: `${pathWidthPercent}%` }}
+                />
               </div>
-            ))}
+
+              {/* 3 Step Nodes */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                {steps.map((step, idx) => {
+                  const isActive = activeStep === idx;
+                  const isDone = idx < activeStep;
+
+                  return (
+                    <button
+                      key={step.id}
+                      type="button"
+                      onClick={() => goToStep(idx)}
+                      className={[
+                        "group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500",
+                        isActive
+                          ? "bg-white shadow-lg shadow-emerald-950/5 scale-105 opacity-100 ring-1 ring-slate-200"
+                          : "bg-white/40 hover:bg-white hover:opacity-100 opacity-60",
+                      ].join(" ")}
+                    >
+                      {/* Illustrated Circular Node */}
+                      <div
+                        className={[
+                          "w-20 h-20 rounded-3xl flex items-center justify-center mb-4 transform transition-all duration-500",
+                          isActive
+                            ? "bg-emerald-50 border-2 border-emerald-500 text-emerald-800 shadow-md animate-node-pulse"
+                            : "bg-slate-50 border-2 border-slate-200 text-slate-400 shadow-sm",
+                        ].join(" ")}
+                      >
+                        {step.icon}
+                      </div>
+
+                      {/* Step Pill */}
+                      <div
+                        className={[
+                          "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 transition",
+                          isActive
+                            ? "bg-emerald-100 text-emerald-800"
+                            : "bg-slate-100 text-slate-500",
+                        ].join(" ")}
+                      >
+                        <span
+                          className={[
+                            "w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-black",
+                            isActive
+                              ? "bg-emerald-700 text-white"
+                              : "bg-slate-300 text-slate-700",
+                          ].join(" ")}
+                        >
+                          {step.num}
+                        </span>
+                        <span>{step.label}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h3
+                        className={[
+                          "text-base font-bold mb-1.5 transition",
+                          isActive ? "text-slate-900" : "text-slate-700",
+                        ].join(" ")}
+                      >
+                        {step.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p
+                        className={[
+                          "text-xs leading-relaxed max-w-xs transition",
+                          isActive ? "text-slate-600" : "text-slate-400",
+                        ].join(" ")}
+                      >
+                        {step.desc}
+                      </p>
+
+                      {/* Individual Timer Bar */}
+                      <div className="w-20 h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+                        <div
+                          className="h-full bg-emerald-600 rounded-full transition-all duration-100"
+                          style={{
+                            width: isActive ? `${progress}%` : isDone ? "100%" : "0%",
+                          }}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Bottom summary bar */}
+            <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-medium text-slate-500">
+              <div className="flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{steps[activeStep].summary}</span>
+              </div>
+              <div className="text-emerald-700 font-bold text-[11px] uppercase tracking-wider">
+                Ruta Continua AprendeLocal
+              </div>
+            </div>
+
           </div>
         </div>
+
       </div>
 
       <style>{`
-        @keyframes heroProgress {
-          from { width: 0%; }
-          to   { width: 100%; }
+        @keyframes nodePulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+          }
+          70% {
+            box-shadow: 0 0 0 14px rgba(22, 163, 74, 0);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+          }
+        }
+        .animate-node-pulse {
+          animation: nodePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
       `}</style>
     </section>
