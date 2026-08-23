@@ -273,6 +273,89 @@ export const SECUENCIA_DEMO: RespuestaSecuencia = {
     ],
     materiales: ["huincha", "cronómetro", "cuaderno"],
     requiere_consulta: false,
+    // Caso multigrado: la explicación y la salida son comunes, y cada curso
+    // recibe su práctica y su medición. El de 7º toma el dato que el de 5º
+    // necesita, para que los cursos se necesiten en vez de estorbarse.
+    niveles: ["5to_basico", "6to_basico", "7mo_basico"],
+    por_nivel: [
+      {
+        nivel: "5to_basico",
+        objetivo_codigo: "OA12_CN_5",
+        objetivo_descripcion:
+          "Describir la distribución del agua dulce y salada en la Tierra.",
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Con el ancho y la profundidad que midió 7º, calcula cuánta agua pasa por el estero en un minuto.",
+              apoyo: "Usa la tabla de la pizarra: ancho × profundidad × velocidad.",
+              respuesta_esperada: "Alrededor de 300 litros por minuto.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Dibuja de dónde viene y hacia dónde va el agua del estero Mahuidanche.",
+            },
+          ],
+        },
+        rol_en_terreno: "Marca con estacas el tramo de 10 metros y cronometra el flotador.",
+      },
+      {
+        nivel: "6to_basico",
+        objetivo_codigo: "OA03_CN_6",
+        objetivo_descripcion:
+          "Analizar los efectos de la actividad humana sobre las redes alimentarias.",
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Con los organismos que anotó el curso, arma la red alimentaria del estero.",
+              apoyo: "Empieza por las algas y sigue hacia arriba.",
+              respuesta_esperada: "Red de al menos tres niveles.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "¿Qué pasaría con esa red si el agua bajara a la mitad del caudal que midieron?",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Registra los seres vivos bajo tres piedras del tramo, sin sacarlos del agua.",
+      },
+      {
+        nivel: "7mo_basico",
+        objetivo_codigo: "OA10_CN_7",
+        objetivo_descripcion:
+          "Explicar la actividad volcánica y sus consecuencias en la naturaleza y la sociedad.",
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Clasifica los sedimentos del lecho y explica de qué erupción vienen.",
+              apoyo: "Compara con las fotos de ceniza y escoria de la guía.",
+              respuesta_esperada: "Predominio de material volcánico reciente.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Explica por qué el suelo de esta zona retiene poca agua, usando lo que observaste.",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Mide ancho y profundidad del estero en tres puntos y entrega los datos a 5º.",
+      },
+    ],
     procedencia: {
       de_datos: {
         punto: "Estero Trancura",

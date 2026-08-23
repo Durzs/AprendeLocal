@@ -261,6 +261,21 @@ export interface MomentoRecuperacion {
   respuesta_esperada: string;
 }
 
+/** Lo que hace un curso concreto dentro de una secuencia compartida. */
+export interface NivelDiferenciado {
+  nivel: string;
+  objetivo_codigo: string;
+  objetivo_descripcion?: string;
+  practica_guiada?: {
+    ejercicios?: { enunciado: string; apoyo?: string; respuesta_esperada?: string }[];
+  };
+  practica_autonoma?: {
+    ejercicios?: { enunciado: string; respuesta_esperada?: string }[];
+  };
+  /** Qué mide o registra este curso durante la salida común. */
+  rol_en_terreno?: string;
+}
+
 export interface Secuencia {
   titulo: string;
   objetivo_codigo: string;
@@ -294,6 +309,17 @@ export interface Secuencia {
   recuperacion_espaciada?: MomentoRecuperacion[];
   materiales?: string[];
   requiere_consulta?: boolean;
+  /** Cursos que atiende esta secuencia. Uno solo en un aula de curso único. */
+  niveles?: string[];
+  /**
+   * Qué hace cada curso cuando la sala es multigrado.
+   *
+   * La explicación, el ejemplo y la salida son comunes: un docente solo no
+   * puede dar tres clases ni organizar tres terrenos a la vez. Lo que se
+   * diferencia es la práctica y el rol de cada curso durante la salida.
+   * Ausente cuando se eligió un único objetivo.
+   */
+  por_nivel?: NivelDiferenciado[];
   procedencia?: {
     de_datos: Record<string, string>;
     generado_por_modelo: string[];

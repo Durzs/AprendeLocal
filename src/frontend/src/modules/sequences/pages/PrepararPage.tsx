@@ -31,7 +31,7 @@ import type {
 } from "../../../types";
 import EtapaSecuencia from "../components/EtapaSecuencia";
 import RielEtapas, { type ResumenEtapa } from "../components/RielEtapas";
-import SelectorObjetivo from "../components/SelectorObjetivo";
+import SelectorObjetivo, { nivelCorto } from "../components/SelectorObjetivo";
 import SelectorLugar from "../components/SelectorLugar";
 import { enPalabras, nombreLegible } from "../lib/etiquetas";
 import {
@@ -64,13 +64,62 @@ function Procedencia({ tipo }: { tipo: "dato" | "generado" }) {
   );
 }
 
+/**
+ * Lo que le toca a cada curso cuando la sala es multigrado.
+ *
+ * Va dentro de la etapa correspondiente y no en una sección aparte: el docente
+ * lee la clase en orden, y separar «lo de 5º» de «lo de 7º» en dos bloques
+ * lejanos le obliga a reconstruir mentalmente lo que pasa a la misma hora.
+ */
+function PorNivel({
+  bloques,
+  campo,
+}: {
+  bloques: NonNullable<Secuencia["por_nivel"]>;
+  campo: "practica_guiada" | "practica_autonoma";
+}) {
+  const conTrabajo = bloques.filter((b) => (b[campo]?.ejercicios?.length ?? 0) > 0);
+  if (conTrabajo.length === 0) return null;
+
+  return (
+    <div className="mt-4 space-y-3 border-t border-slate-200 pt-4">
+      {conTrabajo.map((b) => (
+        <div key={`${b.nivel}-${b.objetivo_codigo}`}>
+          <p className="flex items-baseline gap-2 text-sm font-semibold text-slate-800">
+            <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
+              {nivelCorto(b.nivel)}
+            </span>
+            {b.objetivo_descripcion ? (
+              <span className="font-normal text-slate-500">{b.objetivo_descripcion}</span>
+            ) : null}
+          </p>
+          <ol className="mt-1.5 list-decimal space-y-1.5 pl-5 text-sm">
+            {/* Los dos tipos de ejercicio comparten enunciado; solo el guiado
+                trae apoyo, y leerlo así evita duplicar este bloque. */}
+            {((b[campo]?.ejercicios ?? []) as { enunciado: string; apoyo?: string }[]).map(
+              (e, i) => (
+                <li key={i}>
+                  {e.enunciado}
+                  {e.apoyo ? (
+                    <span className="block text-slate-500">Apoyo: {e.apoyo}</span>
+                  ) : null}
+                </li>
+              )
+            )}
+          </ol>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function PrepararPage() {
   const [objetivos, setObjetivos] = useState<CurriculumObjective[]>([]);
   const [puntos, setPuntos] = useState<POIFeature[]>([]);
   const [cargandoCatalogos, setCargandoCatalogos] = useState(true);
   const [errorCatalogos, setErrorCatalogos] = useState<string | null>(null);
 
-  const [objetivoCode, setObjetivoCode] = useState("");
+  const [objetivoCodes, setObjetivoCodes] = useState<string[]>([]);
   const [pointId, setPointId] = useState("");
   const [entrada, setEntrada] = useState<"objetivo" | "lugar">("objetivo");
   const [sesiones, setSesiones] = useState(4);
@@ -115,9 +164,12 @@ export default function PrepararPage() {
     };
   }, []);
 
-  const objetivoElegido = useMemo(
-    () => objetivos.find((o) => o.code === objetivoCode),
-    [objetivos, objetivoCode]
+  const objetivosElegidos = useMemo(
+    () =>
+      objetivoCodes
+        .map((c) => objetivos.find((o) => o.code === c))
+        .filter((o): o is NonNullable<typeof o> => Boolean(o)),
+    [objetivos, objetivoCodes]
   );
 
   const lugarElegido = useMemo(
@@ -125,7 +177,7 @@ export default function PrepararPage() {
     [puntos, pointId]
   );
 
-  const listo = Boolean(objetivoCode && pointId) && !generando;
+  const listo = objetivoCodes.length > 0 && Boolean(pointId) && !generando;
 
   async function handleGenerar() {
     if (!listo) return;
@@ -141,7 +193,7 @@ export default function PrepararPage() {
         return;
       }
       const r = await generarSecuencia({
-        objectiveCode: objetivoCode,
+        objectiveCodes: objetivoCodes,
         pointId,
         sesiones,
         notasDocente: notas,
@@ -208,7 +260,7 @@ export default function PrepararPage() {
       {/* Barra compacta: sustituye al formulario una vez hay resultado */}
       {resultado && !formAbierto && (
         <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm print:hidden">
-          <span className="font-mono text-xs text-slate-500">{objetivoCode}</span>
+          <span className="font-mono text-xs text-slate-500">{objetivoCodes.join(", ")}</span>
           <span className="text-slate-300">·</span>
           <span className="text-slate-700">
             {puntos.find((p) => String(p.properties.id) === pointId)?.properties.name}
@@ -274,7 +326,7 @@ export default function PrepararPage() {
               onClick={() => {
                 if (entrada === clave) return;
                 setEntrada(clave);
-                setObjetivoCode("");
+                setObjetivoCodes([]);
                 setPointId("");
               }}
               aria-pressed={entrada === clave}
@@ -300,11 +352,11 @@ export default function PrepararPage() {
           {entrada === "objetivo" ? (
             <SelectorObjetivo
               objetivos={objetivos}
-              valor={objetivoCode}
-              onElegir={(code) => {
-                setObjetivoCode(code);
-                // El lugar se eligió para servir a otro objetivo: si cambia el
-                // objetivo, la elección anterior deja de tener fundamento.
+              valores={objetivoCodes}
+              onCambiar={(codes) => {
+                setObjetivoCodes(codes);
+                // El lugar se eligió para servir a otros objetivos: si cambian,
+                // la elección anterior deja de tener fundamento.
                 setPointId("");
               }}
               cargando={cargandoCatalogos}
@@ -313,12 +365,12 @@ export default function PrepararPage() {
             // Sin objetivo aún, el selector muestra los lugares sin juzgarlos:
             // no hay contra qué.
             <SelectorLugar
-              objetivo={undefined}
+              objetivos={[]}
               lugares={puntos}
               valor={pointId}
               onElegir={(id) => {
                 setPointId(id);
-                setObjetivoCode("");
+                setObjetivoCodes([]);
               }}
             />
           )}
@@ -326,7 +378,7 @@ export default function PrepararPage() {
 
         {/* El segundo paso siempre se juzga contra el primero: el objetivo
             filtra lugares, y el lugar ordena objetivos por lo que sostiene. */}
-        {entrada === "objetivo" && objetivoCode && (
+        {entrada === "objetivo" && objetivoCodes.length > 0 && (
           <div>
             <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
               <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
@@ -335,7 +387,7 @@ export default function PrepararPage() {
               Dónde anclarla
             </p>
             <SelectorLugar
-              objetivo={objetivoElegido}
+              objetivos={objetivosElegidos}
               lugares={puntos}
               valor={pointId}
               onElegir={setPointId}
@@ -353,8 +405,8 @@ export default function PrepararPage() {
             </p>
             <SelectorObjetivo
               objetivos={objetivos}
-              valor={objetivoCode}
-              onElegir={setObjetivoCode}
+              valores={objetivoCodes}
+              onCambiar={setObjetivoCodes}
               cargando={cargandoCatalogos}
               lugar={lugarElegido}
             />
@@ -424,7 +476,7 @@ export default function PrepararPage() {
               {s.titulo}
             </h2>
             <p className="mt-2 text-sm text-slate-600">
-              {objetivoElegido?.code ?? s.objetivo_codigo}
+              {objetivoCodes.join(', ') || s.objetivo_codigo}
               <Procedencia tipo="dato" /> · {s.objetivo_descripcion}
             </p>
             {s.sintesis_docente && (
@@ -549,6 +601,7 @@ export default function PrepararPage() {
                 </li>
               ))}
             </ol>
+            {s.por_nivel && <PorNivel bloques={s.por_nivel} campo="practica_guiada" />}
           </EtapaSecuencia>
 
           <EtapaSecuencia
@@ -561,6 +614,7 @@ export default function PrepararPage() {
                 <li key={i}>{e.enunciado}</li>
               ))}
             </ol>
+            {s.por_nivel && <PorNivel bloques={s.por_nivel} campo="practica_autonoma" />}
           </EtapaSecuencia>
 
           <EtapaSecuencia
@@ -574,6 +628,29 @@ export default function PrepararPage() {
               <p>
                 <strong>Llevar:</strong> {s.salida_terreno?.preparacion?.join(", ")}
               </p>
+            )}
+
+            {/* Con varios cursos en una salida, lo que decide si es manejable
+                no es el protocolo sino quién hace qué. Va antes de la tabla:
+                es lo primero que el docente necesita resolver. */}
+            {(s.por_nivel ?? []).some((b) => b.rol_en_terreno) && (
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Quién hace qué
+                </p>
+                <ul className="mt-2 space-y-1.5 text-sm">
+                  {(s.por_nivel ?? [])
+                    .filter((b) => b.rol_en_terreno)
+                    .map((b) => (
+                      <li key={`rol-${b.nivel}-${b.objetivo_codigo}`} className="flex gap-2">
+                        <span className="mt-0.5 h-fit shrink-0 rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
+                          {nivelCorto(b.nivel)}
+                        </span>
+                        <span className="text-slate-800">{b.rol_en_terreno}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
             )}
             <div className="overflow-x-auto">
               <table className="w-full min-w-[420px] text-left text-sm">

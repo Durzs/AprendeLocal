@@ -295,3 +295,55 @@ export function ordenarPorAfinidad(
       );
     });
 }
+
+/**
+ * Afinidad de un lugar con VARIOS objetivos a la vez, que es el caso del aula
+ * multigrado: una salida, varios cursos.
+ *
+ * Se toma la mejor coincidencia, no el promedio. Un lugar que sostiene con
+ * fuerza el objetivo de 7º y flojo el de 5º sigue siendo un buen lugar al que
+ * ir: el docente diferencia la tarea, no el viaje. Promediar lo habría
+ * descartado por culpa del curso más flojo.
+ */
+export function afinidadConVarios(
+  objetivos: CurriculumObjective[],
+  lugar: POIFeature
+): Afinidad {
+  if (objetivos.length === 0) return { puntos: 0, banda: "no_aporta", motivos: [] };
+
+  let mejor: Afinidad = { puntos: -1, banda: "no_aporta", motivos: [] };
+  const motivos = new Set<string>();
+
+  for (const oa of objetivos) {
+    const a = afinidad(oa, lugar);
+    a.motivos.forEach((m) => motivos.add(m));
+    if (a.puntos > mejor.puntos) mejor = a;
+  }
+
+  return { puntos: mejor.puntos, banda: mejor.banda, motivos: [...motivos] };
+}
+
+/** Ordena lugares para un conjunto de objetivos. */
+export function ordenarPorAfinidadConVarios(
+  objetivos: CurriculumObjective[],
+  lugares: POIFeature[]
+): LugarPuntuado[] {
+  if (objetivos.length === 0) {
+    return lugares.map((lugar) => ({
+      lugar,
+      afinidad: { puntos: 0, banda: "no_aporta" as const, motivos: [] },
+    }));
+  }
+
+  return lugares
+    .map((lugar) => ({ lugar, afinidad: afinidadConVarios(objetivos, lugar) }))
+    .sort((a, b) => {
+      if (b.afinidad.puntos !== a.afinidad.puntos) {
+        return b.afinidad.puntos - a.afinidad.puntos;
+      }
+      return String(a.lugar.properties.name).localeCompare(
+        String(b.lugar.properties.name),
+        "es"
+      );
+    });
+}
