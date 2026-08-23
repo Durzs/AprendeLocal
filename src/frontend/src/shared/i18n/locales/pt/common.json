@@ -273,7 +273,8 @@
     "validation": {
       "required": "Preencha email e senha."
     },
-    "notConfirmed": "Se você acabou de se cadastrar, confirme seu email pelo link que enviamos."
+    "notConfirmed": "Se você acabou de se cadastrar, confirme seu email pelo link que enviamos.",
+    "forgot": "Esqueceu sua senha?"
   },
   "makerspaces": {
     "title": "Makerspaces",
@@ -508,5 +509,38 @@
       "resendError": "Não conseguimos reenviar ({{motivo}}).",
       "backToLogin": "Voltar ao login"
     }
+  },
+  "forgot": {
+    "title": "Recuperar senha",
+    "subtitle": "Escreva o email da sua conta e enviaremos um link para criar uma senha nova.",
+    "submit": "Enviar link",
+    "sending": "Enviando...",
+    "sentTitle": "Confira seu email",
+    "sentBody": "Se {{email}} tiver uma conta no AprendeLocal, o link para trocar a senha chegará lá.",
+    "sentHint": "O link expira depois de um tempo e serve só uma vez. Se não aparecer em alguns minutos, olhe a pasta de spam.",
+    "backToLogin": "Voltar para o login",
+    "validation": {
+      "required": "Escreva seu email."
+    },
+    "error": "Não conseguimos enviar o email ({{motivo}})."
+  },
+  "reset": {
+    "verifying": "Verificando o link...",
+    "failed": "Este link não vale mais",
+    "noCredentials": "Este link não traz dados de recuperação. Abra direto pelo email, sem copiar à mão.",
+    "timeout": "O link não pôde ser validado. Costuma acontecer quando já foi usado ou quando passou tempo demais.",
+    "askAgain": "Pedir um link novo",
+    "title": "Crie sua senha nova",
+    "subtitle": "Escolha uma senha que você não use em outros sites.",
+    "newPassword": "Senha nova",
+    "repeatPassword": "Repita a senha",
+    "submit": "Salvar senha",
+    "saving": "Salvando...",
+    "savedTitle": "Senha atualizada!",
+    "savedBody": "Já pode usá-la. Estamos levando você ao AprendeLocal.",
+    "validation": {
+      "mismatch": "As duas senhas não coincidem."
+    },
+    "error": "Não conseguimos salvar a senha ({{motivo}})."
   }
 }

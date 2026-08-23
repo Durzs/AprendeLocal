@@ -100,9 +100,17 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                {t("login.password")}
-              </label>
+              <div className="mb-1.5 flex items-baseline justify-between gap-3">
+                <label className="block text-sm font-medium text-slate-700">
+                  {t("login.password")}
+                </label>
+                <Link
+                  to="/recuperar"
+                  className="text-sm font-medium text-slate-500 transition hover:text-slate-950 hover:underline"
+                >
+                  {t("login.forgot")}
+                </Link>
+              </div>
               <input
                 ref={senhaRef}
                 type="password"

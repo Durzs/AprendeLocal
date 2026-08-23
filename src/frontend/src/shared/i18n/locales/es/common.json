@@ -273,7 +273,8 @@
     "validation": {
       "required": "Completa correo y contraseña."
     },
-    "notConfirmed": "Si acabas de registrarte, primero confirma tu correo con el enlace que te enviamos."
+    "notConfirmed": "Si acabas de registrarte, primero confirma tu correo con el enlace que te enviamos.",
+    "forgot": "¿Olvidaste tu contraseña?"
   },
   "makerspaces": {
     "title": "Makerspaces",
@@ -508,5 +509,38 @@
       "resendError": "No pudimos reenviarlo ({{motivo}}).",
       "backToLogin": "Volver a iniciar sesión"
     }
+  },
+  "forgot": {
+    "title": "Recuperar contraseña",
+    "subtitle": "Escribe el correo de tu cuenta y te enviamos un enlace para crear una contraseña nueva.",
+    "submit": "Enviar enlace",
+    "sending": "Enviando...",
+    "sentTitle": "Revisa tu correo",
+    "sentBody": "Si {{email}} tiene una cuenta en AprendeLocal, ahí llegará el enlace para cambiar la contraseña.",
+    "sentHint": "El enlace caduca en un rato y solo sirve una vez. Si no aparece en unos minutos, mira la carpeta de spam.",
+    "backToLogin": "Volver a iniciar sesión",
+    "validation": {
+      "required": "Escribe tu correo."
+    },
+    "error": "No pudimos enviar el correo ({{motivo}})."
+  },
+  "reset": {
+    "verifying": "Comprobando el enlace...",
+    "failed": "Este enlace ya no sirve",
+    "noCredentials": "Este enlace no trae datos de recuperación. Ábrelo directamente desde el correo, sin copiarlo a mano.",
+    "timeout": "El enlace no pudo validarse. Suele pasar cuando ya se usó una vez o cuando pasó demasiado tiempo.",
+    "askAgain": "Pedir un enlace nuevo",
+    "title": "Crea tu contraseña nueva",
+    "subtitle": "Elige una contraseña que no uses en otros sitios.",
+    "newPassword": "Contraseña nueva",
+    "repeatPassword": "Repite la contraseña",
+    "submit": "Guardar contraseña",
+    "saving": "Guardando...",
+    "savedTitle": "¡Contraseña actualizada!",
+    "savedBody": "Ya puedes usarla. Te estamos llevando a AprendeLocal.",
+    "validation": {
+      "mismatch": "Las dos contraseñas no coinciden."
+    },
+    "error": "No pudimos guardar la contraseña ({{motivo}})."
   }
 }

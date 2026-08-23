@@ -19,10 +19,23 @@ export const missingSupabaseEnvVars: string[] = [
 /** Ruta que recibe la vuelta del enlace de confirmación. */
 export const RUTA_CALLBACK = "/auth/callback";
 
+/** Ruta que recibe la vuelta del enlace de recuperación de contraseña. */
+export const RUTA_RESET = "/auth/reset";
+
 /** URL absoluta a la que Supabase debe devolver al usuario tras confirmar. */
 export function urlDeRetorno(): string | undefined {
   if (typeof window === "undefined") return undefined;
   return `${window.location.origin}${RUTA_CALLBACK}`;
+}
+
+/**
+ * URL absoluta a la que Supabase devuelve tras pulsar el enlace de
+ * recuperación. Tiene que ser distinta de la de confirmación: allí basta con
+ * entrar, aquí hay que pedir la contraseña nueva.
+ */
+export function urlDeReset(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  return `${window.location.origin}${RUTA_RESET}`;
 }
 
 // Con la configuración incompleta se crea el cliente con valores de
