@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserPlus, School as SchoolIcon, Sparkles } from "lucide-react";
+import { UserPlus, Sparkles, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
 import { supabase, urlDeRetorno } from "../../../shared/lib/supabaseClient";
 import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
 import { useTranslation } from "react-i18next";
@@ -24,16 +24,23 @@ export default function RegisterPage() {
   // Rol del usuario: 'profesor' o 'estudiante'
   const [role, setRole] = useState<"profesor" | "estudiante">("profesor");
 
-  // Escuelas para docentes
+  // Escuelas y validación por código
   const [schools, setSchools] = useState<School[]>([]);
-  const [selectedSchoolId, setSelectedSchoolId] = useState<string>("");
-  const [schoolSearch, setSchoolSearch] = useState<string>("");
-  const [selectedCommune, setSelectedCommune] = useState<string>("");
+  const [schoolCodeInput, setSchoolCodeInput] = useState<string>("");
+  const [validatedSchool, setValidatedSchool] = useState<School | null>(null);
+  const [validatedProject, setValidatedProject] = useState<{
+    id: string;
+    code: string;
+    title: string;
+    school_id?: string;
+  } | null>(null);
+  const [codeError, setCodeError] = useState<string>("");
+  const [showCodeHelp, setShowCodeHelp] = useState<boolean>(false);
   const [subject, setSubject] = useState<string>("");
 
   // Se guarda como texto para que el campo pueda quedar vacío mientras se
   // escribe; se valida y convierte al enviar.
-  const [idade, setIdade] = useState("25");
+  const [idade, setIdade] = useState("14");
   const [loading, setLoading] = useState(false);
   const [aviso, setAviso] = useState<{ tipo: "error" | "info"; texto: string } | null>(
     null
@@ -43,7 +50,7 @@ export default function RegisterPage() {
   const [emailPendiente, setEmailPendiente] = useState<string | null>(null);
   const [reenviando, setReenviando] = useState(false);
 
-  // Cargar lista de escuelas para el selector de docentes
+  // Cargar lista de escuelas para validación de códigos
   useEffect(() => {
     fetchSchools()
       .then((data) => {
@@ -64,31 +71,85 @@ export default function RegisterPage() {
       });
   }, []);
 
-  // Comunas únicas disponibles
-  const communes = useMemo(() => {
-    return [...new Set(schools.map((s) => s.commune))].filter(Boolean).sort();
-  }, [schools]);
-
-  // Escuelas filtradas para selección
-  const filteredSchools = useMemo(() => {
-    let list = schools;
-    if (selectedCommune) {
-      list = list.filter((s) => s.commune === selectedCommune);
-    }
-    if (schoolSearch.trim()) {
-      const q = schoolSearch.toLowerCase();
-      list = list.filter(
-        (s) =>
-          s.name.toLowerCase().includes(q) ||
-          s.commune.toLowerCase().includes(q)
+  // Función para validar el código de la escuela o proyecto
+  const handleValidateCode = async (inputVal?: string) => {
+    const code = (inputVal !== undefined ? inputVal : schoolCodeInput).trim().toUpperCase();
+    if (!code) {
+      setValidatedSchool(null);
+      setValidatedProject(null);
+      setCodeError(
+        role === "profesor"
+          ? "Ingresa el código o RBD de tu escuela."
+          : "Ingresa el código de tu escuela o el código de tu profesor/a."
       );
+      return;
     }
-    return list;
-  }, [schools, selectedCommune, schoolSearch]);
 
-  const selectedSchoolObj = useMemo(() => {
-    return schools.find((s) => s.id === selectedSchoolId);
-  }, [schools, selectedSchoolId]);
+    // 1. Buscar coincidencia en escuelas (RBD o formato ESC-[RBD])
+    const matchSchool = schools.find((s) => {
+      const rbdStr = String(s.rbd).toUpperCase();
+      const escCode = `ESC-${rbdStr}`;
+      return (
+        code === rbdStr ||
+        code === escCode ||
+        (s as any).access_code?.toUpperCase() === code
+      );
+    });
+
+    if (matchSchool) {
+      setValidatedSchool(matchSchool);
+      setValidatedProject(null);
+      setCodeError("");
+      return;
+    }
+
+    // 2. Si es estudiante, buscar si es un código de proyecto generado por un profesor
+    if (role === "estudiante") {
+      try {
+        const { data: shareData, error } = await supabase
+          .from("project_share_codes")
+          .select("id, code, project_id, school_id, stem_projects(title)")
+          .eq("code", code)
+          .maybeSingle();
+
+        if (!error && shareData) {
+          setValidatedProject({
+            id: shareData.id,
+            code: shareData.code,
+            title: (shareData.stem_projects as any)?.title || "Proyecto STEM Asignado",
+            school_id: shareData.school_id,
+          });
+
+          if (shareData.school_id) {
+            const sch = schools.find((s) => s.id === shareData.school_id);
+            if (sch) setValidatedSchool(sch);
+          }
+          setCodeError("");
+          return;
+        }
+      } catch (err) {
+        console.warn("Error buscando código de proyecto:", err);
+      }
+    }
+
+    setValidatedSchool(null);
+    setValidatedProject(null);
+    setCodeError(
+      role === "profesor"
+        ? "Código no válido. Ingresa el código oficial o RBD de tu escuela rural."
+        : "Código no válido. Ingresa el código de tu escuela rural o el código que te dio tu profesor/a."
+    );
+  };
+
+  // Escuelas destacadas para ayuda de prueba en el piloto
+  const pilotSampleCodes = useMemo(() => {
+    return schools.slice(0, 6).map((s) => ({
+      name: s.name,
+      commune: s.commune,
+      rbd: s.rbd,
+      code: `ESC-${s.rbd}`,
+    }));
+  }, [schools]);
 
   async function handleCadastro(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -106,8 +167,19 @@ export default function RegisterPage() {
       return;
     }
 
-    // Supabase rechaza contraseñas de menos de seis caracteres. Avisar aquí
-    // ahorra el viaje al servidor y un mensaje de error en inglés.
+    // Obligatorio para ambos roles: deben haber validado un código
+    if (!validatedSchool && !validatedProject) {
+      setAviso({
+        tipo: "error",
+        texto:
+          role === "profesor"
+            ? "Debes ingresar y validar el código o RBD de tu escuela rural para registrarte."
+            : "Debes ingresar y validar el código de tu escuela o el código de proyecto de tu profesor/a para registrarte.",
+      });
+      return;
+    }
+
+    // Supabase rechaza contraseñas de menos de seis caracteres.
     if (senha.length < 6) {
       setAviso({ tipo: "error", texto: t("register.validation.passwordLength") });
       return;
@@ -130,8 +202,9 @@ export default function RegisterPage() {
         nome,
         idade: String(edad),
         role,
-        school_id: selectedSchoolId || null,
-        subject: subject.trim() || null,
+        school_id: validatedSchool?.id || null,
+        project_code: validatedProject?.code || null,
+        subject: role === "profesor" ? subject.trim() || null : null,
       };
 
       const { data, error } = await supabase.auth.signUp({
@@ -139,8 +212,6 @@ export default function RegisterPage() {
         password: senha,
         options: {
           data: metadata,
-          // Sin esto el enlace vuelve al Site URL configurado en Supabase,
-          // que es justo el ajuste que suele quedar apuntando a localhost.
           emailRedirectTo: urlDeRetorno(),
         },
       });
@@ -150,25 +221,17 @@ export default function RegisterPage() {
         return;
       }
 
-      // Con un correo ya registrado, Supabase devuelve un éxito falso —para no
-      // revelar qué direcciones existen— y lo delata dejando `identities` vacío.
       if (data.user && data.user.identities && data.user.identities.length === 0) {
         setAviso({ tipo: "error", texto: t("register.emailTaken") });
         return;
       }
 
-      // Sin sesión, la cuenta existe pero todavía no sirve: falta confirmar el
-      // correo. Mandar al login aquí es lo que hacía parecer que el registro
-      // funcionaba, cuando en realidad dejaba al usuario sin poder entrar.
       if (!data.session) {
         setEmailPendiente(email);
         setAviso({ tipo: "info", texto: t("register.confirmEmail", { email }) });
         return;
       }
 
-      // Solo con sesión activa el JWT permite escribir el perfil bajo RLS. Si el
-      // disparador de base de datos está instalado, la fila ya existe y esto se
-      // limita a completarla con rol y escuela.
       const { error: perfilError } = await supabase
         .from("profiles")
         .upsert(
@@ -177,8 +240,8 @@ export default function RegisterPage() {
             nome,
             idade: edad,
             role,
-            school_id: selectedSchoolId || null,
-            subject: subject.trim() || null,
+            school_id: validatedSchool?.id || null,
+            subject: role === "profesor" ? subject.trim() || null : null,
           },
           { onConflict: "id" }
         );
@@ -192,7 +255,7 @@ export default function RegisterPage() {
         return;
       }
 
-      navigate("/plataforma?tab=map", { replace: true });
+      navigate(role === "profesor" ? "/plataforma?tab=map" : "/plataforma", { replace: true });
     } catch (err: any) {
       setAviso({ tipo: "error", texto: err?.message || t("register.error") });
     } finally {
@@ -248,7 +311,14 @@ export default function RegisterPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setRole("profesor")}
+                  onClick={() => {
+                    setRole("profesor");
+                    setValidatedSchool(null);
+                    setValidatedProject(null);
+                    setSchoolCodeInput("");
+                    setCodeError("");
+                    setIdade("28");
+                  }}
                   className={`flex flex-col items-center justify-center rounded-2xl border-2 p-3 text-center transition ${
                     role === "profesor"
                       ? "border-emerald-600 bg-emerald-50 text-emerald-950 shadow-sm"
@@ -257,12 +327,19 @@ export default function RegisterPage() {
                 >
                   <span className="text-2xl">👩‍🏫</span>
                   <span className="mt-1 text-sm font-semibold">Soy Profesor/a</span>
-                  <span className="text-[11px] text-slate-500">Proyectos para mi escuela</span>
+                  <span className="text-[11px] text-slate-500">Código de escuela</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setRole("estudiante")}
+                  onClick={() => {
+                    setRole("estudiante");
+                    setValidatedSchool(null);
+                    setValidatedProject(null);
+                    setSchoolCodeInput("");
+                    setCodeError("");
+                    setIdade("14");
+                  }}
                   className={`flex flex-col items-center justify-center rounded-2xl border-2 p-3 text-center transition ${
                     role === "estudiante"
                       ? "border-emerald-600 bg-emerald-50 text-emerald-950 shadow-sm"
@@ -271,7 +348,7 @@ export default function RegisterPage() {
                 >
                   <span className="text-2xl">🧑‍🎓</span>
                   <span className="mt-1 text-sm font-semibold">Soy Estudiante</span>
-                  <span className="text-[11px] text-slate-500">Aprender y explorar</span>
+                  <span className="text-[11px] text-slate-500">Código de clase/escuela</span>
                 </button>
               </div>
             </div>
@@ -301,74 +378,123 @@ export default function RegisterPage() {
             )}
 
             <form className="mt-6 space-y-4" onSubmit={handleCadastro}>
-              {/* Sección exclusiva para profesores: selección de escuela rural */}
-              {role === "profesor" && (
-                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
-                  <div className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-2">
-                    <SchoolIcon className="h-4 w-4 text-emerald-600" />
-                    <span>Escuela Rural Asignada</span>
+              {/* Sección de Validación de Código (Obligatorio para Profesores y Estudiantes) */}
+              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
+                <div className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-1.5">
+                  <KeyRound className="h-4 w-4 text-emerald-600" />
+                  <span>
+                    {role === "profesor"
+                      ? "Código de Acceso de tu Escuela"
+                      : "Código de Escuela o de tu Profesor/a"}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mb-3">
+                  {role === "profesor"
+                    ? "Ingresa el código oficial o RBD de tu escuela rural (ej: 4205 o ESC-4205) para activar tu acceso docente."
+                    : "Ingresa el código de tu escuela rural (ej: ESC-4205 o 4205) o el código que te dio tu profesor/a para unirte."}
+                </p>
+
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder={role === "profesor" ? "Ej: ESC-4205 o 4205" : "Ej: ESC-4205 o código de clase"}
+                    value={schoolCodeInput}
+                    onChange={(e) => {
+                      setSchoolCodeInput(e.target.value);
+                      if (codeError) setCodeError("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleValidateCode();
+                      }
+                    }}
+                    className="flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 outline-none uppercase font-mono tracking-wider focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleValidateCode()}
+                    className="rounded-xl bg-emerald-700 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-800 transition"
+                  >
+                    Validar
+                  </button>
+                </div>
+
+                {codeError && (
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-red-600">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span>{codeError}</span>
                   </div>
-                  <p className="text-xs text-slate-600 mb-3">
-                    La plataforma cargará automáticamente los lugares patrimoniales, naturales y proyectos STEM cercanos a tu escuela.
-                  </p>
+                )}
 
-                  {/* Filtro por comuna */}
-                  {communes.length > 0 && (
-                    <div className="mb-2">
-                      <select
-                        value={selectedCommune}
-                        onChange={(e) => setSelectedCommune(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 outline-none focus:border-emerald-500"
-                      >
-                        <option value="">Todas las comunas ({schools.length} escuelas)</option>
-                        {communes.map((c) => (
-                          <option key={c} value={c}>
-                            {c} ({schools.filter((s) => s.commune === c).length})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {/* Buscador de escuela */}
-                  <div className="mb-2">
-                    <input
-                      type="text"
-                      placeholder="Buscar por nombre de escuela..."
-                      value={schoolSearch}
-                      onChange={(e) => setSchoolSearch(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 outline-none focus:border-emerald-500"
-                    />
-                  </div>
-
-                  {/* Selector de escuela */}
-                  <div>
-                    <select
-                      value={selectedSchoolId}
-                      onChange={(e) => setSelectedSchoolId(e.target.value)}
-                      className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 font-medium"
-                    >
-                      <option value="">-- Elige tu escuela rural --</option>
-                      {filteredSchools.map((sch) => (
-                        <option key={sch.id} value={sch.id}>
-                          {sch.name} · {sch.commune} {sch.dependency ? `(${sch.dependency})` : ""}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {selectedSchoolObj && (
-                    <div className="mt-2.5 flex items-center justify-between rounded-xl bg-white p-2.5 border border-emerald-100 text-xs">
-                      <div>
-                        <span className="font-semibold text-slate-900">{selectedSchoolObj.name}</span>
-                        <div className="text-slate-500">📍 {selectedSchoolObj.commune} · RBD: {selectedSchoolObj.rbd}</div>
+                {/* Confirmación de escuela validada */}
+                {validatedSchool && (
+                  <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-emerald-300 bg-white p-3 shadow-sm">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1 text-xs">
+                      <div className="font-semibold text-slate-900 text-sm">
+                        {validatedSchool.name}
                       </div>
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-800 text-[10px]">
-                        Rural Activo
-                      </span>
+                      <div className="text-slate-500 mt-0.5">
+                        📍 {validatedSchool.commune} · RBD: <span className="font-mono font-medium text-slate-700">{validatedSchool.rbd}</span>
+                      </div>
+                      <div className="mt-1 inline-block rounded-full bg-emerald-100 px-2 py-0.5 font-medium text-emerald-800 text-[10px]">
+                        ✓ {role === "profesor" ? "Escuela Asignada al Docente" : "Escuela del Estudiante"}
+                      </div>
                     </div>
-                  )}
+                  </div>
+                )}
 
+                {/* Confirmación de proyecto validado para estudiantes */}
+                {validatedProject && (
+                  <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-blue-300 bg-white p-3 shadow-sm">
+                    <CheckCircle2 className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1 text-xs">
+                      <div className="font-semibold text-slate-900 text-sm">
+                        {validatedProject.title}
+                      </div>
+                      <div className="text-slate-500 mt-0.5">
+                        Código de clase: <span className="font-mono font-bold text-blue-800">{validatedProject.code}</span>
+                      </div>
+                      <div className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 font-medium text-blue-800 text-[10px]">
+                        ✓ Proyecto de Profesor Conectado
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Ayuda de códigos piloto */}
+                <div className="mt-2 text-right">
+                  <button
+                    type="button"
+                    onClick={() => setShowCodeHelp(!showCodeHelp)}
+                    className="text-[11px] text-emerald-800 hover:text-emerald-950 underline underline-offset-2"
+                  >
+                    {showCodeHelp ? "Ocultar códigos piloto" : "¿No sabes el código? Ver códigos piloto"}
+                  </button>
+                </div>
+
+                {showCodeHelp && (
+                  <div className="mt-2 rounded-xl bg-white p-2.5 border border-emerald-200 text-[11px] space-y-1.5 max-h-36 overflow-y-auto">
+                    <p className="font-semibold text-slate-700">Códigos de escuelas piloto en La Araucanía:</p>
+                    {pilotSampleCodes.map((c) => (
+                      <button
+                        key={c.rbd}
+                        type="button"
+                        onClick={() => {
+                          setSchoolCodeInput(c.code);
+                          handleValidateCode(c.code);
+                        }}
+                        className="flex w-full items-center justify-between p-1 rounded hover:bg-emerald-50 text-left transition"
+                      >
+                        <span className="truncate text-slate-800">{c.name} ({c.commune})</span>
+                        <span className="font-mono font-semibold text-emerald-700 shrink-0 ml-2">{c.code}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {role === "profesor" && (
                   <div className="mt-3">
                     <label className="mb-1 block text-xs font-medium text-slate-700">
                       Asignatura / Especialidad (Opcional)
@@ -381,8 +507,8 @@ export default function RegisterPage() {
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-400"
                     />
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -466,14 +592,14 @@ export default function RegisterPage() {
 
             <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl">
               {role === "profesor"
-                ? "Conecta tu escuela rural con el patrimonio de La Araucanía"
-                : t("register.heroTitle")}
+                ? "Conecta tu escuela rural con el territorio de La Araucanía"
+                : "Aprende ciencia y tecnología con tu escuela"}
             </h1>
 
             <p className="mt-5 text-base leading-relaxed text-slate-400">
               {role === "profesor"
-                ? "Como docente, podrás vincular tus objetivos de aprendizaje con parques nacionales, volcanes, reservas naturales y el patrimonio local para crear proyectos contextualizados."
-                : t("register.heroSubtitle")}
+                ? "Como docente registrado con el código de tu escuela, accederás directamente a los puntos de interés patrimoniales, biológicos y geológicos de tu territorio escolar."
+                : "Ingresa el código de tu escuela o el código que te compartió tu profesor/a para comenzar tus proyectos y actividades."}
             </p>
 
             <div className="mt-8">
