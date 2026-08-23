@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../shared/lib/supabaseClient";
 
 import HeroSection from "../components/HeroSection";
-import MakerPuzzle from "../components/MakerPuzzle";
 import CountrySection from "../components/CountrySection";
+import PillarsSection from "../components/PillarsSection";
+import PlaceBasedLearningSection from "../components/PlaceBasedLearningSection";
+import MakerPuzzle from "../components/MakerPuzzle";
 import CoursesSection from "../components/CoursesSection";
+import ContactSection from "../components/ContactSection";
 import CallToAction from "../components/CallToAction";
 
 import type { Course } from "../types";
@@ -73,14 +76,32 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
+      {/* 1. Hero Original */}
       <HeroSection onStart={goStart} onExplore={goExplore} />
-      <MakerPuzzle />
+
+      {/* 2. Oportunidades STEM contextualizadas (Selector Chile / Brasil) */}
       <CountrySection />
+
+      {/* 3. Pilares Fundamentales estilo iNaturalist */}
+      <PillarsSection />
+
+      {/* 4. El poder del aprendizaje basado en el lugar */}
+      <PlaceBasedLearningSection />
+
+      {/* 5. Estación interactiva Maker */}
+      <MakerPuzzle />
+
+      {/* 6. Cursos populares de la plataforma */}
       <CoursesSection
         courses={courses}
         loading={loadingCourses}
         error={errorCourses}
       />
+
+      {/* 7. Contacto para docentes y escuelas */}
+      <ContactSection />
+
+      {/* 8. Call to Action final */}
       <CallToAction onStart={goStart} />
     </main>
   );

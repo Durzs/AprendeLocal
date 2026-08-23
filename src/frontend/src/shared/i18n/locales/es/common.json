@@ -438,23 +438,81 @@
       }
     },
     "country": {
-      "title": "Elige tu experiencia",
-      "subtitle": "AprendeLocal opera en distintos países con contenidos y recursos adaptados a cada región.",
+      "badge": "Territorios en Acción",
+      "title": "Oportunidades STEM contextualizadas",
+      "subtitle": "Elige un país para explorar los desafíos ambientales, biomas y proyectos diseñados específicamente para su realidad territorial:",
       "tags": {
-        "courses": "Cursos",
+        "courses": "Cursos Adaptados",
         "stemPlatform": "Plataforma STEM",
         "schools": "Escuelas",
         "makerspaces": "Makerspaces"
       },
       "chile": {
-        "description": "Explora escuelas y genera proyectos STEM contextualizados con IA en la región de La Araucanía.",
+        "description": "Explora escuelas y genera proyectos STEM contextualizados con IA en la región de La Araucanía, integrando bosque nativo, cuencas y patrimonio cultural.",
         "makerspacesSoon": "Makerspaces — próximamente",
-        "cta": "Explorar Chile"
+        "cta": "Abrir Mapa y Proyectos de Chile"
       },
       "brasil": {
-        "description": "Accede a cursos, makerspaces y una red de espacios maker para aplicar STEM en proyectos reales.",
-        "cta": "Explorar Brasil"
+        "description": "Accede a cursos, makerspaces y una red de espacios maker para aplicar STEM en proyectos reales de regeneración socioambiental.",
+        "cta": "Explorar Makerspaces de Brasil"
       }
+    },
+    "pillars": {
+      "title": "Con AprendeLocal, puedes:",
+      "identify": {
+        "title": "Identificar",
+        "desc": "ecosistemas, flora, fauna, cuencas y problemáticas locales"
+      },
+      "track": {
+        "title": "Monitorear",
+        "desc": "variables ambientales y clima de tu territorio"
+      },
+      "discover": {
+        "title": "Descubrir",
+        "desc": "saberes ancestrales y naturaleza a tu alrededor"
+      },
+      "contribute": {
+        "title": "Contribuir",
+        "desc": "a la ciencia comunitaria con soluciones maker"
+      },
+      "learn": {
+        "title": "Aprender",
+        "desc": "en comunidad con profesores y escuelas rurales"
+      }
+    },
+    "placeBased": {
+      "title": "El poder del aprendizaje basado en el lugar",
+      "subtitle": "Historias reales de estudiantes y docentes que crearon ciencia y tecnología conectadas con su entorno:",
+      "cta": "Ver más proyectos e historias",
+      "story1": {
+        "title": "Rescatando el saber de las especies amenazadas",
+        "desc": "Estudiantes de Curarrehue utilizaron visión por computadora y sensores de humedad para registrar árboles milenarios y catalogar hongos medicinales locales.",
+        "school": "Escuela Rural San Gabriel"
+      },
+      "story2": {
+        "title": "Riego automatizado contra la sequía estacional",
+        "desc": "Diseño de estaciones meteorológicas y micro-riego solar para optimizar el agua en invernaderos escolares, aumentando el rendimiento en un 40%.",
+        "school": "Liceo Lonquimay"
+      },
+      "story3": {
+        "title": "Protegiendo los ecosistemas y cuencas locales",
+        "desc": "Comunidades educativas crearon boyas flotantes con microcontroladores para alertar a vecinos sobre cambios en la calidad del agua de los ríos.",
+        "school": "Club Maker del Sur"
+      }
+    },
+    "contact": {
+      "badge": "Contacto & Alianzas",
+      "title": "¿Quieres llevar AprendeLocal a tu escuela o comunidad?",
+      "subtitle": "Acompañamos a docentes, directivos y comunidades con herramientas pedagógicas abiertas, guías maker y acompañamiento en proyectos de ciencia territorial.",
+      "formTitle": "Envíanos un mensaje",
+      "formSubtitle": "Completa el formulario y nos contactaremos contigo a la brevedad.",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "role": "Rol / Institución",
+      "message": "Mensaje o Territorio de Interés",
+      "send": "Enviar Mensaje",
+      "successTitle": "¡Mensaje recibido!",
+      "successMessage": "Gracias por contactarnos. Nos comunicaremos contigo a la brevedad para coordinar la vinculación."
     }
   },
   "platform": {

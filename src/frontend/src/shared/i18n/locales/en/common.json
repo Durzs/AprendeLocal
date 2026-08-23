@@ -438,23 +438,81 @@
       }
     },
     "country": {
-      "title": "Choose your experience",
-      "subtitle": "AprendeLocal operates in different countries with content and resources tailored to each region.",
+      "badge": "Territories in Action",
+      "title": "Contextualized STEM Opportunities",
+      "subtitle": "Select a country to explore environmental challenges, biomes, and projects designed specifically for its reality:",
       "tags": {
-        "courses": "Courses",
+        "courses": "Adapted Courses",
         "stemPlatform": "STEM Platform",
         "schools": "Schools",
         "makerspaces": "Makerspaces"
       },
       "chile": {
-        "description": "Explore schools and generate AI-powered contextualized STEM projects in the Araucanía region.",
+        "description": "Explore schools and generate AI-powered contextualized STEM projects in the Araucanía region, integrating native forests, watersheds, and cultural heritage.",
         "makerspacesSoon": "Makerspaces — coming soon",
-        "cta": "Explore Chile"
+        "cta": "Open Chile Map & Projects"
       },
       "brasil": {
-        "description": "Access courses, makerspaces, and a network of maker spaces to apply STEM in real projects.",
-        "cta": "Explore Brazil"
+        "description": "Access courses, makerspaces, and a maker network to apply STEM in real socio-environmental regeneration projects.",
+        "cta": "Explore Brazil Makerspaces"
       }
+    },
+    "pillars": {
+      "title": "With AprendeLocal, you can:",
+      "identify": {
+        "title": "Identify",
+        "desc": "ecosystems, flora, fauna, watersheds, and local challenges"
+      },
+      "track": {
+        "title": "Track & Monitor",
+        "desc": "environmental variables and territorial climate in real time"
+      },
+      "discover": {
+        "title": "Discover",
+        "desc": "ancestral wisdom and surrounding nature"
+      },
+      "contribute": {
+        "title": "Contribute",
+        "desc": "to community science with practical maker solutions"
+      },
+      "learn": {
+        "title": "Learn",
+        "desc": "in community alongside teachers and rural schools"
+      }
+    },
+    "placeBased": {
+      "title": "The power of place-based learning",
+      "subtitle": "Real stories of students and educators creating science and technology connected to their territory:",
+      "cta": "Read more stories and projects",
+      "story1": {
+        "title": "Rediscovering endangered native species",
+        "desc": "Curarrehue students used computer vision and moisture sensors to map ancient trees and catalog local medicinal fungi.",
+        "school": "San Gabriel Rural School"
+      },
+      "story2": {
+        "title": "Automated solar irrigation against seasonal drought",
+        "desc": "Design of solar-powered weather stations and micro-irrigation for school greenhouses, increasing yields by 40%.",
+        "school": "Lonquimay High School"
+      },
+      "story3": {
+        "title": "Protecting local watersheds and ecosystems",
+        "desc": "Educational communities created floating microcontroller buoys to alert neighbors of changes in river water quality.",
+        "school": "Club Maker del Sur"
+      }
+    },
+    "contact": {
+      "badge": "Contact & Partnerships",
+      "title": "Want to bring AprendeLocal to your school or community?",
+      "subtitle": "We support teachers, principals, and communities with open pedagogical tools, maker guides, and local science project mentorship.",
+      "formTitle": "Send us a message",
+      "formSubtitle": "Fill out the form and our team will get in touch with you.",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role / Institution",
+      "message": "Message or Territory of Interest",
+      "send": "Send Message",
+      "successTitle": "Message received!",
+      "successMessage": "Thank you for reaching out. We will get back to you shortly."
     }
   },
   "platform": {

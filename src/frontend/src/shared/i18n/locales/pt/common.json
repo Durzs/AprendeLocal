@@ -438,23 +438,81 @@
       }
     },
     "country": {
-      "title": "Escolha sua experiência",
-      "subtitle": "O AprendeLocal opera em diferentes países com conteúdos e recursos adaptados a cada região.",
+      "badge": "Territórios em Ação",
+      "title": "Oportunidades STEM contextualizadas",
+      "subtitle": "Escolha um país para explorar os desafios ambientais, biomas e projetos desenhados especificamente para sua realidade:",
       "tags": {
-        "courses": "Cursos",
+        "courses": "Cursos Adaptados",
         "stemPlatform": "Plataforma STEM",
         "schools": "Escolas",
         "makerspaces": "Makerspaces"
       },
       "chile": {
-        "description": "Explore escolas e gere projetos STEM contextualizados com IA na região de La Araucanía.",
+        "description": "Explore escolas e gere projetos STEM contextualizados com IA na região de La Araucanía, integrando floresta nativa, bacias e patrimônio cultural.",
         "makerspacesSoon": "Makerspaces — em breve",
-        "cta": "Explorar Chile"
+        "cta": "Abrir Mapa e Projetos do Chile"
       },
       "brasil": {
-        "description": "Acesse cursos, makerspaces e uma rede de espaços maker para aplicar STEM em projetos reais.",
-        "cta": "Explorar Brasil"
+        "description": "Acesse cursos, makerspaces e uma rede de espaços maker para aplicar STEM em projetos reais de regeneração socioambiental.",
+        "cta": "Explorar Makerspaces do Brasil"
       }
+    },
+    "pillars": {
+      "title": "Com o AprendeLocal, você pode:",
+      "identify": {
+        "title": "Identificar",
+        "desc": "ecossistemas, flora, fauna, bacias e desafios locais"
+      },
+      "track": {
+        "title": "Monitorar",
+        "desc": "variáveis ambientais e clima do seu território"
+      },
+      "discover": {
+        "title": "Descobrir",
+        "desc": "saberes ancestrais e a natureza ao seu redor"
+      },
+      "contribute": {
+        "title": "Contribuir",
+        "desc": "para a ciência cidadã com soluções maker"
+      },
+      "learn": {
+        "title": "Aprender",
+        "desc": "em comunidade com professores e escolas rurais"
+      }
+    },
+    "placeBased": {
+      "title": "O poder da aprendizagem baseada no lugar",
+      "subtitle": "Histórias reais de estudantes e professores que criaram ciência e tecnologia conectadas ao seu entorno:",
+      "cta": "Ver mais projetos e histórias",
+      "story1": {
+        "title": "Resgatando o saber das espécies ameaçadas",
+        "desc": "Estudantes de Curarrehue usaram visão computacional e sensores de umidade para registrar árvores milenares e catalogar fungos medicinais.",
+        "school": "Escola Rural San Gabriel"
+      },
+      "story2": {
+        "title": "Irrigação automatizada contra a seca sazonal",
+        "desc": "Desenvolvimento de estações meteorológicas e microirrigação solar para otimizar água em estufas escolares, aumentando a colheita em 40%.",
+        "school": "Liceu Lonquimay"
+      },
+      "story3": {
+        "title": "Protegendo ecossistemas e bacias hidrográficas",
+        "desc": "Comunidades educativas criaram boias flutuantes com microcontroladores para alertar sobre mudanças na qualidade da água dos rios.",
+        "school": "Clube Maker do Sul"
+      }
+    },
+    "contact": {
+      "badge": "Contato & Parcerias",
+      "title": "Quer levar o AprendeLocal para sua escola ou comunidade?",
+      "subtitle": "Apoiamos professores, gestores e comunidades com ferramentas pedagógicas abertas, guias maker e acompanhamento em projetos de ciência territorial.",
+      "formTitle": "Envie-nos uma mensagem",
+      "formSubtitle": "Preencha o formulário e entraremos em contato com você.",
+      "name": "Nome",
+      "email": "E-mail",
+      "role": "Função / Instituição",
+      "message": "Mensagem ou Território de Interesse",
+      "send": "Enviar Mensagem",
+      "successTitle": "Mensagem recebida!",
+      "successMessage": "Obrigado pelo contato. Responderemos em breve para conectar sua escola."
     }
   },
   "platform": {
