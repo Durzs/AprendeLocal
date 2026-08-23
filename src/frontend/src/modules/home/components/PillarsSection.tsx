@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+﻿import { useTranslation } from "react-i18next";
 
 export default function PillarsSection() {
   const { t } = useTranslation();
@@ -13,7 +13,7 @@ export default function PillarsSection() {
       ),
       icon: (
         <svg
-          className="w-20 h-20 text-emerald-800"
+          className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -68,7 +68,7 @@ export default function PillarsSection() {
       ),
       icon: (
         <svg
-          className="w-20 h-20 text-emerald-800"
+          className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -116,7 +116,11 @@ export default function PillarsSection() {
         "saberes ancestrales y naturaleza a tu alrededor"
       ),
       icon: (
-        <svg className="w-20 h-20 text-emerald-800" viewBox="0 0 100 100" fill="none">
+        <svg
+          className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
+          viewBox="0 0 100 100"
+          fill="none"
+        >
           {/* Binoculars */}
           <circle
             cx="34"
@@ -158,7 +162,11 @@ export default function PillarsSection() {
         "a la ciencia comunitaria con soluciones maker"
       ),
       icon: (
-        <svg className="w-20 h-20" viewBox="0 0 100 100" fill="none">
+        <svg
+          className="w-28 h-28 sm:w-32 sm:h-32"
+          viewBox="0 0 100 100"
+          fill="none"
+        >
           {/* Globe */}
           <circle cx="50" cy="54" r="24" fill="#334155" />
           <path
@@ -182,7 +190,11 @@ export default function PillarsSection() {
         "en comunidad con profesores y escuelas rurales"
       ),
       icon: (
-        <svg className="w-20 h-20 text-emerald-800" viewBox="0 0 100 100" fill="none">
+        <svg
+          className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
+          viewBox="0 0 100 100"
+          fill="none"
+        >
           {/* Speech Bubble 1 */}
           <path
             d="M22 36C22 26 36 26 48 26C60 26 68 32 68 40C68 48 58 52 48 52C44 52 40 54 34 57C36 53 36 51 34 50C26 48 22 42 22 36Z"
@@ -208,9 +220,9 @@ export default function PillarsSection() {
   ];
 
   return (
-    <section className="bg-[#f1f6ed] py-20 md:py-28 border-y border-emerald-900/5">
+    <section className="bg-[#f1f6ed] py-14 sm:py-20 border-y border-emerald-900/5">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-16 leading-[0.95]">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-12 sm:mb-16 leading-[0.95]">
           {t("home.pillars.title", "Con AprendeLocal, puedes:")}
         </h2>
 
@@ -218,15 +230,15 @@ export default function PillarsSection() {
           {pillars.map((pillar) => (
             <div
               key={pillar.id}
-              className="group flex flex-col items-center text-center"
+              className="group flex flex-col items-center text-center p-2 rounded-2xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="mb-4 flex h-24 w-24 items-center justify-center transition-transform duration-300 group-hover:-translate-y-1">
+              <div className="mb-4 flex h-32 w-32 sm:h-36 sm:w-36 items-center justify-center transition-transform duration-300 group-hover:scale-105">
                 {pillar.icon}
               </div>
-              <h3 className="mb-1 text-lg font-bold text-[#111217]">
+              <h3 className="mb-2 text-xl font-bold text-[#111217]">
                 {pillar.title}
               </h3>
-              <p className="max-w-[200px] text-sm leading-snug text-slate-600">
+              <p className="max-w-[220px] text-sm leading-relaxed text-slate-700">
                 {pillar.desc}
               </p>
             </div>
