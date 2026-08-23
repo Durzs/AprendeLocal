@@ -18,10 +18,9 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Scroll scale state (efecto de crecimiento estilo Antigravity)
+  // Scroll scale state (Efecto cinema expansivo estilo Antigravity)
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollScale, setScrollScale] = useState(0.92);
-  const [scrollOpacity, setScrollOpacity] = useState(0.85);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const stepStartTimeRef = useRef<number>(Date.now());
   const reqAnimRef = useRef<number | null>(null);
@@ -38,18 +37,17 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
     return () => window.clearInterval(interval);
   }, [fullTitle]);
 
-  // Scroll listener for dynamic expansion scale
+  // Scroll listener for dynamic full-screen expansion
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      const progressRatio = Math.min(
-        Math.max((windowHeight - rect.top) / (windowHeight * 0.7), 0),
-        1
-      );
-      setScrollScale(0.92 + progressRatio * 0.08);
-      setScrollOpacity(0.85 + progressRatio * 0.15);
+      
+      // Calculate progress: 0 when just entering view, 1 when centered
+      const rawProgress = (windowHeight - rect.top) / (windowHeight * 0.75);
+      const clamped = Math.min(Math.max(rawProgress, 0), 1);
+      setScrollProgress(clamped);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -107,7 +105,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
       summary: "Fase 1: Mapeo y exploración del ecosistema territorial",
       icon: (
         <svg
-          className="w-12 h-12 text-emerald-800"
+          className="w-12 h-12 text-emerald-400"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -138,13 +136,13 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
           />
           <path
             d="M50 32C38 32 34 46 36 64C54 66 68 62 68 50C68 38 58 32 50 32Z"
-            fill="#2d6a4f"
-            stroke="#1b4332"
+            fill="#10b981"
+            stroke="#059669"
             strokeWidth="2"
           />
           <path
             d="M36 64C48 54 56 46 64 36"
-            stroke="#d8f3dc"
+            stroke="#a7f3d0"
             strokeWidth="3"
             strokeLinecap="round"
           />
@@ -167,29 +165,29 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             cx="34"
             cy="50"
             r="17"
-            fill="#52b788"
-            stroke="#1b4332"
+            fill="#10b981"
+            stroke="#047857"
             strokeWidth="3.5"
           />
           <circle
             cx="66"
             cy="50"
             r="17"
-            fill="#52b788"
-            stroke="#1b4332"
+            fill="#10b981"
+            stroke="#047857"
             strokeWidth="3.5"
           />
-          <rect x="44" y="46" width="12" height="8" rx="2" fill="#1b4332" />
-          <circle cx="34" cy="50" r="4" fill="#1b4332" />
+          <rect x="44" y="46" width="12" height="8" rx="2" fill="#047857" />
+          <circle cx="34" cy="50" r="4" fill="#047857" />
           <path
             d="M34 42V40M34 60V58M26 50H24M44 50H42"
-            stroke="#1b4332"
+            stroke="#047857"
             strokeWidth="2"
             strokeLinecap="round"
           />
           <path
             d="M66 44L68 47L72 47L69 50L70 54L66 52L62 54L63 50L60 47L64 47Z"
-            fill="#d8f3dc"
+            fill="#d1fae5"
           />
         </svg>
       ),
@@ -206,14 +204,14 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
       summary: "Fase 3: Construcción de prototipos y divulgación comunitaria",
       icon: (
         <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="54" r="22" fill="#334155" />
+          <circle cx="50" cy="54" r="22" fill="#1e293b" />
           <path
             d="M36 46C40 44 45 48 48 44C52 40 56 42 60 46C64 50 68 52 64 58C60 64 52 68 46 68C40 68 34 62 36 54Z"
-            fill="#94a3b8"
+            fill="#64748b"
           />
           <path
             d="M58 16C52 16 48 20.5 48 26C48 33.5 58 43 58 43C58 43 68 33.5 68 26C68 20.5 64 16 58 16Z"
-            fill="#16a34a"
+            fill="#10b981"
           />
           <circle cx="58" cy="25" r="3" fill="white" />
         </svg>
@@ -224,8 +222,13 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   // Calculate dynamic path progress width
   const pathWidthPercent = activeStep === 0 ? 0 : activeStep === 1 ? 50 : 100;
 
+  // Transform calculations for Antigravity-style expansion
+  const scale = 0.86 + scrollProgress * 0.14; // Scales from 0.86 up to 1.0
+  const translateY = (1 - scrollProgress) * 35; // Floats up from 35px to 0px
+  const opacity = 0.8 + scrollProgress * 0.2; // Opacity from 0.8 to 1.0
+
   return (
-    <section className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-20 text-center sm:pb-20 sm:pt-24 md:pb-28 md:pt-32">
+    <section className="relative isolate overflow-hidden px-3 sm:px-6 lg:px-8 pb-16 pt-20 text-center sm:pb-20 sm:pt-24 md:pb-28 md:pt-32">
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat"
@@ -301,28 +304,34 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* ========================================================================= */}
-        {/* RUTA TERRITORIAL CONECTADA (CON EFECTO DE CRECIMIENTO SCROLL-DRIVEN)      */}
+        {/* RUTA TERRITORIAL CONECTADA (BLACK CINEMA CARD EXPANSIVA ESTILO ANTIGRAVITY)*/}
         {/* ========================================================================= */}
         <div
           ref={containerRef}
-          className="mx-auto mt-16 max-w-5xl md:mt-24 text-left transition-all duration-300 ease-out will-change-transform"
+          className="mx-auto mt-16 md:mt-24 text-left w-full max-w-[1360px] transition-all duration-500 ease-out will-change-transform"
           style={{
-            transform: `scale(${scrollScale})`,
-            opacity: scrollOpacity,
+            transform: `scale(${scale}) translateY(${translateY}px)`,
+            opacity: opacity,
           }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="relative rounded-[2.5rem] border border-slate-200/90 bg-white/95 p-6 sm:p-12 shadow-2xl shadow-slate-950/8 backdrop-blur-md">
+          {/* Tarjeta Negra de Alto Contraste con Halo Luminoso */}
+          <div className="relative rounded-[2.5rem] border border-slate-800/90 bg-[#0c1017] p-6 sm:p-12 md:p-14 shadow-[0_25px_80px_-15px_rgba(0,0,0,0.6)] backdrop-blur-2xl overflow-hidden">
             
-            <div className="relative">
-              {/* Connecting background pathway */}
-              <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 bg-slate-100 -translate-y-1/2 z-0 rounded-full" />
+            {/* Ambient Background Glows */}
+            <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full bg-teal-500/10 blur-3xl" />
 
-              {/* Dynamic filled pathway */}
-              <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 -translate-y-1/2 z-0 rounded-full overflow-hidden pointer-events-none">
+            <div className="relative z-10">
+              
+              {/* Connecting background pathway */}
+              <div className="hidden md:block absolute top-[48px] left-[14%] right-[14%] h-1.5 bg-slate-800/80 -translate-y-1/2 z-0 rounded-full" />
+
+              {/* Dynamic filled pathway with neon emerald gradient */}
+              <div className="hidden md:block absolute top-[48px] left-[14%] right-[14%] h-1.5 -translate-y-1/2 z-0 rounded-full overflow-hidden pointer-events-none">
                 <div
-                  className="h-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 rounded-full transition-all duration-700 ease-out"
+                  className="h-full bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_12px_rgba(52,211,153,0.6)]"
                   style={{ width: `${pathWidthPercent}%` }}
                 />
               </div>
@@ -339,19 +348,19 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                       type="button"
                       onClick={() => goToStep(idx)}
                       className={[
-                        "group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500",
+                        "group flex flex-col items-center text-center cursor-pointer p-6 rounded-3xl transition-all duration-500 border",
                         isActive
-                          ? "bg-white shadow-lg shadow-emerald-950/5 scale-105 opacity-100 ring-1 ring-slate-200"
-                          : "bg-white/40 hover:bg-white hover:opacity-100 opacity-60",
+                          ? "bg-slate-900/95 border-slate-700 shadow-2xl shadow-black/80 scale-105 opacity-100 ring-1 ring-emerald-500/30"
+                          : "bg-slate-900/40 border-slate-800/60 hover:bg-slate-900/80 hover:border-slate-700 hover:opacity-100 opacity-60",
                       ].join(" ")}
                     >
                       {/* Illustrated Circular Node */}
                       <div
                         className={[
-                          "w-20 h-20 rounded-3xl flex items-center justify-center mb-4 transform transition-all duration-500",
+                          "w-22 h-22 rounded-3xl flex items-center justify-center mb-5 transform transition-all duration-500",
                           isActive
-                            ? "bg-emerald-50 border-2 border-emerald-500 text-emerald-800 shadow-md animate-node-pulse"
-                            : "bg-slate-50 border-2 border-slate-200 text-slate-400 shadow-sm",
+                            ? "bg-emerald-950/70 border-2 border-emerald-400 text-emerald-300 shadow-[0_0_24px_rgba(16,185,129,0.35)] animate-node-pulse"
+                            : "bg-slate-800/80 border border-slate-700/80 text-slate-500 shadow-sm",
                         ].join(" ")}
                       >
                         {step.icon}
@@ -360,18 +369,18 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                       {/* Step Pill */}
                       <div
                         className={[
-                          "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 transition",
+                          "inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition",
                           isActive
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-slate-100 text-slate-500",
+                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                            : "bg-slate-800 text-slate-400 border border-slate-700/50",
                         ].join(" ")}
                       >
                         <span
                           className={[
                             "w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-black",
                             isActive
-                              ? "bg-emerald-700 text-white"
-                              : "bg-slate-300 text-slate-700",
+                              ? "bg-emerald-500 text-slate-950"
+                              : "bg-slate-700 text-slate-300",
                           ].join(" ")}
                         >
                           {step.num}
@@ -382,8 +391,8 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                       {/* Title */}
                       <h3
                         className={[
-                          "text-base font-bold mb-1.5 transition",
-                          isActive ? "text-slate-900" : "text-slate-700",
+                          "text-lg font-bold mb-2 transition",
+                          isActive ? "text-white" : "text-slate-300",
                         ].join(" ")}
                       >
                         {step.title}
@@ -393,16 +402,16 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                       <p
                         className={[
                           "text-xs sm:text-sm leading-relaxed max-w-xs transition",
-                          isActive ? "text-slate-600" : "text-slate-400",
+                          isActive ? "text-slate-300" : "text-slate-500",
                         ].join(" ")}
                       >
                         {step.desc}
                       </p>
 
                       {/* Individual Timer Bar */}
-                      <div className="w-20 h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+                      <div className="w-24 h-1 bg-slate-800 rounded-full mt-5 overflow-hidden">
                         <div
-                          className="h-full bg-emerald-600 rounded-full transition-all duration-100"
+                          className="h-full bg-emerald-400 rounded-full transition-all duration-100 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
                           style={{
                             width: isActive ? `${progress}%` : isDone ? "100%" : "0%",
                           }}
@@ -415,12 +424,12 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             </div>
 
             {/* Bottom summary bar */}
-            <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-medium text-slate-500">
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>{steps[activeStep].summary}</span>
+            <div className="mt-10 pt-7 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-medium text-slate-400">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" />
+                <span className="text-slate-300">{steps[activeStep].summary}</span>
               </div>
-              <div className="text-emerald-700 font-bold text-[11px] uppercase tracking-wider">
+              <div className="text-emerald-400 font-bold text-[11px] uppercase tracking-wider">
                 Ruta Continua AprendeLocal
               </div>
             </div>
@@ -431,19 +440,19 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
       </div>
 
       <style>{`
-        @keyframes nodePulse {
+        @keyframes nodePulseDark {
           0% {
-            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
           }
           70% {
-            box-shadow: 0 0 0 14px rgba(22, 163, 74, 0);
+            box-shadow: 0 0 0 16px rgba(52, 211, 153, 0);
           }
           100% {
-            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
           }
         }
         .animate-node-pulse {
-          animation: nodePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          animation: nodePulseDark 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
       `}</style>
     </section>
