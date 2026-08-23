@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Play, ArrowRight, MapPin, BookOpen, Wrench, Mail, UserPlus } from "lucide-react";
+import { ArrowRight, MapPin, BookOpen, Wrench, Mail, UserPlus, Compass } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
 
 interface HeroSectionProps {
@@ -19,10 +19,9 @@ const CYCLE_MS = 5000;
 
 export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
-  const fullTitle = t("home.hero.title");
+  const fullTitle = t("home.hero.title", "Tu territorio es tu mejor laboratorio STEM");
   const [displayedText, setDisplayedText] = useState("");
   const [activeStep, setActiveStep] = useState(0);
-  // key that resets the CSS animation each time the step changes
   const [animKey, setAnimKey] = useState(0);
 
   // Typewriter effect
@@ -71,8 +70,8 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
       <div className="mx-auto max-w-6xl">
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
-          <MapPin className="h-4 w-4 text-emerald-600" />
-          {t("home.hero.steps.explore.label")} · {t("home.hero.steps.learn.label")} · {t("home.hero.steps.create.label")}
+          <Compass className="h-4 w-4 text-emerald-600" />
+          {t("home.hero.steps.explore.label", "Explora")} · {t("home.hero.steps.learn.label", "Aprende")} · {t("home.hero.steps.create.label", "Crea")}
         </div>
 
         {/* Title */}
@@ -83,53 +82,52 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
         {/* Subtitle */}
         <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-slate-500 md:text-lg">
-          {t("home.hero.subtitle")}
+          {t("home.hero.subtitle", "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio.")}
         </p>
 
-        {/* CTA buttons */}
+        {/* CTA buttons (Sin referencias a makerspaces) */}
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
           >
-            <Play className="h-4 w-4" fill="currentColor" />
-            {t("home.hero.ctaStart")}
+            <Compass className="h-4 w-4 text-emerald-400" />
+            {t("home.hero.ctaStart", "Comenzar en mi Territorio")}
           </button>
 
           <button
             onClick={onExplore}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
           >
-            {t("home.hero.ctaExplore")}
+            {t("home.hero.ctaExplore", "Conoce cómo funciona")}
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
 
         {/* Contact / signup line */}
         <div className="mt-6 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-4">
-          <span className="text-sm text-slate-400">{t("home.hero.contactLine")}</span>
+          <span className="text-sm text-slate-400">{t("home.hero.contactLine", "¿Quieres llevar AprendeLocal a tu escuela o comunidad?")}</span>
           <div className="flex items-center gap-3">
             <a
               href="/registro"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 transition hover:text-emerald-700"
             >
               <UserPlus className="h-3.5 w-3.5" />
-              {t("home.hero.ctaSignup")}
+              {t("home.hero.ctaSignup", "Crear cuenta gratis")}
             </a>
             <span className="text-slate-200">|</span>
             <a
-              href="mailto:contacto@aprendelocal.cl"
+              href="#contacto"
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 transition hover:text-slate-700"
             >
               <Mail className="h-3.5 w-3.5" />
-              {t("home.hero.ctaContact")}
+              {t("home.hero.ctaContact", "Contáctanos")}
             </a>
           </div>
         </div>
 
         {/* ── Animated steps — how it works ── */}
         <div className="mx-auto mt-16 max-w-4xl md:mt-20">
-          {/* Step cards */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {steps.map((key, i) => {
               const Icon = STEP_ICONS[i];
@@ -201,7 +199,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                     {t(`home.hero.steps.${key}.desc`)}
                   </p>
 
-                  {/* Progress bar — only visible on active card */}
+                  {/* Progress bar */}
                   <div
                     className={[
                       "mt-5 h-1 overflow-hidden rounded-full bg-slate-100 transition-opacity duration-300",
@@ -252,7 +250,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Keyframe for the progress bar */}
       <style>{`
         @keyframes heroProgress {
           from { width: 0%; }
