@@ -32,7 +32,7 @@ export default function EstadoConexion() {
     needRefresh: [hayVersionNueva, setHayVersionNueva],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisterError(error) {
+    onRegisterError(error: any) {
       // Sin service worker la aplicación sigue funcionando en línea; se avisa
       // por consola y no se interrumpe al docente con algo que no puede
       // resolver desde la sala.
