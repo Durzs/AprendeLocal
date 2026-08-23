@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Mail, UserPlus, Compass } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
@@ -277,7 +277,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* ========================================================================= */}
-        <!-- RUTA TERRITORIAL CONECTADA (OPCIÓN 2 REFINADA CON ANIMACIÓN Y ESTILO iNAT) -->
+        {/* RUTA TERRITORIAL CONECTADA (OPCIÓN 2 REFINADA CON ANIMACIÓN Y ESTILO iNAT) */}
         {/* ========================================================================= */}
         <div
           className="mx-auto mt-16 max-w-4xl md:mt-20 text-left"
