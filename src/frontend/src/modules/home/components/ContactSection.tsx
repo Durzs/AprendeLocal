@@ -21,15 +21,15 @@ export default function ContactSection() {
   return (
     <section id="contacto" className="relative overflow-hidden bg-slate-900 py-20 md:py-28 text-white">
       {/* Background glow accents */}
-      <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-emerald-600/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-teal-600/10 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-600/15 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left information */}
           <div className="space-y-6 lg:col-span-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-              <Mail className="h-3.5 w-3.5" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-300 border border-blue-500/30">
+              <Mail className="h-3.5 w-3.5 text-orange-400" />
               {t("home.contact.badge", "Contacto & Alianzas")}
             </div>
 
@@ -49,14 +49,14 @@ export default function ContactSection() {
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-emerald-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-orange-400">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="text-xs text-slate-400">Correo directo</div>
                   <a
                     href="mailto:contacto@aprendelocal.cl"
-                    className="font-semibold text-white transition hover:text-emerald-400"
+                    className="font-semibold text-white transition hover:text-orange-400"
                   >
                     contacto@aprendelocal.cl
                   </a>
@@ -190,9 +190,9 @@ export default function ContactSection() {
 
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-emerald-600/30 transition hover:bg-emerald-500 hover:-translate-y-0.5"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3.5 font-bold text-white shadow-lg shadow-blue-600/30 transition hover:-translate-y-0.5 cursor-pointer"
                   >
-                    <Send className="h-4 w-4" />
+                    <Send className="h-4 w-4 text-amber-300" />
                     <span>{t("home.contact.send", "Enviar Mensaje")}</span>
                   </button>
                 </form>
