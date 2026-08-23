@@ -1,4 +1,4 @@
-﻿import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function PillarsSection() {
   const { t } = useTranslation();
@@ -221,7 +221,7 @@ export default function PillarsSection() {
 
   return (
     <section className="bg-[#f1f6ed] py-14 sm:py-20 border-y border-emerald-900/5">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-12 sm:mb-16 leading-[0.95]">
           {t("home.pillars.title", "Con AprendeLocal, puedes:")}
         </h2>

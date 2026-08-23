@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+﻿import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Mail, UserPlus, Compass } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
@@ -18,6 +18,11 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Scroll scale state (efecto de crecimiento estilo Antigravity)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollScale, setScrollScale] = useState(0.92);
+  const [scrollOpacity, setScrollOpacity] = useState(0.85);
+
   const stepStartTimeRef = useRef<number>(Date.now());
   const reqAnimRef = useRef<number | null>(null);
 
@@ -32,6 +37,25 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
     }, 45);
     return () => window.clearInterval(interval);
   }, [fullTitle]);
+
+  // Scroll listener for dynamic expansion scale
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const progressRatio = Math.min(
+        Math.max((windowHeight - rect.top) / (windowHeight * 0.7), 0),
+        1
+      );
+      setScrollScale(0.92 + progressRatio * 0.08);
+      setScrollOpacity(0.85 + progressRatio * 0.15);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Jump to specific step
   const goToStep = useCallback((i: number) => {
@@ -201,7 +225,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const pathWidthPercent = activeStep === 0 ? 0 : activeStep === 1 ? 50 : 100;
 
   return (
-    <section className="relative isolate overflow-hidden px-4 pb-12 pt-20 text-center sm:pb-16 sm:pt-24 md:pb-20 md:pt-32">
+    <section className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-20 text-center sm:pb-20 sm:pt-24 md:pb-28 md:pt-32">
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat"
@@ -212,7 +236,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         }}
       />
 
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
           <Compass className="h-4 w-4 text-emerald-600" />
@@ -226,7 +250,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </h1>
 
         {/* Subtitle */}
-        <p className="mx-auto mt-8 max-w-2xl text-base leading-8 text-slate-500 md:text-lg">
+        <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-slate-500 md:text-lg">
           {t(
             "home.hero.subtitle",
             "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio."
@@ -237,7 +261,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#111217] px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
           >
             <Compass className="h-4 w-4 text-emerald-400" />
             {t("home.hero.ctaStart", "Comenzar en mi Territorio")}
@@ -245,7 +269,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
           <button
             onClick={onExplore}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-7 py-3.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
           >
             {t("home.hero.ctaExplore", "Conoce cómo funciona")}
             <ArrowRight className="h-4 w-4" />
@@ -277,14 +301,19 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* ========================================================================= */}
-        {/* RUTA TERRITORIAL CONECTADA (OPCIÓN 2 REFINADA CON ANIMACIÓN Y ESTILO iNAT) */}
+        {/* RUTA TERRITORIAL CONECTADA (CON EFECTO DE CRECIMIENTO SCROLL-DRIVEN)      */}
         {/* ========================================================================= */}
         <div
-          className="mx-auto mt-16 max-w-4xl md:mt-20 text-left"
+          ref={containerRef}
+          className="mx-auto mt-16 max-w-5xl md:mt-24 text-left transition-all duration-300 ease-out will-change-transform"
+          style={{
+            transform: `scale(${scrollScale})`,
+            opacity: scrollOpacity,
+          }}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="relative rounded-[2.5rem] border border-slate-200/90 bg-white/90 p-6 sm:p-10 shadow-xl shadow-slate-950/5 backdrop-blur-md">
+          <div className="relative rounded-[2.5rem] border border-slate-200/90 bg-white/95 p-6 sm:p-12 shadow-2xl shadow-slate-950/8 backdrop-blur-md">
             
             <div className="relative">
               {/* Connecting background pathway */}
@@ -299,7 +328,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
               </div>
 
               {/* 3 Step Nodes */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
                 {steps.map((step, idx) => {
                   const isActive = activeStep === idx;
                   const isDone = idx < activeStep;
@@ -363,7 +392,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                       {/* Description */}
                       <p
                         className={[
-                          "text-xs leading-relaxed max-w-xs transition",
+                          "text-xs sm:text-sm leading-relaxed max-w-xs transition",
                           isActive ? "text-slate-600" : "text-slate-400",
                         ].join(" ")}
                       >

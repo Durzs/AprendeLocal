@@ -8,7 +8,7 @@ export default function CountrySection() {
 
   return (
     <section id="territorios" className="bg-slate-50/70 py-20 md:py-28 border-y border-slate-200/60">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
