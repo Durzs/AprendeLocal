@@ -98,18 +98,25 @@ Hay dos configuraciones válidas, y hay que elegir una:
 
 ### URLs de retorno
 
-Si dejas la confirmación activada, el enlace del correo devuelve al usuario a
-`/auth/callback`. Esa ruta **tiene que estar permitida** en Supabase →
+Los correos de la aplicación devuelven al usuario a dos rutas distintas:
+`/auth/callback` tras confirmar la cuenta, y `/auth/reset` tras pedir una
+contraseña nueva. Ambas **tienen que estar permitidas** en Supabase →
 Authentication → URL Configuration, o Supabase rechaza el retorno:
 
 | Campo | Valor |
 |---|---|
 | Site URL | `https://www.aprendelocal.com` |
-| Redirect URLs | `https://www.aprendelocal.com/auth/callback`<br>`http://localhost:5173/auth/callback` |
+| Redirect URLs | `https://www.aprendelocal.com/auth/callback`<br>`https://www.aprendelocal.com/auth/reset`<br>`http://localhost:5173/auth/callback`<br>`http://localhost:5173/auth/reset` |
 
-El registro pasa `emailRedirectTo` explícitamente, así que no depende solo del
-Site URL —que es el ajuste que suele quedarse apuntando a `localhost`—, pero la
-URL debe figurar igualmente en la lista blanca.
+El registro y la recuperación pasan la URL de retorno explícitamente, así que no
+dependen solo del Site URL —que es el ajuste que suele quedarse apuntando a
+`localhost`—, pero ambas deben figurar igualmente en la lista blanca.
+
+> **La recuperación de contraseña necesita SMTP propio.** El enlace para
+> restablecerla se envía por el mismo canal que el de confirmación, de modo que
+> con el remitente integrado de Supabase la mayoría de esos correos no llega.
+> Es un caso peor que el registro: quien pierde la contraseña se queda fuera sin
+> ninguna alternativa.
 
 > El cliente usa el flujo **implícito** a propósito, no PKCE. PKCE exige que el
 > verificador guardado al registrarse siga en el mismo navegador, y aquí es

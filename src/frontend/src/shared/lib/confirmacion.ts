@@ -7,7 +7,7 @@
  * lugar de mostrar la portada como si nada hubiese pasado.
  */
 
-import { supabase, urlDeRetorno } from "./supabaseClient";
+import { supabase, urlDeRetorno, urlDeReset } from "./supabaseClient";
 
 export type ErrorDeRetorno = {
   codigo: string;
@@ -71,5 +71,18 @@ export async function reenviarConfirmacion(email: string) {
     type: "signup",
     email,
     options: { emailRedirectTo: urlDeRetorno() },
+  });
+}
+
+/**
+ * Envía el correo con el enlace para fijar una contraseña nueva.
+ *
+ * Supabase responde igual exista o no la cuenta, y conviene que siga siendo
+ * así: distinguir ambos casos en la interfaz permitiría averiguar qué correos
+ * están registrados probándolos uno a uno.
+ */
+export async function enviarEnlaceDeRecuperacion(email: string) {
+  return supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: urlDeReset(),
   });
 }

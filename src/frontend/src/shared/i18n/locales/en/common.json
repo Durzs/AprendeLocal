@@ -273,7 +273,8 @@
     "validation": {
       "required": "Please enter email and password."
     },
-    "notConfirmed": "If you just signed up, confirm your email using the link we sent you first."
+    "notConfirmed": "If you just signed up, confirm your email using the link we sent you first.",
+    "forgot": "Forgot your password?"
   },
   "makerspaces": {
     "title": "Makerspaces",
@@ -508,5 +509,38 @@
       "resendError": "We couldn't resend it ({{motivo}}).",
       "backToLogin": "Back to log in"
     }
+  },
+  "forgot": {
+    "title": "Reset your password",
+    "subtitle": "Enter your account email and we will send you a link to create a new password.",
+    "submit": "Send link",
+    "sending": "Sending...",
+    "sentTitle": "Check your email",
+    "sentBody": "If {{email}} has an AprendeLocal account, the password reset link is on its way.",
+    "sentHint": "The link expires after a while and works only once. If it does not show up in a few minutes, check your spam folder.",
+    "backToLogin": "Back to sign in",
+    "validation": {
+      "required": "Enter your email."
+    },
+    "error": "We could not send the email ({{motivo}})."
+  },
+  "reset": {
+    "verifying": "Checking the link...",
+    "failed": "This link no longer works",
+    "noCredentials": "This link carries no recovery data. Open it straight from the email instead of copying it by hand.",
+    "timeout": "The link could not be validated. This usually means it was already used or too much time has passed.",
+    "askAgain": "Request a new link",
+    "title": "Create your new password",
+    "subtitle": "Pick a password you do not use anywhere else.",
+    "newPassword": "New password",
+    "repeatPassword": "Repeat the password",
+    "submit": "Save password",
+    "saving": "Saving...",
+    "savedTitle": "Password updated!",
+    "savedBody": "You can use it now. Taking you to AprendeLocal.",
+    "validation": {
+      "mismatch": "The two passwords do not match."
+    },
+    "error": "We could not save the password ({{motivo}})."
   }
 }

@@ -54,8 +54,18 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
     return ordenarPorAfinidad(objetivo, base);
   }, [objetivo, lugares, comuna]);
 
-  const utiles = ordenados.filter((r) => r.afinidad.banda !== "no_aporta");
-  const resto = ordenados.filter((r) => r.afinidad.banda === "no_aporta");
+  // Sin objetivo todavía no hay contra qué juzgar los lugares, así que se
+  // muestran todos por igual: es el docente que entra por el lugar porque ya
+  // sabe adónde puede llevar al curso. El emparejamiento se aplica después,
+  // al elegir el objetivo.
+  const neutral = !objetivo;
+
+  const utiles = neutral
+    ? ordenados
+    : ordenados.filter((r) => r.afinidad.banda !== "no_aporta");
+  const resto = neutral
+    ? []
+    : ordenados.filter((r) => r.afinidad.banda === "no_aporta");
   const elegido = ordenados.find((r) => String(r.lugar.properties.id) === valor);
 
   // Ningún lugar aporta. Decirlo es más honesto —y más útil— que ofrecer el
@@ -135,11 +145,13 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
                   <span className="text-xs text-slate-500">
                     {String(lugar.properties.commune)}
                   </span>
-                  <span
-                    className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${estilo.etiqueta}`}
-                  >
-                    {estilo.texto}
-                  </span>
+                  {!neutral && (
+                    <span
+                      className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${estilo.etiqueta}`}
+                    >
+                      {estilo.texto}
+                    </span>
+                  )}
                 </div>
                 {afinidad.motivos.length > 0 && (
                   <p className="mt-1 text-xs text-slate-600">
@@ -200,7 +212,9 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
         </div>
       )}
 
-      {elegido && elegido.afinidad.banda === "no_aporta" && (
+      {/* Sin objetivo no hay incoherencia que advertir: en modo neutral todos
+          los lugares puntúan cero porque no se comparan contra nada. */}
+      {!neutral && elegido && elegido.afinidad.banda === "no_aporta" && (
         <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
           Elegiste un lugar que no se relaciona con el objetivo. La secuencia se
           va a generar igual, pero el lugar será decorado: revísala con cuidado

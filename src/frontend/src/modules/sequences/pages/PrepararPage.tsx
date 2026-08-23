@@ -2,9 +2,15 @@
  * Preparar una unidad — pantalla del docente.
  *
  * La diferencia de fondo con la plataforma actual está en la puerta de
- * entrada: aquí se empieza por el objetivo de aprendizaje que toca esta
- * semana, y el lugar se elige para servirlo. En el mapa se empezaba al revés,
- * y esa inversión es la que arrastra al resto del diseño.
+ * entrada: aquí el objetivo de aprendizaje manda y el lugar se elige para
+ * servirlo. En el mapa se empezaba al revés, y esa inversión es la que
+ * arrastra al resto del diseño.
+ *
+ * Hay dos puertas para llegar a ese par, porque los docentes llegan de dos
+ * maneras: quien sabe qué le toca esta semana entra por el objetivo, y quien
+ * ya sabe adónde puede llevar al curso entra por el lugar. Cambia el orden en
+ * que se pregunta, no la regla: el emparejamiento se calcula y se muestra en
+ * los dos sentidos, y sigue siendo el objetivo el que justifica la salida.
  *
  * La secuencia se muestra completa y editable mentalmente por el docente antes
  * de llevarla al aula: por eso los problemas de validación se enseñan en lugar
@@ -66,6 +72,7 @@ export default function PrepararPage() {
 
   const [objetivoCode, setObjetivoCode] = useState("");
   const [pointId, setPointId] = useState("");
+  const [entrada, setEntrada] = useState<"objetivo" | "lugar">("objetivo");
   const [sesiones, setSesiones] = useState(4);
   const [notas, setNotas] = useState("");
 
@@ -111,6 +118,11 @@ export default function PrepararPage() {
   const objetivoElegido = useMemo(
     () => objetivos.find((o) => o.code === objetivoCode),
     [objetivos, objetivoCode]
+  );
+
+  const lugarElegido = useMemo(
+    () => puntos.find((p) => String(p.properties.id) === pointId),
+    [puntos, pointId]
   );
 
   const listo = Boolean(objetivoCode && pointId) && !generando;
@@ -172,12 +184,16 @@ export default function PrepararPage() {
           Preparar una unidad
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
-          Empieza por lo que tienes que enseñar
+          {entrada === "objetivo"
+            ? "Empieza por lo que tienes que enseñar"
+            : "Empieza por el lugar al que puedes ir"}
         </h1>
         <p className="mt-3 max-w-2xl text-slate-600">
-          Elige el objetivo de aprendizaje y un lugar cercano a tu escuela. La
-          secuencia llega con instrucción explícita, un ejemplo resuelto de ese lugar,
-          práctica y salida a terreno — en ese orden.
+          {entrada === "objetivo"
+            ? "Elige el objetivo de aprendizaje y un lugar cercano a tu escuela."
+            : "Elige un lugar cercano a tu escuela y mira qué objetivos sostiene de verdad."}{" "}
+          La secuencia llega con instrucción explícita, un ejemplo resuelto de ese
+          lugar, práctica y salida a terreno — en ese orden.
         </p>
       </header>
 
@@ -241,29 +257,76 @@ export default function PrepararPage() {
           </div>
         )}
 
+        {/* Dos puertas al mismo par. Cambiar de puerta descarta lo elegido:
+            arrastrarlo dejaría en pantalla una elección hecha bajo otra
+            pregunta. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-slate-500">Empezar por</span>
+          {(
+            [
+              ["objetivo", "Lo que tengo que enseñar"],
+              ["lugar", "Un lugar al que puedo ir"],
+            ] as const
+          ).map(([clave, texto]) => (
+            <button
+              key={clave}
+              type="button"
+              onClick={() => {
+                if (entrada === clave) return;
+                setEntrada(clave);
+                setObjetivoCode("");
+                setPointId("");
+              }}
+              aria-pressed={entrada === clave}
+              className={[
+                "rounded-full border px-3.5 py-1.5 text-xs font-semibold transition",
+                entrada === clave
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 text-slate-600 hover:bg-slate-50",
+              ].join(" ")}
+            >
+              {texto}
+            </button>
+          ))}
+        </div>
+
         <div>
           <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
             <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
               1
             </span>
-            Qué tienes que enseñar
+            {entrada === "objetivo" ? "Qué tienes que enseñar" : "Dónde puedes ir"}
           </p>
-          <SelectorObjetivo
-            objetivos={objetivos}
-            valor={objetivoCode}
-            onElegir={(code) => {
-              setObjetivoCode(code);
-              // El lugar se eligió para servir a otro objetivo: si cambia el
-              // objetivo, la elección anterior deja de tener fundamento.
-              setPointId("");
-            }}
-            cargando={cargandoCatalogos}
-          />
+          {entrada === "objetivo" ? (
+            <SelectorObjetivo
+              objetivos={objetivos}
+              valor={objetivoCode}
+              onElegir={(code) => {
+                setObjetivoCode(code);
+                // El lugar se eligió para servir a otro objetivo: si cambia el
+                // objetivo, la elección anterior deja de tener fundamento.
+                setPointId("");
+              }}
+              cargando={cargandoCatalogos}
+            />
+          ) : (
+            // Sin objetivo aún, el selector muestra los lugares sin juzgarlos:
+            // no hay contra qué.
+            <SelectorLugar
+              objetivo={undefined}
+              lugares={puntos}
+              valor={pointId}
+              onElegir={(id) => {
+                setPointId(id);
+                setObjetivoCode("");
+              }}
+            />
+          )}
         </div>
 
-        {/* El lugar aparece después del objetivo, no a la vez: se elige PARA
-            servirlo, y sin objetivo no hay nada contra lo que juzgarlo. */}
-        {objetivoCode && (
+        {/* El segundo paso siempre se juzga contra el primero: el objetivo
+            filtra lugares, y el lugar ordena objetivos por lo que sostiene. */}
+        {entrada === "objetivo" && objetivoCode && (
           <div>
             <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
               <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
@@ -276,6 +339,24 @@ export default function PrepararPage() {
               lugares={puntos}
               valor={pointId}
               onElegir={setPointId}
+            />
+          </div>
+        )}
+
+        {entrada === "lugar" && pointId && (
+          <div>
+            <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
+              <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+                2
+              </span>
+              Qué puedes enseñar ahí
+            </p>
+            <SelectorObjetivo
+              objetivos={objetivos}
+              valor={objetivoCode}
+              onElegir={setObjetivoCode}
+              cargando={cargandoCatalogos}
+              lugar={lugarElegido}
             />
           </div>
         )}

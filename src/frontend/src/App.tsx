@@ -12,6 +12,7 @@
  * /perfil        → Perfil del usuario (requiere auth)
  * /entrar        → Login
  * /cadastrar     → Registro
+ * /recuperar     → Solicitud del enlace para recuperar la contraseña
  * *              → 404
  */
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
@@ -23,6 +24,8 @@ import PlataformaApp from "./PlataformaApp";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
+import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
+import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
 import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
@@ -39,6 +42,7 @@ const router = createBrowserRouter([
       { path: "entrar", element: <LoginPage /> },
       { path: "cadastrar", element: <RegisterPage /> },
       { path: "registro", element: <RegisterPage /> },
+      { path: "recuperar", element: <ForgotPasswordPage /> },
 
       /* ── Plataforma unificada ── */
       { path: "plataforma", element: <PlatformPage /> },
@@ -83,6 +87,11 @@ const router = createBrowserRouter([
     // Retorno del enlace de confirmación de Supabase.
     path: "/auth/callback",
     element: <AuthCallbackPage />,
+  },
+  {
+    // Retorno del enlace de recuperación: aquí se fija la contraseña nueva.
+    path: "/auth/reset",
+    element: <ResetPasswordPage />,
   },
   {
     path: "/plataforma-legacy",
