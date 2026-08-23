@@ -64,14 +64,18 @@ export async function leerPuntos(): Promise<POIFeature[]> {
  * la única razón por la que hacía falta un servicio aparte.
  */
 export async function generarSecuencia(params: {
-  objectiveCode: string;
+  /** Uno por curso de la sala. En un aula de curso único, uno solo. */
+  objectiveCodes: string[];
   pointId: string;
   sesiones?: number;
   notasDocente?: string;
 }): Promise<RespuestaSecuencia> {
   const { data, error } = await supabase.functions.invoke("generar-secuencia", {
     body: {
-      objective_code: params.objectiveCode,
+      objective_codes: params.objectiveCodes,
+      // Se sigue mandando el campo antiguo: si el navegador del docente tiene
+      // cacheada una versión previa de la función, con esto no se rompe.
+      objective_code: params.objectiveCodes[0],
       point_id: params.pointId,
       sesiones: params.sesiones ?? 4,
       notas_docente: params.notasDocente ?? "",

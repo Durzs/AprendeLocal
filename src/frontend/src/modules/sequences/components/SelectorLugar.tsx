@@ -10,7 +10,7 @@
 
 import { useMemo, useState } from "react";
 import type { CurriculumObjective, POIFeature } from "../../../types";
-import { ordenarPorAfinidad, type Banda } from "../lib/afinidad";
+import { ordenarPorAfinidadConVarios, type Banda } from "../lib/afinidad";
 import { enPalabras } from "../lib/etiquetas";
 
 const ESTILO: Record<Banda, { borde: string; etiqueta: string; texto: string }> = {
@@ -32,13 +32,14 @@ const ESTILO: Record<Banda, { borde: string; etiqueta: string; texto: string }> 
 };
 
 type Props = {
-  objetivo: CurriculumObjective | undefined;
+  /** Los objetivos de la sala. Vacío mientras no se haya elegido ninguno. */
+  objetivos: CurriculumObjective[];
   lugares: POIFeature[];
   valor: string;
   onElegir: (id: string) => void;
 };
 
-export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Props) {
+export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: Props) {
   const [comuna, setComuna] = useState("");
   const [verTodos, setVerTodos] = useState(false);
 
@@ -51,14 +52,14 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
     const base = comuna
       ? lugares.filter((p) => String(p.properties.commune) === comuna)
       : lugares;
-    return ordenarPorAfinidad(objetivo, base);
-  }, [objetivo, lugares, comuna]);
+    return ordenarPorAfinidadConVarios(objetivos, base);
+  }, [objetivos, lugares, comuna]);
 
   // Sin objetivo todavía no hay contra qué juzgar los lugares, así que se
   // muestran todos por igual: es el docente que entra por el lugar porque ya
   // sabe adónde puede llevar al curso. El emparejamiento se aplica después,
   // al elegir el objetivo.
-  const neutral = !objetivo;
+  const neutral = objetivos.length === 0;
 
   const utiles = neutral
     ? ordenados
@@ -70,7 +71,7 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
 
   // Ningún lugar aporta. Decirlo es más honesto —y más útil— que ofrecer el
   // catálogo entero: hay objetivos que se enseñan mejor en el aula.
-  const sinAnclaje = objetivo && utiles.length === 0;
+  const sinAnclaje = !neutral && utiles.length === 0;
 
   return (
     <div>
@@ -106,15 +107,15 @@ export default function SelectorLugar({ objetivo, lugares, valor, onElegir }: Pr
 
       {sinAnclaje && (
         <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3.5 text-sm text-amber-900">
-          <p className="font-semibold">Este objetivo no se ancla en un lugar</p>
+          <p className="font-semibold">Ninguno de los objetivos se ancla en un lugar</p>
           <p className="mt-1.5 leading-relaxed">
             Ninguno de los {ordenados.length} lugares
-            {comuna ? ` de ${comuna}` : ""} aporta materia a este contenido. Se
+            {comuna ? ` de ${comuna}` : ""} aporta materia a estos contenidos. Se
             enseña mejor en el aula: llevar al curso a terreno le sumaría una
             salida que organizar, sin sumarle nada que aprender.
           </p>
           <p className="mt-2 text-xs opacity-80">
-            Puedes elegir otro objetivo, o mirar otra comuna.
+            Puedes cambiar los objetivos, o mirar otra comuna.
           </p>
         </div>
       )}

@@ -21,3 +21,6 @@ data.sql
 
 # Caché de pytest
 .pytest_cache/
+
+# Artefactos que genera vite-plugin-pwa en cada build
+src/frontend/dev-dist/

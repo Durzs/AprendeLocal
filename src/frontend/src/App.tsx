@@ -31,6 +31,7 @@ import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
 import NotFoundPage from "./modules/errors/pages/NotFoundPage";
+import EstadoConexion from "./shared/components/ui/EstadoConexion";
 import "./shared/i18n";
 
 const router = createBrowserRouter([
@@ -101,5 +102,13 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      {/* Fuera del router a propósito: el aviso de «sin señal» tiene que
+          poder aparecer en cualquier pantalla, incluidas las de
+          autenticación, que no cuelgan del Layout. */}
+      <EstadoConexion />
+    </>
+  );
 }

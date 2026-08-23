@@ -15,7 +15,10 @@ i18n
       en: { common: enCommon },
       es: { common: esCommon }
     },
-    fallbackLng: "pt",
+    // Español: el piloto es en La Araucanía. Con «pt» de respaldo, un
+    // computador de escuela mal configurado servía la plataforma en portugués
+    // a un docente chileno, que es el peor primer contacto posible.
+    fallbackLng: "es",
     supportedLngs: ["pt", "en", "es"],
     defaultNS: "common",
     interpolation: { escapeValue: false },
