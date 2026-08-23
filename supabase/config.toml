@@ -1,0 +1,14 @@
+# Configuración del proyecto para la CLI de Supabase.
+#
+# Sin este archivo la CLI no reconoce el directorio como un proyecto y
+# `supabase functions deploy` falla antes de empezar. Su ausencia es parte de
+# por qué la Edge Function vivía en el repositorio sin llegar nunca al
+# proyecto: no había forma de desplegarla sin inventarse los parámetros.
+
+project_id = "aprendelocal"
+
+[functions.generar-secuencia]
+# La invoca el navegador con la clave anónima. La comprobación de JWT se hace
+# dentro de la función, que consulta con el token de quien llama cuando lo hay
+# para que sigan aplicándose las políticas RLS.
+verify_jwt = false
