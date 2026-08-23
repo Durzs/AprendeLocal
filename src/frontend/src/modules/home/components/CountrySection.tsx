@@ -33,7 +33,7 @@ export default function CountrySection() {
               className={[
                 "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition cursor-pointer",
                 selectedCountry === "chile"
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                  ? "bg-[#0a0047] text-white shadow-md shadow-[#0a0047]/25"
                   : "text-slate-600 hover:text-slate-900",
               ].join(" ")}
             >

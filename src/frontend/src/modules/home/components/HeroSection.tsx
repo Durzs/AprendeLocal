@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, Mail, UserPlus, Compass } from "lucide-react";
 import homeBg from "../../../assets/images/home-bg.png";
@@ -270,7 +270,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
             onClick={onStart}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 hover:bg-blue-700 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-600/25 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0a0047] hover:bg-[#140066] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#0a0047]/30 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
           >
             <Compass className="h-4 w-4 text-amber-300" />
             {t("home.hero.ctaStart", "Comenzar en mi Territorio")}

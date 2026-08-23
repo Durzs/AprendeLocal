@@ -120,7 +120,7 @@ export default function PlaceBasedLearningSection() {
         <div className="mt-14 text-center">
           <Link
             to="/plataforma"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-600/20 transition hover:shadow-xl hover:-translate-y-0.5"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-[#0a0047]/30 transition hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
           >
             <span>{t("home.placeBased.cta", "Ver más proyectos e historias")}</span>
             <ChevronRight className="h-5 w-5 text-amber-300" />

@@ -190,7 +190,7 @@ export default function ContactSection() {
 
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3.5 font-bold text-white shadow-lg shadow-blue-600/30 transition hover:-translate-y-0.5 cursor-pointer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] border border-blue-900/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-[#0a0047]/50 transition hover:-translate-y-0.5 cursor-pointer"
                   >
                     <Send className="h-4 w-4 text-amber-300" />
                     <span>{t("home.contact.send", "Enviar Mensaje")}</span>
