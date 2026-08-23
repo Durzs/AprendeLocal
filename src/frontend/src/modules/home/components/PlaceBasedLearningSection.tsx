@@ -58,7 +58,7 @@ export default function PlaceBasedLearningSection() {
 
   return (
     <section className="bg-white py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-14 text-center max-w-3xl mx-auto">
           <h2 className="text-3xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] sm:text-4xl md:text-5xl">
