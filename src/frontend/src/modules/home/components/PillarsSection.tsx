@@ -1,7 +1,41 @@
+﻿import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Sparkles } from "lucide-react";
 
 export default function PillarsSection() {
   const { t } = useTranslation();
+
+  // Typewriter rotating actions for dynamic title effect
+  const actions = ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"];
+  const [currentActionIndex, setCurrentActionIndex] = useState(0);
+  const [typedAction, setTypedAction] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const fullWord = actions[currentActionIndex];
+    let timer: number;
+
+    if (!isDeleting && typedAction.length < fullWord.length) {
+      // Typing
+      timer = window.setTimeout(() => {
+        setTypedAction(fullWord.slice(0, typedAction.length + 1));
+      }, 90);
+    } else if (!isDeleting && typedAction.length === fullWord.length) {
+      // Pause at full word
+      timer = window.setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && typedAction.length > 0) {
+      // Deleting
+      timer = window.setTimeout(() => {
+        setTypedAction(fullWord.slice(0, typedAction.length - 1));
+      }, 50);
+    } else if (isDeleting && typedAction.length === 0) {
+      // Next word
+      setIsDeleting(false);
+      setCurrentActionIndex((prev) => (prev + 1) % actions.length);
+    }
+
+    return () => window.clearTimeout(timer);
+  }, [typedAction, isDeleting, currentActionIndex]);
 
   const pillars = [
     {
@@ -11,6 +45,7 @@ export default function PillarsSection() {
         "home.pillars.identify.desc",
         "ecosistemas, flora, fauna, cuencas y problemáticas locales"
       ),
+      floatClass: "animate-float-slow-1",
       icon: (
         <svg
           className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
@@ -66,6 +101,7 @@ export default function PillarsSection() {
         "home.pillars.track.desc",
         "variables ambientales y clima de tu territorio"
       ),
+      floatClass: "animate-float-slow-2",
       icon: (
         <svg
           className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
@@ -115,6 +151,7 @@ export default function PillarsSection() {
         "home.pillars.discover.desc",
         "saberes ancestrales y naturaleza a tu alrededor"
       ),
+      floatClass: "animate-float-slow-3",
       icon: (
         <svg
           className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
@@ -161,6 +198,7 @@ export default function PillarsSection() {
         "home.pillars.contribute.desc",
         "a la ciencia comunitaria con soluciones maker"
       ),
+      floatClass: "animate-float-slow-4",
       icon: (
         <svg
           className="w-28 h-28 sm:w-32 sm:h-32"
@@ -189,6 +227,7 @@ export default function PillarsSection() {
         "home.pillars.learn.desc",
         "en comunidad con profesores y escuelas rurales"
       ),
+      floatClass: "animate-float-slow-5",
       icon: (
         <svg
           className="w-28 h-28 sm:w-32 sm:h-32 text-emerald-800"
@@ -220,22 +259,37 @@ export default function PillarsSection() {
   ];
 
   return (
-    <section className="bg-[#f1f6ed] py-14 sm:py-20 border-y border-emerald-900/5">
+    <section className="bg-[#f1f6ed] py-16 sm:py-24 border-y border-emerald-900/5 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-12 sm:mb-16 leading-[0.95]">
-          {t("home.pillars.title", "Con AprendeLocal, puedes:")}
-        </h2>
+        
+        {/* Dynamic Title with animated typewriter pill */}
+        <div className="mb-14 sm:mb-18">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-200/60 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+            Pilares Fundamentales
+          </div>
+          
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[1.05]">
+            Con AprendeLocal, puedes:{" "}
+            <span className="text-emerald-700 underline decoration-emerald-300 decoration-wavy decoration-2 inline-block min-w-[170px] text-left">
+              {typedAction}
+              <span className="ml-0.5 inline-block animate-pulse text-emerald-500">|</span>
+            </span>
+          </h2>
+        </div>
 
+        {/* 5 Floating Illustrated Pillars */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 items-start">
           {pillars.map((pillar) => (
             <div
               key={pillar.id}
-              className="group flex flex-col items-center text-center p-2 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+              className="group flex flex-col items-center text-center p-3 rounded-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
             >
-              <div className="mb-4 flex h-32 w-32 sm:h-36 sm:w-36 items-center justify-center transition-transform duration-300 group-hover:scale-105">
+              {/* Floating icon wrapper with custom slow keyframe */}
+              <div className={`mb-4 flex h-32 w-32 sm:h-36 sm:w-36 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${pillar.floatClass}`}>
                 {pillar.icon}
               </div>
-              <h3 className="mb-2 text-xl font-bold text-[#111217]">
+              <h3 className="mb-2 text-xl font-bold text-[#111217] group-hover:text-emerald-800 transition">
                 {pillar.title}
               </h3>
               <p className="max-w-[220px] text-sm leading-relaxed text-slate-700">
@@ -244,6 +298,7 @@ export default function PillarsSection() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

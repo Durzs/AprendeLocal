@@ -16,7 +16,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [progress, setProgress] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   // Scroll scale state (efecto de crecimiento al hacer scroll)
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,23 +60,19 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
     stepStartTimeRef.current = Date.now();
   }, []);
 
-  // Continuous animation loop
+  // Continuous and unstoppable animation loop
   useEffect(() => {
     stepStartTimeRef.current = Date.now();
 
     const updateLoop = () => {
-      if (!isPaused) {
-        const elapsed = Date.now() - stepStartTimeRef.current;
-        const currentProgress = Math.min((elapsed / CYCLE_MS) * 100, 100);
-        setProgress(currentProgress);
+      const elapsed = Date.now() - stepStartTimeRef.current;
+      const currentProgress = Math.min((elapsed / CYCLE_MS) * 100, 100);
+      setProgress(currentProgress);
 
-        if (elapsed >= CYCLE_MS) {
-          setActiveStep((prev) => (prev + 1) % 3);
-          stepStartTimeRef.current = Date.now();
-          setProgress(0);
-        }
-      } else {
-        stepStartTimeRef.current = Date.now() - (progress / 100) * CYCLE_MS;
+      if (elapsed >= CYCLE_MS) {
+        setActiveStep((prev) => (prev + 1) % 3);
+        stepStartTimeRef.current = Date.now();
+        setProgress(0);
       }
 
       reqAnimRef.current = requestAnimationFrame(updateLoop);
@@ -88,7 +83,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
     return () => {
       if (reqAnimRef.current) cancelAnimationFrame(reqAnimRef.current);
     };
-  }, [isPaused, progress]);
+  }, []);
 
   // Data for the 3 steps with iNaturalist-styled illustrated SVGs
   const steps = [
@@ -101,7 +96,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         "home.hero.steps.explore.desc",
         "Identifica ecosistemas, cuencas hídricas y biodiversidad local como punto de partida."
       ),
-      summary: "Fase 1: Mapeo y exploración del ecosistema territorial",
       icon: (
         <svg
           className="w-12 h-12 text-emerald-800"
@@ -157,7 +151,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         "home.hero.steps.learn.desc",
         "Cursos y herramientas que unen ciencia y sensores con los problemas reales de tu entorno."
       ),
-      summary: "Fase 2: Conexión de hipótesis con sensores y metodología STEM",
       icon: (
         <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
           <circle
@@ -200,7 +193,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         "home.hero.steps.create.desc",
         "Diseña proyectos y prototipos reales que impacten positivamente a tu comunidad."
       ),
-      summary: "Fase 3: Construcción de prototipos y divulgación comunitaria",
       icon: (
         <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
           <circle cx="50" cy="54" r="22" fill="#334155" />
@@ -240,8 +232,8 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
       <div className="mx-auto max-w-7xl">
         {/* Badge */}
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
-          <Compass className="h-4 w-4 text-emerald-600" />
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/95 px-4 py-2 text-sm font-medium text-slate-600 shadow-sm animate-pulse-glow">
+          <Compass className="h-4 w-4 text-emerald-600 animate-spin-slow" />
           {steps.map((s) => s.label).join(" · ")}
         </div>
 
@@ -312,10 +304,8 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             transform: `scale(${scale}) translateY(${translateY}px)`,
             opacity: opacity,
           }}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Marco Exterior Oscuro Elegante (#111217 - Mismo tono de la marca) */}
+          {/* Marco Exterior Oscuro Elegante (#111217) */}
           <div className="relative rounded-[2.5rem] border border-slate-800 bg-[#111217] p-6 sm:p-10 md:p-12 shadow-2xl shadow-slate-950/20">
             
             <div className="relative z-10">
@@ -323,7 +313,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
               {/* Connecting background pathway */}
               <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 bg-slate-800 -translate-y-1/2 z-0 rounded-full" />
 
-              {/* Dynamic filled pathway (Verde bosque natural) */}
+              {/* Dynamic filled pathway (Verde bosque continuo) */}
               <div className="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 -translate-y-1/2 z-0 rounded-full overflow-hidden pointer-events-none">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 rounded-full transition-all duration-700 ease-out"
@@ -331,7 +321,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                 />
               </div>
 
-              {/* 3 Step Cards (Tarjetas Blancas Claras y Limpias con Alto Contraste) */}
+              {/* 3 Step Cards (Tarjetas Blancas Claras con Alto Contraste) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 relative z-10">
                 {steps.map((step, idx) => {
                   const isActive = activeStep === idx;
@@ -410,17 +400,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
                     </button>
                   );
                 })}
-              </div>
-            </div>
-
-            {/* Bottom summary bar dentro del marco oscuro */}
-            <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-medium text-slate-400">
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-slate-300">{steps[activeStep].summary}</span>
-              </div>
-              <div className="text-emerald-400 font-bold text-[11px] uppercase tracking-wider">
-                Ruta Continua AprendeLocal
               </div>
             </div>
 
