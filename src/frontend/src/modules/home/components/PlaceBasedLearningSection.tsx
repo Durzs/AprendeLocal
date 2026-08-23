@@ -1,4 +1,4 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
 
@@ -61,7 +61,7 @@ export default function PlaceBasedLearningSection() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-14 text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] sm:text-4xl md:text-5xl font-serif">
+          <h2 className="text-3xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] sm:text-4xl md:text-5xl">
             {t(
               "home.placeBased.title",
               "El poder del aprendizaje basado en el lugar"
@@ -90,7 +90,7 @@ export default function PlaceBasedLearningSection() {
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent p-5 flex items-end">
-                  <h3 className="font-serif text-lg font-bold text-white leading-snug">
+                  <h3 className="text-lg font-bold text-white leading-snug tracking-tight">
                     {story.title}
                   </h3>
                 </div>

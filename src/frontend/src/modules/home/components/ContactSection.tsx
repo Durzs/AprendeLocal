@@ -33,7 +33,7 @@ export default function ContactSection() {
               {t("home.contact.badge", "Contacto & Alianzas")}
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.04em] text-white leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
               {t(
                 "home.contact.title",
                 "¿Quieres llevar AprendeLocal a tu escuela o comunidad?"
