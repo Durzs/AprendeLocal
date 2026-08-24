@@ -14,19 +14,30 @@
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+/**
+ * Modelos por orden de preferencia.
+ *
+ * La lista anterior —claude-3-*, claude-2.1, claude-instant— estaba entera
+ * descatalogada, y ese fue el origen de casi todo lo demás: las llamadas
+ * fallaban, y para que algo volviera se añadieron reparador de JSON y relleno
+ * de estructura. Con un modelo vigente esas muletas dejan de hacer falta.
+ *
+ * Sonnet primero por equilibrio entre calidad y latencia; Haiku como
+ * alternativa rápida si Sonnet no estuviera disponible.
+ */
 const MODELOS_CANDIDATOS = [
   Deno.env.get("ANTHROPIC_MODEL"),
-  "claude-3-5-haiku-20241022",
-  "claude-3-haiku-20240307",
-  "claude-3-5-sonnet-latest",
-  "claude-3-7-sonnet-latest",
-  "claude-3-sonnet-20240229",
-  "claude-3-opus-20240229",
-  "claude-2.1",
-  "claude-instant-1.2",
+  "claude-sonnet-5",
+  "claude-haiku-4-5-20251001",
+  "claude-opus-5",
 ].filter(Boolean) as string[];
 
-const MAX_TOKENS = 4096;
+/**
+ * Seis etapas con el ejemplo resuelto paso a paso no caben en 4096 tokens: la
+ * respuesta se truncaba siempre. El tamaño lo controlan las cotas por lista
+ * del prompt; esto es holgura para que no se corte a mitad del JSON.
+ */
+const MAX_TOKENS = 16000;
 
 /**
  * Por debajo del límite del entorno, para poder responder con un motivo en vez
@@ -210,12 +221,24 @@ function parsear(texto: string): Record<string, unknown> {
 /**
  * Asegura que todas las etapas y campos mínimos requeridos existan en la secuencia.
  */
-function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos: any[], poi: any): void {
+/**
+ * Completa lo que el modelo no devolvió, para que la pantalla no se rompa.
+ *
+ * Lo que rellena NO es una clase: son marcadores de posición genéricos. Antes
+ * viajaban con el mismo sello de «generado» que el resto, así que el docente
+ * los habría descubierto delante del curso. Ahora se anota qué se rellenó y se
+ * devuelve al frontend, que ya sabe mostrar esa lista como algo a revisar.
+ *
+ * Devuelve las etapas sustituidas por relleno.
+ */
+function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos: any[], poi: any): string[] {
+  const rellenadas: string[] = [];
   s.titulo = s.titulo || `Secuencia de Enseñanza: ${poi?.name || "Territorio Local"}`;
   s.sesiones = s.sesiones || 2;
   s.sintesis_docente = s.sintesis_docente || "Secuencia de enseñanza territorial adaptada para el aula.";
 
   if (!s.instruccion_explicita || typeof s.instruccion_explicita !== "object") {
+    rellenadas.push("instruccion_explicita");
     s.instruccion_explicita = {
       duracion_min: 20,
       notas_para_el_docente: ["Explicar el concepto central anclado al lugar."],
@@ -230,6 +253,7 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
     !Array.isArray(s.ejemplo_resuelto.pasos) ||
     s.ejemplo_resuelto.pasos.length === 0
   ) {
+    rellenadas.push("ejemplo_resuelto");
     s.ejemplo_resuelto = {
       situacion: `Análisis de terreno en ${poi?.name || "el territorio"}.`,
       pasos: [
@@ -241,6 +265,7 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
   }
 
   if (!s.practica_guiada || typeof s.practica_guiada !== "object") {
+    rellenadas.push("practica_guiada");
     s.practica_guiada = {
       instrucciones_docente: "Guiar a los estudiantes en la resolución conjunta.",
       ejercicios: [{ enunciado: `Calcular la medición en ${poi?.name}.`, apoyo: "Revisar los pasos del ejemplo.", respuesta_esperada: "Resultado obtenido." }],
@@ -248,12 +273,14 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
   }
 
   if (!s.practica_autonoma || typeof s.practica_autonoma !== "object") {
+    rellenadas.push("practica_autonoma");
     s.practica_autonoma = {
       ejercicios: [{ enunciado: "Resolver el ejercicio individualmente en el cuaderno.", respuesta_esperada: "Respuesta correcta." }],
     };
   }
 
   if (!s.salida_terreno || typeof s.salida_terreno !== "object") {
+    rellenadas.push("salida_terreno");
     s.salida_terreno = {
       duracion_min: 90,
       preparacion: ["Revisar materiales y libreta de campo."],
@@ -263,6 +290,7 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
   }
 
   if (!Array.isArray(s.recuperacion_espaciada) || s.recuperacion_espaciada.length === 0) {
+    rellenadas.push("recuperacion_espaciada");
     s.recuperacion_espaciada = [
       { semanas_despues: 1, pregunta: "¿Qué medición realizamos en la salida?", respuesta_esperada: "La variable estudiada." },
       { semanas_despues: 3, pregunta: "¿Cómo se relaciona ese dato con el ecosistema?", respuesta_esperada: "Explica el fenómeno observado." },
@@ -274,6 +302,7 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
   }
 
   if (codigos.length > 1 && (!Array.isArray(s.por_nivel) || s.por_nivel.length === 0)) {
+    rellenadas.push("por_nivel");
     s.por_nivel = objetivos.map((o: any) => ({
       nivel: o.level || "Básico",
       objetivo_codigo: o.code,
@@ -282,6 +311,8 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
       rol_en_terreno: `Encargado de la medición específica del nivel ${o.level || o.code}`,
     }));
   }
+
+  return rellenadas;
 }
 
 function legible(campo: string): string {
@@ -533,8 +564,9 @@ Deno.serve(async (req: Request) => {
 
   let secuencia = parsear(textoGenerado);
 
-  // Garantizar que la estructura esté completa y tenga todos los campos
-  asegurarEstructura(secuencia, codigos, objetivos, poi);
+  // Completa lo que falte para que la pantalla no se rompa, y anota qué tuvo
+  // que inventar: eso no es material de clase y el docente debe saberlo.
+  const rellenadas = asegurarEstructura(secuencia, codigos, objetivos, poi);
 
   secuencia.procedencia = {
     de_datos: {
@@ -562,6 +594,14 @@ Deno.serve(async (req: Request) => {
   secuencia.__codigos_pedidos = codigos;
   const problemas = validar(secuencia);
   delete secuencia.__codigos_pedidos;
+
+  // Lo que hubo que rellenar encabeza la lista: no es material de clase, y el
+  // docente tiene que verlo antes que cualquier otra observación.
+  for (const etapa of rellenadas.reverse()) {
+    problemas.unshift(
+      `${NOMBRE_VISIBLE[etapa] ?? etapa}: el generador no lo devolvió. Lo que aparece es un texto de relleno, no una clase: escríbelo tú o vuelve a generar.`,
+    );
+  }
 
   return responder({
     secuencia,
