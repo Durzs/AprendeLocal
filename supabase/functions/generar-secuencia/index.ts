@@ -96,14 +96,23 @@ function responder(cuerpo: unknown, status = 200): Response {
   });
 }
 
-/** Tolera que el modelo envuelva el JSON en un bloque de código. */
+/** Tolera que el modelo envuelva el JSON en un bloque de código o texto adicional. */
 function parsear(texto: string): Record<string, unknown> {
   let limpio = texto.trim();
-  if (limpio.startsWith("```")) {
-    limpio = limpio.slice(limpio.indexOf("\n") + 1);
-    limpio = limpio.slice(0, limpio.lastIndexOf("```")).trim();
-    if (limpio.startsWith("json")) limpio = limpio.slice(4).trim();
+
+  // Si viene envuelto en markdown ```json ... ```
+  if (limpio.includes("```")) {
+    limpio = limpio.replace(/^```(?:json)?\s*/i, "");
+    limpio = limpio.replace(/\s*```$/i, "");
   }
+
+  // Extraer con precisión desde la primera '{' hasta la última '}'
+  const primerBrace = limpio.indexOf("{");
+  const ultimoBrace = limpio.lastIndexOf("}");
+  if (primerBrace !== -1 && ultimoBrace !== -1 && ultimoBrace > primerBrace) {
+    limpio = limpio.slice(primerBrace, ultimoBrace + 1);
+  }
+
   const datos = JSON.parse(limpio);
   if (typeof datos !== "object" || datos === null || Array.isArray(datos)) {
     throw new Error("el modelo no devolvió un objeto");
@@ -332,7 +341,8 @@ Deno.serve(async (req: Request) => {
     multigrado
       ? "Es UNA sola clase para todos los cursos juntos. Devuelve además " +
         '"por_nivel" con una entrada por cada curso listado, y reparte las ' +
-        "mediciones de la salida de modo que los cursos se necesiten entre sí."
+        "mediciones de la salida de modo que los cursos se necesiten entre sí. " +
+        "En multigrado con varios cursos, sé conciso y preciso en cada nivel (1-2 ejercicios por curso) para que la respuesta complete y cierre el JSON perfectamente."
       : "",
   ]
     .filter(Boolean)
