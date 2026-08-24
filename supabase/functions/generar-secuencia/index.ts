@@ -84,6 +84,12 @@ const CORS = {
 };
 
 function responder(cuerpo: unknown, status = 200): Response {
+  if (status === 204 || cuerpo === null) {
+    return new Response(null, {
+      status,
+      headers: CORS,
+    });
+  }
   return new Response(JSON.stringify(cuerpo), {
     status,
     headers: { ...CORS, "Content-Type": "application/json" },
@@ -336,7 +342,9 @@ function validar(s: Record<string, any>): string[] {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return responder(null, 204);
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: CORS, status: 200 });
+  }
   if (req.method !== "POST") return responder({ error: "Método no permitido" }, 405);
 
   const claveAnthropic = Deno.env.get("ANTHROPIC_API_KEY");
