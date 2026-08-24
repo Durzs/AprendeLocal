@@ -20,8 +20,13 @@ const MODELO = "claude-sonnet-5";
  * Seis etapas completas —con el ejemplo resuelto paso a paso— no caben en 4000
  * tokens: se cortaba a mitad del JSON y el fallo aparecía como «no devolvió
  * JSON válido», que no dice nada de la causa real.
+ *
+ * Con 8000 seguía cortándose, porque las listas del esquema no tenían tope y
+ * el modelo las llenaba cuanto quisiera. El límite de verdad son las cotas por
+ * lista que impone el prompt; esto es solo holgura para que una respuesta algo
+ * más larga de lo previsto no se trunque a mitad del JSON.
  */
-const MAX_TOKENS = 8000;
+const MAX_TOKENS = 16000;
 
 /**
  * Por debajo del límite del entorno, para poder responder con un motivo en vez
@@ -63,6 +68,14 @@ Reglas que no puedes romper:
 7. LA RECUPERACIÓN ESPACIADA USA LOS DATOS QUE LOS PROPIOS ESTUDIANTES TOMARON, con marcadores {dato_del_estudiante}.
 8. CULTURA MAPUCHE: solo si es pertinente, como fuente de conocimiento y nunca como adorno. Si la incluyes, márcalo en requiere_consulta.
 9. AULA MULTIGRADO: cuando recibas más de un objetivo, son cursos distintos sentados en la MISMA sala con UN solo docente. No escribas varias clases paralelas: escribe UNA. La instrucción explícita, el ejemplo resuelto y la salida a terreno son comunes a todos. Lo que cambia por curso es la práctica y qué mide cada uno en la salida, y eso va en "por_nivel". Reparte el trabajo de terreno para que los cursos dependan unos de otros: el curso mayor toma la medición que el menor necesita para su tarea.
+
+LARGO. Ajústate a estas cantidades. No son sugerencias: por encima, la respuesta se corta a mitad del JSON y el docente no recibe nada.
+- notas_para_el_docente: 3 a 5    - conceptos_clave: 3 a 5    - errores_frecuentes: 2 a 4
+- pasos del ejemplo resuelto: 4 a 6, cada uno de 2 o 3 frases
+- ejercicios de práctica guiada: 3    - de práctica autónoma: 3
+- preparacion: 3 a 5    - protocolo: 3 a 5 campos    - seguridad: 2 a 4
+- recuperacion_espaciada: 3 momentos    - materiales: 4 a 8
+- en por_nivel, por cada curso: 2 ejercicios guiados y 2 autónomos
 
 Responde SOLO con un JSON válido, sin markdown, con esta forma:
 {"titulo":"","objetivo_codigo":"","sesiones":4,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"instrucciones_docente":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
@@ -353,7 +366,7 @@ Deno.serve(async (req: Request) => {
       {
         error: porTiempo
           ? "La secuencia tardó demasiado en generarse y se cortó. " +
-            "Vuelve a intentarlo, o pide menos sesiones."
+            "Vuelve a intentarlo."
           : `No se pudo contactar al generador: ${e}`,
       },
       504,
@@ -371,11 +384,18 @@ Deno.serve(async (req: Request) => {
   // de parseo no dice por qué. Conviene distinguirlo: la salida es pedir menos
   // sesiones, no reintentar lo mismo.
   if (datos.stop_reason === "max_tokens") {
+    // El número de sesiones no cambia el tamaño del JSON —las etapas son
+    // siempre seis—, así que pedir menos sesiones no resolvía nada y mandaba
+    // al docente a repetir lo mismo. Lo que sí lo cambia es cuántos cursos
+    // atiende la secuencia.
     return responder(
       {
-        error:
-          "La secuencia salió más larga de lo que cabe en una respuesta y quedó " +
-          "incompleta. Prueba con menos sesiones.",
+        error: multigrado
+          ? "La secuencia salió demasiado larga y quedó incompleta. Con " +
+            `${objetivos.length} cursos a la vez es lo que suele pasar: prueba ` +
+            "con menos objetivos y genera el resto aparte."
+          : "La secuencia salió demasiado larga y quedó incompleta. Vuelve a " +
+            "intentarlo: no siempre ocurre.",
       },
       502,
     );
