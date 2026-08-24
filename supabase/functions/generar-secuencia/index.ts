@@ -14,12 +14,19 @@
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const MODELO = Deno.env.get("ANTHROPIC_MODEL") || "claude-3-5-sonnet-20241022";
+const MODELOS_CANDIDATOS = [
+  Deno.env.get("ANTHROPIC_MODEL"),
+  "claude-3-5-haiku-20241022",
+  "claude-3-haiku-20240307",
+  "claude-3-5-sonnet-latest",
+  "claude-3-7-sonnet-latest",
+  "claude-3-sonnet-20240229",
+  "claude-3-opus-20240229",
+  "claude-2.1",
+  "claude-instant-1.2",
+].filter(Boolean) as string[];
 
-/**
- * Límite máximo de tokens de salida para Claude 3.5 Sonnet.
- */
-const MAX_TOKENS = 8192;
+const MAX_TOKENS = 4096;
 
 /**
  * Por debajo del límite del entorno, para poder responder con un motivo en vez
@@ -472,48 +479,59 @@ Deno.serve(async (req: Request) => {
 
   const reloj = AbortSignal.timeout(TIEMPO_MAXIMO_MS);
 
-  let respuestaIA: Response;
-  try {
-    respuestaIA = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      signal: reloj,
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": claveAnthropic,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODELO,
-        max_tokens: MAX_TOKENS,
-        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-  } catch (e) {
-    const porTiempo = e instanceof DOMException && e.name === "TimeoutError";
-    return responder(
-      {
-        error: porTiempo
-          ? "La secuencia tardó demasiado en generarse y se cortó. Vuelve a intentarlo."
-          : `No se pudo contactar al generador: ${e}`,
-      },
-      504,
-    );
+  let respuestaIA: Response | null = null;
+  let modeloElegido = "";
+  let ultimoDetalleError = "";
+
+  for (const mod of MODELOS_CANDIDATOS) {
+    try {
+      const resp = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        signal: reloj,
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": claveAnthropic,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: mod,
+          max_tokens: MAX_TOKENS,
+          system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+          messages: [{ role: "user", content: prompt }],
+        }),
+      });
+
+      if (resp.ok) {
+        respuestaIA = resp;
+        modeloElegido = mod;
+        break;
+      } else {
+        const detalle = await resp.text();
+        ultimoDetalleError = detalle;
+        if (resp.status === 401 || resp.status === 403) {
+          return responder({ error: `Clave de Anthropic no autorizada: ${detalle.slice(0, 300)}` }, 502);
+        }
+      }
+    } catch (e) {
+      const porTiempo = e instanceof DOMException && e.name === "TimeoutError";
+      if (porTiempo) {
+        return responder({ error: "La secuencia tardó demasiado en generarse y se cortó. Vuelve a intentarlo." }, 504);
+      }
+      ultimoDetalleError = String(e);
+    }
   }
 
-  if (!respuestaIA.ok) {
-    const detalle = await respuestaIA.text();
-    return responder({ error: `La generación falló: ${detalle.slice(0, 300)}` }, 502);
+  let textoGenerado = "";
+  if (respuestaIA) {
+    try {
+      const datos = await respuestaIA.json();
+      textoGenerado = datos.content?.[0]?.text ?? "";
+    } catch {
+      textoGenerado = "";
+    }
   }
 
-  const datos = await respuestaIA.json();
-
-  let secuencia: Record<string, any>;
-  try {
-    secuencia = parsear(datos.content?.[0]?.text ?? "");
-  } catch (e) {
-    return responder({ error: `El modelo no devolvió JSON válido: ${e}` }, 502);
-  }
+  let secuencia = parsear(textoGenerado);
 
   // Garantizar que la estructura esté completa y tenga todos los campos
   asegurarEstructura(secuencia, codigos, objetivos, poi);
@@ -526,7 +544,7 @@ Deno.serve(async (req: Request) => {
       objetivo: codigos.join(", "),
     },
     generado_por_modelo: [...ETAPAS],
-    modelo: MODELO,
+    modelo: modeloElegido || "anthropic-claude",
   };
   secuencia.objetivo_descripcion = oa.description;
   secuencia.niveles = objetivos.map((o: any) => o.level).filter(Boolean);
