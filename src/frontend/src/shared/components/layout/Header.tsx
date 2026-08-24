@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { User, ChevronDown, LogIn, Menu, X } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -32,66 +32,70 @@ export default function Header() {
     t("header.user.myAccount");
 
   return (
-    <header className="sticky top-4 z-50 px-4">
-      <div className="mx-auto max-w-6xl rounded-full border border-slate-200 bg-white/90 shadow-sm backdrop-blur-xl">
-        <div className="flex h-14 items-center justify-between gap-2 px-3 sm:h-16 sm:px-6 lg:px-8">
+    <header className="relative z-50 w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
+          
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2" onClick={closeMobile}>
+          <Link to="/" className="flex items-center gap-2.5 group" onClick={closeMobile}>
             <img
               src={logo}
               alt="Logo AprendeLocal"
-              className="h-8 w-8 rounded-full border border-slate-200 object-cover sm:h-9 sm:w-9"
+              className="h-8 w-8 rounded-full border border-white/20 object-cover sm:h-9 sm:w-9 transition group-hover:scale-105"
             />
-            <span className="max-w-[86px] truncate text-sm font-semibold tracking-tight text-slate-950 sm:max-w-none sm:text-base">
+            <span className="text-base sm:text-lg font-bold tracking-tight text-white">
               AprendeLocal
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 md:flex">
-            {/* Entrada del docente. Va primera y con borde propio porque es una
-                puerta distinta: se empieza por el objetivo, no por explorar. */}
+          <nav className="hidden items-center gap-1.5 md:flex">
+            {/* Entrada del docente */}
             <Link
               to="/preparar"
               className={[
-                "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                "rounded-full border px-4 py-1.5 text-sm font-semibold transition",
                 location.pathname === "/preparar"
-                  ? "border-emerald-600 bg-emerald-600 text-white"
-                  : "border-emerald-600/40 text-emerald-800 hover:bg-emerald-50",
+                  ? "border-amber-400 bg-amber-400 text-slate-950 font-bold"
+                  : "border-amber-400/40 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20",
               ].join(" ")}
             >
               {t("header.nav.prepare")}
             </Link>
-            <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden="true" />
+            
+            <span className="mx-1 h-5 w-px bg-white/15" aria-hidden="true" />
+            
             <Link
               to="/plataforma?tab=courses"
               className={[
-                "rounded-full px-4 py-2 text-sm font-medium transition",
+                "rounded-full px-4 py-1.5 text-sm font-medium transition",
                 location.pathname === "/plataforma" && location.search.includes("courses")
-                  ? "bg-slate-100 text-slate-950"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                  ? "bg-white/20 text-white font-semibold"
+                  : "text-slate-200 hover:bg-white/10 hover:text-white",
               ].join(" ")}
             >
               {t("header.nav.courses")}
             </Link>
+            
             <Link
               to="/plataforma?tab=map"
               className={[
-                "rounded-full px-4 py-2 text-sm font-medium transition",
+                "rounded-full px-4 py-1.5 text-sm font-medium transition",
                 location.pathname === "/plataforma" && location.search.includes("map")
-                  ? "bg-slate-100 text-slate-950"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                  ? "bg-white/20 text-white font-semibold"
+                  : "text-slate-200 hover:bg-white/10 hover:text-white",
               ].join(" ")}
             >
               {t("header.nav.makerspaces").replace("Makerspaces", "Mapa STEM")}
             </Link>
+            
             <Link
               to="/plataforma?tab=makerspaces"
               className={[
-                "rounded-full px-4 py-2 text-sm font-medium transition",
+                "rounded-full px-4 py-1.5 text-sm font-medium transition",
                 location.pathname === "/plataforma" && location.search.includes("makerspaces")
-                  ? "bg-slate-100 text-slate-950"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                  ? "bg-white/20 text-white font-semibold"
+                  : "text-slate-200 hover:bg-white/10 hover:text-white",
               ].join(" ")}
             >
               Makerspaces
@@ -99,7 +103,7 @@ export default function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Language switcher - desktop */}
             <div className="hidden md:block">
               <LanguageSwitcher />
@@ -108,7 +112,7 @@ export default function Header() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 md:hidden"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white md:hidden"
               aria-label={mobileOpen ? t("header.mobile.closeMenu") : t("header.mobile.openMenu")}
               aria-expanded={mobileOpen}
             >
@@ -117,23 +121,23 @@ export default function Header() {
 
             {/* Auth buttons */}
             {loading ? (
-              <div className="px-3 py-2 text-sm text-slate-500">
+              <div className="px-3 py-2 text-sm text-slate-300">
                 {t("header.actions.loading")}
               </div>
             ) : user ? (
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
-                  <button className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-slate-800 transition hover:bg-slate-50">
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-slate-950 text-white">
+                  <button className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-white transition hover:bg-white/20 cursor-pointer">
+                    <span className="grid h-7 w-7 place-items-center rounded-full bg-amber-400 text-slate-950 font-bold">
                       <User className="h-4 w-4" />
                     </span>
                     <div className="hidden flex-col items-start leading-tight sm:flex">
-                      <span className="text-sm font-semibold text-slate-900">{displayName}</span>
-                      <span className="-mt-0.5 text-[11px] text-slate-500">
+                      <span className="text-sm font-semibold text-white">{displayName}</span>
+                      <span className="-mt-0.5 text-[11px] text-slate-300">
                         {user?.email?.split("@")?.[0]}
                       </span>
                     </div>
-                    <ChevronDown className="hidden h-4 w-4 text-slate-500 sm:block" />
+                    <ChevronDown className="hidden h-4 w-4 text-slate-300 sm:block" />
                   </button>
                 </DropdownMenu.Trigger>
 
@@ -141,7 +145,7 @@ export default function Header() {
                   <DropdownMenu.Content
                     align="end"
                     sideOffset={10}
-                    className="z-50 min-w-[220px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-lg"
+                    className="z-50 min-w-[220px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl"
                   >
                     <div className="px-3 py-2">
                       <p className="text-sm font-semibold text-slate-900">{displayName}</p>
@@ -178,7 +182,7 @@ export default function Header() {
             ) : (
               <button
                 onClick={() => navigate("/entrar")}
-                className="inline-flex items-center gap-2 rounded-full bg-[#111217] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-black"
+                className="inline-flex items-center gap-2 rounded-full bg-orange-500 hover:bg-orange-600 px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition hover:-translate-y-0.5 cursor-pointer"
               >
                 <LogIn className="h-4 w-4" />
                 {t("header.actions.signIn")}
@@ -190,48 +194,52 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="mt-2 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-lg backdrop-blur-xl md:hidden">
-          <nav className="flex flex-col gap-1">
-            <div className="mb-3 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-              <span className="text-sm font-medium text-slate-700">{t("header.user.language")}</span>
+        <div className="border-t border-blue-900/60 bg-[#0a0047] p-4 shadow-xl md:hidden">
+          <nav className="flex flex-col gap-2">
+            <div className="mb-2 flex items-center justify-between rounded-xl bg-white/10 px-4 py-2.5">
+              <span className="text-sm font-medium text-white">{t("header.user.language")}</span>
               <LanguageSwitcher />
             </div>
 
             <Link
               to="/preparar"
               onClick={closeMobile}
-              className="rounded-xl border border-emerald-600/40 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50"
+              className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
               {t("header.nav.prepare")}
             </Link>
+            
             <Link
               to="/plataforma?tab=courses"
               onClick={closeMobile}
-              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
               {t("header.nav.courses")}
             </Link>
+            
             <Link
               to="/plataforma?tab=map"
               onClick={closeMobile}
-              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
               Mapa STEM
             </Link>
+            
             <Link
               to="/plataforma?tab=makerspaces"
               onClick={closeMobile}
-              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
               Makerspaces
             </Link>
+
             {user && (
               <Link
                 to="/perfil"
                 onClick={closeMobile}
                 className={[
-                  "rounded-xl px-4 py-3 text-sm font-medium transition",
-                  isActive("/perfil") ? "bg-slate-100 text-slate-950" : "text-slate-700 hover:bg-slate-50",
+                  "rounded-xl px-4 py-2.5 text-sm font-medium transition",
+                  isActive("/perfil") ? "bg-white/20 text-white" : "text-slate-200 hover:bg-white/10",
                 ].join(" ")}
               >
                 {t("header.nav.profile")}
@@ -241,7 +249,7 @@ export default function Header() {
             {!user && (
               <button
                 onClick={() => { closeMobile(); navigate("/entrar"); }}
-                className="mt-2 rounded-xl bg-[#111217] px-4 py-3 text-sm font-semibold text-white shadow"
+                className="mt-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-4 py-3 text-sm font-bold text-white shadow cursor-pointer"
               >
                 {t("header.actions.signIn")}
               </button>

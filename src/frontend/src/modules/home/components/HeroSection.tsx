@@ -234,7 +234,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const opacity = 0.85 + scrollProgress * 0.15;
 
   return (
-    <section className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-20 text-center sm:pb-20 sm:pt-24 md:pb-28 md:pt-32">
+    <section className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-28 md:pt-20">
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat"
