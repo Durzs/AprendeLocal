@@ -552,14 +552,29 @@ Deno.serve(async (req: Request) => {
     }
   }
 
+  // Ningún modelo respondió. Sin esta comprobación el fallo era mudo: el bucle
+  // terminaba, el texto quedaba vacío, el relleno de estructura lo completaba
+  // entero y la función devolvía 200 con una secuencia inventada de principio a
+  // fin. El docente recibía una clase que nadie escribió, y el motivo real
+  // —`ultimoDetalleError`— se recogía sin llegar a usarse nunca.
+  if (!respuestaIA) {
+    return responder(
+      {
+        error:
+          "Ningún modelo respondió. Es lo que ocurre cuando el identificador " +
+          "de modelo ya no existe o la cuenta no tiene acceso a él. " +
+          `Detalle: ${ultimoDetalleError.slice(0, 300) || "sin detalle"}`,
+      },
+      502,
+    );
+  }
+
   let textoGenerado = "";
-  if (respuestaIA) {
-    try {
-      const datos = await respuestaIA.json();
-      textoGenerado = datos.content?.[0]?.text ?? "";
-    } catch {
-      textoGenerado = "";
-    }
+  try {
+    const datos = await respuestaIA.json();
+    textoGenerado = datos.content?.[0]?.text ?? "";
+  } catch {
+    textoGenerado = "";
   }
 
   let secuencia = parsear(textoGenerado);
