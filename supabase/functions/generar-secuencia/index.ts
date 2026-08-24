@@ -552,17 +552,74 @@ Deno.serve(async (req: Request) => {
     }
   }
 
+  // Ningún modelo respondió. Sin esta comprobación el fallo era mudo: el texto
+  // quedaba vacío, el relleno completaba la secuencia entera y la función
+  // devolvía 200 con una clase que nadie escribió.
+  if (!respuestaIA) {
+    return responder(
+      {
+        error:
+          "Ningún modelo respondió. Ocurre cuando el identificador de modelo ya " +
+          "no existe o la cuenta no tiene acceso a él. " +
+          `Detalle: ${ultimoDetalleError.slice(0, 300) || "sin detalle"}`,
+      },
+      502,
+    );
+  }
+
   let textoGenerado = "";
-  if (respuestaIA) {
-    try {
-      const datos = await respuestaIA.json();
-      textoGenerado = datos.content?.[0]?.text ?? "";
-    } catch {
-      textoGenerado = "";
-    }
+  let motivoDeCorte = "";
+  let tiposDeBloque: string[] = [];
+
+  try {
+    const datos = await respuestaIA.json();
+    motivoDeCorte = String(datos?.stop_reason ?? "");
+    const bloques = Array.isArray(datos?.content) ? datos.content : [];
+    tiposDeBloque = bloques.map((b: any) => String(b?.type ?? "?"));
+
+    // Se juntan TODOS los bloques de texto. Leer solo `content[0].text` daba
+    // cadena vacía en cuanto el primer bloque no era de texto, y esa cadena
+    // vacía viajaba sin ruido hasta convertirse en una secuencia de relleno.
+    textoGenerado = bloques
+      .filter((b: any) => b?.type === "text" && typeof b?.text === "string")
+      .map((b: any) => b.text)
+      .join("");
+  } catch (e) {
+    return responder(
+      { error: `No se pudo leer la respuesta del generador: ${String(e).slice(0, 200)}` },
+      502,
+    );
+  }
+
+  // La respuesta llegó vacía. Antes esto era indistinguible de un éxito y
+  // terminaba en una clase inventada; ahora se dice, con lo que hace falta
+  // para saber por qué.
+  if (!textoGenerado.trim()) {
+    return responder(
+      {
+        error:
+          `El generador (${modeloElegido}) respondió sin texto. ` +
+          `Motivo de corte: ${motivoDeCorte || "desconocido"}. ` +
+          `Bloques recibidos: ${tiposDeBloque.join(", ") || "ninguno"}.`,
+      },
+      502,
+    );
   }
 
   let secuencia = parsear(textoGenerado);
+
+  // Se cortó por longitud y no quedó nada aprovechable. Distinguirlo importa:
+  // la salida es acotar la secuencia, no reintentar lo mismo.
+  if (motivoDeCorte === "max_tokens" && Object.keys(secuencia).length === 0) {
+    return responder(
+      {
+        error:
+          "La secuencia salió demasiado larga y quedó incompleta. Con varios " +
+          "cursos a la vez es lo que suele pasar: prueba con menos objetivos.",
+      },
+      502,
+    );
+  }
 
   // Completa lo que falte para que la pantalla no se rompa, y anota qué tuvo
   // que inventar: eso no es material de clase y el docente debe saberlo.
