@@ -69,6 +69,13 @@ export async function generarSecuencia(params: {
   pointId: string;
   sesiones?: number;
   notasDocente?: string;
+  /**
+   * Idioma en el que se quiere la clase.
+   *
+   * Traducir el armazón de la pantalla y dejar la secuencia en español deja el
+   * trabajo a medias justo en la parte que se lee: la clase es el producto.
+   */
+  idioma?: string;
 }): Promise<RespuestaSecuencia> {
   const { data, error } = await supabase.functions.invoke("generar-secuencia", {
     body: {
@@ -79,6 +86,9 @@ export async function generarSecuencia(params: {
       point_id: params.pointId,
       sesiones: params.sesiones ?? 4,
       notas_docente: params.notasDocente ?? "",
+      // Una función aún sin desplegar ignora este campo y responde en español,
+      // que es el comportamiento de siempre: no rompe nada.
+      idioma: params.idioma ?? "es",
     },
   });
 

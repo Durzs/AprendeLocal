@@ -9,25 +9,26 @@
  */
 
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { CurriculumObjective, POIFeature } from "../../../types";
 import { ordenarPorAfinidadConVarios, type Banda } from "../lib/afinidad";
 import { enPalabras } from "../lib/etiquetas";
 
-const ESTILO: Record<Banda, { borde: string; etiqueta: string; texto: string }> = {
+const ESTILO: Record<Banda, { borde: string; etiqueta: string; clave: string }> = {
   sirve: {
     borde: "border-emerald-300 bg-emerald-50/40",
     etiqueta: "bg-emerald-600 text-white",
-    texto: "Sirve",
+    clave: "preparar.bands.serves",
   },
   quizas: {
     borde: "border-slate-200",
     etiqueta: "bg-slate-200 text-slate-700",
-    texto: "Puede servir",
+    clave: "preparar.bands.mayServe",
   },
   no_aporta: {
     borde: "border-slate-200",
     etiqueta: "bg-slate-100 text-slate-500",
-    texto: "Sin relación",
+    clave: "preparar.bands.unrelated",
   },
 };
 
@@ -40,6 +41,7 @@ type Props = {
 };
 
 export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: Props) {
+  const { t } = useTranslation();
   const [comuna, setComuna] = useState("");
   const [verTodos, setVerTodos] = useState(false);
 
@@ -86,7 +88,7 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
               : "border-slate-300 text-slate-600 hover:bg-slate-50",
           ].join(" ")}
         >
-          Todas
+          {t("preparar.place.all")}
         </button>
         {comunas.map((c) => (
           <button
@@ -107,15 +109,20 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
 
       {sinAnclaje && (
         <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3.5 text-sm text-amber-900">
-          <p className="font-semibold">Ninguno de los objetivos se ancla en un lugar</p>
+          <p className="font-semibold">{t("preparar.place.noAnchorTitle")}</p>
           <p className="mt-1.5 leading-relaxed">
-            Ninguno de los {ordenados.length} lugares
-            {comuna ? ` de ${comuna}` : ""} aporta materia a estos contenidos. Se
-            enseña mejor en el aula: llevar al curso a terreno le sumaría una
-            salida que organizar, sin sumarle nada que aprender.
+            {/* La comuna no se puede intercalar como fragmento suelto: en otros
+                idiomas no cae en el mismo sitio de la frase. Son dos frases
+                completas y se elige la que corresponde. */}
+            {comuna
+              ? t("preparar.place.noAnchorBodyCommune", {
+                  count: ordenados.length,
+                  commune: comuna,
+                })
+              : t("preparar.place.noAnchorBody", { count: ordenados.length })}
           </p>
           <p className="mt-2 text-xs opacity-80">
-            Puedes cambiar los objetivos, o mirar otra comuna.
+            {t("preparar.place.noAnchorHint")}
           </p>
         </div>
       )}
@@ -150,13 +157,15 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
                     <span
                       className={`ml-auto rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${estilo.etiqueta}`}
                     >
-                      {estilo.texto}
+                      {t(estilo.clave)}
                     </span>
                   )}
                 </div>
                 {afinidad.motivos.length > 0 && (
                   <p className="mt-1 text-xs text-slate-600">
-                    Coincide en {afinidad.motivos.slice(0, 3).join(" · ")}
+                    {t("preparar.place.matchesOn", {
+                      reasons: afinidad.motivos.slice(0, 3).join(" · "),
+                    })}
                   </p>
                 )}
                 {typeof pr.ecosystem === "string" && pr.ecosystem && (
@@ -178,10 +187,10 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
             className="text-xs font-semibold text-slate-500 underline underline-offset-2 hover:text-slate-800"
           >
             {verTodos
-              ? "Ocultar los que no se relacionan"
+              ? t("preparar.place.hideUnrelated")
               : resto.length === 1
-                ? "Ver el lugar que no se relaciona con este objetivo"
-                : `Ver los ${resto.length} lugares que no se relacionan con este objetivo`}
+                ? t("preparar.place.showUnrelatedOne")
+                : t("preparar.place.showUnrelatedMany", { count: resto.length })}
           </button>
 
           {/* Se pueden elegir igualmente: la última palabra es del docente, que
@@ -217,9 +226,7 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
           los lugares puntúan cero porque no se comparan contra nada. */}
       {!neutral && elegido && elegido.afinidad.banda === "no_aporta" && (
         <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
-          Elegiste un lugar que no se relaciona con el objetivo. La secuencia se
-          va a generar igual, pero el lugar será decorado: revísala con cuidado
-          antes de llevarla al aula.
+          {t("preparar.place.mismatchWarning")}
         </p>
       )}
     </div>

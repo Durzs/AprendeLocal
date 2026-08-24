@@ -18,6 +18,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   generarSecuencia,
   leerObjetivos,
@@ -37,13 +38,14 @@ import { enPalabras, nombreLegible } from "../lib/etiquetas";
 import {
   OBJETIVOS_DEMO,
   PUNTOS_DEMO,
-  SECUENCIA_DEMO,
+  secuenciaDemo,
   esperar,
   modoDemo,
 } from "../../../shared/lib/demo";
 
 /** Distintivo que separa el dato real del texto generado por el modelo. */
 function Procedencia({ tipo }: { tipo: "dato" | "generado" }) {
+  const { t } = useTranslation();
   const esDato = tipo === "dato";
   return (
     <span
@@ -55,11 +57,11 @@ function Procedencia({ tipo }: { tipo: "dato" | "generado" }) {
       ].join(" ")}
       title={
         esDato
-          ? "Proviene de los datos territoriales y del currículo"
-          : "Lo redactó el modelo. Revísalo antes de llevarlo al aula"
+          ? t("preparar.provenanceDataTitle")
+          : t("preparar.provenanceGeneratedTitle")
       }
     >
-      {esDato ? "dato" : "generado"}
+      {esDato ? t("preparar.provenanceData") : t("preparar.provenanceGenerated")}
     </span>
   );
 }
@@ -78,6 +80,7 @@ function PorNivel({
   bloques: NonNullable<Secuencia["por_nivel"]>;
   campo: "practica_guiada" | "practica_autonoma";
 }) {
+  const { t } = useTranslation();
   const conTrabajo = bloques.filter((b) => (b[campo]?.ejercicios?.length ?? 0) > 0);
   if (conTrabajo.length === 0) return null;
 
@@ -87,7 +90,7 @@ function PorNivel({
         <div key={`${b.nivel}-${b.objetivo_codigo}`}>
           <p className="flex items-baseline gap-2 text-sm font-semibold text-slate-800">
             <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
-              {nivelCorto(b.nivel)}
+              {nivelCorto(b.nivel, t("preparar.gradeBadge"))}
             </span>
             {b.objetivo_descripcion ? (
               <span className="font-normal text-slate-500">{b.objetivo_descripcion}</span>
@@ -101,7 +104,9 @@ function PorNivel({
                 <li key={i}>
                   {e.enunciado}
                   {e.apoyo ? (
-                    <span className="block text-slate-500">Apoyo: {e.apoyo}</span>
+                    <span className="block text-slate-500">
+                      {t("preparar.support")} {e.apoyo}
+                    </span>
                   ) : null}
                 </li>
               )
@@ -114,6 +119,7 @@ function PorNivel({
 }
 
 export default function PrepararPage() {
+  const { t, i18n } = useTranslation();
   const [objetivos, setObjetivos] = useState<CurriculumObjective[]>([]);
   const [puntos, setPuntos] = useState<POIFeature[]>([]);
   const [cargandoCatalogos, setCargandoCatalogos] = useState(true);
@@ -153,7 +159,7 @@ export default function PrepararPage() {
         // en producción. Se nombra el motivo probable en vez de dejar la
         // pantalla vacía.
         setErrorCatalogos(
-          err instanceof Error ? err.message : "No se pudo cargar el catálogo"
+          err instanceof Error ? err.message : t("preparar.catalogErrorTitle")
         );
       } finally {
         if (vigente) setCargandoCatalogos(false);
@@ -187,7 +193,7 @@ export default function PrepararPage() {
     try {
       if (modoDemo()) {
         await esperar(900); // la generación real tampoco es instantánea
-        setResultado(SECUENCIA_DEMO);
+        setResultado(secuenciaDemo(i18n.resolvedLanguage ?? i18n.language));
         setFormAbierto(false);
         setEtapaActiva(1);
         return;
@@ -197,13 +203,15 @@ export default function PrepararPage() {
         pointId,
         sesiones,
         notasDocente: notas,
+        // La clase se escribe en el idioma en el que se está mirando.
+        idioma: i18n.resolvedLanguage ?? i18n.language,
       });
       setResultado(r);
       setFormAbierto(false);
       setEtapaActiva(1);
     } catch (err: unknown) {
       setErrorGeneracion(
-        err instanceof Error ? err.message : "No se pudo generar la secuencia"
+        err instanceof Error ? err.message : t("preparar.generateError")
       );
     } finally {
       setGenerando(false);
@@ -215,45 +223,42 @@ export default function PrepararPage() {
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
   const etapas: ResumenEtapa[] = [
-    { numero: 1, momento: "Clase 1", titulo: "Explicas tú", unidad: "puntos",
-      piezas: s?.instruccion_explicita?.notas_para_el_docente?.length },
-    { numero: 2, momento: "Clase 1", titulo: "Muestras este ejemplo", unidad: "pasos",
-      piezas: s?.ejemplo_resuelto?.pasos?.length },
-    { numero: 3, momento: "Clase 2", titulo: "Resuelven contigo", unidad: "ejercicios",
-      piezas: s?.practica_guiada?.ejercicios?.length },
-    { numero: 4, momento: "Clase 2", titulo: "Resuelven solos", unidad: "ejercicios",
-      piezas: s?.practica_autonoma?.ejercicios?.length },
-    { numero: 5, momento: "Clase 3", titulo: "Salen a medir", unidad: "mediciones",
-      piezas: s?.salida_terreno?.protocolo?.length },
-    { numero: 6, momento: "Semanas 1, 3 y 6", titulo: "Vuelves a preguntar", unidad: "preguntas",
-      piezas: s?.recuperacion_espaciada?.length },
+    { numero: 1, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.explain"),
+      unidad: "points", piezas: s?.instruccion_explicita?.notas_para_el_docente?.length },
+    { numero: 2, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.example"),
+      unidad: "steps", piezas: s?.ejemplo_resuelto?.pasos?.length },
+    { numero: 3, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.guided"),
+      unidad: "exercises", piezas: s?.practica_guiada?.ejercicios?.length },
+    { numero: 4, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
+      unidad: "exercises", piezas: s?.practica_autonoma?.ejercicios?.length },
+    { numero: 5, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
+      unidad: "measurements", piezas: s?.salida_terreno?.protocolo?.length },
+    { numero: 6, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
+      unidad: "questions", piezas: s?.recuperacion_espaciada?.length },
   ];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <header className="print:hidden">
         <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
-          Preparar una unidad
+          {t("preparar.eyebrow")}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
           {entrada === "objetivo"
-            ? "Empieza por lo que tienes que enseñar"
-            : "Empieza por el lugar al que puedes ir"}
+            ? t("preparar.titleByObjective")
+            : t("preparar.titleByPlace")}
         </h1>
         <p className="mt-3 max-w-2xl text-slate-600">
           {entrada === "objetivo"
-            ? "Elige el objetivo de aprendizaje y un lugar cercano a tu escuela."
-            : "Elige un lugar cercano a tu escuela y mira qué objetivos sostiene de verdad."}{" "}
-          La secuencia llega con instrucción explícita, un ejemplo resuelto de ese
-          lugar, práctica y salida a terreno — en ese orden.
+            ? t("preparar.leadByObjective")
+            : t("preparar.leadByPlace")}{" "}
+          {t("preparar.leadCommon")}
         </p>
       </header>
 
       {modoDemo() && (
         <p className="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          <strong>Datos de demostración.</strong> No hay API detrás: los objetivos, los
-          lugares y la secuencia son de ejemplo, para poder revisar la interfaz sin
-          levantar el backend.
+          <strong>{t("preparar.demoTitle")}</strong> {t("preparar.demoBody")}
         </p>
       )}
 
@@ -266,13 +271,15 @@ export default function PrepararPage() {
             {puntos.find((p) => String(p.properties.id) === pointId)?.properties.name}
           </span>
           <span className="text-slate-300">·</span>
-          <span className="text-slate-600">{sesiones} sesiones</span>
+          <span className="text-slate-600">
+            {t("preparar.sessionsCount", { count: sesiones })}
+          </span>
           <button
             type="button"
             onClick={() => setFormAbierto(true)}
             className="ml-auto rounded-full border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
           >
-            Cambiar
+            {t("preparar.change")}
           </button>
         </div>
       )}
@@ -289,22 +296,19 @@ export default function PrepararPage() {
             role="alert"
             className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
           >
-            <p className="font-semibold">No se pudo cargar el catálogo</p>
-            <p className="mt-1">
-              No se pudieron leer los objetivos de aprendizaje ni los lugares desde la
-              base de datos.
-            </p>
+            <p className="font-semibold">{t("preparar.catalogErrorTitle")}</p>
+            <p className="mt-1">{t("preparar.catalogErrorBody")}</p>
             {/* Salida inmediata: quien solo quiere ver la pantalla no debería
                 quedarse ante un muro sin siguiente paso. */}
             <p className="mt-2.5">
               <a href="?demo=1" className="font-semibold underline underline-offset-2">
-                Ver la pantalla con datos de ejemplo
+                {t("preparar.catalogErrorDemoLink")}
               </a>
             </p>
             {/* El detalle técnico queda, pero en segundo plano: lo necesita quien
                 mantiene el sitio, no quien va a dar la clase. */}
             <p className="mt-2.5 text-xs opacity-70">
-              Detalle: {errorCatalogos}
+              {t("preparar.detail", { detail: errorCatalogos })}
             </p>
           </div>
         )}
@@ -313,13 +317,13 @@ export default function PrepararPage() {
             arrastrarlo dejaría en pantalla una elección hecha bajo otra
             pregunta. */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-slate-500">Empezar por</span>
+          <span className="text-sm text-slate-500">{t("preparar.startFrom")}</span>
           {(
             [
-              ["objetivo", "Lo que tengo que enseñar"],
-              ["lugar", "Un lugar al que puedo ir"],
+              ["objetivo", "preparar.startFromObjective"],
+              ["lugar", "preparar.startFromPlace"],
             ] as const
-          ).map(([clave, texto]) => (
+          ).map(([clave, etiqueta]) => (
             <button
               key={clave}
               type="button"
@@ -337,7 +341,7 @@ export default function PrepararPage() {
                   : "border-slate-300 text-slate-600 hover:bg-slate-50",
               ].join(" ")}
             >
-              {texto}
+              {t(etiqueta)}
             </button>
           ))}
         </div>
@@ -347,7 +351,9 @@ export default function PrepararPage() {
             <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
               1
             </span>
-            {entrada === "objetivo" ? "Qué tienes que enseñar" : "Dónde puedes ir"}
+            {entrada === "objetivo"
+              ? t("preparar.step1ByObjective")
+              : t("preparar.step1ByPlace")}
           </p>
           {entrada === "objetivo" ? (
             <SelectorObjetivo
@@ -384,7 +390,7 @@ export default function PrepararPage() {
               <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
                 2
               </span>
-              Dónde anclarla
+              {t("preparar.step2Place")}
             </p>
             <SelectorLugar
               objetivos={objetivosElegidos}
@@ -401,7 +407,7 @@ export default function PrepararPage() {
               <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
                 2
               </span>
-              Qué puedes enseñar ahí
+              {t("preparar.step2Objective")}
             </p>
             <SelectorObjetivo
               objetivos={objetivos}
@@ -419,7 +425,7 @@ export default function PrepararPage() {
               htmlFor="sesiones"
               className="mb-1.5 block text-sm font-medium text-slate-700"
             >
-              Sesiones disponibles
+              {t("preparar.sessionsLabel")}
             </label>
             <input
               id="sesiones"
@@ -436,14 +442,14 @@ export default function PrepararPage() {
               htmlFor="notas"
               className="mb-1.5 block text-sm font-medium text-slate-700"
             >
-              Notas (opcional)
+              {t("preparar.notesLabel")}
             </label>
             <input
               id="notas"
               type="text"
               value={notas}
               onChange={(e) => setNotas(e.target.value)}
-              placeholder="Aula multigrado 5º a 8º"
+              placeholder={t("preparar.notesPlaceholder")}
               className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
             />
           </div>
@@ -455,7 +461,7 @@ export default function PrepararPage() {
           disabled={!listo}
           className="w-full rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:shadow-none"
         >
-          {generando ? "Preparando la secuencia…" : "Preparar secuencia"}
+          {generando ? t("preparar.generating") : t("preparar.generate")}
         </button>
 
         {errorGeneracion && (
@@ -488,9 +494,12 @@ export default function PrepararPage() {
 
             {s.procedencia && (
               <p className="mt-4 font-mono text-[11px] text-slate-500">
-                lugar: {s.procedencia.de_datos.punto} · {s.procedencia.de_datos.comuna} ·
-                ecosistema: {enPalabras(s.procedencia.de_datos.ecosistema ?? "")} · modelo:{" "}
-                {s.procedencia.modelo}
+                {t("preparar.provenanceLine", {
+                  place: s.procedencia.de_datos.punto,
+                  commune: s.procedencia.de_datos.comuna,
+                  ecosystem: enPalabras(s.procedencia.de_datos.ecosistema ?? ""),
+                  model: s.procedencia.modelo,
+                })}
               </p>
             )}
 
@@ -500,7 +509,7 @@ export default function PrepararPage() {
                 onClick={() => window.print()}
                 className="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
               >
-                Imprimir
+                {t("preparar.print")}
               </button>
             </div>
           </header>
@@ -511,9 +520,7 @@ export default function PrepararPage() {
               role="alert"
               className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-900"
             >
-              <p className="font-semibold">
-                Revisa esto antes de llevarla al aula
-              </p>
+              <p className="font-semibold">{t("preparar.issuesTitle")}</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 {resultado.problemas.map((p) => (
                   <li key={p}>{p}</li>
@@ -524,8 +531,9 @@ export default function PrepararPage() {
 
           {s.requiere_consulta && (
             <div className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-900">
-              Esta secuencia incorpora elementos culturales mapuche.{" "}
-              <strong>Requiere consulta previa a la comunidad</strong> antes de usarse.
+              {t("preparar.consultationBody")}{" "}
+              <strong>{t("preparar.consultationStrong")}</strong>{" "}
+              {t("preparar.consultationTail")}
             </div>
           )}
 
@@ -535,10 +543,12 @@ export default function PrepararPage() {
             <div className="min-w-0 space-y-4 print:space-y-0">
           <EtapaSecuencia
             activa={etapaActiva === 1}
-            titulo="Explicas tú"
+            titulo={t("preparar.stages.explain")}
             subtitulo={
               s.instruccion_explicita?.duracion_min
-                ? `${s.instruccion_explicita.duracion_min} minutos`
+                ? t("preparar.minutes", {
+                    count: s.instruccion_explicita.duracion_min,
+                  })
                 : undefined
             }
             actor="docente"
@@ -550,7 +560,7 @@ export default function PrepararPage() {
             </ul>
             {(s.instruccion_explicita?.errores_frecuentes ?? []).length > 0 && (
               <p className="text-slate-600">
-                <strong>Errores que conviene anticipar:</strong>{" "}
+                <strong>{t("preparar.commonMistakes")}</strong>{" "}
                 {s.instruccion_explicita?.errores_frecuentes?.join("; ")}
               </p>
             )}
@@ -558,7 +568,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             activa={etapaActiva === 2}
-            titulo="Muestras este ejemplo"
+            titulo={t("preparar.stages.example")}
             subtitulo={s.ejemplo_resuelto?.situacion}
             actor="plataforma"
             destacada
@@ -570,10 +580,10 @@ export default function PrepararPage() {
                     {p.paso}. {p.accion}
                   </p>
                   <p className="mt-1 text-slate-600">
-                    <em>Por qué:</em> {p.razonamiento}
+                    <em>{t("preparar.why")}</em> {p.razonamiento}
                   </p>
                   <p className="mt-1 text-slate-800">
-                    <em>Resultado:</em> {p.resultado}
+                    <em>{t("preparar.result")}</em> {p.resultado}
                   </p>
                 </li>
               ))}
@@ -587,7 +597,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             activa={etapaActiva === 3}
-            titulo="Resuelven contigo"
+            titulo={t("preparar.stages.guided")}
             subtitulo={s.practica_guiada?.instrucciones_docente}
             actor="docente"
           >
@@ -596,7 +606,9 @@ export default function PrepararPage() {
                 <li key={i}>
                   {e.enunciado}
                   {e.apoyo && (
-                    <span className="block text-slate-500">Apoyo: {e.apoyo}</span>
+                    <span className="block text-slate-500">
+                      {t("preparar.support")} {e.apoyo}
+                    </span>
                   )}
                 </li>
               ))}
@@ -606,7 +618,7 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             activa={etapaActiva === 4}
-            titulo="Resuelven solos"
+            titulo={t("preparar.stages.independent")}
             actor="estudiantes"
           >
             <ol className="list-decimal space-y-2 pl-5">
@@ -619,14 +631,15 @@ export default function PrepararPage() {
 
           <EtapaSecuencia
             activa={etapaActiva === 5}
-            titulo="Salen a medir"
-            subtitulo="Ya practicaron: llegan sabiendo qué mirar"
+            titulo={t("preparar.stages.field")}
+            subtitulo={t("preparar.stages.fieldSubtitle")}
             actor="estudiantes"
             destacada
           >
             {(s.salida_terreno?.preparacion ?? []).length > 0 && (
               <p>
-                <strong>Llevar:</strong> {s.salida_terreno?.preparacion?.join(", ")}
+                <strong>{t("preparar.bring")}</strong>{" "}
+                {s.salida_terreno?.preparacion?.join(", ")}
               </p>
             )}
 
@@ -636,7 +649,7 @@ export default function PrepararPage() {
             {(s.por_nivel ?? []).some((b) => b.rol_en_terreno) && (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Quién hace qué
+                  {t("preparar.whoDoesWhat")}
                 </p>
                 <ul className="mt-2 space-y-1.5 text-sm">
                   {(s.por_nivel ?? [])
@@ -644,7 +657,7 @@ export default function PrepararPage() {
                     .map((b) => (
                       <li key={`rol-${b.nivel}-${b.objetivo_codigo}`} className="flex gap-2">
                         <span className="mt-0.5 h-fit shrink-0 rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
-                          {nivelCorto(b.nivel)}
+                          {nivelCorto(b.nivel, t("preparar.gradeBadge"))}
                         </span>
                         <span className="text-slate-800">{b.rol_en_terreno}</span>
                       </li>
@@ -656,9 +669,9 @@ export default function PrepararPage() {
               <table className="w-full min-w-[420px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 font-mono text-[11px] uppercase tracking-wider text-slate-500">
-                    <th className="py-2 pr-3">Qué anotan</th>
-                    <th className="py-2 pr-3">Cómo se mide</th>
-                    <th className="py-2">Unidad</th>
+                    <th className="py-2 pr-3">{t("preparar.colWhat")}</th>
+                    <th className="py-2 pr-3">{t("preparar.colHow")}</th>
+                    <th className="py-2">{t("preparar.colUnit")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -667,7 +680,10 @@ export default function PrepararPage() {
                       {/* El nombre técnico queda en el title por si hay que
                           cruzar estos datos con los que quedan guardados. */}
                       <td className="py-2 pr-3 font-medium text-slate-900" title={c.campo}>
-                        {nombreLegible(c.campo, c.unidad)}
+                        {/* El nombre derivado sale del identificador, que es
+                            español siempre. Si el generador mandó etiqueta, se
+                            prefiere: es la que está en el idioma del docente. */}
+                        {c.etiqueta?.trim() || nombreLegible(c.campo, c.unidad)}
                       </td>
                       <td className="py-2 pr-3">{c.instruccion}</td>
                       <td className="py-2 font-mono text-xs">{c.unidad ?? "—"}</td>
@@ -678,23 +694,23 @@ export default function PrepararPage() {
             </div>
             {(s.salida_terreno?.seguridad ?? []).length > 0 && (
               <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
-                <strong>Seguridad:</strong> {s.salida_terreno?.seguridad?.join(" · ")}
+                <strong>{t("preparar.safety")}</strong>{" "}
+                {s.salida_terreno?.seguridad?.join(" · ")}
               </p>
             )}
           </EtapaSecuencia>
 
           <EtapaSecuencia
             activa={etapaActiva === 6}
-            titulo="Vuelves a preguntar"
-            subtitulo="Con lo que ellos mismos midieron en el estero"
+            titulo={t("preparar.stages.review")}
+            subtitulo={t("preparar.stages.reviewSubtitle")}
             actor="estudiantes"
           >
             <ul className="space-y-2">
               {(s.recuperacion_espaciada ?? []).map((m) => (
                 <li key={m.semanas_despues} className="rounded-xl bg-slate-50 p-3">
                   <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
-                    {m.semanas_despues}{" "}
-                    {m.semanas_despues === 1 ? "semana después" : "semanas después"}
+                    {t("preparar.weeksLater", { count: m.semanas_despues })}
                   </span>
                   <p className="mt-1 text-slate-800">{m.pregunta}</p>
                 </li>
@@ -710,10 +726,13 @@ export default function PrepararPage() {
                   disabled={etapaActiva === 1}
                   className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
                 >
-                  Anterior
+                  {t("preparar.prev")}
                 </button>
                 <span className="font-mono text-xs text-slate-400">
-                  {etapaActiva} de {etapas.length}
+                  {t("preparar.stepOf", {
+                    current: etapaActiva,
+                    total: etapas.length,
+                  })}
                 </span>
                 <button
                   type="button"
@@ -721,15 +740,15 @@ export default function PrepararPage() {
                   disabled={etapaActiva === etapas.length}
                   className="rounded-full bg-[#111217] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
                 >
-                  Siguiente
+                  {t("preparar.next")}
                 </button>
               </div>
             </div>
           </div>
 
           <p className="pt-6 text-sm text-slate-500">
-            Todo lo marcado como <Procedencia tipo="generado" /> lo redactó un modelo.
-            Revísalo y edítalo: quien enseña eres tú.
+            {t("preparar.footerBefore")} <Procedencia tipo="generado" />{" "}
+            {t("preparar.footerAfter")}
           </p>
         </article>
       )}

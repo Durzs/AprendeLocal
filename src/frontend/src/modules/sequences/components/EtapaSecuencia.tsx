@@ -8,6 +8,7 @@
  */
 
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   titulo: string;
@@ -24,10 +25,10 @@ type Props = {
 // En voz de docente, no en jerga de diseño instruccional. Sigue marcando la
 // frontera del acompañante —la plataforma no enseña— sin decirlo con esas
 // palabras.
-const ETIQUETA_ACTOR: Record<Props["actor"], string> = {
-  docente: "Lo haces tú",
-  plataforma: "Te lo dejamos preparado",
-  estudiantes: "Lo hacen ellos",
+const CLAVE_ACTOR: Record<Props["actor"], string> = {
+  docente: "preparar.actorTeacher",
+  plataforma: "preparar.actorPlatform",
+  estudiantes: "preparar.actorStudents",
 };
 
 export default function EtapaSecuencia({
@@ -38,6 +39,8 @@ export default function EtapaSecuencia({
   activa = true,
   children,
 }: Props) {
+  const { t } = useTranslation();
+
   return (
     <section
       className={[
@@ -49,7 +52,7 @@ export default function EtapaSecuencia({
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className="text-lg font-semibold tracking-tight text-slate-950">{titulo}</h3>
         <span className="ml-auto font-mono text-[11px] uppercase tracking-wider text-slate-500">
-          {ETIQUETA_ACTOR[actor]}
+          {t(CLAVE_ACTOR[actor])}
         </span>
       </header>
 

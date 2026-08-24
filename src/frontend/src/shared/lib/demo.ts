@@ -142,7 +142,7 @@ export const PUNTOS_DEMO: POIFeature[] = [
  * numérico sin unidad— para que se vea cómo la pantalla avisa en lugar de
  * ocultarlo.
  */
-export const SECUENCIA_DEMO: RespuestaSecuencia = {
+const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
   secuencia: {
     titulo: "El caudal del estero Trancura y el consumo de la escuela",
     objetivo_codigo: "OA12_CN_5",
@@ -371,7 +371,7 @@ export const SECUENCIA_DEMO: RespuestaSecuencia = {
         "salida_terreno",
         "recuperacion_espaciada",
       ],
-      modelo: "claude-sonnet-5 (demostración)",
+      modelo: "claude-sonnet-5 (demo)",
     },
   },
   resumen: {},
@@ -448,3 +448,450 @@ export const CURSOS_DEMO: Course[] = [
     url_img: "",
   },
 ];
+
+/**
+ * La misma clase, escrita en inglés y en portugués.
+ *
+ * No es un capricho de escaparate: en producción la Edge Function ya redacta
+ * la secuencia en el idioma de la interfaz, así que si la demostración fuera
+ * la única que sale siempre en español enseñaría algo que el producto no hace.
+ *
+ * Lo que NO se traduce, y es deliberado:
+ *
+ * - Los objetivos de aprendizaje. Son el texto oficial del currículum chileno
+ *   y en producción llegan de la base tal cual. Traducirlos aquí enseñaría una
+ *   pantalla que no existe.
+ * - Los nombres del territorio (Estero Trancura, Curarrehue). Son topónimos.
+ * - Las claves del JSON y los nombres de campo del protocolo, que son el
+ *   contrato con el resto de la aplicación.
+ */
+const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
+  secuencia: {
+    ...SECUENCIA_DEMO_ES.secuencia,
+    titulo: "The flow of the Trancura stream and the school's water use",
+    sintesis_docente:
+      "Students work out the flow of the stream they cross every day and compare it with what the school uses in a week.",
+    instruccion_explicita: {
+      duracion_min: 20,
+      notas_para_el_docente: [
+        "Define flow as the volume of water passing a point in a given time",
+        "Show on the board how the cross section of the channel relates to the speed of the water",
+        "Explain why several measurements are averaged instead of trusting a single one",
+      ],
+      conceptos_clave: ["flow", "cross section", "speed", "average"],
+      errores_frecuentes: [
+        "confusing flow with depth",
+        "believing a wider river always carries more water",
+      ],
+    },
+    ejemplo_resuelto: {
+      situacion: "The Trancura stream at the Curarrehue bridge",
+      pasos: [
+        {
+          paso: 1,
+          accion: "Measure the width of the channel at three points 10 m apart",
+          razonamiento:
+            "The channel is not even; averaging keeps one odd measurement from skewing the result",
+          resultado: "2.1 m · 2.6 m · 2.5 m → 2.4 m average width",
+        },
+        {
+          paso: 2,
+          accion: "Measure the average depth and work out the cross section",
+          razonamiento:
+            "The cross section is the area the water passes through: width times depth",
+          resultado: "2.4 m × 0.35 m = 0.84 m²",
+        },
+        {
+          paso: 3,
+          accion: "Time a float over 5 m and multiply",
+          razonamiento:
+            "Flow is volume per unit of time, and it comes from multiplying the cross section by the speed",
+          resultado: "0.84 m² × 0.35 m/s = 0.29 m³/s",
+        },
+      ],
+      respuesta:
+        "The approximate flow of the stream is 0.29 m³/s, that is around 290 litres per second",
+    },
+    practica_guiada: {
+      instrucciones_docente:
+        "Solve the first one on the board with the class, and leave the second for pairs",
+      ejercicios: [
+        {
+          enunciado:
+            "A channel is 3 m wide and 0.4 m deep, and the water moves at 0.15 m/s. What is its flow?",
+          apoyo: "The formula is written on the board",
+          respuesta_esperada: "0.18 m³/s",
+        },
+        {
+          enunciado:
+            "If the width doubles but the speed halves, does the flow change?",
+          apoyo: "Remember that the two factors multiply",
+          respuesta_esperada: "It does not change: the factors cancel out",
+        },
+      ],
+    },
+    practica_autonoma: {
+      ejercicios: [
+        {
+          enunciado:
+            "Work out the flow of the northern arm of the stream using the data in the table",
+          respuesta_esperada: "0.11 m³/s",
+        },
+      ],
+    },
+    salida_terreno: {
+      duracion_min: 90,
+      preparacion: ["5 m tape measure", "stopwatch", "notebook", "boots"],
+      protocolo: [
+        {
+          campo: "ancho_cauce_m",
+          etiqueta: "Channel width",
+          instruccion: "Measure the width at 3 points 10 m apart and write down all three",
+          unidad: "m",
+          tipo: "numero",
+        },
+        {
+          campo: "profundidad_media_m",
+          etiqueta: "Average depth",
+          instruccion: "Measure the depth at 5 points across the channel and average them",
+          unidad: "m",
+          tipo: "numero",
+        },
+        {
+          campo: "tiempo_flotador_s",
+          etiqueta: "Float time",
+          instruccion: "Time a float travelling 5 m, three times",
+          tipo: "numero",
+        },
+        {
+          campo: "observaciones",
+          etiqueta: "Observations",
+          instruccion: "Note any litter, bank erosion or changes in colour",
+          tipo: "texto",
+        },
+      ],
+      seguridad: [
+        "Do not go into water above the knee",
+        "Nobody approaches the bank alone",
+      ],
+    },
+    recuperacion_espaciada: [
+      {
+        semanas_despues: 1,
+        pregunta:
+          "Your group measured {dato_del_estudiante} m of average width. With a depth of 0.3 m and a speed of 0.3 m/s, what flow do you get?",
+        respuesta_esperada: "Depends on their measurement; review the procedure",
+      },
+      {
+        semanas_despues: 3,
+        pregunta:
+          "Why did we measure the width at three points and not just one? Explain using what you saw at the stream.",
+        respuesta_esperada: "Because the channel is irregular and a single measurement skews it",
+      },
+      {
+        semanas_despues: 6,
+        pregunta:
+          "With the flow you measured, would the stream be enough to supply the school for a week?",
+        respuesta_esperada: "Compare the flow with the school's estimated use",
+      },
+    ],
+    materiales: ["tape measure", "stopwatch", "notebook"],
+    por_nivel: [
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![0],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Using the width and depth grade 7 measured, work out how much water passes through the stream in one minute.",
+              apoyo: "Use the table on the board: width × depth × speed.",
+              respuesta_esperada: "Around 300 litres per minute.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Draw where the water of the Mahuidanche stream comes from and where it goes.",
+            },
+          ],
+        },
+        rol_en_terreno: "Stake out the 10 metre stretch and time the float.",
+      },
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![1],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Using the organisms the class recorded, build the food web of the stream.",
+              apoyo: "Start with the algae and work upwards.",
+              respuesta_esperada: "A web with at least three levels.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "What would happen to that web if the water dropped to half the flow you measured?",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Record the living things under three stones of the stretch, without taking them out of the water.",
+      },
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![2],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Classify the sediments of the streambed and explain which eruption they come from.",
+              apoyo: "Compare with the ash and scoria photographs in the guide.",
+              respuesta_esperada: "Mostly recent volcanic material.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Explain why the soil in this area holds little water, using what you observed.",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Measure the width and depth of the stream at three points and hand the data to grade 5.",
+      },
+    ],
+  },
+  resumen: {},
+  problemas: [
+    "The measurement “Float time” does not say which unit to record it in",
+  ],
+  utilizable: false,
+};
+
+const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
+  secuencia: {
+    ...SECUENCIA_DEMO_ES.secuencia,
+    titulo: "A vazão do córrego Trancura e o consumo da escola",
+    sintesis_docente:
+      "Os estudantes calculam a vazão do córrego que atravessam todo dia e comparam com o que a escola consome em uma semana.",
+    instruccion_explicita: {
+      duracion_min: 20,
+      notas_para_el_docente: [
+        "Definir vazão como o volume de água que passa por um ponto em um tempo dado",
+        "Mostrar no quadro a relação entre a seção do leito e a velocidade da água",
+        "Esclarecer por que se faz a média de várias medições em vez de confiar em uma só",
+      ],
+      conceptos_clave: ["vazão", "seção", "velocidade", "média"],
+      errores_frecuentes: [
+        "confundir vazão com profundidade",
+        "achar que um rio mais largo sempre leva mais água",
+      ],
+    },
+    ejemplo_resuelto: {
+      situacion: "O córrego Trancura na altura da ponte de Curarrehue",
+      pasos: [
+        {
+          paso: 1,
+          accion: "Medir a largura do leito em três pontos separados por 10 m",
+          razonamiento:
+            "O leito não é uniforme; a média evita que uma medição atípica distorça o resultado",
+          resultado: "2,1 m · 2,6 m · 2,5 m → 2,4 m de largura média",
+        },
+        {
+          paso: 2,
+          accion: "Medir a profundidade média e calcular a seção",
+          razonamiento:
+            "A seção é a área pela qual a água passa: largura vezes profundidade",
+          resultado: "2,4 m × 0,35 m = 0,84 m²",
+        },
+        {
+          paso: 3,
+          accion: "Cronometrar um flutuador ao longo de 5 m e multiplicar",
+          razonamiento:
+            "A vazão é o volume por unidade de tempo, e sai de multiplicar a seção pela velocidade",
+          resultado: "0,84 m² × 0,35 m/s = 0,29 m³/s",
+        },
+      ],
+      respuesta:
+        "A vazão aproximada do córrego é de 0,29 m³/s, ou seja, uns 290 litros por segundo",
+    },
+    practica_guiada: {
+      instrucciones_docente:
+        "Resolver o primeiro no quadro junto com a turma, e deixar o segundo para duplas",
+      ejercicios: [
+        {
+          enunciado:
+            "Um leito mede 3 m de largura, 0,4 m de profundidade e a água avança a 0,15 m/s. Qual é a sua vazão?",
+          apoyo: "A fórmula fica escrita no quadro",
+          respuesta_esperada: "0,18 m³/s",
+        },
+        {
+          enunciado:
+            "Se a largura dobra mas a velocidade cai pela metade, a vazão muda?",
+          apoyo: "Lembre que os dois fatores se multiplicam",
+          respuesta_esperada: "Não muda: os fatores se compensam",
+        },
+      ],
+    },
+    practica_autonoma: {
+      ejercicios: [
+        {
+          enunciado:
+            "Calcule a vazão do braço norte do córrego com os dados da tabela",
+          respuesta_esperada: "0,11 m³/s",
+        },
+      ],
+    },
+    salida_terreno: {
+      duracion_min: 90,
+      preparacion: ["trena de 5 m", "cronômetro", "caderno", "botas"],
+      protocolo: [
+        {
+          campo: "ancho_cauce_m",
+          etiqueta: "Largura do leito",
+          instruccion: "Meça a largura em 3 pontos separados por 10 m e anote os três",
+          unidad: "m",
+          tipo: "numero",
+        },
+        {
+          campo: "profundidad_media_m",
+          etiqueta: "Profundidade média",
+          instruccion: "Meça a profundidade em 5 pontos ao longo da largura e faça a média",
+          unidad: "m",
+          tipo: "numero",
+        },
+        {
+          campo: "tiempo_flotador_s",
+          etiqueta: "Tempo do flutuador",
+          instruccion: "Cronometre um flutuador percorrendo 5 m, três vezes",
+          tipo: "numero",
+        },
+        {
+          campo: "observaciones",
+          etiqueta: "Observações",
+          instruccion: "Anote se há lixo, erosão das margens ou mudanças de cor",
+          tipo: "texto",
+        },
+      ],
+      seguridad: [
+        "Não entrar na água acima do joelho",
+        "Ninguém se aproxima sozinho da margem",
+      ],
+    },
+    recuperacion_espaciada: [
+      {
+        semanas_despues: 1,
+        pregunta:
+          "Seu grupo mediu {dato_del_estudiante} m de largura média. Com uma profundidade de 0,3 m e velocidade de 0,3 m/s, que vazão resulta?",
+        respuesta_esperada: "Depende da medição deles; revisa-se o procedimento",
+      },
+      {
+        semanas_despues: 3,
+        pregunta:
+          "Por que medimos a largura em três pontos e não em um só? Explique com o que você viu no córrego.",
+        respuesta_esperada: "Porque o leito é irregular e uma única medida distorce",
+      },
+      {
+        semanas_despues: 6,
+        pregunta:
+          "Com a vazão que vocês mediram, o córrego daria para abastecer a escola por uma semana?",
+        respuesta_esperada: "Comparar a vazão com o consumo estimado da escola",
+      },
+    ],
+    materiales: ["trena", "cronômetro", "caderno"],
+    por_nivel: [
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![0],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Com a largura e a profundidade que o 7º mediu, calcule quanta água passa pelo córrego em um minuto.",
+              apoyo: "Use a tabela do quadro: largura × profundidade × velocidade.",
+              respuesta_esperada: "Cerca de 300 litros por minuto.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Desenhe de onde vem e para onde vai a água do córrego Mahuidanche.",
+            },
+          ],
+        },
+        rol_en_terreno: "Marca com estacas o trecho de 10 metros e cronometra o flutuador.",
+      },
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![1],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Com os organismos que a turma anotou, monte a rede alimentar do córrego.",
+              apoyo: "Comece pelas algas e siga para cima.",
+              respuesta_esperada: "Rede de pelo menos três níveis.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "O que aconteceria com essa rede se a água caísse para metade da vazão que mediram?",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Registra os seres vivos sob três pedras do trecho, sem tirá-los da água.",
+      },
+      {
+        ...SECUENCIA_DEMO_ES.secuencia.por_nivel![2],
+        practica_guiada: {
+          ejercicios: [
+            {
+              enunciado:
+                "Classifique os sedimentos do leito e explique de que erupção vêm.",
+              apoyo: "Compare com as fotos de cinza e escória do guia.",
+              respuesta_esperada: "Predomínio de material vulcânico recente.",
+            },
+          ],
+        },
+        practica_autonoma: {
+          ejercicios: [
+            {
+              enunciado:
+                "Explique por que o solo desta região retém pouca água, usando o que você observou.",
+            },
+          ],
+        },
+        rol_en_terreno:
+          "Mede largura e profundidade do córrego em três pontos e entrega os dados ao 5º.",
+      },
+    ],
+  },
+  resumen: {},
+  problemas: [
+    "A medição «Tempo do flutuador» não diz em que unidade anotar",
+  ],
+  utilizable: false,
+};
+
+/**
+ * La secuencia de ejemplo en el idioma que se esté mirando.
+ *
+ * Cualquier idioma que no sea inglés o portugués cae en español, igual que
+ * hace la Edge Function: una sola regla para los dos caminos.
+ */
+export function secuenciaDemo(idioma?: string): RespuestaSecuencia {
+  const corto = (idioma ?? "es").slice(0, 2).toLowerCase();
+  if (corto === "en") return SECUENCIA_DEMO_EN;
+  if (corto === "pt") return SECUENCIA_DEMO_PT;
+  return SECUENCIA_DEMO_ES;
+}

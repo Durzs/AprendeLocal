@@ -54,13 +54,124 @@ const ETAPAS = [
   "recuperacion_espaciada",
 ] as const;
 
-const NOMBRE_VISIBLE: Record<string, string> = {
-  instruccion_explicita: "lo que explicas tú en la clase 1",
-  ejemplo_resuelto: "el ejemplo que muestras en la clase 1",
-  practica_guiada: "los ejercicios que resuelven contigo",
-  practica_autonoma: "los ejercicios que resuelven solos",
-  salida_terreno: "la salida a medir",
-  recuperacion_espaciada: "las preguntas de las semanas siguientes",
+/**
+ * Idiomas en los que la función sabe hablarle al docente.
+ *
+ * Los mismos tres de la interfaz. Cualquier otro valor cae en español: el
+ * piloto es en La Araucanía y ante la duda vale más el idioma de la sala.
+ */
+type Idioma = "es" | "en" | "pt";
+
+function idiomaValido(valor: unknown): Idioma {
+  const corto = String(valor ?? "").slice(0, 2).toLowerCase();
+  return corto === "en" || corto === "pt" ? corto : "es";
+}
+
+/**
+ * Lo que el modelo tiene que escribir en el idioma del docente.
+ *
+ * Las CLAVES del JSON siguen en español pase lo que pase: son el contrato con
+ * la pantalla, y traducirlas la rompería en cuanto alguien cambiara de idioma.
+ * Lo que cambia es el texto que se lee, no la estructura que lo sostiene.
+ */
+const INSTRUCCION_IDIOMA: Record<Idioma, string> = {
+  es: "",
+  en:
+    "IDIOMA DE SALIDA: escribe TODO el texto legible (titulo, sintesis_docente, notas, " +
+    "enunciados, instrucciones, preguntas, materiales, roles, etiqueta) en INGLÉS. Las claves del " +
+    "JSON y los valores de 'tipo' se quedan EXACTAMENTE como están, en español. Los " +
+    "nombres propios del territorio (Estero Trancura, Curarrehue, Lago Colico) no se traducen.",
+  pt:
+    "IDIOMA DE SALIDA: escribe TODO el texto legible (titulo, sintesis_docente, notas, " +
+    "enunciados, instrucciones, preguntas, materiales, roles, etiqueta) en PORTUGUÉS DE BRASIL. Las " +
+    "claves del JSON y los valores de 'tipo' se quedan EXACTAMENTE como están, en español. " +
+    "Los nombres propios del territorio (Estero Trancura, Curarrehue, Lago Colico) no se traducen.",
+};
+
+const NOMBRE_VISIBLE: Record<Idioma, Record<string, string>> = {
+  es: {
+    instruccion_explicita: "lo que explicas tú en la clase 1",
+    ejemplo_resuelto: "el ejemplo que muestras en la clase 1",
+    practica_guiada: "los ejercicios que resuelven contigo",
+    practica_autonoma: "los ejercicios que resuelven solos",
+    salida_terreno: "la salida a medir",
+    recuperacion_espaciada: "las preguntas de las semanas siguientes",
+  },
+  en: {
+    instruccion_explicita: "what you explain in lesson 1",
+    ejemplo_resuelto: "the example you show in lesson 1",
+    practica_guiada: "the exercises they solve with you",
+    practica_autonoma: "the exercises they solve alone",
+    salida_terreno: "the fieldwork",
+    recuperacion_espaciada: "the questions for the following weeks",
+  },
+  pt: {
+    instruccion_explicita: "o que você explica na aula 1",
+    ejemplo_resuelto: "o exemplo que você mostra na aula 1",
+    practica_guiada: "os exercícios que resolvem com você",
+    practica_autonoma: "os exercícios que resolvem sozinhos",
+    salida_terreno: "a saída a campo",
+    recuperacion_espaciada: "as perguntas das semanas seguintes",
+  },
+};
+
+/**
+ * Los avisos de validación, en el mismo idioma que la secuencia.
+ *
+ * Van juntos porque se leen juntos: una clase en inglés con las advertencias
+ * en español es exactamente la mitad del trabajo, y es la mitad que se nota.
+ */
+const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
+  es: {
+    falta: (x) => `Falta ${x}`,
+    sinPasos: () => "El ejemplo no trae los pasos resueltos",
+    unPasoSinPorque: (x) => `En el ejemplo, el paso ${x} no explica por qué se hace así`,
+    variosPasosSinPorque: (x) => `En el ejemplo, los pasos ${x} no explican por qué se hacen así`,
+    sinResultado: () => "El ejemplo no termina en un resultado",
+    sinMediciones: () => "La salida no dice qué hay que medir",
+    medicionSinNombre: () => "Una de las mediciones no tiene nombre",
+    medicionSinUnidad: (x) => `La medición «${x}» no dice en qué unidad anotarla`,
+    sinReparto: () => "La secuencia no reparte el trabajo entre los cursos de la sala",
+    sinActividad: (x) => `Sin actividad propia para ${x}`,
+    cursoSinEjercicios: (x) => `El curso ${x} no tiene ejercicios`,
+    pocaRecuperacion: () => "Hay que volver a preguntar al menos en dos momentos distintos",
+    relleno: (x) =>
+      `${x}: el generador no lo devolvió. Lo que aparece es un texto de relleno, no una clase: escríbelo tú o vuelve a generar.`,
+  },
+  en: {
+    falta: (x) => `Missing: ${x}`,
+    sinPasos: () => "The example has no worked steps",
+    unPasoSinPorque: (x) => `In the example, step ${x} does not explain why it is done that way`,
+    variosPasosSinPorque: (x) =>
+      `In the example, steps ${x} do not explain why they are done that way`,
+    sinResultado: () => "The example does not end in a result",
+    sinMediciones: () => "The fieldwork does not say what to measure",
+    medicionSinNombre: () => "One of the measurements has no name",
+    medicionSinUnidad: (x) => `The measurement “${x}” does not say which unit to record it in`,
+    sinReparto: () => "The sequence does not divide the work between the grades in the room",
+    sinActividad: (x) => `No work of their own for ${x}`,
+    cursoSinEjercicios: (x) => `Grade ${x} has no exercises`,
+    pocaRecuperacion: () => "You need to ask again at two separate moments at least",
+    relleno: (x) =>
+      `${x}: the generator did not return it. What you see is filler text, not a lesson: write it yourself or generate again.`,
+  },
+  pt: {
+    falta: (x) => `Falta ${x}`,
+    sinPasos: () => "O exemplo não traz os passos resolvidos",
+    unPasoSinPorque: (x) => `No exemplo, o passo ${x} não explica por que é feito assim`,
+    variosPasosSinPorque: (x) =>
+      `No exemplo, os passos ${x} não explicam por que são feitos assim`,
+    sinResultado: () => "O exemplo não termina em um resultado",
+    sinMediciones: () => "A saída não diz o que medir",
+    medicionSinNombre: () => "Uma das medições não tem nome",
+    medicionSinUnidad: (x) => `A medição «${x}» não diz em que unidade anotar`,
+    sinReparto: () => "A sequência não divide o trabalho entre os anos da turma",
+    sinActividad: (x) => `Sem atividade própria para ${x}`,
+    cursoSinEjercicios: (x) => `O ano ${x} não tem exercícios`,
+    pocaRecuperacion: () => "É preciso perguntar de novo em pelo menos dois momentos distintos",
+    relleno: (x) =>
+      `${x}: o gerador não devolveu. O que aparece é texto de preenchimento, não uma aula: escreva você ou gere de novo.`,
+  },
 };
 
 const SYSTEM_PROMPT =
@@ -75,7 +186,7 @@ Reglas que no puedes romper:
 3. LA SALIDA A TERRENO VA DESPUÉS de la práctica guiada, nunca antes.
 4. HABLAS AL DOCENTE. La instrucción explícita se redacta como notas para que el profesor las explique él.
 5. MATERIALES DE ZONA RURAL: cuaderno, huincha, lupa, termómetro, botellas recicladas, agua del estero.
-6. EL PROTOCOLO DE TERRENO LLEVA CAMPOS CONCRETOS Y MEDIBLES, con unidad.
+6. EL PROTOCOLO DE TERRENO LLEVA CAMPOS CONCRETOS Y MEDIBLES, con unidad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, y va en el idioma de salida.
 7. LA RECUPERACIÓN ESPACIADA USA LOS DATOS QUE LOS PROPIOS ESTUDIANTES TOMARON, con marcadores {dato_del_estudiante}.
 8. CULTURA MAPUCHE: solo si es pertinente, como fuente de conocimiento y nunca como adorno. Si la incluyes, márcalo en requiere_consulta.
 9. AULA MULTIGRADO: cuando recibas más de un objetivo, son cursos distintos sentados en la MISMA sala con UN solo docente. No escribas varias clases paralelas: escribe UNA. La instrucción explícita, el ejemplo resuelto y la salida a terreno son comunes a todos. Lo que cambia por curso es la práctica y qué mide cada uno en la salida, y eso va en "por_nivel". Reparte el trabajo de terreno para que los cursos dependan unos de otros: el curso mayor toma la medición que el menor necesita para su tarea.
@@ -90,7 +201,7 @@ LARGO Y CONCISIÓN. Sé sintético y preciso:
 - en por_nivel, por cada curso: 1 a 2 ejercicios guiados y 1 autónomo (enunciados breves)
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"instrucciones_docente":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"instrucciones_docente":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
 
 Con más de un objetivo, añade además la clave "por_nivel", con una entrada por curso:
 "por_nivel":[{"nivel":"","objetivo_codigo":"","practica_guiada":{"ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"rol_en_terreno":""}]`;
@@ -325,56 +436,65 @@ function legible(campo: string): string {
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
 
-function validar(s: Record<string, any>): string[] {
+function validar(s: Record<string, any>, idioma: Idioma): string[] {
   const problemas: string[] = [];
+  const avisa = AVISOS[idioma];
+  const nombre = NOMBRE_VISIBLE[idioma];
 
   for (const etapa of ETAPAS) {
-    if (!(etapa in s)) problemas.push(`Falta ${NOMBRE_VISIBLE[etapa]}`);
+    if (!(etapa in s)) problemas.push(avisa.falta(nombre[etapa]));
   }
 
   const pasos = s.ejemplo_resuelto?.pasos ?? [];
   if (pasos.length === 0) {
-    problemas.push("El ejemplo no trae los pasos resueltos");
+    problemas.push(avisa.sinPasos());
   } else {
     const sinPorque = pasos
       .map((p: any, i: number) => (String(p?.razonamiento ?? "").trim() ? null : p?.paso ?? i + 1))
       .filter((x: unknown) => x !== null);
     if (sinPorque.length > 0) {
+      // Singular y plural son frases distintas, no una frase con una pieza
+      // intercambiable: en otros idiomas cambia más que la palabra «paso».
       problemas.push(
-        `En el ejemplo, ${sinPorque.length > 1 ? "los pasos" : "el paso"} ${sinPorque.join(", ")} no explican por qué se hacen así`,
+        sinPorque.length > 1
+          ? avisa.variosPasosSinPorque(sinPorque.join(", "))
+          : avisa.unPasoSinPorque(String(sinPorque[0])),
       );
     }
   }
   if (!String(s.ejemplo_resuelto?.respuesta ?? "").trim()) {
-    problemas.push("El ejemplo no termina en un resultado");
+    problemas.push(avisa.sinResultado());
   }
 
   const protocolo = s.salida_terreno?.protocolo ?? [];
-  if (protocolo.length === 0) problemas.push("La salida no dice qué hay que medir");
+  if (protocolo.length === 0) problemas.push(avisa.sinMediciones());
   for (const campo of protocolo) {
-    if (!String(campo?.campo ?? "").trim()) problemas.push("Una de las mediciones no tiene nombre");
+    if (!String(campo?.campo ?? "").trim()) problemas.push(avisa.medicionSinNombre());
     if (campo?.tipo === "numero" && !String(campo?.unidad ?? "").trim()) {
-      problemas.push(
-        `La medición «${legible(campo?.campo ?? "?")}» no dice en qué unidad anotarla`,
-      );
+      // Se nombra la medición como la lee el curso en la hoja, no como se
+      // llama por dentro: el aviso es para el docente, no para la base.
+      const visible = String(campo?.etiqueta ?? "").trim() || legible(campo?.campo ?? "?");
+      problemas.push(avisa.medicionSinUnidad(visible));
     }
   }
 
   if (Array.isArray(s.__codigos_pedidos) && s.__codigos_pedidos.length > 1) {
     const bloques = Array.isArray(s.por_nivel) ? s.por_nivel : [];
     if (bloques.length === 0) {
-      problemas.push("La secuencia no reparte el trabajo entre los cursos de la sala");
+      problemas.push(avisa.sinReparto());
     } else {
       const cubiertos = new Set(bloques.map((b: any) => b?.objetivo_codigo));
       const sinTrabajo = s.__codigos_pedidos.filter((c: string) => !cubiertos.has(c));
       if (sinTrabajo.length > 0) {
-        problemas.push(`Sin actividad propia para ${sinTrabajo.join(", ")}`);
+        problemas.push(avisa.sinActividad(sinTrabajo.join(", ")));
       }
       for (const b of bloques) {
         const guiada = b?.practica_guiada?.ejercicios?.length ?? 0;
         const autonoma = b?.practica_autonoma?.ejercicios?.length ?? 0;
         if (guiada + autonoma === 0) {
-          problemas.push(`El curso ${b?.nivel ?? b?.objetivo_codigo ?? "?"} no tiene ejercicios`);
+          problemas.push(
+            avisa.cursoSinEjercicios(String(b?.nivel ?? b?.objetivo_codigo ?? "?")),
+          );
         }
       }
     }
@@ -382,7 +502,7 @@ function validar(s: Record<string, any>): string[] {
 
   const recuperacion = s.recuperacion_espaciada ?? [];
   if (recuperacion.length < 2) {
-    problemas.push("Hay que volver a preguntar al menos en dos momentos distintos");
+    problemas.push(avisa.pocaRecuperacion());
   }
 
   return problemas;
@@ -412,6 +532,8 @@ Deno.serve(async (req: Request) => {
     point_id?: string;
     sesiones?: number;
     notas_docente?: string;
+    /** El idioma de la interfaz, para que la clase salga en el mismo. */
+    idioma?: string;
   };
   try {
     cuerpo = await req.json();
@@ -420,6 +542,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const { objective_code, objective_codes, point_id, sesiones = 2, notas_docente = "" } = cuerpo;
+  const idioma = idiomaValido(cuerpo.idioma);
 
   const codigos = (objective_codes?.length ? objective_codes : objective_code ? [objective_code] : [])
     .map((c) => String(c).trim())
@@ -504,6 +627,9 @@ Deno.serve(async (req: Request) => {
     multigrado
       ? "Es UNA sola clase para todos los cursos juntos. Devuelve 'por_nivel' con una entrada por cada curso listado. Sé sintético y conciso."
       : "",
+    // Al final del todo, que es donde más peso tiene: el idioma es lo primero
+    // que se nota si sale mal y lo último que el modelo debe olvidar.
+    INSTRUCCION_IDIOMA[idioma],
   ]
     .filter(Boolean)
     .join("\n");
@@ -649,14 +775,14 @@ Deno.serve(async (req: Request) => {
   }
 
   secuencia.__codigos_pedidos = codigos;
-  const problemas = validar(secuencia);
+  const problemas = validar(secuencia, idioma);
   delete secuencia.__codigos_pedidos;
 
   // Lo que hubo que rellenar encabeza la lista: no es material de clase, y el
   // docente tiene que verlo antes que cualquier otra observación.
   for (const etapa of rellenadas.reverse()) {
     problemas.unshift(
-      `${NOMBRE_VISIBLE[etapa] ?? etapa}: el generador no lo devolvió. Lo que aparece es un texto de relleno, no una clase: escríbelo tú o vuelve a generar.`,
+      AVISOS[idioma].relleno(NOMBRE_VISIBLE[idioma][etapa] ?? etapa),
     );
   }
 

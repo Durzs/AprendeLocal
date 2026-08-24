@@ -19,19 +19,27 @@
  */
 
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { CurriculumObjective, POIFeature } from "../../../types";
 import { ordenarObjetivosPorAfinidad, type Banda } from "../lib/afinidad";
 
-const ESTILO: Record<Banda, { etiqueta: string; texto: string }> = {
-  sirve: { etiqueta: "bg-emerald-600 text-white", texto: "Sirve" },
-  quizas: { etiqueta: "bg-slate-200 text-slate-700", texto: "Puede servir" },
-  no_aporta: { etiqueta: "bg-slate-100 text-slate-500", texto: "Sin relación" },
+const ESTILO: Record<Banda, { etiqueta: string; clave: string }> = {
+  sirve: { etiqueta: "bg-emerald-600 text-white", clave: "preparar.bands.serves" },
+  quizas: { etiqueta: "bg-slate-200 text-slate-700", clave: "preparar.bands.mayServe" },
+  no_aporta: { etiqueta: "bg-slate-100 text-slate-500", clave: "preparar.bands.unrelated" },
 };
 
-/** `6to_basico` → `6º`. El dato viene con la forma de la base, no de la sala. */
-export function nivelCorto(level: string): string {
+/**
+ * `6to_basico` → `6º` en español, `G6` en inglés.
+ *
+ * El dato viene con la forma de la base, no de la sala. La marca ordinal no se
+ * puede fijar en el código porque no viaja: el inglés no escribe «6º», y sus
+ * ordinales son irregulares —1st, 2nd, 3rd—, así que la forma la pone el
+ * catálogo de idioma y aquí solo se extrae el número.
+ */
+export function nivelCorto(level: string, patron = "{{n}}º"): string {
   const n = /^(\d)/.exec(level.replace(/^(\d)(to|mo|vo|er|ro)?/, "$1"));
-  return n ? `${n[1]}º` : level;
+  return n ? patron.replace("{{n}}", n[1]) : level;
 }
 
 function normalizar(s: string): string {
@@ -58,6 +66,8 @@ export default function SelectorObjetivo({
   lugar,
   maximo = 5,
 }: Props) {
+  const { t } = useTranslation();
+  const patronNivel = t("preparar.gradeBadge");
   const [busqueda, setBusqueda] = useState("");
   const [nivelesActivos, setNivelesActivos] = useState<string[]>([]);
   const [verTodos, setVerTodos] = useState(false);
@@ -153,13 +163,15 @@ export default function SelectorObjetivo({
             ✓
           </span>
           <span className="mt-0.5 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-600">
-            {nivelCorto(objetivo.level)}
+            {nivelCorto(objetivo.level, patronNivel)}
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-sm text-slate-800">{objetivo.description}</span>
             {motivos && motivos.length > 0 && (
               <span className="mt-0.5 block text-xs text-slate-600">
-                Coincide en {motivos.slice(0, 3).join(" · ")}
+                {t("preparar.objective.matchesOn", {
+                  reasons: motivos.slice(0, 3).join(" · "),
+                })}
               </span>
             )}
           </span>
@@ -167,7 +179,7 @@ export default function SelectorObjetivo({
             <span
               className={`mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${ESTILO[banda].etiqueta}`}
             >
-              {ESTILO[banda].texto}
+              {t(ESTILO[banda].clave)}
             </span>
           )}
         </button>
@@ -187,7 +199,7 @@ export default function SelectorObjetivo({
               className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5"
             >
               <span className="mt-0.5 shrink-0 rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white">
-                {nivelCorto(o.level)}
+                {nivelCorto(o.level, patronNivel)}
               </span>
               <p className="min-w-0 flex-1 text-sm text-slate-800">{o.description}</p>
               <button
@@ -195,7 +207,7 @@ export default function SelectorObjetivo({
                 onClick={() => alternar(o.code)}
                 className="shrink-0 rounded-full border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
               >
-                Quitar
+                {t("preparar.objective.remove")}
               </button>
             </li>
           ))}
@@ -204,9 +216,8 @@ export default function SelectorObjetivo({
 
       {cursosDistintos > 1 && (
         <p className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs text-emerald-900">
-          <strong>Aula multigrado:</strong> {cursosDistintos} cursos. La explicación
-          y la salida serán las mismas para todos; cada curso recibirá su propia
-          práctica y su tarea en terreno.
+          <strong>{t("preparar.objective.multigradeTitle")}</strong>{" "}
+          {t("preparar.objective.multigradeBody", { count: cursosDistintos })}
         </p>
       )}
 
@@ -225,7 +236,7 @@ export default function SelectorObjetivo({
                   : "border-slate-300 text-slate-600 hover:bg-slate-50",
               ].join(" ")}
             >
-              {nivelCorto(n)}
+              {nivelCorto(n, patronNivel)}
             </button>
           ))}
         </div>
@@ -233,7 +244,7 @@ export default function SelectorObjetivo({
           type="search"
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
-          placeholder="Buscar: agua, volcanes, erosión…"
+          placeholder={t("preparar.objective.searchPlaceholder")}
           disabled={cargando}
           className="min-w-0 flex-1 rounded-full border border-slate-200 px-4 py-1.5 text-sm outline-none focus:border-slate-400"
         />
@@ -241,7 +252,7 @@ export default function SelectorObjetivo({
 
       {lleno && (
         <p className="mt-2 text-xs text-amber-800">
-          Máximo {maximo} objetivos por secuencia. Quita uno para añadir otro.
+          {t("preparar.objective.maxReached", { max: maximo })}
         </p>
       )}
 
@@ -249,19 +260,18 @@ export default function SelectorObjetivo({
           62 opciones buscando una que este lugar no puede sostener. */}
       {puntuados && !cargando && utiles.length === 0 && filtrados.length > 0 && (
         <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3.5 text-sm text-amber-900">
-          <p className="font-semibold">Este lugar no ancla ningún objetivo</p>
+          <p className="font-semibold">{t("preparar.objective.noAnchorTitle")}</p>
           <p className="mt-1.5 leading-relaxed">
-            De los {filtrados.length} objetivos visibles, ninguno encuentra materia
-            aquí. Prueba con otro curso, quita la búsqueda, o elige otro lugar.
+            {t("preparar.objective.noAnchorBody", { count: filtrados.length })}
           </p>
         </div>
       )}
 
       <ul className="mt-3 max-h-72 divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-200">
-        {cargando && <li className="px-4 py-3 text-sm text-slate-500">Cargando…</li>}
+        {cargando && <li className="px-4 py-3 text-sm text-slate-500">{t("preparar.objective.loading")}</li>}
         {!cargando && filtrados.length === 0 && (
           <li className="px-4 py-3 text-sm text-slate-500">
-            Ningún objetivo coincide con esa búsqueda.
+            {t("preparar.objective.noMatch")}
           </li>
         )}
 
@@ -286,14 +296,19 @@ export default function SelectorObjetivo({
           className="mt-2 text-xs font-semibold text-slate-500 underline underline-offset-2 hover:text-slate-800"
         >
           {verTodos
-            ? "Ocultar los que no se relacionan"
-            : `Ver también los ${resto.length} sin relación con este lugar`}
+            ? t("preparar.objective.hideUnrelated")
+            : t("preparar.objective.showUnrelated", { count: resto.length })}
         </button>
       )}
 
       <p className="mt-1.5 text-xs text-slate-400">
-        {filtrados.length} de {objetivos.length} objetivos
-        {valores.length > 0 ? ` · ${valores.length} elegido${valores.length > 1 ? "s" : ""}` : ""}
+        {t("preparar.objective.counter", {
+          shown: filtrados.length,
+          total: objetivos.length,
+        })}
+        {valores.length > 0
+          ? ` · ${t("preparar.objective.chosen", { count: valores.length })}`
+          : ""}
       </p>
     </div>
   );
