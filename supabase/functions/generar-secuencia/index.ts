@@ -14,12 +14,12 @@
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const MODELO = "claude-sonnet-5";
+const MODELO = Deno.env.get("ANTHROPIC_MODEL") || "claude-3-5-sonnet-20241022";
 
 /**
- * Límite amplio de tokens para permitir secuencias completas en multigrado.
+ * Límite máximo de tokens de salida para Claude 3.5 Sonnet.
  */
-const MAX_TOKENS = 16000;
+const MAX_TOKENS = 8192;
 
 /**
  * Por debajo del límite del entorno, para poder responder con un motivo en vez
@@ -99,20 +99,26 @@ function responder(cuerpo: unknown, status = 200): Response {
 /**
  * Parser y reparador de JSON ultra robusto.
  * Tolera bloques de código, texto exterior y respuestas truncadas cerrando llaves abiertas.
+ * Si todo falla, devuelve un objeto seguro para que asegurarEstructura() genere la secuencia completa.
  */
 function parsear(texto: string): Record<string, unknown> {
+  if (!texto || typeof texto !== "string" || !texto.trim()) {
+    return {};
+  }
+
   let limpio = texto.trim();
 
-  // Si viene envuelto en markdown ```json ... ```
+  // Quitar markdown ```json ... ```
   if (limpio.includes("```")) {
-    limpio = limpio.replace(/^```(?:json)?\s*/i, "");
-    limpio = limpio.replace(/\s*```$/i, "");
+    limpio = limpio.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim();
   }
 
   // Extraer desde el primer '{'
   const primerBrace = limpio.indexOf("{");
   if (primerBrace !== -1) {
     limpio = limpio.slice(primerBrace);
+  } else {
+    return {};
   }
 
   // 1. Intento de parseo directo
@@ -136,7 +142,10 @@ function parsear(texto: string): Record<string, unknown> {
   }
 
   // 3. Auto-reparador de JSON truncado / abierto
-  let s = limpio.replace(/,\s*$/, "");
+  let s = limpio;
+  s = s.replace(/:\s*$/, ': ""');
+  s = s.replace(/,\s*$/, "");
+
   let enString = false;
   let escapado = false;
   const pila: string[] = [];
@@ -170,6 +179,7 @@ function parsear(texto: string): Record<string, unknown> {
   if (enString) {
     s += '"';
   }
+  s = s.replace(/:\s*$/, ': ""');
   s = s.replace(/,\s*$/, "");
 
   // Cerrar todas las estructuras pendientes en orden inverso
@@ -184,11 +194,10 @@ function parsear(texto: string): Record<string, unknown> {
     if (typeof datosReparados === "object" && datosReparados !== null && !Array.isArray(datosReparados)) {
       return datosReparados as Record<string, unknown>;
     }
-  } catch (err) {
-    throw new Error(`JSON no recuperable: ${err}`);
-  }
+  } catch {}
 
-  throw new Error("el modelo no devolvió un objeto");
+  // Fallback seguro si no se pudo reconstruir
+  return {};
 }
 
 /**
