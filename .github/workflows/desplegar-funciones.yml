@@ -34,6 +34,31 @@ jobs:
             echo "Se configuran en Settings → Secrets and variables → Actions."
             exit 1
           fi
+
+          # El token de cuenta y las claves del proyecto se confunden con
+          # facilidad: el panel las muestra en secciones parecidas, pero solo
+          # una sirve para desplegar. La CLI responde a eso con «Invalid access
+          # token format», que no dice cuál de los tres secretos está mal.
+          case "$SUPABASE_ACCESS_TOKEN" in
+            sbp_*) ;;
+            eyJ*)
+              echo "SUPABASE_ACCESS_TOKEN contiene una clave del proyecto (empieza por «eyJ»),"
+              echo "no un token de cuenta. El correcto empieza por «sbp_» y se genera en"
+              echo "supabase.com/dashboard → Account settings → Access Tokens."
+              exit 1 ;;
+            *)
+              echo "SUPABASE_ACCESS_TOKEN no parece un token de acceso personal:"
+              echo "debe empezar por «sbp_». Se genera en supabase.com/dashboard →"
+              echo "Account settings → Access Tokens."
+              exit 1 ;;
+          esac
+
+          case "$PROJECT_REF" in
+            sbp_*|eyJ*)
+              echo "SUPABASE_PROJECT_REF parece una clave, no la referencia del proyecto."
+              echo "Es la cadena que aparece en la URL del panel, después de /project/."
+              exit 1 ;;
+          esac
           supabase functions deploy generar-secuencia --project-ref "$PROJECT_REF"
 
       - name: Comprobar que responde
