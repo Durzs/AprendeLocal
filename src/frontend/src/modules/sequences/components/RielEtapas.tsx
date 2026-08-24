@@ -11,6 +11,8 @@
  * quien no lo pidió.
  */
 
+import { useTranslation } from "react-i18next";
+
 export type ResumenEtapa = {
   numero: number;
   /** Cuándo ocurre: «Clase 1», «Semanas 1, 3 y 6»… */
@@ -19,7 +21,15 @@ export type ResumenEtapa = {
   titulo: string;
   /** Cuántas piezas trae, para juzgar el peso de un vistazo. */
   piezas?: number;
-  /** Unidad de esas piezas: «pasos», «ejercicios», «mediciones»… */
+  /**
+   * Unidad de esas piezas: `steps`, `exercises`, `measurements`…
+   *
+   * Es una clave, no una palabra. Antes era el plural en español y el
+   * singular se obtenía quitándole la «s», lo que fuera del español produce
+   * disparates —«1 exercise» sale bien por casualidad, «1 measurement» no— y
+   * deja el recuento a medio traducir. Ahora la forma la decide i18next, que
+   * conoce las reglas de plural de cada idioma.
+   */
   unidad?: string;
 };
 
@@ -29,21 +39,12 @@ type Props = {
   onCambiar: (numero: number) => void;
 };
 
-/** «1 ejercicios» chirría en una interfaz que quiere sonar a persona. */
-function contar(n: number, plural: string): string {
-  if (n !== 1) return `${n} ${plural}`;
-  const singular = plural.endsWith("ones")
-    ? plural.slice(0, -4) + "ón"
-    : plural.endsWith("es")
-      ? plural.slice(0, -2)
-      : plural.replace(/s$/, "");
-  return `${n} ${singular}`;
-}
-
 export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
+  const { t } = useTranslation();
+
   return (
     <nav
-      aria-label="Momentos de la unidad"
+      aria-label={t("preparar.railAria")}
       // `min-w-0` es imprescindible: como hijo de una rejilla su ancho mínimo
       // es automático, y sin esto la fila de chips estira el contenedor y hace
       // que toda la página se desplace en horizontal en el móvil.
@@ -85,7 +86,7 @@ export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
                         esActiva ? "text-slate-400" : "text-slate-400",
                       ].join(" ")}
                     >
-                      {contar(e.piezas, e.unidad ?? "")}
+                      {t(`preparar.units.${e.unidad}`, { count: e.piezas })}
                     </span>
                   )}
                 </span>
@@ -97,8 +98,7 @@ export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
       </ol>
 
       <p className="mt-5 hidden text-[11px] leading-relaxed text-slate-400 lg:block">
-        Salen a terreno después de practicar, no antes: así llegan sabiendo qué
-        mirar.
+        {t("preparar.railNote")}
       </p>
     </nav>
   );

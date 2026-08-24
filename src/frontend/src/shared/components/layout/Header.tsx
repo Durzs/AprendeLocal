@@ -86,7 +86,7 @@ export default function Header() {
                   : "text-slate-200 hover:bg-white/10 hover:text-white",
               ].join(" ")}
             >
-              {t("header.nav.makerspaces").replace("Makerspaces", "Mapa STEM")}
+              {t("platform.tabs.map")}
             </Link>
             
             <Link
@@ -222,7 +222,7 @@ export default function Header() {
               onClick={closeMobile}
               className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
-              Mapa STEM
+              {t("platform.tabs.map")}
             </Link>
             
             <Link

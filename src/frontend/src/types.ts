@@ -249,7 +249,17 @@ export interface PasoResuelto {
 }
 
 export interface CampoProtocolo {
+  /**
+   * Identificador estable del dato. Se queda siempre en español, en cualquier
+   * idioma: con él se cruzan las mediciones que los cursos van guardando, y
+   * si cambiara de nombre al cambiar de idioma dejarían de cruzarse.
+   */
   campo: string;
+  /**
+   * El nombre que se lee en la hoja de terreno, en el idioma del docente.
+   * Puede no venir: entonces se deriva de `campo`, como se hacía antes.
+   */
+  etiqueta?: string;
   instruccion: string;
   unidad?: string;
   tipo?: string;
