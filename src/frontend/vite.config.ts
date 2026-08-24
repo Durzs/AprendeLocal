@@ -93,7 +93,7 @@ export default defineConfig({
         // secuencia vieja desde la caché confunde más de lo que ayuda.
       },
 
-      devOptions: { enabled: false },
+      devOptions: { enabled: true },
     }),
   ],
   server: {
