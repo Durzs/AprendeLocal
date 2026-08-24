@@ -59,7 +59,7 @@ jobs:
               echo "Es la cadena que aparece en la URL del panel, después de /project/."
               exit 1 ;;
           esac
-          supabase functions deploy generar-secuencia --project-ref "$PROJECT_REF"
+          supabase functions deploy generar-secuencia --project-ref "$PROJECT_REF" --no-verify-jwt
 
       - name: Comprobar que responde
         env:
