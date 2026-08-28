@@ -52,15 +52,15 @@ export default function Header() {
           <nav className="hidden items-center gap-1.5 md:flex">
             {/* Entrada del docente */}
             <Link
-              to="/preparar"
+              to="/rutas"
               className={[
                 "rounded-full border px-4 py-1.5 text-sm font-semibold transition",
-                location.pathname === "/preparar"
+                location.pathname === "/rutas"
                   ? "border-amber-400 bg-amber-400 text-slate-950 font-bold"
                   : "border-amber-400/40 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20",
               ].join(" ")}
             >
-              {t("header.nav.prepare")}
+              {t("header.nav.routes")}
             </Link>
             
             <span className="mx-1 h-5 w-px bg-white/15" aria-hidden="true" />
@@ -75,18 +75,6 @@ export default function Header() {
               ].join(" ")}
             >
               {t("header.nav.courses")}
-            </Link>
-            
-            <Link
-              to="/rutas"
-              className={[
-                "rounded-full px-4 py-1.5 text-sm font-medium transition",
-                location.pathname === "/rutas"
-                  ? "bg-white/20 text-white font-semibold"
-                  : "text-slate-200 hover:bg-white/10 hover:text-white",
-              ].join(" ")}
-            >
-              {t("rutas.eyebrow")}
             </Link>
 
             <Link
@@ -214,11 +202,11 @@ export default function Header() {
             </div>
 
             <Link
-              to="/preparar"
+              to="/rutas"
               onClick={closeMobile}
               className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
-              {t("header.nav.prepare")}
+              {t("header.nav.routes")}
             </Link>
             
             <Link

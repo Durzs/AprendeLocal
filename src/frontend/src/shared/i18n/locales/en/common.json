@@ -56,7 +56,8 @@
       "courses": "Courses",
       "makerspaces": "Makerspaces",
       "profile": "Profile",
-      "prepare": "Prepare a lesson"
+      "prepare": "Prepare a lesson",
+      "routes": "Routes"
     },
     "mobile": {
       "openMenu": "Open menu",
@@ -545,8 +546,8 @@
     },
     "teacherEntry": {
       "eyebrow": "For teachers",
-      "title": "Prepare the lesson from what you have to teach",
-      "body": "You explain it, you show a worked example from a place near your school, they practise it, and only then do they go out and measure.",
+      "title": "Four lessons already written, ready for Monday",
+      "body": "Pick one, fit it to your school and take it printed. Nothing to configure and nothing to wait for.",
       "cta": "Prepare a lesson"
     }
   },
@@ -785,6 +786,25 @@
     "productAnswer": "The class answer to the question, with their numbers:",
     "productEvidence": "What they base that on:",
     "productWhoDidWhat": "Who did what:",
-    "productReminder": "Someone outside the school reads this. The numbers have to be right because somebody will use them, not because the teacher checks them."
+    "productReminder": "Someone outside the school reads this. The numbers have to be right because somebody will use them, not because the teacher checks them.",
+    "customize": "Fit the route to your school",
+    "customizeEmpty": "Not adjusted yet. Tap to add your school, your grades and your place.",
+    "customizeLead": "The route is the same in every school. This is what changes in yours, and it is what gets printed.",
+    "gradesInRoom": "Grades you have in the room",
+    "gradesHelp": "Only the sheets for the grades you leave ticked get printed.",
+    "gradesNone": "With no grades ticked there is nothing to print. Tick at least one.",
+    "placeName": "What your place is called",
+    "placeNamePlaceholder": "Mahuidanche stream",
+    "outingDate": "Date of the outing",
+    "outingDateHelp": "It goes in the letter to families.",
+    "schoolName": "School name",
+    "schoolPlaceholder": "Mahuidanche Rural School",
+    "teacherName": "Your name",
+    "teacherHelp": "Signs the consent slip for the outing.",
+    "recipient": "Who receives the work",
+    "recipientHelp": "The route suggests one. Change it for whoever it is in your community.",
+    "savedHere": "This is saved on this device. No account and no internet needed.",
+    "letterDate2": "The outing is on {{date}}.",
+    "letterSignedBy": "Yours sincerely, {{teacher}}."
   }
 }

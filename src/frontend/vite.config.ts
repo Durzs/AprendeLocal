@@ -49,7 +49,7 @@ export default defineConfig({
         // Accesos directos a lo que se abre de verdad, para que la aplicación
         // instalada no obligue a navegar desde la portada.
         shortcuts: [
-          { name: 'Preparar una unidad', url: '/preparar' },
+          { name: 'Rutas', url: '/rutas' },
           { name: 'Mi bitácora', url: '/bitacora' },
         ],
       },
