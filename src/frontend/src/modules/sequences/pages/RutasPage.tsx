@@ -5,15 +5,34 @@
  * elige lugar, espera, y a veces recibe relleno. Aquí elige una de cuatro y ya
  * tiene la clase delante. Sin sesión, sin señal, sin esperar.
  *
- * Las cuatro tarjetas dicen desde fuera lo único que decide la elección: qué
- * cursos de su sala quedan cubiertos y qué lugar hace falta. Un profesor
- * multigrado no elige por tema, elige por a quién puede atender el martes.
+ * Lo que se enseña primero de cada ruta no es su contenido: es la pregunta que
+ * la sostiene y a quién le entregan el resultado. Un proyecto sin destinatario
+ * es una actividad larga, y el lugar vuelve a ser decorado. Con destinatario,
+ * el curso tiene una razón para que los números estén bien que no es la nota.
  */
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RUTAS, cursoCorto, type Ruta } from "../rutas/catalogo";
+import { RUTAS, cursoCorto, type Postura, type Ruta } from "../rutas/catalogo";
+import Recorrido from "../rutas/Recorrido";
+import Documentos from "../rutas/Documentos";
 import VistaSecuencia from "../components/VistaSecuencia";
+
+/** Las dos edades que conviven en la sala, dichas sin jerga de etapas. */
+function Postura({ postura }: { postura: Postura }) {
+  const { t } = useTranslation();
+  const explora = postura === "explorar";
+  return (
+    <span
+      className={[
+        "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        explora ? "bg-sky-100 text-sky-800" : "bg-emerald-100 text-emerald-900",
+      ].join(" ")}
+    >
+      {t(explora ? "rutas.explore" : "rutas.act")}
+    </span>
+  );
+}
 
 function Tarjeta({
   ruta,
@@ -34,7 +53,7 @@ function Tarjeta({
       <button
         type="button"
         onClick={onAbrir}
-        className="flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-lg"
+        className="group flex h-full w-full flex-col rounded-2xl border border-slate-200 bg-white p-5 text-left transition duration-200 hover:-translate-y-1 hover:border-slate-400 hover:shadow-xl"
       >
         <div className="flex flex-wrap items-center gap-1.5">
           {cursos.map((c) => (
@@ -50,19 +69,146 @@ function Tarjeta({
           </span>
         </div>
 
-        <h2 className="mt-3 text-lg font-semibold tracking-tight text-slate-950">
-          {ruta.titulo}
-        </h2>
-        <p className="mt-1.5 flex-1 text-sm text-slate-600">{ruta.gancho}</p>
+        {/* La pregunta va antes que el título: es lo que decide si a este
+            curso le interesa, y lo que el docente repetirá tres semanas. */}
+        <p className="mt-3 text-[15px] font-semibold leading-snug text-slate-950">
+          {ruta.preguntaGuia}
+        </p>
+        <p className="mt-2 flex-1 text-sm text-slate-600">{ruta.gancho}</p>
 
         <p className="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-500">
-          {ruta.lugar}
+          <span className="font-semibold text-slate-700">{t("rutas.deliverTo")}</span>{" "}
+          {ruta.producto.paraQuien}
         </p>
-        <p className="mt-1.5 font-mono text-[11px] text-slate-400">
+        <p className="mt-1.5 text-xs text-slate-500">{ruta.lugar}</p>
+        <p className="mt-1.5 flex items-center gap-2 font-mono text-[11px] text-slate-400">
           {t("rutas.objectives", { count: totalOA })}
+          <span className="ml-auto font-sans font-semibold text-slate-500 transition-transform duration-200 group-hover:translate-x-1">
+            →
+          </span>
         </p>
       </button>
     </li>
+  );
+}
+
+function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
+  const { t } = useTranslation();
+  const [semana, setSemana] = useState(1);
+
+  return (
+    <div className="animar-avanza mx-auto max-w-6xl px-4 py-10">
+      <button
+        type="button"
+        onClick={onVolver}
+        className="rounded-full border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 print:hidden"
+      >
+        {t("rutas.back")}
+      </button>
+
+      <header className="mt-5 rounded-2xl border border-slate-200 bg-white p-6">
+        <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
+          {t("rutas.drivingQuestion")}
+        </p>
+        <h1 className="mt-2 text-2xl font-semibold leading-snug tracking-tight text-slate-950">
+          {ruta.preguntaGuia}
+        </h1>
+
+        <div className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+              {t("rutas.whatTheyDeliver")}
+            </p>
+            <p className="mt-1.5 text-sm text-slate-800">{ruta.producto.que}</p>
+          </div>
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+              {t("rutas.toWhom")}
+            </p>
+            <p className="mt-1.5 text-sm text-slate-800">{ruta.producto.paraQuien}</p>
+          </div>
+        </div>
+
+        <Recorrido fases={ruta.fases} activa={semana} onElegir={setSemana} />
+      </header>
+
+      {/* Quién hace qué, por edad. En una sala de 5º a 8º conviven dos maneras
+          distintas de relacionarse con el lugar, y eso deja de ser un estorbo
+          cuando los pequeños levantan lo que los grandes necesitan. */}
+      <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6">
+        <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+          {t("rutas.eachGrade")}
+        </p>
+        <ul className="mt-3 space-y-2.5">
+          {ruta.cubre.map((c, i) => (
+            <li
+              key={c.nivel}
+              className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-wrap items-baseline gap-x-2.5 gap-y-1`}
+            >
+              <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white">
+                {cursoCorto(c.nivel)}
+              </span>
+              <Postura postura={c.postura} />
+              <span className="min-w-0 flex-1 text-sm text-slate-800">{c.papel}</span>
+              <span className="font-mono text-[10px] text-slate-400">
+                {c.codigos.join(" · ")}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3.5 border-t border-slate-100 pt-3 text-xs text-slate-500">
+          {t("rutas.postureNote")}
+        </p>
+      </section>
+
+      {/* El territorio nombrado en las dos lenguas. */}
+      {ruta.mapuzugun?.length ? (
+        <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            {t("rutas.inMapuzugun")}
+          </p>
+          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+            {ruta.mapuzugun.map((m, i) => (
+              <li
+                key={m.termino}
+                className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}
+              >
+                <span className="text-sm font-semibold text-slate-950">{m.termino}</span>
+                <span className="text-sm text-slate-600"> · {m.castellano}</span>
+                {m.nota ? (
+                  <span className="block text-xs text-slate-500">{m.nota}</span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+
+          {ruta.kimun ? (
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm text-slate-800">
+                <span className="font-semibold">{t("rutas.askTheCommunity")}</span>{" "}
+                {ruta.kimun.pregunta}
+              </p>
+              <p className="mt-1.5 text-xs text-slate-600">
+                {t("rutas.askWho")} {ruta.kimun.aQuien}
+              </p>
+            </div>
+          ) : null}
+
+          <p className="mt-3.5 border-t border-slate-100 pt-3 text-xs text-amber-800">
+            {t("rutas.mapuzugunNotice")}
+          </p>
+        </section>
+      ) : null}
+
+      <Documentos ruta={ruta} />
+
+      <VistaSecuencia
+        key={ruta.id}
+        secuencia={ruta.secuencia}
+        codigos={ruta.cubre.flatMap((c) => c.codigos)}
+        porModelo={false}
+      />
+    </div>
   );
 }
 
@@ -70,28 +216,7 @@ export default function RutasPage() {
   const { t } = useTranslation();
   const [abierta, setAbierta] = useState<Ruta | null>(null);
 
-  if (abierta) {
-    return (
-      <div className="animar-avanza mx-auto max-w-6xl px-4 py-10">
-        <button
-          type="button"
-          onClick={() => setAbierta(null)}
-          className="rounded-full border border-slate-300 px-4 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 print:hidden"
-        >
-          {t("rutas.back")}
-        </button>
-
-        {/* Una ruta no la escribió un modelo, así que no lleva ni el sello ni
-            la advertencia de revisarla: eso sería mentir al revés. */}
-        <VistaSecuencia
-          key={abierta.id}
-          secuencia={abierta.secuencia}
-          codigos={abierta.cubre.flatMap((c) => c.codigos)}
-          porModelo={false}
-        />
-      </div>
-    );
-  }
+  if (abierta) return <Detalle ruta={abierta} onVolver={() => setAbierta(null)} />;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
