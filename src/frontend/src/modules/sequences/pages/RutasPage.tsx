@@ -11,11 +11,20 @@
  * el curso tiene una razón para que los números estén bien que no es la nota.
  */
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RUTAS, cursoCorto, type Postura, type Ruta } from "../rutas/catalogo";
 import Recorrido from "../rutas/Recorrido";
 import Documentos from "../rutas/Documentos";
+import Personalizar from "../rutas/Personalizar";
+import {
+  guardarEscuela,
+  guardarRuta,
+  leerEscuela,
+  leerRuta,
+  type AjustesEscuela,
+  type AjustesRuta,
+} from "../rutas/ajustes";
 import VistaSecuencia from "../components/VistaSecuencia";
 
 /** Las dos edades que conviven en la sala, dichas sin jerga de etapas. */
@@ -95,6 +104,39 @@ function Tarjeta({
 function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
   const { t } = useTranslation();
   const [semana, setSemana] = useState(1);
+  const [escuela, setEscuela] = useState<AjustesEscuela>(() => leerEscuela());
+  const [ajustes, setAjustes] = useState<AjustesRuta>(() =>
+    leerRuta(ruta.id, ruta.producto.paraQuien)
+  );
+
+  useEffect(() => guardarEscuela(escuela), [escuela]);
+  useEffect(() => guardarRuta(ruta.id, ajustes), [ruta.id, ajustes]);
+
+  /**
+   * Los cursos que esta escuela tiene de verdad, dentro de los que la ruta
+   * atiende. Sin ajustar nada se muestran todos: una ruta recién abierta
+   * tiene que verse entera, no vacía.
+   */
+  const cursos = useMemo(() => {
+    const dela = ruta.cubre.map((c) => c.nivel);
+    return escuela.cursos.length
+      ? dela.filter((n) => escuela.cursos.includes(n))
+      : dela;
+  }, [ruta, escuela.cursos]);
+
+  const cubre = ruta.cubre.filter((c) => cursos.includes(c.nivel));
+
+  // La secuencia se recorta a esos cursos. Imprimir la práctica de un curso
+  // que no existe en la sala es lo que hace que el docente deje de fiarse.
+  const secuencia = useMemo(
+    () => ({
+      ...ruta.secuencia,
+      por_nivel: (ruta.secuencia.por_nivel ?? []).filter((b) =>
+        cursos.includes(b.nivel)
+      ),
+    }),
+    [ruta.secuencia, cursos]
+  );
 
   return (
     <div className="animar-avanza mx-auto max-w-6xl px-4 py-10">
@@ -140,7 +182,7 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
           {t("rutas.eachGrade")}
         </p>
         <ul className="mt-3 space-y-2.5">
-          {ruta.cubre.map((c, i) => (
+          {cubre.map((c, i) => (
             <li
               key={c.nivel}
               className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-wrap items-baseline gap-x-2.5 gap-y-1`}
@@ -200,12 +242,20 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
         </section>
       ) : null}
 
-      <Documentos ruta={ruta} />
+      <Personalizar
+        ruta={ruta}
+        escuela={escuela}
+        onEscuela={setEscuela}
+        ajustes={ajustes}
+        onAjustes={setAjustes}
+      />
+
+      <Documentos ruta={ruta} secuencia={secuencia} escuela={escuela} ajustes={ajustes} />
 
       <VistaSecuencia
         key={ruta.id}
-        secuencia={ruta.secuencia}
-        codigos={ruta.cubre.flatMap((c) => c.codigos)}
+        secuencia={secuencia}
+        codigos={cubre.flatMap((c) => c.codigos)}
         porModelo={false}
       />
     </div>

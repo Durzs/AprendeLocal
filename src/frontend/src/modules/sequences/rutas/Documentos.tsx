@@ -27,6 +27,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cursoCorto, type Ruta } from "./catalogo";
+import { fechaLegible, type AjustesEscuela, type AjustesRuta } from "./ajustes";
+import type { Secuencia } from "../../../types";
 import { nombreLegible } from "../lib/etiquetas";
 
 /**
@@ -53,10 +55,13 @@ function Renglones({ cuantos }: { cuantos: number }) {
 function Hoja({
   titulo,
   subtitulo,
+  membrete,
   children,
 }: {
   titulo: string;
   subtitulo?: string;
+  /** Escuela y docente, cuando el panel los tiene. */
+  membrete?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -64,6 +69,11 @@ function Hoja({
     // se mezclan, el docente no puede repartir uno por curso.
     <section className="hidden print:block print:break-after-page print:pt-6">
       <header className="border-b-2 border-slate-900 pb-2">
+        {membrete && (
+          <p className="text-[11px] uppercase tracking-widest text-slate-700">
+            {membrete}
+          </p>
+        )}
         <h2 className="text-xl font-bold text-slate-950">{titulo}</h2>
         {subtitulo && <p className="text-sm text-slate-700">{subtitulo}</p>}
       </header>
@@ -74,8 +84,19 @@ function Hoja({
 
 type Cual = "terreno" | "guia" | "familia" | "producto";
 
-export default function Documentos({ ruta }: { ruta: Ruta }) {
-  const { t } = useTranslation();
+export default function Documentos({
+  ruta,
+  secuencia,
+  escuela,
+  ajustes,
+}: {
+  ruta: Ruta;
+  /** Ya recortada a los cursos que esta escuela tiene en la sala. */
+  secuencia: Secuencia;
+  escuela: AjustesEscuela;
+  ajustes: AjustesRuta;
+}) {
+  const { t, i18n } = useTranslation();
   const [marcados, setMarcados] = useState<Record<Cual, boolean>>({
     terreno: true,
     guia: true,
@@ -90,8 +111,16 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
     { clave: "producto", etiqueta: t("rutas.docProduct"), ayuda: t("rutas.docProductHelp") },
   ];
 
-  const protocolo = ruta.secuencia.salida_terreno?.protocolo ?? [];
-  const porNivel = ruta.secuencia.por_nivel ?? [];
+  const protocolo = secuencia.salida_terreno?.protocolo ?? [];
+  const porNivel = secuencia.por_nivel ?? [];
+
+  const membrete = [escuela.escuela, escuela.docente].filter(Boolean).join(" · ");
+  // El nombre propio del sitio, si el docente lo puso. Vacío significa que
+  // todavía no lo dijo, y cada documento decide con qué lo sustituye: la hoja
+  // de terreno con el título de la ruta, la carta con su descripción genérica.
+  const lugarPropio = ajustes.lugar.trim();
+  const destinatario = ajustes.destinatario.trim() || ruta.producto.paraQuien;
+  const fecha = fechaLegible(ajustes.fechaSalida, i18n.resolvedLanguage ?? "es");
 
   return (
     <>
@@ -143,7 +172,8 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
           <Hoja
             key={`terreno-${b.nivel}`}
             titulo={`${t("rutas.docField")} · ${cursoCorto(b.nivel)}`}
-            subtitulo={ruta.titulo}
+            subtitulo={lugarPropio || ruta.titulo}
+            membrete={membrete}
           >
             <p>
               <strong>{t("rutas.yourJob")}</strong> {b.rol_en_terreno}
@@ -151,7 +181,7 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
 
             <p className="mt-3">
               <strong>{t("rutas.bring")}</strong>{" "}
-              {(ruta.secuencia.salida_terreno?.preparacion ?? []).join(", ")}
+              {(secuencia.salida_terreno?.preparacion ?? []).join(", ")}
             </p>
 
             <table className="mt-4 w-full border-collapse text-left text-xs">
@@ -209,7 +239,7 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
 
             <p className="mt-3 text-xs">
               <strong>{t("rutas.safety")}</strong>{" "}
-              {(ruta.secuencia.salida_terreno?.seguridad ?? []).join(" · ")}
+              {(secuencia.salida_terreno?.seguridad ?? []).join(" · ")}
             </p>
           </Hoja>
         ))}
@@ -229,6 +259,7 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
               key={`guia-${b.nivel}`}
               titulo={`${t("rutas.docGuide")} · ${cursoCorto(b.nivel)}`}
               subtitulo={ruta.preguntaGuia}
+              membrete={membrete}
             >
               <p className="text-xs text-slate-700">{b.objetivo_descripcion}</p>
               <ol className="mt-4 space-y-1">
@@ -250,24 +281,38 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
 
       {/* ── Carta a la familia ── */}
       {marcados.familia && (
-        <Hoja titulo={t("rutas.docLetter")} subtitulo={ruta.titulo}>
+        <Hoja
+          titulo={t("rutas.docLetter")}
+          subtitulo={ruta.titulo}
+          membrete={membrete}
+        >
           <p>{t("rutas.letterGreeting")}</p>
           <p className="mt-3">
             {t("rutas.letterBody", {
               question: sinPuntoFinal(ruta.preguntaGuia),
-              place: sinPuntoFinal(ruta.lugar).toLowerCase(),
+              place: lugarPropio || sinPuntoFinal(ruta.lugar).toLowerCase(),
               weeks: ruta.semanas,
             })}
           </p>
+          {/* Sin fecha la carta no sirve para pedir el permiso, así que si el
+              docente la puso, va en su propia línea y no perdida en el párrafo. */}
+          {fecha && (
+            <p className="mt-3 font-semibold">{t("rutas.letterDate2", { date: fecha })}</p>
+          )}
           <p className="mt-3">
-            {t("rutas.letterDeliver", { to: sinPuntoFinal(ruta.producto.paraQuien) })}
+            {t("rutas.letterDeliver", { to: sinPuntoFinal(destinatario) })}
           </p>
           <p className="mt-3">{t("rutas.letterSafety")}</p>
           <ul className="mt-1 list-disc pl-5 text-xs">
-            {(ruta.secuencia.salida_terreno?.seguridad ?? []).map((s) => (
+            {(secuencia.salida_terreno?.seguridad ?? []).map((s) => (
               <li key={s}>{s}</li>
             ))}
           </ul>
+          {escuela.docente && (
+            <p className="mt-5 text-sm">
+              {t("rutas.letterSignedBy", { teacher: escuela.docente })}
+            </p>
+          )}
 
           <div className="mt-8 border-t border-slate-400 pt-4">
             <p className="text-xs font-semibold uppercase tracking-wide">
@@ -293,7 +338,11 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
 
       {/* ── La hoja del producto ── */}
       {marcados.producto && (
-        <Hoja titulo={t("rutas.docProduct")} subtitulo={ruta.titulo}>
+        <Hoja
+          titulo={t("rutas.docProduct")}
+          subtitulo={ruta.titulo}
+          membrete={membrete}
+        >
           <p className="text-base font-semibold">{ruta.preguntaGuia}</p>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -307,7 +356,7 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 {t("rutas.toWhom")}
               </p>
-              <p className="mt-1">{ruta.producto.paraQuien}</p>
+              <p className="mt-1">{destinatario}</p>
             </div>
           </div>
 
@@ -319,7 +368,9 @@ export default function Documentos({ ruta }: { ruta: Ruta }) {
 
           <p className="mt-5 font-semibold">{t("rutas.productWhoDidWhat")}</p>
           <ul className="mt-2 space-y-3 text-xs">
-            {ruta.cubre.map((c) => (
+            {ruta.cubre
+              .filter((c) => porNivel.some((b) => b.nivel === c.nivel))
+              .map((c) => (
               <li key={c.nivel} className="flex items-baseline gap-2">
                 <span className="w-8 shrink-0 font-bold">{cursoCorto(c.nivel)}</span>
                 <span className="flex-1 border-b border-slate-400 pb-1">{c.papel}</span>

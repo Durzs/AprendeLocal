@@ -56,7 +56,8 @@
       "courses": "Cursos",
       "makerspaces": "Makerspaces",
       "profile": "Perfil",
-      "prepare": "Preparar aula"
+      "prepare": "Preparar aula",
+      "routes": "Rotas"
     },
     "mobile": {
       "openMenu": "Abrir menu",
@@ -545,8 +546,8 @@
     },
     "teacherEntry": {
       "eyebrow": "Para docentes",
-      "title": "Prepare a aula a partir do que você precisa ensinar",
-      "body": "Você explica, mostra um exemplo já resolvido de um lugar perto da sua escola, eles praticam, e só então saem para medir.",
+      "title": "Quatro aulas já escritas, prontas para segunda",
+      "body": "Escolha uma, ajuste à sua escola e leve impressa. Não há nada para configurar nem para esperar.",
       "cta": "Preparar aula"
     }
   },
@@ -785,6 +786,25 @@
     "productAnswer": "A resposta da turma à pergunta, com os seus números:",
     "productEvidence": "Em que se apoiam para dizer isso:",
     "productWhoDidWhat": "Quem fez o quê:",
-    "productReminder": "Isto é lido por alguém de fora da escola. Os números têm que estar certos porque alguém vai usá-los, não porque o professor os corrige."
+    "productReminder": "Isto é lido por alguém de fora da escola. Os números têm que estar certos porque alguém vai usá-los, não porque o professor os corrige.",
+    "customize": "Ajuste a rota à sua escola",
+    "customizeEmpty": "Ainda sem ajustar. Toque para pôr sua escola, seus anos e seu lugar.",
+    "customizeLead": "A rota é a mesma em todas as escolas. Isto é o que muda na sua, e é o que sai impresso.",
+    "gradesInRoom": "Anos que você tem na sala",
+    "gradesHelp": "Só se imprimem as folhas dos anos que deixar marcados.",
+    "gradesNone": "Sem anos marcados não há o que imprimir. Marque pelo menos um.",
+    "placeName": "Como se chama o seu lugar",
+    "placeNamePlaceholder": "Córrego Mahuidanche",
+    "outingDate": "Data da saída",
+    "outingDateHelp": "Vai na carta às famílias.",
+    "schoolName": "Nome da escola",
+    "schoolPlaceholder": "Escola Rural Mahuidanche",
+    "teacherName": "Seu nome",
+    "teacherHelp": "Assina a autorização da saída.",
+    "recipient": "A quem entregam o trabalho",
+    "recipientHelp": "A rota propõe um. Troque pelo que corresponder na sua comunidade.",
+    "savedHere": "Isto fica salvo neste dispositivo. Não precisa de conta nem de internet.",
+    "letterDate2": "A saída é em {{date}}.",
+    "letterSignedBy": "Atenciosamente, {{teacher}}."
   }
 }

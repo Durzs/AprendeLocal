@@ -56,7 +56,8 @@
       "courses": "Cursos",
       "makerspaces": "Makerspaces",
       "profile": "Perfil",
-      "prepare": "Preparar clase"
+      "prepare": "Preparar clase",
+      "routes": "Rutas"
     },
     "mobile": {
       "openMenu": "Abrir menú",
@@ -545,8 +546,8 @@
     },
     "teacherEntry": {
       "eyebrow": "Para docentes",
-      "title": "Prepara la clase desde lo que te toca enseñar",
-      "body": "Lo explicas tú, muestras un ejemplo ya resuelto de un lugar cercano a tu escuela, lo practican, y recién después salen a medir.",
+      "title": "Cuatro clases ya escritas, listas para el lunes",
+      "body": "Elige una, ajústala a tu escuela y llévala impresa. No hay que configurar nada ni esperar a que se genere.",
       "cta": "Preparar clase"
     }
   },
@@ -785,6 +786,25 @@
     "productAnswer": "La respuesta del curso a la pregunta, con sus números:",
     "productEvidence": "En qué se apoyan para decir eso:",
     "productWhoDidWhat": "Quién hizo qué:",
-    "productReminder": "Esto lo lee alguien de fuera de la escuela. Los números tienen que estar bien porque alguien los va a usar, no porque los revise el profesor."
+    "productReminder": "Esto lo lee alguien de fuera de la escuela. Los números tienen que estar bien porque alguien los va a usar, no porque los revise el profesor.",
+    "customize": "Ajusta la ruta a tu escuela",
+    "customizeEmpty": "Sin ajustar. Toca para poner tu escuela, tus cursos y tu lugar.",
+    "customizeLead": "La ruta es la misma en todas las escuelas. Esto es lo que cambia en la tuya, y es lo que sale impreso.",
+    "gradesInRoom": "Cursos que tienes en la sala",
+    "gradesHelp": "Solo se imprimen las hojas de los cursos que dejes marcados.",
+    "gradesNone": "Sin cursos marcados no hay nada que imprimir. Marca al menos uno.",
+    "placeName": "Cómo se llama tu lugar",
+    "placeNamePlaceholder": "Estero Mahuidanche",
+    "outingDate": "Fecha de la salida",
+    "outingDateHelp": "Va en la carta a las familias.",
+    "schoolName": "Nombre de la escuela",
+    "schoolPlaceholder": "Escuela Rural Mahuidanche",
+    "teacherName": "Tu nombre",
+    "teacherHelp": "Firma la autorización de la salida.",
+    "recipient": "A quién le entregan el trabajo",
+    "recipientHelp": "La ruta propone uno. Cámbialo por el que corresponda en tu comunidad.",
+    "savedHere": "Esto queda guardado en este dispositivo. No hace falta cuenta ni internet.",
+    "letterDate2": "La salida es el {{date}}.",
+    "letterSignedBy": "Atentamente, {{teacher}}."
   }
 }
