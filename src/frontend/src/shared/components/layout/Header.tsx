@@ -78,6 +78,18 @@ export default function Header() {
             </Link>
             
             <Link
+              to="/rutas"
+              className={[
+                "rounded-full px-4 py-1.5 text-sm font-medium transition",
+                location.pathname === "/rutas"
+                  ? "bg-white/20 text-white font-semibold"
+                  : "text-slate-200 hover:bg-white/10 hover:text-white",
+              ].join(" ")}
+            >
+              {t("rutas.eyebrow")}
+            </Link>
+
+            <Link
               to="/plataforma?tab=map"
               className={[
                 "rounded-full px-4 py-1.5 text-sm font-medium transition",

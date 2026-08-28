@@ -545,8 +545,8 @@
     },
     "teacherEntry": {
       "eyebrow": "Para docentes",
-      "title": "Prepare uma unidade a partir do seu objetivo de aprendizagem",
-      "body": "Instrução explícita, um exemplo resolvido de um lugar perto da sua escola, prática e saída a campo — nessa ordem.",
+      "title": "Prepare a aula a partir do que você precisa ensinar",
+      "body": "Você explica, mostra um exemplo já resolvido de um lugar perto da sua escola, eles praticam, e só então saem para medir.",
       "cta": "Preparar aula"
     }
   },
@@ -607,7 +607,7 @@
     "titleByPlace": "Comece pelo lugar aonde você pode ir",
     "leadByObjective": "Escolha o objetivo de aprendizagem e um lugar perto da sua escola.",
     "leadByPlace": "Escolha um lugar perto da sua escola e veja quais objetivos ele sustenta de verdade.",
-    "leadCommon": "A sequência chega com instrução explícita, um exemplo resolvido daquele lugar, prática e saída a campo, nessa ordem.",
+    "leadCommon": "A aula chega inteira: o que você explica, um exemplo resolvido com os números daquele lugar, os exercícios, e a saída para medir. Nessa ordem.",
     "demoTitle": "Dados de demonstração.",
     "demoBody": "Não há API por trás: os objetivos, os lugares e a sequência são exemplos, para poder revisar a interface sem subir o backend.",
     "sessionsCount_one": "{{count}} sessão",
@@ -724,6 +724,20 @@
       "showUnrelatedOne": "Ver o lugar que não se relaciona com este objetivo",
       "showUnrelatedMany": "Ver os {{count}} lugares que não se relacionam com este objetivo",
       "mismatchWarning": "Você escolheu um lugar que não se relaciona com o objetivo. A sequência será gerada mesmo assim, mas o lugar ficará decorativo: revise com cuidado antes de levar para a sala."
-    }
+    },
+    "whatTheyDo": "O que fazem:",
+    "meanwhile": "Enquanto isso:",
+    "reviewedRoute": "Esta rota foi escrita por pessoas, não por um modelo."
+  },
+  "rutas": {
+    "eyebrow": "Rotas",
+    "title": "Quatro aulas já escritas",
+    "lead": "Escolha uma e comece. Não há nada para configurar nem para esperar: estão escritas, cobrem vários anos ao mesmo tempo e podem ser impressas.",
+    "weeks_one": "{{count}} semana",
+    "weeks_other": "{{count}} semanas",
+    "objectives_one": "{{count}} objetivo do programa",
+    "objectives_other": "{{count}} objetivos do programa",
+    "back": "Voltar às rotas",
+    "draftNotice": "Estas quatro rotas foram escritas com o currículo e o território à frente, mas ainda não foram revisadas por um professor de sala. Use e nos diga o que falha."
   }
 }

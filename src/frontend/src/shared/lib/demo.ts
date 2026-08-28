@@ -153,6 +153,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
       "Los estudiantes calculan el caudal del estero que cruzan a diario y lo comparan con lo que consume la escuela en una semana.",
     instruccion_explicita: {
       duracion_min: 20,
+      que_hacen_los_estudiantes:
+        "Todos sentados, cuaderno abierto. Copian solo el dibujo del cauce que haces en la pizarra, no las frases.",
       notas_para_el_docente: [
         "Definir caudal como el volumen de agua que pasa por un punto en un tiempo dado",
         "Mostrar en la pizarra la relación entre sección del cauce y velocidad del agua",
@@ -193,8 +195,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
         "El caudal aproximado del estero es de 0,29 m³/s, es decir unos 290 litros por segundo",
     },
     practica_guiada: {
-      instrucciones_docente:
-        "Resolver el primero en la pizarra junto al curso, y dejar el segundo para parejas",
+      como_trabajan:
+        "El primero lo resuelves tú en la pizarra con todos mirando. El segundo, en parejas y en el cuaderno, mientras tú pasas banco por banco.",
       ejercicios: [
         {
           enunciado:
@@ -211,6 +213,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
       ],
     },
     practica_autonoma: {
+      como_trabajan:
+        "Cada uno solo, en su cuaderno. Sin hablar. El que termina, revisa el ejercicio del compañero de al lado.",
       ejercicios: [
         {
           enunciado:
@@ -301,6 +305,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Dibujan el estero en el cuaderno con las tres medidas anotadas. Les toma toda la clase y no necesitan preguntarte nada.",
         rol_en_terreno: "Marca con estacas el tramo de 10 metros y cronometra el flotador.",
       },
       {
@@ -326,6 +332,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Pasan a limpio la lista de bichos que anotaron y le ponen nombre a cada uno con la lámina de la pared.",
         rol_en_terreno:
           "Registra los seres vivos bajo tres piedras del tramo, sin sacarlos del agua.",
       },
@@ -352,6 +360,8 @@ const SECUENCIA_DEMO_ES: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Ordenan las piedras que trajeron de mayor a menor y escriben en qué se diferencian. Trabajo de mesa, en silencio.",
         rol_en_terreno:
           "Mide ancho y profundidad del estero en tres puntos y entrega los datos a 5º.",
       },
@@ -473,6 +483,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
       "Students work out the flow of the stream they cross every day and compare it with what the school uses in a week.",
     instruccion_explicita: {
       duracion_min: 20,
+      que_hacen_los_estudiantes:
+        "All seated, notebooks open. They copy only the drawing of the channel you put on the board, not the sentences.",
       notas_para_el_docente: [
         "Define flow as the volume of water passing a point in a given time",
         "Show on the board how the cross section of the channel relates to the speed of the water",
@@ -513,8 +525,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
         "The approximate flow of the stream is 0.29 m³/s, that is around 290 litres per second",
     },
     practica_guiada: {
-      instrucciones_docente:
-        "Solve the first one on the board with the class, and leave the second for pairs",
+      como_trabajan:
+        "You solve the first one on the board with everyone watching. The second one in pairs, in the notebook, while you go desk by desk.",
       ejercicios: [
         {
           enunciado:
@@ -531,6 +543,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
       ],
     },
     practica_autonoma: {
+      como_trabajan:
+        "Each one alone, in their notebook. No talking. Whoever finishes checks the work of the classmate next to them.",
       ejercicios: [
         {
           enunciado:
@@ -617,6 +631,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "They draw the stream in their notebook with the three measurements written in. It takes them the whole lesson and they need nothing from you.",
         rol_en_terreno: "Stake out the 10 metre stretch and time the float.",
       },
       {
@@ -639,6 +655,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "They write up the list of creatures they recorded and name each one using the chart on the wall.",
         rol_en_terreno:
           "Record the living things under three stones of the stretch, without taking them out of the water.",
       },
@@ -662,6 +680,8 @@ const SECUENCIA_DEMO_EN: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "They sort the stones they brought from largest to smallest and write down how they differ. Deskwork, in silence.",
         rol_en_terreno:
           "Measure the width and depth of the stream at three points and hand the data to grade 5.",
       },
@@ -682,6 +702,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
       "Os estudantes calculam a vazão do córrego que atravessam todo dia e comparam com o que a escola consome em uma semana.",
     instruccion_explicita: {
       duracion_min: 20,
+      que_hacen_los_estudiantes:
+        "Todos sentados, caderno aberto. Copiam só o desenho do leito que você faz no quadro, não as frases.",
       notas_para_el_docente: [
         "Definir vazão como o volume de água que passa por um ponto em um tempo dado",
         "Mostrar no quadro a relação entre a seção do leito e a velocidade da água",
@@ -722,8 +744,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
         "A vazão aproximada do córrego é de 0,29 m³/s, ou seja, uns 290 litros por segundo",
     },
     practica_guiada: {
-      instrucciones_docente:
-        "Resolver o primeiro no quadro junto com a turma, e deixar o segundo para duplas",
+      como_trabajan:
+        "O primeiro você resolve no quadro com todos olhando. O segundo, em duplas e no caderno, enquanto você passa banco por banco.",
       ejercicios: [
         {
           enunciado:
@@ -740,6 +762,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
       ],
     },
     practica_autonoma: {
+      como_trabajan:
+        "Cada um sozinho, no seu caderno. Sem conversar. Quem terminar, confere o exercício do colega ao lado.",
       ejercicios: [
         {
           enunciado:
@@ -826,6 +850,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Desenham o córrego no caderno com as três medidas anotadas. Leva a aula inteira e não precisam perguntar nada a você.",
         rol_en_terreno: "Marca com estacas o trecho de 10 metros e cronometra o flutuador.",
       },
       {
@@ -848,6 +874,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Passam a limpo a lista de bichos que anotaram e dão nome a cada um com o cartaz da parede.",
         rol_en_terreno:
           "Registra os seres vivos sob três pedras do trecho, sem tirá-los da água.",
       },
@@ -871,6 +899,8 @@ const SECUENCIA_DEMO_PT: RespuestaSecuencia = {
             },
           ],
         },
+        mientras_esperan:
+          "Ordenam as pedras que trouxeram da maior para a menor e escrevem em que se diferenciam. Trabalho de mesa, em silêncio.",
         rol_en_terreno:
           "Mede largura e profundidade do córrego em três pontos e entrega os dados ao 5º.",
       },

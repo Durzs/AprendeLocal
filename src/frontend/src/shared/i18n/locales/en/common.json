@@ -545,8 +545,8 @@
     },
     "teacherEntry": {
       "eyebrow": "For teachers",
-      "title": "Prepare a unit from your curriculum objective",
-      "body": "Explicit instruction, a worked example from a place near your school, practice and fieldwork — in that order.",
+      "title": "Prepare the lesson from what you have to teach",
+      "body": "You explain it, you show a worked example from a place near your school, they practise it, and only then do they go out and measure.",
       "cta": "Prepare a lesson"
     }
   },
@@ -607,7 +607,7 @@
     "titleByPlace": "Start from the place you can take them to",
     "leadByObjective": "Pick the learning objective and a place near your school.",
     "leadByPlace": "Pick a place near your school and see which objectives it genuinely supports.",
-    "leadCommon": "The sequence arrives with explicit instruction, a worked example from that place, practice and fieldwork, in that order.",
+    "leadCommon": "The whole lesson arrives: what you explain, a worked example with the numbers of that place, the exercises, and going out to measure. In that order.",
     "demoTitle": "Demonstration data.",
     "demoBody": "There is no API behind this: the objectives, the places and the sequence are samples, so the interface can be reviewed without running the backend.",
     "sessionsCount_one": "{{count}} session",
@@ -724,6 +724,20 @@
       "showUnrelatedOne": "Show the place unrelated to this objective",
       "showUnrelatedMany": "Show the {{count}} places unrelated to this objective",
       "mismatchWarning": "You picked a place unrelated to the objective. The sequence will still be generated, but the place will be decorative: review it carefully before taking it into the classroom."
-    }
+    },
+    "whatTheyDo": "What they do:",
+    "meanwhile": "Meanwhile:",
+    "reviewedRoute": "This route was written by people, not by a model."
+  },
+  "rutas": {
+    "eyebrow": "Routes",
+    "title": "Four lessons already written",
+    "lead": "Pick one and start. Nothing to configure and nothing to wait for: they are written, they cover several grades at once, and they print.",
+    "weeks_one": "{{count}} week",
+    "weeks_other": "{{count}} weeks",
+    "objectives_one": "{{count}} curriculum objective",
+    "objectives_other": "{{count}} curriculum objectives",
+    "back": "Back to the routes",
+    "draftNotice": "These four routes were written with the curriculum and the territory in hand, but no classroom teacher has reviewed them yet. Use them and tell us what breaks."
   }
 }

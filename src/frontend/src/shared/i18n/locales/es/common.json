@@ -545,8 +545,8 @@
     },
     "teacherEntry": {
       "eyebrow": "Para docentes",
-      "title": "Prepara una unidad desde tu objetivo de aprendizaje",
-      "body": "Instrucción explícita, un ejemplo resuelto de un lugar cercano a tu escuela, práctica y salida a terreno — en ese orden.",
+      "title": "Prepara la clase desde lo que te toca enseñar",
+      "body": "Lo explicas tú, muestras un ejemplo ya resuelto de un lugar cercano a tu escuela, lo practican, y recién después salen a medir.",
       "cta": "Preparar clase"
     }
   },
@@ -607,7 +607,7 @@
     "titleByPlace": "Empieza por el lugar al que puedes ir",
     "leadByObjective": "Elige el objetivo de aprendizaje y un lugar cercano a tu escuela.",
     "leadByPlace": "Elige un lugar cercano a tu escuela y mira qué objetivos sostiene de verdad.",
-    "leadCommon": "La secuencia llega con instrucción explícita, un ejemplo resuelto de ese lugar, práctica y salida a terreno, en ese orden.",
+    "leadCommon": "La clase llega entera: lo que explicas tú, un ejemplo resuelto con los números de ese lugar, los ejercicios, y la salida a medir. En ese orden.",
     "demoTitle": "Datos de demostración.",
     "demoBody": "No hay API detrás: los objetivos, los lugares y la secuencia son de ejemplo, para poder revisar la interfaz sin levantar el backend.",
     "sessionsCount_one": "{{count}} sesión",
@@ -724,6 +724,20 @@
       "showUnrelatedOne": "Ver el lugar que no se relaciona con este objetivo",
       "showUnrelatedMany": "Ver los {{count}} lugares que no se relacionan con este objetivo",
       "mismatchWarning": "Elegiste un lugar que no se relaciona con el objetivo. La secuencia se va a generar igual, pero el lugar será decorado: revísala con cuidado antes de llevarla al aula."
-    }
+    },
+    "whatTheyDo": "Qué hacen:",
+    "meanwhile": "Mientras tanto:",
+    "reviewedRoute": "Esta ruta la escribieron personas, no un modelo."
+  },
+  "rutas": {
+    "eyebrow": "Rutas",
+    "title": "Cuatro clases ya escritas",
+    "lead": "Elige una y empieza. No hay que configurar nada ni esperar a que se genere: están escritas, cubren varios cursos a la vez y se pueden imprimir.",
+    "weeks_one": "{{count}} semana",
+    "weeks_other": "{{count}} semanas",
+    "objectives_one": "{{count}} objetivo del programa",
+    "objectives_other": "{{count}} objetivos del programa",
+    "back": "Volver a las rutas",
+    "draftNotice": "Estas cuatro rutas están escritas con el currículum y el territorio delante, pero todavía no las ha revisado un docente de aula. Úsalas y dinos qué falla."
   }
 }

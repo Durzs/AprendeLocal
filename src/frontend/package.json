@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && node ../../scripts/revisar-lenguaje.mjs && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "revisar-lenguaje": "node ../../scripts/revisar-lenguaje.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
