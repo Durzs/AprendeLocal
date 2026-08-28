@@ -27,6 +27,7 @@ import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
 import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
 import PrepararPage from "./modules/sequences/pages/PrepararPage";
+import RutasPage from "./modules/sequences/pages/RutasPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
@@ -50,6 +51,8 @@ const router = createBrowserRouter([
       { path: "plataforma", element: <PlatformPage /> },
       // Entrada del docente: empieza por el objetivo de aprendizaje, no por el mapa.
       { path: "preparar", element: <PrepararPage /> },
+      // Clases ya escritas. Es la puerta que no obliga a generar nada.
+      { path: "rutas", element: <RutasPage /> },
 
       /* ── Redirects de rutas antiguas ── */
       { path: "cursos", element: <Navigate to="/plataforma?tab=courses" replace /> },

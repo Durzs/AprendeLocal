@@ -175,36 +175,50 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
 };
 
 const SYSTEM_PROMPT =
-  `Eres un diseñador instruccional que prepara material para docentes rurales del sur de Chile (La Araucanía), muchos de ellos a cargo de aulas multigrado donde un solo profesor atiende varios cursos a la vez.
+  `Escribes la clase del lunes para un profesor de escuela rural en La Araucanía. Muchos tienen la sala llena de cursos distintos a la vez: 5º, 6º y 7º sentados juntos, y un solo profesor.
 
-Tu trabajo NO es diseñar un proyecto para que el estudiante descubra por su cuenta. Es preparar una secuencia de enseñanza en la que la guía empieza alta y se retira progresivamente, siguiendo la evidencia sobre carga cognitiva y ejemplos resueltos.
+Escribes PARA ÉL. No para una revista de educación, no para su jefe técnico, no para justificar el método. Él va a leer esto de pie, cinco minutos antes de entrar.
+
+CÓMO SE ESCRIBE
+Está PROHIBIDO usar estas palabras, y cualquier otra del mismo estilo: instrucción explícita, práctica guiada, práctica autónoma, recuperación espaciada, carga cognitiva, andamiaje, metacognición, aprendizaje significativo, competencia, transferencia, indagación, constructivismo, protocolo, insumo, dispositivo pedagógico, objetivo transversal.
+Si necesitas decir eso, dilo en palabras normales: «lo explicas tú», «lo resuelven contigo», «lo resuelven solos», «se lo vuelves a preguntar en tres semanas».
+Frases cortas. Tuteo. Verbos concretos: mide, anota, reparte, pega, sale, cuenta. Nada de «se sugiere que el estudiante logre»: escribe «que midan el ancho con la huincha».
+
+QUÉ TIENE QUE QUEDAR CLARO
+Un profesor no necesita saber por qué funciona. Necesita saber QUÉ PASA EN LA SALA: quién hace qué, dónde, con qué, y qué hacen los demás mientras tanto. Eso es lo que más falta hace y lo que peor se suele escribir.
 
 Reglas que no puedes romper:
 
-1. EL LUGAR ES EL CONTEXTO, NO EL MÉTODO. El territorio es el material del que están hechos el ejemplo y la práctica, no el punto de partida de una exploración libre.
-2. EL EJEMPLO RESUELTO ES EL CENTRO. Debe estar completamente desarrollado, paso a paso, con los números o las observaciones ya hechas y explicadas.
-3. LA SALIDA A TERRENO VA DESPUÉS de la práctica guiada, nunca antes.
-4. HABLAS AL DOCENTE. La instrucción explícita se redacta como notas para que el profesor las explique él.
-5. MATERIALES DE ZONA RURAL: cuaderno, huincha, lupa, termómetro, botellas recicladas, agua del estero.
-6. EL PROTOCOLO DE TERRENO LLEVA CAMPOS CONCRETOS Y MEDIBLES, con unidad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, y va en el idioma de salida.
-7. LA RECUPERACIÓN ESPACIADA USA LOS DATOS QUE LOS PROPIOS ESTUDIANTES TOMARON, con marcadores {dato_del_estudiante}.
-8. CULTURA MAPUCHE: solo si es pertinente, como fuente de conocimiento y nunca como adorno. Si la incluyes, márcalo en requiere_consulta.
-9. AULA MULTIGRADO: cuando recibas más de un objetivo, son cursos distintos sentados en la MISMA sala con UN solo docente. No escribas varias clases paralelas: escribe UNA. La instrucción explícita, el ejemplo resuelto y la salida a terreno son comunes a todos. Lo que cambia por curso es la práctica y qué mide cada uno en la salida, y eso va en "por_nivel". Reparte el trabajo de terreno para que los cursos dependan unos de otros: el curso mayor toma la medición que el menor necesita para su tarea.
+1. EL LUGAR ES DE DONDE SALEN LOS NÚMEROS. El estero, el suelo o el bosque son el material del ejemplo y de los ejercicios. No son una excursión con nombre bonito.
+2. EL EJEMPLO VA RESUELTO ENTERO. Paso a paso, con los números puestos y explicados, listo para copiar en la pizarra. Es lo más importante de todo: si el profesor tiene que inventarlo él, no le sirvió de nada.
+3. SALEN A TERRENO DESPUÉS DE PRACTICAR, nunca antes. Llegan sabiendo qué mirar.
+4. DI SIEMPRE QUÉ HACEN LOS ESTUDIANTES. En cada momento de la clase: si están sentados escuchando, si copian, si trabajan en parejas, si uno lee en voz alta. Y con qué: cuaderno, hoja, pizarra, huincha.
+5. MATERIALES QUE HAY DE VERDAD: cuaderno, lápiz, huincha, lupa, termómetro, botellas recicladas, tarros, cordel, agua del estero. Nada que haya que comprar.
+6. LO QUE MIDEN EN TERRENO SON COSAS CONCRETAS, con su unidad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, en el idioma de salida.
+7. AL VOLVER A PREGUNTAR, USA LO QUE ELLOS MISMOS MIDIERON, con marcadores {dato_del_estudiante}.
+8. CULTURA MAPUCHE: solo si viene al caso, como conocimiento y nunca de adorno. Si la incluyes, marca requiere_consulta.
+9. SALA MULTIGRADO. Con más de un objetivo son cursos distintos en la MISMA sala con UN profesor. No escribas varias clases en paralelo: escribe UNA. Lo que explicas y la salida son iguales para todos; lo que cambia por curso son los ejercicios y qué mide cada uno, y eso va en "por_nivel".
+   Y lo más importante: el profesor solo puede estar en un puesto a la vez. En cada curso escribe "mientras_esperan": qué hace ese curso, callado y sin ti, mientras estás sentado con otro. Tiene que ser algo que puedan hacer solos y que dure. Si no lo dices, la clase se cae.
+   En terreno, reparte el trabajo para que los cursos se necesiten: el mayor toma la medida que el menor necesita para su ejercicio.
 
-LARGO Y CONCISIÓN. Sé sintético y preciso:
-- notas_para_el_docente: 3 a 4 notas concisas
-- pasos del ejemplo resuelto: 3 a 5 pasos claros con razonamiento y resultado
-- ejercicios de práctica guiada: 2 a 3 ejercicios breves
-- ejercicios de práctica autónoma: 2 a 3 ejercicios breves
-- protocolo de terreno: 2 a 4 campos con unidad
-- recuperacion_espaciada: 2 preguntas breves
-- en por_nivel, por cada curso: 1 a 2 ejercicios guiados y 1 autónomo (enunciados breves)
+LARGO. Sé breve, que esto se imprime:
+- lo que explicas: 3 o 4 frases
+- pasos del ejemplo: 3 a 5, con el número puesto
+- ejercicios contigo: 2 o 3, cortos
+- ejercicios solos: 2 o 3, cortos
+- qué miden en terreno: 2 a 4 cosas, con unidad
+- volver a preguntar: 2 preguntas cortas
+- por curso: 1 o 2 ejercicios contigo y 1 solo
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"instrucciones_docente":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+
+Qué va en los campos nuevos:
+- "que_hacen_los_estudiantes": qué hace el curso mientras tú explicas. Ejemplo: «Sentados, con el cuaderno abierto. Copian solo la tabla que dibujas en la pizarra, no las frases.»
+- "como_trabajan": cómo se organiza la sala en ese rato. Ejemplo: «En parejas, en el puesto. Tú vas pasando banco por banco.»
 
 Con más de un objetivo, añade además la clave "por_nivel", con una entrada por curso:
-"por_nivel":[{"nivel":"","objetivo_codigo":"","practica_guiada":{"ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"rol_en_terreno":""}]`;
+"por_nivel":[{"nivel":"","objetivo_codigo":"","practica_guiada":{"ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"mientras_esperan":"","rol_en_terreno":""}]`;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -366,27 +380,27 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
   ) {
     rellenadas.push("ejemplo_resuelto");
     s.ejemplo_resuelto = {
-      situacion: `Análisis de terreno en ${poi?.name || "el territorio"}.`,
+      situacion: `En ${poi?.name || "el lugar"}.`,
       pasos: [
-        { paso: 1, accion: "Identificar la variable a medir en el lugar.", razonamiento: "Permite delimitar el alcance del estudio.", resultado: "Variable definida." },
-        { paso: 2, accion: "Registrar datos con la unidad correspondiente.", razonamiento: "Asegura la comparabilidad de las mediciones.", resultado: "Registro completo." },
+        { paso: 1, accion: "Aquí va el ejemplo resuelto, con los números puestos.", razonamiento: "Esto no se generó.", resultado: "Escríbelo tú o vuelve a generar." },
       ],
-      respuesta: "Datos registrados y analizados correctamente.",
+      respuesta: "Sin ejemplo. Esta parte hay que escribirla.",
     };
   }
 
   if (!s.practica_guiada || typeof s.practica_guiada !== "object") {
     rellenadas.push("practica_guiada");
     s.practica_guiada = {
-      instrucciones_docente: "Guiar a los estudiantes en la resolución conjunta.",
-      ejercicios: [{ enunciado: `Calcular la medición en ${poi?.name}.`, apoyo: "Revisar los pasos del ejemplo.", respuesta_esperada: "Resultado obtenido." }],
+      como_trabajan: "Sin escribir. Esta parte no se generó.",
+      ejercicios: [{ enunciado: "Aquí van los ejercicios que resuelven contigo. Escríbelos tú o vuelve a generar.", apoyo: "", respuesta_esperada: "" }],
     };
   }
 
   if (!s.practica_autonoma || typeof s.practica_autonoma !== "object") {
     rellenadas.push("practica_autonoma");
     s.practica_autonoma = {
-      ejercicios: [{ enunciado: "Resolver el ejercicio individualmente en el cuaderno.", respuesta_esperada: "Respuesta correcta." }],
+      como_trabajan: "Sin escribir. Esta parte no se generó.",
+      ejercicios: [{ enunciado: "Aquí van los ejercicios que resuelven solos. Escríbelos tú o vuelve a generar.", respuesta_esperada: "" }],
     };
   }
 
@@ -394,22 +408,22 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
     rellenadas.push("salida_terreno");
     s.salida_terreno = {
       duracion_min: 90,
-      preparacion: ["Revisar materiales y libreta de campo."],
-      protocolo: [{ campo: "Medición principal", instruccion: "Medir en el punto indicado", unidad: "m", tipo: "numero" }],
-      seguridad: ["No alejarse del grupo."],
+      preparacion: ["Cuaderno y lápiz."],
+      protocolo: [{ campo: "sin_definir", etiqueta: "Sin definir", instruccion: "Aquí va qué miden. Escríbelo tú o vuelve a generar.", tipo: "texto" }],
+      seguridad: ["Nadie se aleja del grupo."],
     };
   }
 
   if (!Array.isArray(s.recuperacion_espaciada) || s.recuperacion_espaciada.length === 0) {
     rellenadas.push("recuperacion_espaciada");
     s.recuperacion_espaciada = [
-      { semanas_despues: 1, pregunta: "¿Qué medición realizamos en la salida?", respuesta_esperada: "La variable estudiada." },
-      { semanas_despues: 3, pregunta: "¿Cómo se relaciona ese dato con el ecosistema?", respuesta_esperada: "Explica el fenómeno observado." },
+      { semanas_despues: 1, pregunta: "¿Qué midieron en la salida?", respuesta_esperada: "" },
+      { semanas_despues: 3, pregunta: "Aquí va la segunda pregunta. Escríbela tú o vuelve a generar.", respuesta_esperada: "" },
     ];
   }
 
   if (!Array.isArray(s.materiales) || s.materiales.length === 0) {
-    s.materiales = ["Cuaderno de campo", "Lápiz", "Huincha de medir", "Lupa"];
+    s.materiales = ["Cuaderno", "Lápiz", "Huincha", "Lupa"];
   }
 
   if (codigos.length > 1 && (!Array.isArray(s.por_nivel) || s.por_nivel.length === 0)) {
@@ -417,9 +431,10 @@ function asegurarEstructura(s: Record<string, any>, codigos: string[], objetivos
     s.por_nivel = objetivos.map((o: any) => ({
       nivel: o.level || "Básico",
       objetivo_codigo: o.code,
-      practica_guiada: { ejercicios: [{ enunciado: `Actividad práctica guiada para ${o.level || o.code}`, apoyo: "Guiarse por el ejemplo resuelto", respuesta_esperada: "Completado" }] },
-      practica_autonoma: { ejercicios: [{ enunciado: `Actividad autónoma para ${o.level || o.code}`, respuesta_esperada: "Completado" }] },
-      rol_en_terreno: `Encargado de la medición específica del nivel ${o.level || o.code}`,
+      practica_guiada: { ejercicios: [{ enunciado: `Sin ejercicios para ${o.level || o.code}. Escríbelos tú o vuelve a generar.`, apoyo: "", respuesta_esperada: "" }] },
+      practica_autonoma: { ejercicios: [{ enunciado: `Sin ejercicios para ${o.level || o.code}.`, respuesta_esperada: "" }] },
+      mientras_esperan: "",
+      rol_en_terreno: "",
     }));
   }
 
@@ -623,7 +638,7 @@ Deno.serve(async (req: Request) => {
     `Sesiones disponibles: ${sesiones}`,
     notas_docente ? `Notas del docente: ${notas_docente}` : "",
     "",
-    "Genera la secuencia completa. El ejemplo resuelto debe estar totalmente desarrollado y ambientado en este lugar.",
+    "Escribe la clase entera. El ejemplo tiene que ir resuelto de principio a fin, con los números de este lugar, listo para copiar en la pizarra.",
     multigrado
       ? "Es UNA sola clase para todos los cursos juntos. Devuelve 'por_nivel' con una entrada por cada curso listado. Sé sintético y conciso."
       : "",

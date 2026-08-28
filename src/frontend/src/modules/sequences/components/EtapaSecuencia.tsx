@@ -19,6 +19,14 @@ type Props = {
   /** Fuera de la etapa activa se oculta en pantalla, pero sigue en el DOM
    *  para que al imprimir salga la secuencia entera y seguida. */
   activa?: boolean;
+  /**
+   * Hacia dónde se movió el docente: 1 avanzando, -1 volviendo.
+   *
+   * La etapa entra por el lado contrario al que va, igual que una página que
+   * pasa. Es lo que convierte seis tarjetas iguales en una secuencia con
+   * dirección, que es justo lo que hay que entender de ella.
+   */
+  sentido?: 1 | -1;
   children: ReactNode;
 };
 
@@ -37,6 +45,7 @@ export default function EtapaSecuencia({
   actor,
   destacada = false,
   activa = true,
+  sentido = 1,
   children,
 }: Props) {
   const { t } = useTranslation();
@@ -47,6 +56,10 @@ export default function EtapaSecuencia({
         "break-inside-avoid rounded-2xl border bg-white p-5 md:p-6",
         destacada ? "border-emerald-300 ring-1 ring-emerald-200" : "border-slate-200",
         activa ? "" : "hidden print:block print:mt-4",
+        // La clase se pone al activarse y se quita al salir, así que el
+        // navegador vuelve a lanzar la animación en cada cambio sin que haya
+        // que remontar nada: remontar borraría el desplazamiento de la página.
+        activa ? (sentido === 1 ? "animar-avanza" : "animar-retrocede") : "",
       ].join(" ")}
     >
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">

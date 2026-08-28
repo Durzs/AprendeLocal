@@ -282,6 +282,16 @@ export interface NivelDiferenciado {
   practica_autonoma?: {
     ejercicios?: { enunciado: string; respuesta_esperada?: string }[];
   };
+  /**
+   * Qué hace este curso, callado y sin el docente, mientras él está sentado
+   * con otro.
+   *
+   * Es el dato que sostiene toda la clase multigrado y el que faltaba. La
+   * secuencia decía qué practica cada curso, pero no que el profesor solo
+   * puede estar en un puesto a la vez: sin esto, tres de los cuatro cursos
+   * quedan sin instrucciones justo cuando nadie los está mirando.
+   */
+  mientras_esperan?: string;
   /** Qué mide o registra este curso durante la salida común. */
   rol_en_terreno?: string;
 }
@@ -294,6 +304,8 @@ export interface Secuencia {
   sintesis_docente?: string;
   instruccion_explicita?: {
     duracion_min?: number;
+    /** Qué hace el curso mientras el docente explica: sentados, copiando… */
+    que_hacen_los_estudiantes?: string;
     notas_para_el_docente?: string[];
     conceptos_clave?: string[];
     errores_frecuentes?: string[];
@@ -304,10 +316,13 @@ export interface Secuencia {
     respuesta?: string;
   };
   practica_guiada?: {
+    /** Cómo se organiza la sala en ese rato: solos, en parejas, dónde. */
+    como_trabajan?: string;
     instrucciones_docente?: string;
     ejercicios?: { enunciado: string; apoyo?: string; respuesta_esperada?: string }[];
   };
   practica_autonoma?: {
+    como_trabajan?: string;
     ejercicios?: { enunciado: string; respuesta_esperada?: string }[];
   };
   salida_terreno?: {
