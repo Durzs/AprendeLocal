@@ -727,7 +727,9 @@
     },
     "whatTheyDo": "O que fazem:",
     "meanwhile": "Enquanto isso:",
-    "reviewedRoute": "Esta rota foi escrita por pessoas, não por um modelo."
+    "reviewedRoute": "Esta rota foi escrita por pessoas, não por um modelo.",
+    "waitNormal": "Escrevendo a aula. Costuma levar meio minuto.",
+    "waitLong": "Está demorando mais que o normal. Continua funcionando, não feche."
   },
   "rutas": {
     "eyebrow": "Rotas",

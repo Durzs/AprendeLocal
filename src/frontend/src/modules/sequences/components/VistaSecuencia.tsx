@@ -63,8 +63,13 @@ function PorNivel({
 
   return (
     <div className="mt-4 space-y-3 border-t border-slate-200 pt-4">
-      {conTrabajo.map((b) => (
-        <div key={`${b.nivel}-${b.objetivo_codigo}`}>
+      {conTrabajo.map((b, i) => (
+        // Escalonados: tres o cuatro cursos entrando a la vez son una pared.
+        // Entrando de arriba abajo se leen como la lista que son.
+        <div
+          key={`${b.nivel}-${b.objetivo_codigo}`}
+          className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}
+        >
           <p className="flex items-baseline gap-2 text-sm font-semibold text-slate-800">
             <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
               {nivelCorto(b.nivel, t("preparar.gradeBadge"))}
@@ -142,6 +147,14 @@ export default function VistaSecuencia({
 }: Props) {
   const { t } = useTranslation();
   const [etapaActiva, setEtapaActiva] = useState(1);
+  // Saltar del riel a una etapa lejana también tiene sentido: hacia adelante
+  // si el número sube, hacia atrás si baja.
+  const [sentido, setSentido] = useState<1 | -1>(1);
+
+  function irA(numero: number) {
+    setSentido(numero >= etapaActiva ? 1 : -1);
+    setEtapaActiva(numero);
+  }
 
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
@@ -223,11 +236,12 @@ export default function VistaSecuencia({
         )}
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
-          <RielEtapas etapas={etapas} activa={etapaActiva} onCambiar={setEtapaActiva} />
+          <RielEtapas etapas={etapas} activa={etapaActiva} onCambiar={irA} />
 
           <div className="min-w-0 space-y-4 print:space-y-0">
         <EtapaSecuencia
           activa={etapaActiva === 1}
+            sentido={sentido}
           titulo={t("preparar.stages.explain")}
           subtitulo={
             s.instruccion_explicita?.duracion_min
@@ -254,6 +268,7 @@ export default function VistaSecuencia({
 
         <EtapaSecuencia
           activa={etapaActiva === 2}
+            sentido={sentido}
           titulo={t("preparar.stages.example")}
           subtitulo={s.ejemplo_resuelto?.situacion}
           actor="plataforma"
@@ -283,6 +298,7 @@ export default function VistaSecuencia({
 
         <EtapaSecuencia
           activa={etapaActiva === 3}
+            sentido={sentido}
           titulo={t("preparar.stages.guided")}
           actor="docente"
         >
@@ -312,6 +328,7 @@ export default function VistaSecuencia({
 
         <EtapaSecuencia
           activa={etapaActiva === 4}
+            sentido={sentido}
           titulo={t("preparar.stages.independent")}
           actor="estudiantes"
         >
@@ -326,6 +343,7 @@ export default function VistaSecuencia({
 
         <EtapaSecuencia
           activa={etapaActiva === 5}
+            sentido={sentido}
           titulo={t("preparar.stages.field")}
           subtitulo={t("preparar.stages.fieldSubtitle")}
           actor="estudiantes"
@@ -397,6 +415,7 @@ export default function VistaSecuencia({
 
         <EtapaSecuencia
           activa={etapaActiva === 6}
+            sentido={sentido}
           titulo={t("preparar.stages.review")}
           subtitulo={t("preparar.stages.reviewSubtitle")}
           actor="estudiantes"
@@ -417,7 +436,7 @@ export default function VistaSecuencia({
             <div className="flex items-center justify-between gap-3 print:hidden">
               <button
                 type="button"
-                onClick={() => setEtapaActiva((n) => Math.max(1, n - 1))}
+                onClick={() => irA(Math.max(1, etapaActiva - 1))}
                 disabled={etapaActiva === 1}
                 className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-40"
               >
@@ -431,7 +450,7 @@ export default function VistaSecuencia({
               </span>
               <button
                 type="button"
-                onClick={() => setEtapaActiva((n) => Math.min(etapas.length, n + 1))}
+                onClick={() => irA(Math.min(etapas.length, etapaActiva + 1))}
                 disabled={etapaActiva === etapas.length}
                 className="rounded-full bg-[#111217] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
               >

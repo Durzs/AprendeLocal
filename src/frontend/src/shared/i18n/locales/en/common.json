@@ -727,7 +727,9 @@
     },
     "whatTheyDo": "What they do:",
     "meanwhile": "Meanwhile:",
-    "reviewedRoute": "This route was written by people, not by a model."
+    "reviewedRoute": "This route was written by people, not by a model.",
+    "waitNormal": "Writing the lesson. It usually takes about half a minute.",
+    "waitLong": "This is taking longer than usual. It is still working, do not close it."
   },
   "rutas": {
     "eyebrow": "Routes",

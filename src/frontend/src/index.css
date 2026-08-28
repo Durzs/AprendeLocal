@@ -68,6 +68,94 @@ body {
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Movimiento con trabajo que hacer.
+
+   Nada de esto es adorno. La secuencia es un orden en el tiempo —primero lo
+   explicas, al final salen a medir— y ese orden es justamente lo que un
+   docente no capta leyendo seis tarjetas iguales. Que el contenido entre por
+   el lado hacia el que avanzas dice «vas hacia adelante» sin una palabra.
+
+   Reglas que se cumplen abajo sin excepción:
+   · Nada dura más de 400 ms. Esto se usa de pie, antes de entrar a la sala.
+   · Nada se mueve más de 16 px: a esa distancia se lee la dirección y no
+     marea.
+   · Nada anima opacidad desde 0 en contenido que ya estaba: aparecer de la
+     nada se lee como un parpadeo, no como una transición.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@keyframes entraDesdeDerecha {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes entraDesdeIzquierda {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes asomaAbajo {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Barra de espera. No finge saber cuánto falta: recorre y vuelve. */
+@keyframes recorreEsperando {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.animar-avanza  { animation: entraDesdeDerecha 260ms ease-out both; }
+.animar-retrocede { animation: entraDesdeIzquierda 260ms ease-out both; }
+.animar-asoma   { animation: asomaAbajo 300ms ease-out both; }
+.animar-esperando { animation: recorreEsperando 1.4s ease-in-out infinite; }
+
+/*
+ * El escalonado hace que tres o cuatro cursos se lean como una lista en
+ * orden, y no como una pared que aparece de golpe. Cuatro pasos bastan: en
+ * una sala multigrado no hay más de cuatro cursos, y si los hubiera, el
+ * quinto entra sin retraso en vez de hacer esperar a nadie.
+ */
+.animar-asoma-1 { animation-delay: 40ms; }
+.animar-asoma-2 { animation-delay: 80ms; }
+.animar-asoma-3 { animation-delay: 120ms; }
+.animar-asoma-4 { animation-delay: 160ms; }
+
+/*
+ * Quien pidió que nada se mueva, no ve nada moverse. Incluye las animaciones
+ * decorativas de la portada, que hasta ahora ignoraban esta preferencia: un
+ * docente con vértigo o con mareo por movimiento se encontraba la página
+ * entera flotando sin manera de pararla.
+ *
+ * No se desactivan con `animation: none`, que dejaría los elementos en el
+ * fotograma inicial —es decir, invisibles y desplazados—. Se colapsan a una
+ * duración mínima, así el estado final se aplica igual.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lo mismo al imprimir: en papel no hay transición que valga, y un elemento
+   sorprendido a mitad de animación saldría a medio desvanecer. */
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* Leaflet maps — solo aplica dentro de PlataformaApp */
 .leaflet-container {
   height: 100%;

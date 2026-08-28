@@ -41,6 +41,43 @@ import {
   modoDemo,
 } from "../../../shared/lib/demo";
 
+/**
+ * La espera de la generación.
+ *
+ * Escribir la clase tarda cerca de medio minuto. Hasta ahora, en ese medio
+ * minuto la pantalla no hacía absolutamente nada: el botón cambiaba de texto y
+ * ya. Para alguien que no da por hecho que un sitio web esté «pensando», una
+ * pantalla quieta significa que se colgó, y lo que se hace entonces es cerrar.
+ *
+ * La barra no finge saber cuánto falta —no hay manera de saberlo, es una sola
+ * llamada— así que recorre y vuelve, que es lo honesto. Lo que sí se puede
+ * decir es cuánto suele tardar, y avisar cuando se está pasando de eso.
+ */
+function Esperando() {
+  const { t } = useTranslation();
+  const [segundos, setSegundos] = useState(0);
+
+  useEffect(() => {
+    const reloj = setInterval(() => setSegundos((n) => n + 1), 1000);
+    return () => clearInterval(reloj);
+  }, []);
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5"
+    >
+      <div className="h-1 w-full overflow-hidden rounded-full bg-slate-200">
+        <div className="animar-esperando h-full w-1/4 rounded-full bg-slate-900" />
+      </div>
+      <p className="mt-2.5 text-sm text-slate-700">
+        {segundos < 25 ? t("preparar.waitNormal") : t("preparar.waitLong")}
+      </p>
+    </div>
+  );
+}
+
 export default function PrepararPage() {
   const { t, i18n } = useTranslation();
   const [objetivos, setObjetivos] = useState<CurriculumObjective[]>([]);
@@ -367,6 +404,8 @@ export default function PrepararPage() {
         >
           {generando ? t("preparar.generating") : t("preparar.generate")}
         </button>
+
+        {generando && <Esperando />}
 
         {errorGeneracion && (
           <p

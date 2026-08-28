@@ -15,13 +15,22 @@ import { useTranslation } from "react-i18next";
 import { RUTAS, cursoCorto, type Ruta } from "../rutas/catalogo";
 import VistaSecuencia from "../components/VistaSecuencia";
 
-function Tarjeta({ ruta, onAbrir }: { ruta: Ruta; onAbrir: () => void }) {
+function Tarjeta({
+  ruta,
+  onAbrir,
+  orden,
+}: {
+  ruta: Ruta;
+  onAbrir: () => void;
+  /** Posición en la rejilla, para que entren de una en una y no de golpe. */
+  orden: number;
+}) {
   const { t } = useTranslation();
   const cursos = ruta.cubre.map((c) => cursoCorto(c.nivel));
   const totalOA = ruta.cubre.reduce((n, c) => n + c.codigos.length, 0);
 
   return (
-    <li>
+    <li className={`animar-asoma animar-asoma-${Math.min(orden, 4)}`}>
       <button
         type="button"
         onClick={onAbrir}
@@ -63,7 +72,7 @@ export default function RutasPage() {
 
   if (abierta) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      <div className="animar-avanza mx-auto max-w-6xl px-4 py-10">
         <button
           type="button"
           onClick={() => setAbierta(null)}
@@ -75,6 +84,7 @@ export default function RutasPage() {
         {/* Una ruta no la escribió un modelo, así que no lleva ni el sello ni
             la advertencia de revisarla: eso sería mentir al revés. */}
         <VistaSecuencia
+          key={abierta.id}
           secuencia={abierta.secuencia}
           codigos={abierta.cubre.flatMap((c) => c.codigos)}
           porModelo={false}
@@ -96,8 +106,8 @@ export default function RutasPage() {
       </header>
 
       <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-        {RUTAS.map((r) => (
-          <Tarjeta key={r.id} ruta={r} onAbrir={() => setAbierta(r)} />
+        {RUTAS.map((r, i) => (
+          <Tarjeta key={r.id} ruta={r} orden={i + 1} onAbrir={() => setAbierta(r)} />
         ))}
       </ul>
 
