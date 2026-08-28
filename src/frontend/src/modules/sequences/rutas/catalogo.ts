@@ -25,6 +25,29 @@
 
 import type { Secuencia } from "../../../types";
 
+/**
+ * La postura desde la que trabaja cada curso.
+ *
+ * Sobel observa que la relación con el lugar cambia con la edad, y que
+ * saltarse ese orden es lo que produce niños angustiados por problemas
+ * planetarios que no pueden tocar. Entre los 8 y los 11 toca EXPLORAR: mapear,
+ * recorrer, averiguar cómo funciona esto de aquí. Entre los 12 y los 15 toca
+ * ACTUAR: un problema real de la comunidad, y algo que entregar.
+ *
+ * Una sala multigrado de 5º a 8º tiene las dos edades sentadas a la vez, y eso
+ * deja de ser un estorbo para volverse la mejor razón para juntarlos: los
+ * pequeños levantan los datos del lugar y los grandes los usan para sostener
+ * algo delante de un adulto. Cada uno en su postura, y dependiendo del otro.
+ */
+export type Postura = "explorar" | "actuar";
+
+/** Una semana de la ruta, para verla como recorrido y no como lista. */
+export type Fase = {
+  semana: number;
+  titulo: string;
+  queOcurre: string;
+};
+
 export type Ruta = {
   id: string;
   titulo: string;
@@ -33,8 +56,52 @@ export type Ruta = {
   /** Qué tipo de lugar hace falta. No un lugar concreto: cada escuela tiene el suyo. */
   lugar: string;
   semanas: number;
-  /** Un código de objetivo por curso que la ruta atiende. */
-  cubre: { nivel: string; codigos: string[] }[];
+  /**
+   * La pregunta que sostiene la ruta entera.
+   *
+   * Del PBL: una pregunta abierta, real, sin respuesta en el libro, y que a
+   * alguien del pueblo le importe de verdad. No es el objetivo de aprendizaje
+   * disfrazado de pregunta.
+   */
+  preguntaGuia: string;
+  /**
+   * Lo que el curso entrega, y a quién.
+   *
+   * Es la pieza que separa un proyecto de una actividad larga: hay una
+   * audiencia real esperando algo. Sin destinatario, el trabajo termina en el
+   * cuaderno y la nota, y el lugar vuelve a ser decorado.
+   */
+  producto: { que: string; paraQuien: string };
+  /** El recorrido semana a semana. */
+  fases: Fase[];
+  /** Un objetivo por curso, con la postura que le toca por edad. */
+  cubre: { nivel: string; codigos: string[]; postura: Postura; papel: string }[];
+  /**
+   * El lugar nombrado en mapuzugun, además de en castellano.
+   *
+   * Esto no es un adorno bilingüe ni una traducción de la interfaz. En una
+   * escuela de La Araucanía el estero tiene dos nombres, y el que usa la
+   * comunidad suele decir más del sitio que el del mapa: «menoko» no es «un
+   * humedal», es un ojo de agua con dueño y con reglas. Que la hoja de terreno
+   * lleve los dos nombres es lo que separa la educación intercultural de la
+   * decoración con motivos.
+   *
+   * Los términos se escriben en grafemario Azümchefe, que es el que el
+   * MINEDUC usa en Educación Intercultural Bilingüe. Van marcados como SIN
+   * VALIDAR hasta que los revise un hablante: escribir mal una lengua en
+   * proceso de revitalización no es un detalle menor, y preferimos decir que
+   * no estamos seguros antes que imprimirlo con aplomo.
+   */
+  mapuzugun?: { termino: string; castellano: string; nota?: string }[];
+  /**
+   * Lo que la comunidad sabe de este lugar, y que la ruta puede recoger.
+   *
+   * Va aparte del contenido científico a propósito: no es una versión
+   * folclórica de lo mismo, es otra fuente de conocimiento sobre el mismo
+   * sitio. Y no se usa sin permiso: quien lo tiene es la comunidad, no la
+   * escuela ni nosotros.
+   */
+  kimun?: { pregunta: string; aQuien: string };
   secuencia: Secuencia;
 };
 
@@ -1028,11 +1095,63 @@ export const RUTAS: Ruta[] = [
     gancho: "Miden cuánta agua lleva el estero de al lado y la comparan con lo que gasta la escuela.",
     lugar: "Un estero, una vertiente o un río al que se pueda llegar caminando.",
     semanas: 3,
-    cubre: [
-      { nivel: "5to_basico", codigos: ["OA12_CN_5", "OA13_CN_5", "OA14_CN_5"] },
-      { nivel: "6to_basico", codigos: ["OA01_CN_6", "OA15_CN_6"] },
-      { nivel: "7mo_basico", codigos: ["OA12_CN_7"] },
+    preguntaGuia:
+      "¿Le alcanza el agua de nuestro estero para la escuela y las casas de alrededor, todo el año?",
+    producto: {
+      que: "Un informe de una plana con el caudal que midieron, comparado con lo que gasta la escuela en una semana.",
+      paraQuien: "El comité de agua potable rural, o la directiva de la junta de vecinos.",
+    },
+    fases: [
+      {
+        semana: 1,
+        titulo: "Aprenden a medir antes de ir",
+        queOcurre:
+          "Lo explicas tú, muestras el ejemplo ya resuelto con los números puestos, y practican en el cuaderno. Todavía no salen.",
+      },
+      {
+        semana: 2,
+        titulo: "Salen a medir el estero",
+        queOcurre:
+          "Llegan sabiendo qué mirar. Cada curso levanta su parte y se la pasa al que la necesita.",
+      },
+      {
+        semana: 3,
+        titulo: "Sacan la cuenta y la entregan",
+        queOcurre:
+          "Calculan el caudal con sus propios datos, lo comparan con el consumo de la escuela y escriben el informe.",
+      },
     ],
+    cubre: [
+      {
+        nivel: "5to_basico",
+        codigos: ["OA12_CN_5", "OA13_CN_5", "OA14_CN_5"],
+        postura: "explorar",
+        papel: "Dibujan el mapa del estero y toman el tiempo del flotador.",
+      },
+      {
+        nivel: "6to_basico",
+        codigos: ["OA01_CN_6", "OA15_CN_6"],
+        postura: "explorar",
+        papel: "Anotan quién vive del estero y qué encuentran bajo las piedras.",
+      },
+      {
+        nivel: "7mo_basico",
+        codigos: ["OA12_CN_7"],
+        postura: "actuar",
+        papel: "Miden ancho y hondo, sacan la cuenta y escriben el informe que se entrega.",
+      },
+    ],
+    mapuzugun: [
+      { termino: "ko", castellano: "agua" },
+      { termino: "lewfü", castellano: "río" },
+      { termino: "witrunko", castellano: "agua que corre", nota: "estero, agua en movimiento" },
+      { termino: "menoko", castellano: "ojo de agua", nota: "vertiente o humedal; sitio con dueño y con reglas" },
+      { termino: "trayenko", castellano: "salto de agua" },
+    ],
+    kimun: {
+      pregunta: "¿Hasta dónde llegaba el estero cuando usted era niño, y en qué mes bajaba?",
+      aQuien: "Una persona mayor de la comunidad, o el educador tradicional de la escuela.",
+    },
     secuencia: AGUA,
   },
   {
@@ -1041,12 +1160,69 @@ export const RUTAS: Ruta[] = [
     gancho: "Arman la red alimentaria de un metro cuadrado de bosque con los bichos que ellos levantan.",
     lugar: "Un bosque nativo, un renoval o un matorral. Basta un metro cuadrado.",
     semanas: 3,
-    cubre: [
-      { nivel: "5to_basico", codigos: ["OA01_CN_5"] },
-      { nivel: "6to_basico", codigos: ["OA02_CN_6", "OA03_CN_6"] },
-      { nivel: "7mo_basico", codigos: ["OA05_CN_7"] },
-      { nivel: "8vo_basico", codigos: ["OA04_CN_8"] },
+    preguntaGuia:
+      "¿Qué se lleva por delante nuestro bosque si desaparece un solo ser vivo de los que hay ahí?",
+    producto: {
+      que: "Un mural con la red alimentaria del bosque de al lado, dibujada con los seres vivos que ellos mismos encontraron.",
+      paraQuien: "Las familias, en una tarde en la escuela donde el curso lo explica.",
+    },
+    fases: [
+      {
+        semana: 1,
+        titulo: "Aprenden a leer una red",
+        queOcurre:
+          "Lo explicas tú con el esquema de las flechas, muestras el ejemplo resuelto, y practican con listas ya hechas.",
+      },
+      {
+        semana: 2,
+        titulo: "Salen a levantar su metro cuadrado",
+        queOcurre:
+          "Marcan el cuadrado, levantan piedras, cuentan y devuelven todo a su sitio.",
+      },
+      {
+        semana: 3,
+        titulo: "Arman el mural y lo explican",
+        queOcurre:
+          "Montan la red con lo suyo y ensayan cómo contársela a sus familias.",
+      },
     ],
+    cubre: [
+      {
+        nivel: "5to_basico",
+        codigos: ["OA01_CN_5"],
+        postura: "explorar",
+        papel: "Marcan el metro cuadrado y cuentan las plantas de dentro.",
+      },
+      {
+        nivel: "6to_basico",
+        codigos: ["OA02_CN_6", "OA03_CN_6"],
+        postura: "explorar",
+        papel: "Levantan las piedras con la lupa y anotan lo que sale.",
+      },
+      {
+        nivel: "7mo_basico",
+        codigos: ["OA05_CN_7"],
+        postura: "actuar",
+        papel: "Miden la hojarasca y explican quién devuelve todo al suelo.",
+      },
+      {
+        nivel: "8vo_basico",
+        codigos: ["OA04_CN_8"],
+        postura: "actuar",
+        papel: "Comparan hojas de sol y de sombra, y dirigen el montaje del mural.",
+      },
+    ],
+    mapuzugun: [
+      { termino: "mawiza", castellano: "bosque, montaña con monte" },
+      { termino: "anümka", castellano: "planta, árbol plantado" },
+      { termino: "koyam", castellano: "roble" },
+      { termino: "üñüm", castellano: "pájaro" },
+      { termino: "lawen", castellano: "planta que cura", nota: "el uso medicinal es conocimiento de la comunidad" },
+    ],
+    kimun: {
+      pregunta: "¿Qué plantas de este monte se usan, para qué, y en qué época se recogen?",
+      aQuien: "La lawentuchefe de la comunidad, si la hay, o el educador tradicional.",
+    },
     secuencia: REDES,
   },
   {
@@ -1055,10 +1231,57 @@ export const RUTAS: Ruta[] = [
     gancho: "Leen las capas de un corte de camino y descubren por qué esta tierra no retiene el agua.",
     lugar: "Un corte de camino, una barranca o una zanja donde se vean las capas del suelo.",
     semanas: 3,
-    cubre: [
-      { nivel: "6to_basico", codigos: ["OA16_CN_6", "OA17_CN_6", "OA18_CN_6"] },
-      { nivel: "7mo_basico", codigos: ["OA09_CN_7", "OA10_CN_7", "OA11_CN_7"] },
+    preguntaGuia:
+      "¿Por qué esta tierra se nos seca en enero, si en invierno llueve tanto?",
+    producto: {
+      que: "Una ficha del suelo de la escuela: qué capas tiene, cuánta agua retiene y qué conviene sembrar.",
+      paraQuien: "Quien cultiva la huerta de la escuela y las familias que siembran cerca.",
+    },
+    fases: [
+      {
+        semana: 1,
+        titulo: "Aprenden a leer un corte",
+        queOcurre:
+          "Lo explicas tú con el dibujo de las capas, muestras el ejemplo con las medidas ya tomadas, y practican los cálculos.",
+      },
+      {
+        semana: 2,
+        titulo: "Salen a medir el corte",
+        queOcurre:
+          "Miden capa por capa, toman muestras y hacen el experimento del tarro con agua.",
+      },
+      {
+        semana: 3,
+        titulo: "Escriben la ficha del suelo",
+        queOcurre:
+          "Con sus mililitros sacan cuánta agua retiene esta tierra y qué significa para sembrar.",
+      },
     ],
+    cubre: [
+      {
+        nivel: "6to_basico",
+        codigos: ["OA16_CN_6", "OA17_CN_6", "OA18_CN_6"],
+        postura: "explorar",
+        papel: "Miden y dibujan las capas con sus colores reales.",
+      },
+      {
+        nivel: "7mo_basico",
+        codigos: ["OA09_CN_7", "OA10_CN_7", "OA11_CN_7"],
+        postura: "actuar",
+        papel: "Hacen el experimento del agua y escriben la ficha que se entrega.",
+      },
+    ],
+    mapuzugun: [
+      { termino: "mapu", castellano: "tierra, suelo, territorio" },
+      { termino: "kura", castellano: "piedra" },
+      { termino: "rag", castellano: "greda, arcilla" },
+      { termino: "trufken", castellano: "ceniza" },
+      { termino: "degiñ", castellano: "volcán" },
+    ],
+    kimun: {
+      pregunta: "¿Qué se siembra aquí y qué no prende nunca? ¿Desde cuándo se sabe eso?",
+      aQuien: "Las familias que siembran cerca de la escuela.",
+    },
     secuencia: SUELO,
   },
   {
@@ -1067,12 +1290,75 @@ export const RUTAS: Ruta[] = [
     gancho: "Miden su propia sala durante una semana y encuentran por dónde se les escapa el calor.",
     lugar: "La sala de clases. Esta ruta no necesita salir del recinto.",
     semanas: 4,
-    cubre: [
-      { nivel: "5to_basico", codigos: ["OA13_CN_5"] },
-      { nivel: "6to_basico", codigos: ["OA10_CN_6", "OA14_CN_6", "OA15_CN_6"] },
-      { nivel: "7mo_basico", codigos: ["OA12_CN_7"] },
-      { nivel: "8vo_basico", codigos: ["OA11_CN_8"] },
+    preguntaGuia:
+      "¿Por dónde se nos escapa el calor de la sala, y cuánto frío pasamos por eso?",
+    producto: {
+      que: "El plano de la sala con los escapes marcados y los grados que se pierden, más lo que costaría taparlos.",
+      paraQuien: "La dirección de la escuela, para pedirlo al sostenedor con datos y no con quejas.",
+    },
+    fases: [
+      {
+        semana: 1,
+        titulo: "Aprenden a medir temperatura",
+        queOcurre:
+          "Lo explicas tú, muestras la curva del día ya resuelta, y practican leyendo el termómetro.",
+      },
+      {
+        semana: 2,
+        titulo: "Miden la sala una semana entera",
+        queOcurre:
+          "Cuatro veces al día, siempre a la misma hora, en tres puntos. Sin salir del recinto.",
+      },
+      {
+        semana: 3,
+        titulo: "Buscan por dónde se escapa",
+        queOcurre:
+          "Con el papelito recorren puertas y ventanas y marcan cada rendija en el plano.",
+      },
+      {
+        semana: 4,
+        titulo: "Lo presentan a la dirección",
+        queOcurre:
+          "Arman el plano con los grados perdidos y lo entregan. Con números, no con quejas.",
+      },
     ],
+    cubre: [
+      {
+        nivel: "5to_basico",
+        codigos: ["OA13_CN_5"],
+        postura: "explorar",
+        papel: "Leen el termómetro del centro y cantan el número.",
+      },
+      {
+        nivel: "6to_basico",
+        codigos: ["OA10_CN_6", "OA14_CN_6", "OA15_CN_6"],
+        postura: "explorar",
+        papel: "Miden en la ventana y afuera, y llevan los dos tarros al sol y a la sombra.",
+      },
+      {
+        nivel: "7mo_basico",
+        codigos: ["OA12_CN_7"],
+        postura: "actuar",
+        papel: "Llevan la planilla de la semana y sacan los promedios.",
+      },
+      {
+        nivel: "8vo_basico",
+        codigos: ["OA11_CN_8"],
+        postura: "actuar",
+        papel: "Buscan las rendijas, hacen el plano de escapes y lo presentan.",
+      },
+    ],
+    mapuzugun: [
+      { termino: "kütral", castellano: "fuego" },
+      { termino: "antü", castellano: "sol, día" },
+      { termino: "wütre", castellano: "frío" },
+      { termino: "aref", castellano: "calor" },
+      { termino: "kürüf", castellano: "viento" },
+    ],
+    kimun: {
+      pregunta: "¿Cómo se orientaba antes una ruka para que no entrara el viento, y por qué el fogón iba al centro?",
+      aQuien: "El educador tradicional, o una persona mayor de la comunidad.",
+    },
     secuencia: CALOR,
   },
 ];

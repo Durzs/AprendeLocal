@@ -143,6 +143,26 @@ body {
   }
 }
 
+/*
+ * El papel de una escuela rural pasa por una fotocopiadora vieja, y el gris
+ * claro que en pantalla se lee como «secundario» ahí sale casi blanco. Las
+ * hojas que van a manos del curso se imprimen en negro, sin jerarquías de
+ * color que el papel no puede reproducir. El fondo, al revés: blanco, para no
+ * gastarle el tóner a nadie.
+ */
+@media print {
+  section[class*="break-after-page"],
+  section[class*="break-after-page"] * {
+    color: #000 !important;
+    /* La regla general de impresión aclara los bordes a #999 para que la
+       secuencia del docente no salga cargada. En una tabla que hay que
+       rellenar a mano ocurre lo contrario: si la línea no se ve, no se escribe
+       dentro. */
+    border-color: #000 !important;
+    background: transparent !important;
+  }
+}
+
 /* Lo mismo al imprimir: en papel no hay transición que valga, y un elemento
    sorprendido a mitad de animación saldría a medio desvanecer. */
 @media print {
