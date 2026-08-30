@@ -828,6 +828,14 @@
       "en_peligro": "En peligro",
       "vulnerable": "Vulnerable",
       "casi_amenazada": "Casi amenazada"
-    }
+    },
+    "pickPlace": "Elige un lugar",
+    "pickPlaceLead": "Un estero, un bosque, un corte de camino. Después te decimos qué se ha registrado ahí.",
+    "searchPlace": "Buscar: estero, bosque, vertiente…",
+    "allCommunes": "Todas",
+    "loading": "Cargando lugares…",
+    "noMatch": "Ningún lugar coincide con esa búsqueda.",
+    "noPlaces": "La consulta funcionó pero no devolvió ningún lugar. Puede que la tabla esté vacía o que sus coordenadas no se puedan leer.",
+    "loadFailed": "No se pudieron cargar los lugares desde la base de datos. Detalle: {{detail}}"
   }
 }

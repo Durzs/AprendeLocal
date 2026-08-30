@@ -828,6 +828,14 @@
       "en_peligro": "Em perigo",
       "vulnerable": "Vulnerável",
       "casi_amenazada": "Quase ameaçada"
-    }
+    },
+    "pickPlace": "Escolha um lugar",
+    "pickPlaceLead": "Um córrego, uma mata, um corte de estrada. Depois dizemos o que já foi registrado ali.",
+    "searchPlace": "Buscar: córrego, mata, nascente…",
+    "allCommunes": "Todos",
+    "loading": "Carregando lugares…",
+    "noMatch": "Nenhum lugar corresponde a essa busca.",
+    "noPlaces": "A consulta funcionou mas não devolveu nenhum lugar. A tabela pode estar vazia, ou as coordenadas podem não ser legíveis.",
+    "loadFailed": "Não foi possível carregar os lugares do banco de dados. Detalhe: {{detail}}"
   }
 }
