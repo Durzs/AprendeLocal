@@ -6,7 +6,7 @@
  * de La Araucanía con fotografías representativas, nombres en Mapuzugun y notas docentes.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { consultarTodo, type Avistamiento, type Combinado } from "./fuentes";
 import { reconocer, type Estado, type Origen } from "./nativas";
@@ -75,6 +75,7 @@ function TarjetaEspecie({ a, origen }: { a: Avistamiento; origen: Origen }) {
           <img
             src={foto}
             alt={nativa?.comun || intro?.comun || a.comun || a.cientifico}
+            referrerPolicy="no-referrer"
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
             onError={() => setImgError(true)}
@@ -162,38 +163,80 @@ export default function PanelBiodiversidad({
   const { t, i18n } = useTranslation();
   const idioma = (i18n.resolvedLanguage ?? "es").slice(0, 2);
   const [radio, setRadio] = useState<number>(10);
-  const [datos, setDatos] = useState<Combinado | null>(() =>
-    leerCache(clave(lat, lng, 10, idioma))
-  );
-  const [cargando, setCargando] = useState(false);
+  const [datos, setDatos] = useState<Combinado | null>(null);
+  const [cargando, setCargando] = useState(true);
   const [aviso, setAviso] = useState<string | null>(null);
+
+  // Consulta automática a iNaturalist & GBIF en cuanto se selecciona un lugar o cambia el radio
+  useEffect(() => {
+    let activo = true;
+    const k = clave(lat, lng, radio, idioma);
+    const cacheado = leerCache(k);
+
+    if (cacheado) {
+      setDatos(cacheado);
+      setCargando(false);
+      setAviso(null);
+      return;
+    }
+
+    setCargando(true);
+    setAviso(null);
+
+    consultarTodo(lat, lng, radio, idioma)
+      .then((c) => {
+        if (!activo) return;
+        if (c.avistamientos.length === 0) {
+          setDatos(null);
+          setAviso(
+            c.fallos.length === 2
+              ? t("bio.bothFailed")
+              : t("bio.empty", { km: radio })
+          );
+        } else {
+          guardarCache(k, c);
+          setDatos(c);
+          if (c.fallos.length > 0) {
+            setAviso(t("bio.partial", { fuente: c.fallos.map((f) => f.fuente).join(", ") }));
+          }
+        }
+      })
+      .catch(() => {
+        if (!activo) return;
+        setAviso(t("bio.bothFailed"));
+      })
+      .finally(() => {
+        if (activo) setCargando(false);
+      });
+
+    return () => {
+      activo = false;
+    };
+  }, [lat, lng, radio, idioma, t]);
 
   function cambiarRadio(r: number) {
     setRadio(r);
-    setAviso(null);
-    setDatos(leerCache(clave(lat, lng, r, idioma)));
   }
 
-  async function buscar() {
-    setAviso(null);
+  function refrescar() {
     setCargando(true);
-    const c = await consultarTodo(lat, lng, radio, idioma);
-    setCargando(false);
-
-    if (c.avistamientos.length === 0) {
-      setDatos(null);
-      setAviso(
-        c.fallos.length === 2
-          ? t("bio.bothFailed")
-          : t("bio.empty", { km: radio })
-      );
-      return;
-    }
-    guardarCache(clave(lat, lng, radio, idioma), c);
-    setDatos(c);
-    if (c.fallos.length > 0) {
-      setAviso(t("bio.partial", { fuente: c.fallos.map((f) => f.fuente).join(", ") }));
-    }
+    setAviso(null);
+    const k = clave(lat, lng, radio, idioma);
+    consultarTodo(lat, lng, radio, idioma)
+      .then((c) => {
+        if (c.avistamientos.length === 0) {
+          setDatos(null);
+          setAviso(
+            c.fallos.length === 2
+              ? t("bio.bothFailed")
+              : t("bio.empty", { km: radio })
+          );
+        } else {
+          guardarCache(k, c);
+          setDatos(c);
+        }
+      })
+      .finally(() => setCargando(false));
   }
 
   // Clasificación de especies
@@ -235,7 +278,7 @@ export default function PanelBiodiversidad({
           ))}
           <button
             type="button"
-            onClick={buscar}
+            onClick={refrescar}
             disabled={cargando}
             className="rounded-full bg-[#0a0047] px-4 py-1.5 text-xs font-bold text-white transition hover:bg-[#120078] hover:shadow-md disabled:opacity-60"
           >
@@ -245,21 +288,21 @@ export default function PanelBiodiversidad({
       </div>
 
       {cargando && (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-2 py-4">
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
             <div className="animar-esperando h-full w-1/3 rounded-full bg-[#0a0047]" />
           </div>
-          <p className="text-center text-xs text-slate-500 font-medium">{t("bio.searching")} en iNaturalist & GBIF...</p>
+          <p className="text-center text-xs text-slate-500 font-medium">{t("bio.searching")} en iNaturalist & GBIF en tiempo real...</p>
         </div>
       )}
 
-      {aviso && (
+      {aviso && !cargando && (
         <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {aviso}
         </p>
       )}
 
-      {datos && (
+      {datos && !cargando && (
         <div className="mt-6 space-y-6">
           {nativas.length > 0 && (
             <section>

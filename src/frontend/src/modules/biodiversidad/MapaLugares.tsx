@@ -195,6 +195,7 @@ export default function MapaLugares() {
                   <img
                     src={foto}
                     alt={l.nombre}
+                    referrerPolicy="no-referrer"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -240,10 +241,7 @@ export default function MapaLugares() {
       {/* Mapa y Panel de Especies de la Zona */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Mapa Interactivo con los 4 puntos */}
-        <div
-          className="lg:col-span-5 overflow-hidden rounded-3xl border border-slate-200 shadow-sm sticky top-24"
-          style={{ minHeight: 480 }}
-        >
+        <div className="lg:col-span-5 h-[520px] min-h-[520px] w-full overflow-hidden rounded-3xl border border-slate-200 shadow-sm sticky top-24">
           <MapView
             points={paraMapa}
             onSelectPoint={(p) => {

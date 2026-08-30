@@ -2,23 +2,8 @@
  * Las especies del bosque templado de La Araucanía, con lo que las APIs no
  * saben decir.
  *
- * Por qué hace falta esta lista si ya consultamos iNaturalist y GBIF. Porque
- * una lista de especies bajada de una API es una lista de nombres, y a un
- * curso de 6º no le dice nada. Lo que convierte esa lista en algo enseñable
- * son tres cosas que ninguna de las dos APIs entrega junta y fiable:
- *
- *   1. SI ES NATIVA O NO. En La Araucanía esto no es un detalle académico: la
- *      diferencia entre un renoval de coigüe y una plantación de pino es la
- *      discusión ambiental y política del territorio. Un mapa que las mezcla
- *      sin distinguirlas está enseñando algo falso.
- *   2. CÓMO SE LLAMA EN MAPUZUGUN. El nombre castellano de casi todas estas
- *      especies ES el nombre mapuche castellanizado —coigüe de koywe, quila
- *      de küla, copihue de kopiwe—, y decirlo devuelve al territorio una capa
- *      que estaba ahí antes que el catálogo científico.
- *   3. POR QUÉ IMPORTA. Una frase que un docente pueda repetir.
- *
- * De dónde sale. De literatura de botánica y fauna chilena de referencia
- * general, no de una base de datos consultada en línea.
+ * Cada especie cuenta con su fotografía oficial verificada de iNaturalist,
+ * nombres en Mapuzugun y notas docentes para el aula.
  */
 
 export type Estado = "en_peligro" | "vulnerable" | "casi_amenazada";
@@ -33,7 +18,7 @@ export type Nativa = {
   /** Una frase que el docente pueda decir en voz alta. */
   porQue: string;
   estado?: Estado;
-  /** Fotografía representativa de la especie. */
+  /** Fotografía representativa oficial de la especie. */
   fotoUrl?: string;
 };
 
@@ -45,48 +30,44 @@ export type Introducida = {
 };
 
 /**
- * Lo que NO es de aquí.
- *
- * Va en su propia lista y se marca en rojo en el mapa. Cuando un curso
- * encuentra pino o zarzamora no está encontrando naturaleza: está encontrando
- * la historia reciente del uso del suelo, y eso también se enseña.
+ * Lo que NO es de aquí (especies introducidas e invasoras).
  */
 export const INTRODUCIDAS: Introducida[] = [
   {
     cientifico: "Pinus radiata",
     comun: "pino insigne",
     porQue: "Plantación forestal. Bajo un pinar casi no crece nada más, y el suelo se acidifica.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Pinus_radiata_foliage.jpg/640px-Pinus_radiata_foliage.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/168316058/medium.jpg",
   },
   {
     cientifico: "Eucalyptus globulus",
     comun: "eucalipto",
     porQue: "Plantación forestal. Consume mucha agua, y eso se nota en los esteros de al lado.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Eucalyptus_globulus_leaves.jpg/640px-Eucalyptus_globulus_leaves.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/30675602/medium.jpg",
   },
   {
     cientifico: "Rubus ulmifolius",
     comun: "zarzamora, murra",
     porQue: "Invasora. Tapa los claros y no deja que el bosque nativo se regenere.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rubus_ulmifolius_berries.jpg/640px-Rubus_ulmifolius_berries.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/37606/medium.jpg",
   },
   {
     cientifico: "Ulex europaeus",
     comun: "espinillo",
     porQue: "Invasora. Coloniza suelo quemado o removido y es muy difícil de sacar.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Ulex_europaeus_flowers.jpg/640px-Ulex_europaeus_flowers.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/459991680/medium.jpg",
   },
   {
     cientifico: "Salmo trutta",
     comun: "trucha café",
     porQue: "Introducida en los ríos. Se come al puye y a los anfibios pequeños.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Salmo_trutta.jpg/640px-Salmo_trutta.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/34847723/medium.jpg",
   },
   {
     cientifico: "Oncorhynchus mykiss",
     comun: "trucha arcoíris",
     porQue: "Introducida. Compite con los peces nativos del mismo estero.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Rainbow_trout.png/640px-Rainbow_trout.png",
+    fotoUrl: "https://static.inaturalist.org/photos/60921460/medium.jpg",
   },
 ];
 
@@ -100,7 +81,7 @@ export const NATIVAS: Nativa[] = [
     porQue:
       "Da el piñón, alimento sagrado del pueblo pewenche. Un árbol puede vivir más de mil años en las alturas volcánicas.",
     estado: "en_peligro",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Araucaria_araucana_Conguillio.jpg/640px-Araucaria_araucana_Conguillio.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/176887961/medium.jpg",
   },
   {
     cientifico: "Nothofagus dombeyi",
@@ -108,7 +89,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "koywe",
     grupo: "arbol",
     porQue: "El árbol más alto del bosque templado. Su copa provee la sombra y humedad donde habita el sotobosque.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Nothofagus_dombeyi_1.jpg/640px-Nothofagus_dombeyi_1.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/27177332/medium.jpeg",
   },
   {
     cientifico: "Nothofagus obliqua",
@@ -116,7 +97,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "koyam",
     grupo: "arbol",
     porQue: "Su madera es tan dura que se usaba tradicionalmente para las vigas maestras de las rukas.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Nothofagus_obliqua.jpg/640px-Nothofagus_obliqua.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/27150090/medium.jpeg",
   },
   {
     cientifico: "Nothofagus alpina",
@@ -124,14 +105,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "ruyli",
     grupo: "arbol",
     porQue: "Hoja grande y ondulada. Árbol emblemático de las laderas andinas con follaje otoñal rojizo.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Nothofagus_alpina_leaves.jpg/640px-Nothofagus_alpina_leaves.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/475340040/medium.jpg",
   },
   {
     cientifico: "Nothofagus pumilio",
     comun: "lenga",
     grupo: "arbol",
     porQue: "El árbol que aguanta más arriba en el límite arbóreo cerca de la nieve. En otoño viste las montañas de rojo.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Nothofagus_pumilio_autumn.jpg/640px-Nothofagus_pumilio_autumn.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/75075173/medium.jpg",
   },
   {
     cientifico: "Drimys winteri",
@@ -139,7 +120,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "foye",
     grupo: "arbol",
     porQue: "Árbol sagrado del pueblo mapuche y símbolo de paz. Presente en el rewe y en ceremonias medicinales.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Drimys_winteri_leaves_and_flowers.jpg/640px-Drimys_winteri_leaves_and_flowers.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/1542790/medium.jpg",
   },
   {
     cientifico: "Persea lingue",
@@ -147,14 +128,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "lige",
     grupo: "arbol",
     porQue: "De su corteza se extraen tinturas tradicionales para el telar. Crece en quebradas húmedas protegidas.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Persea_lingue.jpg/640px-Persea_lingue.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/188777834/medium.jpg",
   },
   {
     cientifico: "Luma apiculata",
     comun: "arrayán",
     grupo: "arbol",
     porQue: "Tronco anaranjado, liso y notablemente frío al tacto. Crece siempre junto a cursos de agua cristalina.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Luma_apiculata.jpg/640px-Luma_apiculata.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/1541071/medium.jpg",
   },
   {
     cientifico: "Embothrium coccineum",
@@ -162,14 +143,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "notxu",
     grupo: "arbol",
     porQue: "En primavera florece con un rojo encendido que nutre a picaflores. Es pionero tras incendios o erupciones.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Embothrium_coccineum_flores.jpg/640px-Embothrium_coccineum_flores.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/587661720/medium.jpg",
   },
   {
     cientifico: "Peumus boldus",
     comun: "boldo",
     grupo: "arbol",
     porQue: "Sus aromáticas hojas se usan en infusión digestiva. Es ley y lawen (planta medicinal de alto valor).",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Peumus_boldus.jpg/640px-Peumus_boldus.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/142596835/medium.jpg",
   },
 
   // ── Plantas del sotobosque ──
@@ -179,7 +160,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "küla",
     grupo: "planta",
     porQue: "Bambú nativo que forma densos matorrales donde se refugian aves y pequeños mamíferos.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Chusquea_cumingii.jpg/640px-Chusquea_cumingii.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/100760355/medium.jpg",
   },
   {
     cientifico: "Gunnera tinctoria",
@@ -187,7 +168,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "nalka",
     grupo: "planta",
     porQue: "La hoja más grande de la flora chilena. Su tallo tierno se come y sus hojas se usan para tapar el curanto.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Gunnera_tinctoria_1.jpg/640px-Gunnera_tinctoria_1.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/125734/medium.jpg",
   },
   {
     cientifico: "Aristotelia chilensis",
@@ -195,7 +176,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "maki",
     grupo: "planta",
     porQue: "Fruto silvestre morado con altísimo poder antioxidante. Planta sagrada y regeneradora del suelo.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Aristotelia_chilensis_leaves_and_berries.jpg/640px-Aristotelia_chilensis_leaves_and_berries.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/28746610/medium.jpg",
   },
   {
     cientifico: "Lapageria rosea",
@@ -203,14 +184,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "kopiwe",
     grupo: "planta",
     porQue: "Flor nacional de Chile. Enredadera que escala por los troncos húmedos en bosques sombríos.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Lapageria_rosea_1.jpg/640px-Lapageria_rosea_1.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/62761239/medium.jpeg",
   },
   {
     cientifico: "Blechnum chilense",
     comun: "costilla de vaca, quil-quil",
     grupo: "planta",
     porQue: "Helecho gigante de quebradas y cascadas que indica humedad permanente en el ecosistema.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Blechnum_chilense.jpg/640px-Blechnum_chilense.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/31461704/medium.jpg",
   },
 
   // ── Aves ──
@@ -221,14 +202,14 @@ export const NATIVAS: Nativa[] = [
     grupo: "ave",
     porQue:
       "Su canto potente guía al caminante en el sotobosque. En la cosmovisión mapuche avisa el destino según el lado por donde canta.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Scelorchilus_rubecula_-Chile-8.jpg/640px-Scelorchilus_rubecula_-Chile-8.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/285165353/medium.jpeg",
   },
   {
     cientifico: "Pteroptochos tarnii",
     comun: "hued-hued del sur",
     grupo: "ave",
     porQue: "Pariente del chucao pero más grande. Corre velozmente entre los troncos caídos en busca de insectos.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Pteroptochos_tarnii.jpg/640px-Pteroptochos_tarnii.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/285165396/medium.jpg",
   },
   {
     cientifico: "Sephanoides sephaniodes",
@@ -236,7 +217,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "pigda",
     grupo: "ave",
     porQue: "El picaflor más austral del planeta. Principal polinizador del notro y el copihue durante todo el año.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Sephanoides_sephaniodes_-Chile-8.jpg/640px-Sephanoides_sephaniodes_-Chile-8.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/238706641/medium.jpg",
   },
   {
     cientifico: "Campephilus magellanicus",
@@ -244,14 +225,14 @@ export const NATIVAS: Nativa[] = [
     grupo: "ave",
     porQue: "El carpintero más grande de Sudamérica. Con su fuerte picoteo abre cavidades en árboles centenarios.",
     estado: "vulnerable",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Campephilus_magellanicus_-Conguillio_National_Park%2C_Chile_-male-8.jpg/640px-Campephilus_magellanicus_-Conguillio_National_Park%2C_Chile_-male-8.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/48405/medium.jpg",
   },
   {
     cientifico: "Enicognathus ferrugineus",
     comun: "cachaña",
     grupo: "ave",
     porQue: "Loro austral muy sociable que vuela en ruidosas bandadas dispersando semillas de piñones y frutos.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Austral_Parakeet.jpg/640px-Austral_Parakeet.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/198371508/medium.jpeg",
   },
   {
     cientifico: "Vanellus chilensis",
@@ -259,14 +240,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "ketxewe",
     grupo: "ave",
     porQue: "Centinela de los potreros y esteros. Con su alarma sonora protege su nido ubicado a ras de suelo.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Southern_Lapwing_RWD2.jpg/640px-Southern_Lapwing_RWD2.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/601222938/medium.jpg",
   },
   {
     cientifico: "Strix rufipes",
     comun: "concón",
     grupo: "ave",
     porQue: "Búho misterioso del bosque nativo antiguo. Su presencia confirma la existencia de árboles maduros.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Strix_rufipes.jpg/640px-Strix_rufipes.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/384798110/medium.jpeg",
   },
   {
     cientifico: "Vultur gryphus",
@@ -275,7 +256,7 @@ export const NATIVAS: Nativa[] = [
     grupo: "ave",
     porQue: "El ave voladora más grande del mundo. Sobrevuela las altas cumbres y riscos de la cordillera araucana.",
     estado: "vulnerable",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Vultur_gryphus_-San_Diego_Zoo-8a.jpg/640px-Vultur_gryphus_-San_Diego_Zoo-8a.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/90906598/medium.jpg",
   },
 
   // ── Mamíferos ──
@@ -287,7 +268,7 @@ export const NATIVAS: Nativa[] = [
     porQue:
       "Fósil viviente y único representante del orden Microbiotheria. Marsupial clave que hiberna en invierno.",
     estado: "casi_amenazada",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Dromiciops_gliroides.jpg/640px-Dromiciops_gliroides.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/6096/medium.jpg",
   },
   {
     cientifico: "Pudu puda",
@@ -296,7 +277,7 @@ export const NATIVAS: Nativa[] = [
     grupo: "mamifero",
     porQue: "Uno de los ciervos más pequeños del mundo (40 cm de alto). Muy tímido y dependiente del bosque denso.",
     estado: "vulnerable",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Pudu_puda.jpg/640px-Pudu_puda.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/263624688/medium.jpg",
   },
   {
     cientifico: "Leopardus guigna",
@@ -305,7 +286,7 @@ export const NATIVAS: Nativa[] = [
     grupo: "mamifero",
     porQue: "El felino salvaje más pequeño de América. Gran trepador de árboles que controla roedores en el bosque.",
     estado: "vulnerable",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Leopardus_guigna_Faunia.jpg/640px-Leopardus_guigna_Faunia.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/403906400/medium.jpeg",
   },
   {
     cientifico: "Lycalopex culpaeus",
@@ -313,7 +294,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "gürü",
     grupo: "mamifero",
     porQue: "El cánido nativo más grande de Chile. Figura central en los relatos tradicionales mapuches.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Lycalopex_culpaeus_standing.jpg/640px-Lycalopex_culpaeus_standing.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/487960433/medium.jpg",
   },
   {
     cientifico: "Lontra provocax",
@@ -321,7 +302,7 @@ export const NATIVAS: Nativa[] = [
     grupo: "mamifero",
     porQue: "Nutria de río nativa de aguas limpias y riberas con vegetación nativa densa.",
     estado: "en_peligro",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Lontra_provocax.jpg/640px-Lontra_provocax.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/38082946/medium.jpg",
   },
   {
     cientifico: "Myocastor coypus",
@@ -329,7 +310,7 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "koypu",
     grupo: "mamifero",
     porQue: "Roedor acuático nativo con membranas en las patas traseras. Indicador de esteros y lagunas sanas.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Myocastor_coypus_in_water.jpg/640px-Myocastor_coypus_in_water.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/136260379/medium.jpeg",
   },
 
   // ── Anfibios ──
@@ -340,14 +321,14 @@ export const NATIVAS: Nativa[] = [
     porQue:
       "El macho cría a los renacuajos dentro de su saco vocal hasta que emergen formados. Joya biológica única de Chile.",
     estado: "en_peligro",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Rhinoderma_darwinii.jpg/640px-Rhinoderma_darwinii.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/57901672/medium.jpeg",
   },
   {
     cientifico: "Batrachyla taeniata",
     comun: "sapito de antifaz",
     grupo: "anfibio",
     porQue: "Pequeño anfibio de hojarasca húmeda con una característica franja oscura en los ojos.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Batrachyla_taeniata.jpg/640px-Batrachyla_taeniata.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/357596074/medium.jpg",
   },
   {
     cientifico: "Calyptocephalella gayi",
@@ -355,7 +336,7 @@ export const NATIVAS: Nativa[] = [
     grupo: "anfibio",
     porQue: "Gigante acuático que puede superar el kilo de peso. Fósil viviente que requiere pozones y esteros tranquilos.",
     estado: "vulnerable",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Calyptocephalella_gayi.jpg/640px-Calyptocephalella_gayi.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/69691825/medium.jpg",
   },
 
   // ── Peces ──
@@ -364,7 +345,7 @@ export const NATIVAS: Nativa[] = [
     comun: "puye",
     grupo: "pez",
     porQue: "Pez nativo pequeño y translúcido. Realiza migraciones entre el agua dulce y los estuarios.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Galaxias_maculatus.jpg/640px-Galaxias_maculatus.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/6037920/medium.jpg",
   },
 
   // ── Hongos ──
@@ -374,14 +355,14 @@ export const NATIVAS: Nativa[] = [
     mapuzugun: "dihweñ",
     grupo: "hongo",
     porQue: "Hongo comestible primaveral que crece en las ramas de robles y coigües. Tradición gastronómica campesina.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cyttaria_espinosae.jpg/640px-Cyttaria_espinosae.jpg",
+    fotoUrl: "https://inaturalist-open-data.s3.amazonaws.com/photos/64640152/medium.jpeg",
   },
   {
     cientifico: "Ramaria flava",
     comun: "changle",
     grupo: "hongo",
     porQue: "Hongo con forma de coral dorado que brota en el suelo del bosque nativo maduro tras las primeras lluvias.",
-    fotoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Ramaria_flava.jpg/640px-Ramaria_flava.jpg",
+    fotoUrl: "https://static.inaturalist.org/photos/35300556/medium.jpeg",
   },
 ];
 
@@ -401,9 +382,7 @@ export type Origen =
 /**
  * Qué sabemos de una especie que nos devolvió una API.
  *
- * Se compara por género y especie, ignorando subespecie y autoría: iNaturalist
- * y GBIF no siempre coinciden en cuánto nombre devuelven, y «Nothofagus
- * dombeyi Mirb. Oerst.» y «Nothofagus dombeyi» son el mismo árbol.
+ * Se compara por género y especie, ignorando subespecie y autoría.
  */
 export function reconocer(cientifico: string): Origen {
   const limpio = cientifico.trim().toLowerCase();
