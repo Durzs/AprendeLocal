@@ -36,6 +36,8 @@ export type Avistamiento = {
   /** El año del registro más reciente, cuando la fuente lo dice. */
   ultimoAno?: number;
   url: string;
+  /** Fotografía representativa de la especie. */
+  fotoUrl?: string;
 };
 
 export type Respuesta =
@@ -104,6 +106,16 @@ export async function deINaturalist(
       if (!cientifico) continue;
 
       const id = typeof taxon.id === "number" ? taxon.id : null;
+      const defaultPhoto = taxon.default_photo as Record<string, unknown> | undefined;
+      const fotoUrl =
+        typeof defaultPhoto?.medium_url === "string"
+          ? defaultPhoto.medium_url
+          : typeof defaultPhoto?.square_url === "string"
+          ? defaultPhoto.square_url
+          : typeof defaultPhoto?.url === "string"
+          ? defaultPhoto.url
+          : undefined;
+
       avistamientos.push({
         cientifico,
         comun:
@@ -115,6 +127,7 @@ export async function deINaturalist(
         url: id
           ? `https://www.inaturalist.org/taxa/${id}`
           : "https://www.inaturalist.org",
+        fotoUrl,
       });
     }
 

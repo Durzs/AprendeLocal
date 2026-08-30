@@ -1,20 +1,9 @@
 /**
  * Qué vive aquí, para un punto del mapa.
  *
- * Esto es lo que el mapa era y no hacía. Antes mostraba nuestros propios
- * puntos —un estero, un bosque, una cancha de palín— con la descripción que
- * alguien les escribió. Útil para elegir adónde ir, y nada más: seguía siendo
- * un catálogo nuestro hablando de sí mismo.
- *
- * Ahora, elegido el punto, se pregunta a quien sabe. iNaturalist dice qué se
- * ha visto; GBIF, qué está registrado en colecciones. Y encima de las dos se
- * cruza nuestra lista de especies del bosque templado, que es la que añade lo
- * que ninguna API entrega junto: si es nativa, cómo se llama en mapuzugun, y
- * por qué le importaría a un curso de 6º.
- *
- * El orden de la lista no es alfabético ni por abundancia: primero lo nativo,
- * después lo introducido, y al final lo que no reconocemos. Un docente que
- * mira treinta nombres necesita que los primeros sean los que puede enseñar.
+ * Muestra las especies observadas y registradas en el territorio (iNaturalist y GBIF),
+ * cruzadas con la base de datos de especies nativas e introducidas del bosque templado
+ * de La Araucanía con fotografías representativas, nombres en Mapuzugun y notas docentes.
  */
 
 import { useState } from "react";
@@ -25,9 +14,19 @@ import { reconocer, type Estado, type Origen } from "./nativas";
 const RADIOS = [5, 10, 25] as const;
 
 const COLOR_ESTADO: Record<Estado, string> = {
-  en_peligro: "bg-red-100 text-red-900",
-  vulnerable: "bg-amber-100 text-amber-900",
-  casi_amenazada: "bg-slate-200 text-slate-700",
+  en_peligro: "bg-red-100 text-red-900 border border-red-200",
+  vulnerable: "bg-amber-100 text-amber-900 border border-amber-200",
+  casi_amenazada: "bg-slate-200 text-slate-700 border border-slate-300",
+};
+
+const ICONO_GRUPO: Record<string, string> = {
+  arbol: "🌲 Árbol",
+  planta: "🌿 Planta",
+  ave: "🦅 Ave",
+  mamifero: "🦊 Mamífero",
+  anfibio: "🐸 Anfibio",
+  pez: "🐟 Pez",
+  hongo: "🍄 Hongo",
 };
 
 function clave(lat: number, lng: number, radio: number, idioma: string) {
@@ -53,61 +52,100 @@ function guardarCache(k: string, c: Combinado): void {
   }
 }
 
-function Fila({ a, origen }: { a: Avistamiento; origen: Origen }) {
+function TarjetaEspecie({ a, origen }: { a: Avistamiento; origen: Origen }) {
   const { t } = useTranslation();
   const nativa = origen.tipo === "nativa" ? origen.ficha : null;
   const intro = origen.tipo === "introducida" ? origen.ficha : null;
+  const [imgError, setImgError] = useState(false);
+
+  const foto = (!imgError && (a.fotoUrl || nativa?.fotoUrl || intro?.fotoUrl)) || null;
 
   return (
     <li
       className={[
-        "rounded-xl border px-3.5 py-2.5",
-        nativa ? "border-emerald-200 bg-emerald-50/50" : "",
-        intro ? "border-red-200 bg-red-50/50" : "",
-        origen.tipo === "desconocido" ? "border-slate-200" : "",
+        "group relative flex flex-col sm:flex-row gap-3.5 rounded-2xl border p-3.5 transition duration-200 hover:shadow-md",
+        nativa ? "border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50/70" : "",
+        intro ? "border-red-200 bg-red-50/40 hover:bg-red-50/70" : "",
+        origen.tipo === "desconocido" ? "border-slate-200 bg-white hover:bg-slate-50" : "",
       ].join(" ")}
     >
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <a
-          href={a.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-semibold text-slate-950 hover:underline"
-        >
-          {nativa?.comun || intro?.comun || a.comun || a.cientifico}
-        </a>
-
-        {nativa?.mapuzugun && (
-          <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
-            {nativa.mapuzugun}
-          </span>
+      {/* Fotografía de la especie */}
+      <div className="relative h-32 w-full sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl bg-slate-100 border border-slate-200/80 shadow-inner flex items-center justify-center">
+        {foto ? (
+          <img
+            src={foto}
+            alt={nativa?.comun || intro?.comun || a.comun || a.cientifico}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center p-2 text-center text-slate-400">
+            <span className="text-2xl">
+              {nativa ? (ICONO_GRUPO[nativa.grupo]?.split(" ")[0] || "🌿") : intro ? "⚠️" : "🔍"}
+            </span>
+            <span className="text-[10px] font-mono text-slate-400 mt-1">
+              {nativa?.grupo || "especie"}
+            </span>
+          </div>
         )}
 
-        {nativa?.estado && (
-          <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${COLOR_ESTADO[nativa.estado]}`}
-          >
-            {t(`bio.estado.${nativa.estado}`)}
+        {nativa?.grupo && (
+          <span className="absolute bottom-1 left-1 rounded bg-black/70 backdrop-blur-xs px-1.5 py-0.5 text-[9px] font-medium text-white shadow-xs">
+            {ICONO_GRUPO[nativa.grupo] || nativa.grupo}
           </span>
         )}
-
-        {intro && (
-          <span className="rounded-full bg-red-600 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-            {t("bio.introduced")}
-          </span>
-        )}
-
-        <span className="ml-auto font-mono text-[11px] text-slate-400">
-          {t("bio.records", { count: a.registros })}
-        </span>
       </div>
 
-      <p className="mt-0.5 text-xs italic text-slate-500">{a.cientifico}</p>
+      <div className="flex flex-1 flex-col justify-between">
+        <div>
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <a
+              href={a.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-base font-bold text-slate-950 hover:underline hover:text-emerald-800"
+            >
+              {nativa?.comun || intro?.comun || a.comun || a.cientifico}
+            </a>
 
-      {/* Lo que hace que esto sea enseñable y no una lista de nombres. */}
-      {(nativa || intro) && (
-        <p className="mt-1.5 text-sm text-slate-700">{nativa?.porQue ?? intro?.porQue}</p>
-      )}
+            {nativa?.mapuzugun && (
+              <span
+                className="rounded-md bg-slate-900 px-2 py-0.5 font-mono text-[11px] font-semibold text-white shadow-xs"
+                title="Nombre en Mapuzugun"
+              >
+                {nativa.mapuzugun}
+              </span>
+            )}
+
+            {nativa?.estado && (
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${COLOR_ESTADO[nativa.estado]}`}
+              >
+                {t(`bio.estado.${nativa.estado}`)}
+              </span>
+            )}
+
+            {intro && (
+              <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs">
+                {t("bio.introduced")}
+              </span>
+            )}
+
+            <span className="ml-auto font-mono text-[11px] text-slate-500 bg-white/90 border border-slate-200/80 rounded-full px-2.5 py-0.5 shadow-2xs">
+              {t("bio.records", { count: a.registros })}
+            </span>
+          </div>
+
+          <p className="mt-0.5 text-xs italic text-slate-500 font-serif">{a.cientifico}</p>
+
+          {(nativa || intro) && (
+            <p className="mt-2 text-xs leading-relaxed text-slate-700 bg-white/70 rounded-lg p-2 border border-slate-100 shadow-2xs">
+              💡 {nativa?.porQue ?? intro?.porQue}
+            </p>
+          )}
+        </div>
+      </div>
     </li>
   );
 }
@@ -133,8 +171,6 @@ export default function PanelBiodiversidad({
   function cambiarRadio(r: number) {
     setRadio(r);
     setAviso(null);
-    // Cada radio tiene su propia respuesta guardada; si ya se consultó, se ve
-    // sin volver a pedir nada.
     setDatos(leerCache(clave(lat, lng, r, idioma)));
   }
 
@@ -155,13 +191,12 @@ export default function PanelBiodiversidad({
     }
     guardarCache(clave(lat, lng, radio, idioma), c);
     setDatos(c);
-    // Media respuesta se usa, pero se dice que es media.
     if (c.fallos.length > 0) {
       setAviso(t("bio.partial", { fuente: c.fallos.map((f) => f.fuente).join(", ") }));
     }
   }
 
-  // Nativo primero, introducido después, lo demás al final.
+  // Clasificación de especies
   const clasificados = (datos?.avistamientos ?? []).map((a) => ({
     a,
     origen: reconocer(a.cientifico),
@@ -171,102 +206,114 @@ export default function PanelBiodiversidad({
   const resto = clasificados.filter((c) => c.origen.tipo === "desconocido");
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5">
-      <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
-        {t("bio.title")}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-slate-900">{nombreDelLugar}</p>
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-900">
+            🔍 {t("bio.title")}
+          </span>
+          <h3 className="mt-1 text-lg font-bold text-slate-950">{nombreDelLugar}</h3>
+        </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        {RADIOS.map((r) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-slate-500 font-medium">Radio:</span>
+          {RADIOS.map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => cambiarRadio(r)}
+              aria-pressed={radio === r}
+              className={[
+                "rounded-full border px-3 py-1 text-xs font-semibold transition",
+                radio === r
+                  ? "border-slate-900 bg-[#0a0047] text-white shadow-xs"
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50",
+              ].join(" ")}
+            >
+              {r} km
+            </button>
+          ))}
           <button
-            key={r}
             type="button"
-            onClick={() => cambiarRadio(r)}
-            aria-pressed={radio === r}
-            className={[
-              "rounded-full border px-3 py-1 text-xs font-semibold transition",
-              radio === r
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-300 text-slate-600 hover:bg-slate-50",
-            ].join(" ")}
+            onClick={buscar}
+            disabled={cargando}
+            className="rounded-full bg-[#0a0047] px-4 py-1.5 text-xs font-bold text-white transition hover:bg-[#120078] hover:shadow-md disabled:opacity-60"
           >
-            {r} km
+            {cargando ? t("bio.searching") : datos ? t("bio.searchAgain") : t("bio.search")}
           </button>
-        ))}
-        <button
-          type="button"
-          onClick={buscar}
-          disabled={cargando}
-          className="ml-auto rounded-full bg-[#111217] px-4 py-1.5 text-xs font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-60"
-        >
-          {cargando ? t("bio.searching") : datos ? t("bio.searchAgain") : t("bio.search")}
-        </button>
+        </div>
       </div>
 
       {cargando && (
-        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200">
-          <div className="animar-esperando h-full w-1/4 rounded-full bg-slate-900" />
+        <div className="mt-4 space-y-2">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+            <div className="animar-esperando h-full w-1/3 rounded-full bg-[#0a0047]" />
+          </div>
+          <p className="text-center text-xs text-slate-500 font-medium">{t("bio.searching")} en iNaturalist & GBIF...</p>
         </div>
       )}
 
       {aviso && (
-        <p className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-sm text-amber-900">
+        <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {aviso}
         </p>
       )}
 
       {datos && (
-        <div className="mt-4 space-y-4">
+        <div className="mt-6 space-y-6">
           {nativas.length > 0 && (
             <section>
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
-                {t("bio.nativeHere", { count: nativas.length })}
-              </p>
-              <ul className="mt-2 space-y-2">
-                {nativas.slice(0, 20).map((c, i) => (
-                  <li
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                  {t("bio.nativeHere", { count: nativas.length })}
+                </p>
+                <span className="text-[11px] text-slate-500">Fotografías e información pedagógica</span>
+              </div>
+              <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                {nativas.map((c) => (
+                  <TarjetaEspecie
                     key={c.a.cientifico}
-                    className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}
-                  >
-                    <Fila a={c.a} origen={c.origen} />
-                  </li>
+                    a={c.a}
+                    origen={c.origen}
+                  />
                 ))}
               </ul>
             </section>
           )}
 
           {introducidas.length > 0 && (
-            <section>
-              <p className="text-xs font-semibold uppercase tracking-wide text-red-800">
+            <section className="pt-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-red-800 flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-red-500"></span>
                 {t("bio.notFromHere", { count: introducidas.length })}
               </p>
-              <ul className="mt-2 space-y-2">
+              <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
                 {introducidas.map((c) => (
-                  <Fila key={c.a.cientifico} a={c.a} origen={c.origen} />
+                  <TarjetaEspecie key={c.a.cientifico} a={c.a} origen={c.origen} />
                 ))}
               </ul>
             </section>
           )}
 
           {resto.length > 0 && (
-            <section>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <section className="pt-2 border-t border-slate-100">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 {t("bio.notInOurList", { count: resto.length })}
               </p>
               <p className="mt-1 text-xs text-slate-500">{t("bio.notInOurListHelp")}</p>
-              <ul className="mt-2 grid gap-x-4 gap-y-1 sm:grid-cols-2">
-                {resto.slice(0, 24).map((c) => (
-                  <li key={c.a.cientifico} className="text-xs">
+              <ul className="mt-3 grid gap-x-4 gap-y-2 sm:grid-cols-2 md:grid-cols-3">
+                {resto.slice(0, 18).map((c) => (
+                  <li key={c.a.cientifico} className="text-xs p-2 rounded-lg bg-slate-50 border border-slate-100">
                     <a
                       href={c.a.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:underline"
+                      className="hover:underline flex flex-col"
                     >
-                      <span className="text-slate-800">{c.a.comun || c.a.cientifico}</span>
+                      <span className="font-semibold text-slate-800">{c.a.comun || c.a.cientifico}</span>
                       {c.a.comun && (
-                        <span className="italic text-slate-500"> · {c.a.cientifico}</span>
+                        <span className="italic text-slate-500 text-[11px] font-serif">{c.a.cientifico}</span>
                       )}
                     </a>
                   </li>
@@ -275,10 +322,10 @@ export default function PanelBiodiversidad({
             </section>
           )}
 
-          <p className="border-t border-slate-100 pt-3 text-xs text-slate-500">
-            {t("bio.sources")} · {t("bio.savedOffline")}
-          </p>
-          <p className="text-xs text-amber-800">{t("bio.notice")}</p>
+          <div className="border-t border-slate-100 pt-4 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
+            <span>{t("bio.sources")} · {t("bio.savedOffline")}</span>
+            <span className="text-amber-800 font-medium">{t("bio.notice")}</span>
+          </div>
         </div>
       )}
     </div>
