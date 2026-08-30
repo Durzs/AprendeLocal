@@ -88,18 +88,6 @@ export default function Header() {
             >
               {t("platform.tabs.map")}
             </Link>
-            
-            <Link
-              to="/plataforma?tab=makerspaces"
-              className={[
-                "rounded-full px-4 py-1.5 text-sm font-medium transition",
-                location.pathname === "/plataforma" && location.search.includes("makerspaces")
-                  ? "bg-white/20 text-white font-semibold"
-                  : "text-slate-200 hover:bg-white/10 hover:text-white",
-              ].join(" ")}
-            >
-              Makerspaces
-            </Link>
           </nav>
 
           {/* Right side */}
@@ -223,14 +211,6 @@ export default function Header() {
               className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
               {t("platform.tabs.map")}
-            </Link>
-            
-            <Link
-              to="/plataforma?tab=makerspaces"
-              onClick={closeMobile}
-              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              Makerspaces
             </Link>
 
             {user && (

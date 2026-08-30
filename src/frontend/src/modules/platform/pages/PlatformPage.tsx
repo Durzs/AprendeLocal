@@ -6,10 +6,6 @@ import {
   ArrowRight,
   BookOpen,
   Map,
-  Wrench,
-  MapPin,
-  Clock,
-  Star,
   ChevronRight,
 } from "lucide-react";
 
@@ -23,38 +19,11 @@ import { fetchSchools, fetchNearbyPOIs } from "../../../api";
 import type { Course } from "../../courses/types";
 import type { School, NearbyPOI, POIFeature } from "../../../types";
 
-/* ─── hardcoded makerspaces (same as MakerspacesPage) ─── */
-const MAKERSPACES = [
-  {
-    id: 1,
-    name: { pt: "Centro de Inovação – Inova USP", en: "Innovation Center – Inova USP", es: "Centro de Innovación – Inova USP" },
-    rating: 4.7,
-    description: {
-      pt: "Espaço de inovação e fabricação digital da Universidade de São Paulo com equipamentos como impressoras 3D, CNC e corte a laser.",
-      en: "Innovation and digital fabrication space at the University of São Paulo, with 3D printers, CNC and laser cutting.",
-      es: "Espacio de innovación y fabricación digital de la Universidad de São Paulo con impresoras 3D, CNC y corte láser.",
-    },
-    location: { pt: "Cidade Universitária – São Paulo, SP", en: "Cidade Universitária – São Paulo, SP", es: "Cidade Universitária – São Paulo, SP" },
-    hours: { pt: "Seg–Sex: 08h–22h", en: "Mon–Fri: 08:00–22:00", es: "Lun–Vie: 08:00–22:00" },
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-  },
-  {
-    id: 2,
-    name: { pt: "Maker Space Rio", en: "Maker Space Rio", es: "Maker Space Rio" },
-    rating: 4.6,
-    description: { pt: "Centro de inovação com foco em robótica e IoT", en: "Innovation center focused on robotics and IoT", es: "Centro de innovación enfocado en robótica e IoT" },
-    location: { pt: "Rio de Janeiro, RJ", en: "Rio de Janeiro, RJ", es: "Río de Janeiro, RJ" },
-    hours: { pt: "Ter–Sáb: 10h–19h", en: "Tue–Sat: 10:00–19:00", es: "Mar–Sáb: 10:00–19:00" },
-    image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45",
-  },
-];
-
 /* ─── Tab type ─── */
-type Tab = "courses" | "map" | "makerspaces";
+type Tab = "courses" | "map";
 const TABS: { key: Tab; icon: typeof BookOpen }[] = [
   { key: "courses", icon: BookOpen },
   { key: "map", icon: Map },
-  { key: "makerspaces", icon: Wrench },
 ];
 
 /* ─────────────────────────────────────────────── */
@@ -552,38 +521,6 @@ export default function PlatformPage() {
                   schoolMarker={selectedSchool || undefined}
                 />
               </div>
-            </div>
-          )}
-
-          {/* ╔═══════════════ TAB: MAKERSPACES ═══════════════╗ */}
-          {activeTab === "makerspaces" && (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {MAKERSPACES.map((space) => (
-                <article
-                  key={space.id}
-                  className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-950/10"
-                >
-                  <img
-                    src={space.image}
-                    alt={pickLang(space.name, lang)}
-                    className="h-48 w-full object-cover"
-                  />
-                  <div className="space-y-3 p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <h3 className="text-lg font-semibold text-slate-950">{pickLang(space.name, lang)}</h3>
-                      <span className="flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                        <Star className="h-3 w-3" />
-                        {space.rating}
-                      </span>
-                    </div>
-                    <p className="text-sm leading-relaxed text-slate-600">{pickLang(space.description, lang)}</p>
-                    <div className="space-y-1.5 text-sm text-slate-500">
-                      <div className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" />{pickLang(space.location, lang)}</div>
-                      <div className="flex items-center gap-2"><Clock className="h-3.5 w-3.5" />{pickLang(space.hours, lang)}</div>
-                    </div>
-                  </div>
-                </article>
-              ))}
             </div>
           )}
 

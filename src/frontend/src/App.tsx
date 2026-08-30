@@ -3,10 +3,9 @@
  *
  * Rutas:
  * /              → Landing page (pública)
- * /plataforma    → Plataforma unificada (cursos + mapa + makerspaces)
+ * /plataforma    → Plataforma unificada (cursos + mapa)
  * /plataforma-legacy → Herramienta STEM legacy (mapa, proyectos, roles)
  * /cursos        → Redirige a /plataforma?tab=courses
- * /makerspaces   → Redirige a /plataforma?tab=makerspaces
  * /cursos/:id    → Curso individual (requiere auth)
  * /comunidades   → Comunidades (requiere auth)
  * /perfil        → Perfil del usuario (requiere auth)
@@ -56,7 +55,6 @@ const router = createBrowserRouter([
 
       /* ── Redirects de rutas antiguas ── */
       { path: "cursos", element: <Navigate to="/plataforma?tab=courses" replace /> },
-      { path: "makerspaces", element: <Navigate to="/plataforma?tab=makerspaces" replace /> },
 
       /* ── Rutas protegidas ── */
       {

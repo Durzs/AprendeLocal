@@ -17,6 +17,8 @@ import { RUTAS, cursoCorto, type Postura, type Ruta } from "../rutas/catalogo";
 import Recorrido from "../rutas/Recorrido";
 import Documentos from "../rutas/Documentos";
 import Personalizar from "../rutas/Personalizar";
+import Naturaleza from "../rutas/Naturaleza";
+import type { Guardado } from "../rutas/inaturalist";
 import {
   guardarEscuela,
   guardarRuta,
@@ -108,6 +110,10 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
   const [ajustes, setAjustes] = useState<AjustesRuta>(() =>
     leerRuta(ruta.id, ruta.producto.paraQuien)
   );
+
+  // La lista de especies vive aquí y no dentro del panel porque los
+  // documentos también la necesitan: se consulta una vez y se imprime.
+  const [naturaleza, setNaturaleza] = useState<Guardado | null>(null);
 
   useEffect(() => guardarEscuela(escuela), [escuela]);
   useEffect(() => guardarRuta(ruta.id, ajustes), [ruta.id, ajustes]);
@@ -250,7 +256,20 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
         onAjustes={setAjustes}
       />
 
-      <Documentos ruta={ruta} secuencia={secuencia} escuela={escuela} ajustes={ajustes} />
+      <Naturaleza
+        ruta={ruta}
+        escuela={escuela}
+        onEscuela={setEscuela}
+        onDatos={setNaturaleza}
+      />
+
+      <Documentos
+        ruta={ruta}
+        secuencia={secuencia}
+        escuela={escuela}
+        ajustes={ajustes}
+        naturaleza={naturaleza}
+      />
 
       <VistaSecuencia
         key={ruta.id}
