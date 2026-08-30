@@ -37,15 +37,13 @@ export default function Header() {
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group" onClick={closeMobile}>
+          <Link to="/" className="flex items-center group" onClick={closeMobile}>
             <img
               src={logo}
-              alt="Logo AprendeLocal"
-              className="h-9 w-9 rounded-xl border border-white/20 object-cover sm:h-10 sm:w-10 transition group-hover:scale-105 shadow-xs"
+              alt="AprendeLocal"
+              className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl border border-white/20 object-cover transition group-hover:scale-105 shadow-xs"
             />
-            <span className="text-base sm:text-lg font-bold tracking-tight text-white">
-              AprendeLocal
-            </span>
+            <span className="sr-only">AprendeLocal</span>
           </Link>
 
           {/* Desktop Nav */}

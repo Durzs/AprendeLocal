@@ -347,12 +347,9 @@ export default function RegisterPage() {
             <img
               src={logo}
               alt="AprendeLocal"
-              className="h-14 w-14 rounded-2xl border border-slate-200 object-cover shadow-sm"
+              className="h-16 w-16 rounded-2xl border border-slate-200 object-cover shadow-sm transition hover:scale-105"
             />
           </Link>
-          <span className="mt-3 text-lg font-semibold tracking-tight text-slate-950">
-            AprendeLocal
-          </span>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
