@@ -286,9 +286,9 @@
       "title": "Seu território é seu melhor laboratório STEM",
       "subtitle": "Descubra como os rios, florestas e comunidades ao seu redor se transformam em projetos de ciência, tecnologia e engenharia. Aprenda criando soluções reais para o seu território.",
       "ctaStart": "Explorar Cursos",
-      "ctaExplore": "Ver Makerspaces",
+      "ctaExplore": "Veja como funciona",
       "ctaStartAria": "Explorar cursos disponíveis",
-      "ctaExploreAria": "Ver makerspaces próximos",
+      "ctaExploreAria": "Ver como a plataforma funciona",
       "ctaContact": "Fale Conosco",
       "ctaSignup": "Criar conta grátis",
       "contactLine": "Quer levar o AprendeLocal para sua escola ou comunidade?",
@@ -306,7 +306,7 @@
         "create": {
           "label": "Crie",
           "title": "Construa soluções",
-          "desc": "Projete protótipos em makerspaces locais que impactem positivamente sua comunidade."
+          "desc": "A turma entrega o trabalho a alguém da comunidade: a associação de moradores, o comitê de água, as famílias."
         }
       }
     },
@@ -325,10 +325,6 @@
         "theoryPractice": {
           "title": "Teoria e Prática",
           "description": "Ponte entre conteúdo teórico e problemas práticos reais da cultura maker."
-        },
-        "makerspaces": {
-          "title": "Makerspaces",
-          "description": "Conecte-se com espaços makers locais para praticar o que aprendeu."
         }
       }
     },
@@ -429,17 +425,15 @@
       "tags": {
         "courses": "Cursos Adaptados",
         "stemPlatform": "Plataforma STEM",
-        "schools": "Escolas",
-        "makerspaces": "Makerspaces"
+        "schools": "Escolas"
       },
       "chile": {
         "description": "Explore escolas e gere projetos STEM contextualizados com IA na região de La Araucanía, integrando floresta nativa, bacias e patrimônio cultural.",
-        "makerspacesSoon": "Makerspaces — em breve",
         "cta": "Abrir Mapa e Projetos do Chile"
       },
       "brasil": {
-        "description": "Acesse cursos, makerspaces e uma rede de espaços maker para aplicar STEM em projetos reais de regeneração socioambiental.",
-        "cta": "Explorar Makerspaces do Brasil"
+        "description": "Acesse cursos e rotas de aprendizagem ancoradas no seu território, para aplicar STEM em projetos reais de regeneração socioambiental.",
+        "cta": "Explorar Brasil"
       }
     },
     "pillars": {
@@ -502,10 +496,10 @@
   },
   "platform": {
     "title": "Plataforma",
-    "subtitle": "Cursos, mapa STEM e makerspaces em um só lugar",
+    "subtitle": "As rotas, os cursos e o que vive no seu território, em um só lugar",
     "tabs": {
       "courses": "Cursos",
-      "map": "Mapa STEM"
+      "map": "O que vive aqui"
     },
     "map": {
       "selectSchool": "Selecione uma escola",
@@ -531,7 +525,7 @@
       "eyebrow": "Para docentes",
       "title": "Quatro aulas já escritas, prontas para segunda",
       "body": "Escolha uma, ajuste à sua escola e leve impressa. Não há nada para configurar nem para esperar.",
-      "cta": "Preparar aula"
+      "cta": "Ver as rotas"
     }
   },
   "auth": {
@@ -812,5 +806,28 @@
     "contribute": "O que a turma encontrar e não estiver nesta lista, subam ao iNaturalist. Em zonas rurais há pouquíssimos registros: as observações deles são dados novos de verdade, não um exercício.",
     "source": "Dados de",
     "savedOffline": "Salvo neste dispositivo: já aparece sem sinal."
+  },
+  "bio": {
+    "title": "O que vive aqui",
+    "search": "Ver o que há registrado",
+    "searchAgain": "Consultar de novo",
+    "searching": "Consultando…",
+    "nativeHere": "{{count}} espécies nativas da mata daqui",
+    "notFromHere": "{{count}} que não são daqui",
+    "notInOurList": "Outras {{count}} registradas na região",
+    "notInOurListHelp": "Não estão na nossa lista de referência, que é curta de propósito. Não significa que não sejam nativas: significa que sobre essas ainda não sabemos dizer nada.",
+    "introduced": "Introduzida",
+    "records": "{{count}} registros",
+    "empty": "Não há registros a {{km}} km daqui. Tente um raio maior. E se também não aparecer nada, isso já é um dado: quase ninguém registrou na sua região.",
+    "partial": "Só uma das duas fontes respondeu. Falta {{fuente}}, então a lista está incompleta.",
+    "bothFailed": "Nenhuma das duas fontes respondeu. Costuma ser o sinal. A aula funciona igual sem isto.",
+    "sources": "Dados do iNaturalist e do GBIF",
+    "savedOffline": "salvo neste dispositivo, já aparece sem sinal",
+    "notice": "Os nomes em mapuzugun não foram validados por um falante, e o estado de conservação precisa ser conferido com o regulamento chileno de classificação de espécies vigente.",
+    "estado": {
+      "en_peligro": "Em perigo",
+      "vulnerable": "Vulnerável",
+      "casi_amenazada": "Quase ameaçada"
+    }
   }
 }

@@ -286,9 +286,9 @@
       "title": "Your territory is your best STEM lab",
       "subtitle": "Discover how the rivers, forests and communities around you become science, technology and engineering projects. Learn by creating real solutions for your territory.",
       "ctaStart": "Explore Courses",
-      "ctaExplore": "View Makerspaces",
+      "ctaExplore": "See how it works",
       "ctaStartAria": "Explore available courses",
-      "ctaExploreAria": "View nearby makerspaces",
+      "ctaExploreAria": "See how the platform works",
       "ctaContact": "Contact Us",
       "ctaSignup": "Create free account",
       "contactLine": "Want to bring AprendeLocal to your school or community?",
@@ -306,7 +306,7 @@
         "create": {
           "label": "Create",
           "title": "Build solutions",
-          "desc": "Design prototypes in local makerspaces that positively impact your community."
+          "desc": "The class delivers its work to someone in the community: the neighbours association, the water committee, the families."
         }
       }
     },
@@ -325,10 +325,6 @@
         "theoryPractice": {
           "title": "Theory and Practice",
           "description": "A bridge between theoretical content and real practical maker problems."
-        },
-        "makerspaces": {
-          "title": "Makerspaces",
-          "description": "Connect with local makerspaces to practice what you learned."
         }
       }
     },
@@ -429,17 +425,15 @@
       "tags": {
         "courses": "Adapted Courses",
         "stemPlatform": "STEM Platform",
-        "schools": "Schools",
-        "makerspaces": "Makerspaces"
+        "schools": "Schools"
       },
       "chile": {
         "description": "Explore schools and generate AI-powered contextualized STEM projects in the Araucanía region, integrating native forests, watersheds, and cultural heritage.",
-        "makerspacesSoon": "Makerspaces — coming soon",
         "cta": "Open Chile Map & Projects"
       },
       "brasil": {
-        "description": "Access courses, makerspaces, and a maker network to apply STEM in real socio-environmental regeneration projects.",
-        "cta": "Explore Brazil Makerspaces"
+        "description": "Access courses and learning routes anchored in your territory, to apply STEM in real socio-environmental regeneration projects.",
+        "cta": "Explore Brazil"
       }
     },
     "pillars": {
@@ -502,10 +496,10 @@
   },
   "platform": {
     "title": "Platform",
-    "subtitle": "Courses, STEM map and makerspaces in one place",
+    "subtitle": "The routes, the courses and what lives in your territory, in one place",
     "tabs": {
       "courses": "Courses",
-      "map": "STEM Map"
+      "map": "What lives here"
     },
     "map": {
       "selectSchool": "Select a school",
@@ -531,7 +525,7 @@
       "eyebrow": "For teachers",
       "title": "Four lessons already written, ready for Monday",
       "body": "Pick one, fit it to your school and take it printed. Nothing to configure and nothing to wait for.",
-      "cta": "Prepare a lesson"
+      "cta": "See the routes"
     }
   },
   "auth": {
@@ -812,5 +806,28 @@
     "contribute": "Whatever the class finds that is not on this list, have them upload it to iNaturalist. Rural areas have very few records: their observations are genuinely new data, not an exercise.",
     "source": "Data from",
     "savedOffline": "Saved on this device: it works without signal now."
+  },
+  "bio": {
+    "title": "What lives here",
+    "search": "See what is recorded",
+    "searchAgain": "Check again",
+    "searching": "Checking…",
+    "nativeHere": "{{count}} species native to this forest",
+    "notFromHere": "{{count}} that are not from here",
+    "notInOurList": "Another {{count}} recorded in the area",
+    "notInOurListHelp": "They are not in our reference list, which is deliberately short. It does not mean they are not native: it means we cannot tell you anything about them yet.",
+    "introduced": "Introduced",
+    "records": "{{count}} records",
+    "empty": "No records within {{km}} km of here. Try a wider radius. And if nothing shows up either, that is already data: almost nobody has been recording in your area.",
+    "partial": "Only one of the two sources answered. {{fuente}} is missing, so the list is incomplete.",
+    "bothFailed": "Neither source answered. It is usually the signal. The lesson works fine without this.",
+    "sources": "Data from iNaturalist and GBIF",
+    "savedOffline": "saved on this device, it works without signal now",
+    "notice": "The Mapuzugun names are not yet validated by a speaker, and the conservation status must be checked against the current Chilean species classification regulation.",
+    "estado": {
+      "en_peligro": "Endangered",
+      "vulnerable": "Vulnerable",
+      "casi_amenazada": "Near threatened"
+    }
   }
 }
