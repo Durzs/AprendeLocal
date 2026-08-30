@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles } from "lucide-react";
 
@@ -266,7 +266,7 @@ export default function PillarsSection() {
   ];
 
   return (
-    <section className="bg-[#f8faff] py-16 sm:py-24 border-y border-blue-900/5 overflow-hidden">
+    <section id="habilidades" className="bg-[#f8faff] py-16 sm:py-24 border-y border-blue-900/5 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         
         {/* Dynamic Title with animated typewriter pill */}

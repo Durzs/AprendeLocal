@@ -1,20 +1,23 @@
 ﻿import HeroSection from "../components/HeroSection";
-import CountrySection from "../components/CountrySection";
+import MethodologySection from "../components/MethodologySection";
+import HowItWorksSection from "../components/HowItWorksSection";
 import PillarsSection from "../components/PillarsSection";
-import PlaceBasedLearningSection from "../components/PlaceBasedLearningSection";
+import ProjectsSection from "../components/ProjectsSection";
+import TeacherTrainingSection from "../components/TeacherTrainingSection";
+import MapExplorerSection from "../components/MapExplorerSection";
 import ContactSection from "../components/ContactSection";
 import CallToAction from "../components/CallToAction";
 
 export default function HomePage() {
   const goStart = () => {
-    const el = document.getElementById("territorios");
+    const el = document.getElementById("metodologia");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   const goExplore = () => {
-    const el = document.getElementById("pilares");
+    const el = document.getElementById("como-funciona");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
@@ -22,24 +25,31 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* 1. Portada */}
+      {/* 1. Hero Principal */}
       <HeroSection onStart={goStart} onExplore={goExplore} />
 
-      {/* 2. Oportunidades STEM contextualizadas (Selector Chile / Brasil) */}
-      <CountrySection />
+      {/* 2. Metodología & Ruta Territorial (3 Etapas Unificadas Foco Docente) */}
+      <MethodologySection />
 
-      {/* 3. Pilares Fundamentales estilo iNaturalist */}
-      <div id="pilares">
-        <PillarsSection />
-      </div>
+      {/* 3. ¿Cómo funciona? (Ciclo Pedagógico en 4 Pasos) */}
+      <HowItWorksSection />
 
-      {/* 4. El poder del aprendizaje basado en el lugar */}
-      <PlaceBasedLearningSection />
+      {/* 4. Pilares Fundamentales & Habilidades STEM */}
+      <PillarsSection />
 
-      {/* 5. Contacto & Alianzas para Escuelas y Docentes */}
+      {/* 5. Banco de Proyectos & Rutas de Aprendizaje */}
+      <ProjectsSection />
+
+      {/* 6. Formación y Acompañamiento Docente */}
+      <TeacherTrainingSection />
+
+      {/* 7. Explorador Territorial «¿Qué vive aquí?» */}
+      <MapExplorerSection />
+
+      {/* 8. Contacto y Alianzas */}
       <ContactSection />
 
-      {/* 6. Call to Action final */}
+      {/* 9. Llamado a la Acción Final */}
       <CallToAction onStart={goStart} />
     </main>
   );

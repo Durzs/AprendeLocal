@@ -1,10 +1,9 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { User, ChevronDown, LogIn, Menu, X } from "lucide-react";
+import { User, ChevronDown, LogIn, Menu, X, Map, Mail } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 
-import AprendeLocalLogo from "../ui/AprendeLocalLogo";
 import { useAuth } from "../../contexts/AuthContext";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 
@@ -22,74 +21,109 @@ export default function Header() {
     navigate("/entrar");
   }
 
-  const isActive = (path: string) => location.pathname === path;
   const closeMobile = () => setMobileOpen(false);
 
   const displayName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.nome ||
     user?.email?.split("@")?.[0] ||
-    t("header.user.myAccount");
+    t("header.user.myAccount", "Mi Cuenta");
+
+  const scrollTo = (id: string) => {
+    closeMobile();
+    if (location.pathname !== "/") {
+      navigate("/#" + id);
+      return;
+    }
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <header className="relative z-50 w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-md">
+    <header className="sticky top-0 z-50 w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-lg backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           
-          {/* Logo vectorial puro integrado con el Header */}
-          <Link to="/" className="flex items-center group py-1" onClick={closeMobile}>
-            <AprendeLocalLogo
-              layout="horizontal"
-              className="h-8 sm:h-9 w-auto text-white transition-transform duration-200 group-hover:scale-105"
-              textColor="#ffffff"
-            />
-            <span className="sr-only">AprendeLocal</span>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group" onClick={closeMobile}>
+            <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#f97316]"></span>
+            </div>
+            <div className="text-white flex items-center gap-1">
+              <span className="text-base sm:text-lg font-light tracking-tight text-slate-200">aprende</span>
+              <div className="text-base sm:text-lg font-black tracking-tight flex items-center gap-0.5 text-white">
+                <span>l</span>
+                <svg className="w-4 h-4 inline-block -mt-0.5" viewBox="0 0 100 100" fill="none">
+                  <circle cx="50" cy="50" r="42" stroke="white" stroke-width="11"/>
+                  <circle cx="50" cy="50" r="16" fill="#f97316"/>
+                </svg>
+                <span>cal</span>
+              </div>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1.5 md:flex">
-            {/* Entrada del docente */}
-            <Link
-              to="/rutas"
-              className={[
-                "rounded-full border px-4 py-1.5 text-sm font-semibold transition",
-                location.pathname === "/rutas"
-                  ? "border-amber-400 bg-amber-400 text-slate-950 font-bold"
-                  : "border-amber-400/40 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20",
-              ].join(" ")}
+          <nav className="hidden items-center gap-1 md:flex">
+            <button
+              onClick={() => scrollTo("metodologia")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
-              {t("header.nav.routes")}
-            </Link>
+              Metodología
+            </button>
             
-            <span className="mx-1 h-5 w-px bg-white/15" aria-hidden="true" />
+            <button
+              onClick={() => scrollTo("proyectos")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+            >
+              Rutas & Proyectos
+            </button>
             
-            <Link
-              to="/plataforma?tab=courses"
-              className={[
-                "rounded-full px-4 py-1.5 text-sm font-medium transition",
-                location.pathname === "/plataforma" && location.search.includes("courses")
-                  ? "bg-white/20 text-white font-semibold"
-                  : "text-slate-200 hover:bg-white/10 hover:text-white",
-              ].join(" ")}
+            <button
+              onClick={() => scrollTo("formacion")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
-              {t("header.nav.courses")}
-            </Link>
-
-            <Link
-              to="/plataforma?tab=map"
-              className={[
-                "rounded-full px-4 py-1.5 text-sm font-medium transition",
-                location.pathname === "/plataforma" && location.search.includes("map")
-                  ? "bg-white/20 text-white font-semibold"
-                  : "text-slate-200 hover:bg-white/10 hover:text-white",
-              ].join(" ")}
-            >
-              {t("platform.tabs.map")}
-            </Link>
+              Formación Docente
+            </button>
+            
+            {/* Dropdown Comunidad ▾ */}
+            <div className="relative group">
+              <button className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer">
+                <span>Comunidad</span>
+                <ChevronDown className="w-3.5 h-3.5 transition group-hover:rotate-180" />
+              </button>
+              
+              <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl bg-white text-slate-900 p-2 shadow-2xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
+                <button
+                  onClick={() => scrollTo("mapa")}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 transition text-slate-800 text-left cursor-pointer"
+                >
+                  <Map className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>¿Qué vive aquí? (Mapa)</span>
+                </button>
+                <div className="my-1 h-px bg-slate-100" />
+                <button
+                  onClick={() => scrollTo("contacto")}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 transition text-slate-800 text-left cursor-pointer"
+                >
+                  <Mail className="w-4 h-4 text-orange-500 shrink-0" />
+                  <span>Contacto & Alianzas</span>
+                </button>
+              </div>
+            </div>
           </nav>
 
           {/* Right side */}
           <div className="flex items-center gap-3">
+            {/* Preparar clase (botón ámbar directo al planificador) */}
+            <Link
+              to="/preparar"
+              className="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block hover:bg-amber-400/20 transition"
+            >
+              {t("header.nav.prepare", "Preparar clase")}
+            </Link>
+
             {/* Language switcher - desktop */}
             <div className="hidden md:block">
               <LanguageSwitcher />
@@ -144,14 +178,14 @@ export default function Header() {
                       className="cursor-pointer rounded-xl px-3 py-2 text-sm text-slate-700 outline-none hover:bg-slate-100"
                       onClick={() => navigate("/perfil")}
                     >
-                      {t("header.user.myProfile")}
+                      {t("header.user.myProfile", "Mi Perfil")}
                     </DropdownMenu.Item>
 
                     <DropdownMenu.Item
                       className="cursor-pointer rounded-xl px-3 py-2 text-sm text-slate-700 outline-none hover:bg-slate-100"
                       onClick={() => navigate("/comunidades")}
                     >
-                      {t("header.user.communities")}
+                      {t("header.user.communities", "Comunidades")}
                     </DropdownMenu.Item>
 
                     <div className="my-2 h-px bg-slate-200" />
@@ -160,7 +194,7 @@ export default function Header() {
                       className="cursor-pointer rounded-xl px-3 py-2 text-sm font-medium text-red-600 outline-none hover:bg-red-50"
                       onClick={handleSignOut}
                     >
-                      {t("header.user.signOut")}
+                      {t("header.user.signOut", "Cerrar sesión")}
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
@@ -168,10 +202,10 @@ export default function Header() {
             ) : (
               <button
                 onClick={() => navigate("/entrar")}
-                className="inline-flex items-center gap-2 rounded-full bg-orange-500 hover:bg-orange-600 px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-[#f97316] hover:bg-orange-600 px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition hover:-translate-y-0.5 cursor-pointer"
               >
                 <LogIn className="h-4 w-4" />
-                {t("header.actions.signIn")}
+                {t("header.actions.signIn", "Entrar")}
               </button>
             )}
           </div>
@@ -183,53 +217,69 @@ export default function Header() {
         <div className="border-t border-blue-900/60 bg-[#0a0047] p-4 shadow-xl md:hidden">
           <nav className="flex flex-col gap-2">
             <div className="mb-2 flex items-center justify-between rounded-xl bg-white/10 px-4 py-2.5">
-              <span className="text-sm font-medium text-white">{t("header.user.language")}</span>
+              <span className="text-sm font-medium text-white">{t("header.user.language", "Idioma")}</span>
               <LanguageSwitcher />
             </div>
 
             <Link
-              to="/rutas"
+              to="/preparar"
               onClick={closeMobile}
               className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
-              {t("header.nav.routes")}
+              {t("header.nav.prepare", "Preparar clase")}
             </Link>
             
-            <Link
-              to="/plataforma?tab=courses"
-              onClick={closeMobile}
-              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            <button
+              onClick={() => scrollTo("metodologia")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
-              {t("header.nav.courses")}
-            </Link>
+              Metodología
+            </button>
             
-            <Link
-              to="/plataforma?tab=map"
-              onClick={closeMobile}
-              className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            <button
+              onClick={() => scrollTo("proyectos")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
-              {t("platform.tabs.map")}
-            </Link>
+              Rutas & Proyectos
+            </button>
+            
+            <button
+              onClick={() => scrollTo("formacion")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              Formación Docente
+            </button>
+
+            <button
+              onClick={() => scrollTo("mapa")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              ¿Qué vive aquí? (Mapa)
+            </button>
+
+            <button
+              onClick={() => scrollTo("contacto")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              Contacto & Alianzas
+            </button>
 
             {user && (
               <Link
                 to="/perfil"
                 onClick={closeMobile}
-                className={[
-                  "rounded-xl px-4 py-2.5 text-sm font-medium transition",
-                  isActive("/perfil") ? "bg-white/20 text-white" : "text-slate-200 hover:bg-white/10",
-                ].join(" ")}
+                className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
               >
-                {t("header.nav.profile")}
+                {t("header.nav.profile", "Mi Perfil")}
               </Link>
             )}
 
             {!user && (
               <button
                 onClick={() => { closeMobile(); navigate("/entrar"); }}
-                className="mt-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-4 py-3 text-sm font-bold text-white shadow cursor-pointer"
+                className="mt-2 rounded-xl bg-[#f97316] hover:bg-orange-600 px-4 py-3 text-sm font-bold text-white shadow cursor-pointer"
               >
-                {t("header.actions.signIn")}
+                {t("header.actions.signIn", "Entrar")}
               </button>
             )}
           </nav>
