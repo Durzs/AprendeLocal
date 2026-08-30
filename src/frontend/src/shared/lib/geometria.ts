@@ -38,38 +38,81 @@ export type Punto = { lat: number; lng: number };
  * entero si esto lanzara.
  */
 export function decodificarPunto(valor: unknown): Punto | null {
-  if (typeof valor !== "string") return null;
+  if (!valor) return null;
 
-  const hex = valor.trim();
-  // Cabecera mínima: 1 byte de orden + 4 de tipo + 16 de las dos coordenadas.
-  if (hex.length < 42 || !/^[0-9a-fA-F]+$/.test(hex)) return null;
-
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  // 1. Objeto GeoJSON { type: "Point", coordinates: [lng, lat] } o { lat, lng }
+  if (typeof valor === "object" && valor !== null) {
+    const obj = valor as Record<string, unknown>;
+    if (Array.isArray(obj.coordinates) && obj.coordinates.length >= 2) {
+      const lng = Number(obj.coordinates[0]);
+      const lat = Number(obj.coordinates[1]);
+      if (
+        Number.isFinite(lat) &&
+        Number.isFinite(lng) &&
+        Math.abs(lat) <= 90 &&
+        Math.abs(lng) <= 180
+      ) {
+        return { lat, lng };
+      }
+    }
+    if (typeof obj.lat === "number" && typeof obj.lng === "number") {
+      if (Math.abs(obj.lat) <= 90 && Math.abs(obj.lng) <= 180) {
+        return { lat: obj.lat, lng: obj.lng };
+      }
+    }
+    if (typeof obj.latitude === "number" && typeof obj.longitude === "number") {
+      if (Math.abs(obj.latitude) <= 90 && Math.abs(obj.longitude) <= 180) {
+        return { lat: obj.latitude, lng: obj.longitude };
+      }
+    }
   }
 
-  const vista = new DataView(bytes.buffer);
-  const pequeno = bytes[0] === 1;
+  // 2. String GeoJSON o EWKB
+  if (typeof valor === "string") {
+    const hex = valor.trim();
 
-  const tipo = vista.getUint32(1, pequeno);
-  // Solo se entienden puntos. Una línea o un polígono aquí es un dato que no
-  // esperábamos, y adivinar su centro sería inventar.
-  if ((tipo & 0xff) !== 1) return null;
+    // String JSON serializado
+    if (hex.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(hex);
+        return decodificarPunto(parsed);
+      } catch {
+        /* no era json valido */
+      }
+    }
 
-  const traeSrid = (tipo & 0x20000000) !== 0;
-  const inicio = traeSrid ? 9 : 5;
-  if (bytes.length < inicio + 16) return null;
+    // Cabecera mínima EWKB: 1 byte de orden + 4 de tipo + 16 de las dos coordenadas.
+    if (hex.length >= 42 && /^[0-9a-fA-F]+$/.test(hex)) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+      }
 
-  const lng = vista.getFloat64(inicio, pequeno);
-  const lat = vista.getFloat64(inicio + 8, pequeno);
+      const vista = new DataView(bytes.buffer);
+      const pequeno = bytes[0] === 1;
 
-  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-  // Fuera de rango significa que se leyó mal, casi siempre por haber invertido
-  // el orden de los bytes. Mejor descartarlo que poner un punto en el mar.
-  if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+      const tipo = vista.getUint32(1, pequeno);
+      if ((tipo & 0xff) === 1) {
+        const traeSrid = (tipo & 0x20000000) !== 0;
+        const inicio = traeSrid ? 9 : 5;
+        if (bytes.length >= inicio + 16) {
+          const lng = vista.getFloat64(inicio, pequeno);
+          const lat = vista.getFloat64(inicio + 8, pequeno);
 
-  return { lat, lng };
+          if (
+            Number.isFinite(lat) &&
+            Number.isFinite(lng) &&
+            Math.abs(lat) <= 90 &&
+            Math.abs(lng) <= 180
+          ) {
+            return { lat, lng };
+          }
+        }
+      }
+    }
+  }
+
+  return null;
 }
 
 /** Distancia en kilómetros entre dos puntos, por la fórmula del semiverseno. */
