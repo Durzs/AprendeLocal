@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { User, ChevronDown, LogIn, Menu, X, Map, Mail } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -56,7 +56,7 @@ export default function Header() {
               <div className="text-base sm:text-lg font-black tracking-tight flex items-center gap-0.5 text-white">
                 <span>l</span>
                 <svg className="w-4 h-4 inline-block -mt-0.5" viewBox="0 0 100 100" fill="none">
-                  <circle cx="50" cy="50" r="42" stroke="white" stroke-width="11"/>
+                  <circle cx="50" cy="50" r="42" stroke="white" strokeWidth="11"/>
                   <circle cx="50" cy="50" r="16" fill="#f97316"/>
                 </svg>
                 <span>cal</span>
