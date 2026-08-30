@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -15,7 +15,7 @@ export default function MapExplorerSection() {
           <span className="text-xs font-bold uppercase tracking-widest text-blue-900 bg-blue-100 px-3.5 py-1 rounded-full border border-blue-200">
             {t("home.map.badge", "Explorador Territorial Interactivo")}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0a0047] tracking-tight mt-3 mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-3 leading-[0.95]">
             {t("home.map.title", "¿Qué vive en tu territorio?")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">

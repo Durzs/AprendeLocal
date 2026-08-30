@@ -1,4 +1,4 @@
-﻿import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 export default function HowItWorksSection() {
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ export default function HowItWorksSection() {
           <span className="text-xs font-bold uppercase tracking-widest text-[#f97316] bg-orange-50 px-3.5 py-1 rounded-full border border-orange-200">
             {t("home.howItWorks.badge", "Ciclo de Trabajo en Aula")}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0a0047] tracking-tight mt-3 mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-4 leading-[0.95]">
             {t("home.howItWorks.title", "¿Cómo funciona AprendeLocal para el docente?")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">

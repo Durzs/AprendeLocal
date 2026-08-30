@@ -46,7 +46,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* Title */}
-        <h1 className="mx-auto max-w-5xl text-3xl font-extrabold leading-[1.02] tracking-[-0.05em] text-[#0a0047] sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="mx-auto max-w-5xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
           {displayedText}
           <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
         </h1>

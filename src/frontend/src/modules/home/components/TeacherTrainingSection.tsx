@@ -1,4 +1,4 @@
-﻿import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { BookOpen, Cpu, Award } from "lucide-react";
 
 export default function TeacherTrainingSection() {
@@ -46,7 +46,7 @@ export default function TeacherTrainingSection() {
           <span className="text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-100 px-3.5 py-1 rounded-full border border-amber-200">
             {t("home.training.badge", "Desarrollo Profesional Docente")}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0a0047] tracking-tight mt-3 mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-3 leading-[0.95]">
             {t("home.training.title", "Micro-capacitaciones para profesores")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">

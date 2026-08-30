@@ -1,4 +1,4 @@
-﻿import { MapPin, FileCheck, Cpu } from "lucide-react";
+import { MapPin, FileCheck, Cpu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function MethodologySection() {
@@ -13,7 +13,7 @@ export default function MethodologySection() {
           <span className="text-xs font-bold uppercase tracking-widest text-blue-900 bg-blue-100 px-3.5 py-1 rounded-full border border-blue-200">
             {t("home.methodology.badge", "Metodología Place-Based Learning (PBL) & STEM")}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0a0047] tracking-tight mt-3 mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-4 leading-[0.95]">
             {t("home.methodology.title", "Una ruta pedagógica en 3 etapas continuas")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
