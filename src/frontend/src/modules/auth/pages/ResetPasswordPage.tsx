@@ -17,7 +17,7 @@ import {
   limpiarUrl,
   traeCredenciales,
 } from "../../../shared/lib/confirmacion";
-import logo from "../../../assets/images/logo.png";
+import AprendeLocalLogo from "../../../shared/components/ui/AprendeLocalLogo";
 
 const LARGO_MINIMO = 6;
 
@@ -131,10 +131,10 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center">
           <Link to="/">
-            <img
-              src={logo}
-              alt="AprendeLocal"
-              className="h-16 w-16 rounded-2xl border border-slate-200 object-cover shadow-sm transition hover:scale-105"
+            <AprendeLocalLogo
+              layout="stacked"
+              className="h-16 w-auto transition-transform hover:scale-105"
+              textColor="#0a0047"
             />
           </Link>
         </div>

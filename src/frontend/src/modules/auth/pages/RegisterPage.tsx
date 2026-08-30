@@ -6,7 +6,7 @@ import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
 import { useTranslation } from "react-i18next";
 import { fetchSchools } from "../../../api";
 import type { School } from "../../../types";
-import logo from "../../../assets/images/logo.png";
+import AprendeLocalLogo from "../../../shared/components/ui/AprendeLocalLogo";
 
 // La plataforma la usan estudiantes de enseñanza básica y media y sus
 // docentes; fuera de este rango el dato no es plausible.
@@ -344,10 +344,10 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
           <Link to="/">
-            <img
-              src={logo}
-              alt="AprendeLocal"
-              className="h-16 w-16 rounded-2xl border border-slate-200 object-cover shadow-sm transition hover:scale-105"
+            <AprendeLocalLogo
+              layout="stacked"
+              className="h-16 w-auto transition-transform hover:scale-105"
+              textColor="#0a0047"
             />
           </Link>
         </div>

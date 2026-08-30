@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link, useSearchParams } from "react-router-do
 import { useTranslation } from "react-i18next";
 import { LogIn, ShieldCheck, Mail, Send, CheckCircle2 } from "lucide-react";
 import { supabase, urlDeRetorno } from "../../../shared/lib/supabaseClient";
-import logo from "../../../assets/images/logo.png";
+import AprendeLocalLogo from "../../../shared/components/ui/AprendeLocalLogo";
 
 const ADMIN_EMAIL = "durzs@uc.cl";
 
@@ -116,10 +116,10 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
           <Link to="/">
-            <img
-              src={logo}
-              alt="AprendeLocal"
-              className="h-16 w-16 rounded-2xl border border-slate-200 object-cover shadow-sm transition hover:scale-105"
+            <AprendeLocalLogo
+              layout="stacked"
+              className="h-16 w-auto transition-transform hover:scale-105"
+              textColor="#0a0047"
             />
           </Link>
         </div>

@@ -4,7 +4,7 @@ import { User, ChevronDown, LogIn, Menu, X } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 
-import logo from "../../../assets/images/logo.png";
+import AprendeLocalLogo from "../ui/AprendeLocalLogo";
 import { useAuth } from "../../contexts/AuthContext";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 
@@ -36,12 +36,12 @@ export default function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           
-          {/* Logo */}
-          <Link to="/" className="flex items-center group" onClick={closeMobile}>
-            <img
-              src={logo}
-              alt="AprendeLocal"
-              className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl border border-white/20 object-cover transition group-hover:scale-105 shadow-xs"
+          {/* Logo vectorial puro integrado con el Header */}
+          <Link to="/" className="flex items-center group py-1" onClick={closeMobile}>
+            <AprendeLocalLogo
+              layout="horizontal"
+              className="h-8 sm:h-9 w-auto text-white transition-transform duration-200 group-hover:scale-105"
+              textColor="#ffffff"
             />
             <span className="sr-only">AprendeLocal</span>
           </Link>
