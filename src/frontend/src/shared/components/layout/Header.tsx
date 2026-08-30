@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { User, ChevronDown, LogIn, Menu, X } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -41,7 +41,7 @@ export default function Header() {
             <img
               src={logo}
               alt="Logo AprendeLocal"
-              className="h-8 w-8 rounded-full border border-white/20 object-cover sm:h-9 sm:w-9 transition group-hover:scale-105"
+              className="h-9 w-9 rounded-xl border border-white/20 object-cover sm:h-10 sm:w-10 transition group-hover:scale-105 shadow-xs"
             />
             <span className="text-base sm:text-lg font-bold tracking-tight text-white">
               AprendeLocal
