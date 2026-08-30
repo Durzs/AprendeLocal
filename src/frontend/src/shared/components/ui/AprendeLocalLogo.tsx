@@ -1,6 +1,6 @@
 interface LogoProps {
   className?: string;
-  /** 'horizontal' para la barra de navegación (header) o 'stacked' (apilado) */
+  /** 'horizontal' para la barra de navegación o 'stacked' para acceso/portada */
   layout?: "horizontal" | "stacked";
   /** Color del texto: 'currentColor', '#ffffff' o tono personalizado */
   textColor?: string;
@@ -14,7 +14,7 @@ export default function AprendeLocalLogo({
   if (layout === "horizontal") {
     return (
       <svg
-        viewBox="0 0 300 48"
+        viewBox="0 0 270 42"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={className}
@@ -24,11 +24,11 @@ export default function AprendeLocalLogo({
         {/* 'aprende' */}
         <text
           x="0"
-          y="36"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-          fontSize="36"
+          y="30"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+          fontSize="33"
           fontWeight="800"
-          letterSpacing="-0.035em"
+          letterSpacing="-0.03em"
           fill={textColor}
         >
           aprende
@@ -36,37 +36,37 @@ export default function AprendeLocalLogo({
 
         {/* 'l' */}
         <text
-          x="154"
-          y="36"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-          fontSize="36"
+          x="142"
+          y="30"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+          fontSize="33"
           fontWeight="800"
-          letterSpacing="-0.035em"
+          letterSpacing="-0.03em"
           fill={textColor}
         >
           l
         </text>
 
-        {/* 'o' como icono de diana concéntrica */}
-        <g transform="translate(178, 25)">
-          {/* Anillo exterior blanco / tono texto */}
-          <circle cx="0" cy="0" r="13" stroke={textColor} strokeWidth="3" fill="none" />
+        {/* 'o' como icono de diana concéntrica con simetría geométrica */}
+        <g transform="translate(167, 20.5)">
+          {/* Anillo exterior */}
+          <circle cx="0" cy="0" r="11.5" stroke={textColor} strokeWidth="2.8" fill="none" />
           {/* Anillo medio verde bosque */}
-          <circle cx="0" cy="0" r="9" fill="#7a9785" />
+          <circle cx="0" cy="0" r="8" fill="#7a9785" />
           {/* Núcleo terracota */}
-          <circle cx="0" cy="0" r="5" fill="#cc6138" />
-          {/* Centro blanco sutil */}
-          <circle cx="0" cy="0" r="1.8" fill="#ffffff" />
+          <circle cx="0" cy="0" r="4.5" fill="#cc6138" />
+          {/* Centro blanco */}
+          <circle cx="0" cy="0" r="1.6" fill="#ffffff" />
         </g>
 
         {/* 'cal' */}
         <text
-          x="198"
-          y="36"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-          fontSize="36"
+          x="185"
+          y="30"
+          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+          fontSize="33"
           fontWeight="800"
-          letterSpacing="-0.035em"
+          letterSpacing="-0.03em"
           fill={textColor}
         >
           cal
@@ -75,10 +75,10 @@ export default function AprendeLocalLogo({
     );
   }
 
-  // Layout apilado (2 líneas) para pantallas de inicio/login
+  // Layout apilado con alineación y espaciado simétrico
   return (
     <svg
-      viewBox="0 0 190 115"
+      viewBox="0 0 170 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
@@ -88,11 +88,11 @@ export default function AprendeLocalLogo({
       {/* Línea 1: 'aprende' */}
       <text
         x="0"
-        y="42"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-        fontSize="46"
+        y="38"
+        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+        fontSize="42"
         fontWeight="800"
-        letterSpacing="-0.04em"
+        letterSpacing="-0.035em"
         fill={textColor}
       >
         aprende
@@ -101,36 +101,36 @@ export default function AprendeLocalLogo({
       {/* Línea 2: 'l' */}
       <text
         x="0"
-        y="98"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-        fontSize="46"
+        y="88"
+        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+        fontSize="42"
         fontWeight="800"
-        letterSpacing="-0.04em"
+        letterSpacing="-0.035em"
         fill={textColor}
       >
         l
       </text>
 
       {/* 'o' concéntrica */}
-      <g transform="translate(32, 84)">
+      <g transform="translate(31, 76)">
         {/* Anillo exterior */}
-        <circle cx="0" cy="0" r="17" stroke={textColor} strokeWidth="3.8" fill="none" />
+        <circle cx="0" cy="0" r="15" stroke={textColor} strokeWidth="3.4" fill="none" />
         {/* Anillo medio verde bosque */}
-        <circle cx="0" cy="0" r="12" fill="#7a9785" />
+        <circle cx="0" cy="0" r="10.5" fill="#7a9785" />
         {/* Núcleo terracota */}
-        <circle cx="0" cy="0" r="6.5" fill="#cc6138" />
+        <circle cx="0" cy="0" r="5.8" fill="#cc6138" />
         {/* Centro blanco */}
-        <circle cx="0" cy="0" r="2.2" fill="#ffffff" />
+        <circle cx="0" cy="0" r="2" fill="#ffffff" />
       </g>
 
       {/* 'cal' */}
       <text
-        x="58"
-        y="98"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif"
-        fontSize="46"
+        x="54"
+        y="88"
+        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
+        fontSize="42"
         fontWeight="800"
-        letterSpacing="-0.04em"
+        letterSpacing="-0.035em"
         fill={textColor}
       >
         cal
