@@ -17,7 +17,7 @@ const FOTOS_DESTACADAS: Record<string, string> = {
   conguillio: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=800&auto=format&fit=crop&q=80",
   villarrica: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80",
   cautin: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80",
-  malalcahuello: "https://images.unsplash.com/photo-1511497584788-87676104235f?w=800&auto=format&fit=crop&q=80",
+  malalcahuello: "https://images.unsplash.com/photo-1542332213-31f87348057f?w=800&auto=format&fit=crop&q=80",
 };
 
 const ICONOS_ECOSISTEMA: Record<string, string> = {
