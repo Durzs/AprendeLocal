@@ -14,6 +14,7 @@ import { CURSOS_DEMO, modoDemo } from "../../../shared/lib/demo";
 import { pickLang } from "../../../shared/i18n/pickLang";
 import MapView from "../../../components/MapView";
 import PointPanel from "../../../components/PointPanel";
+import PanelBiodiversidad from "../../biodiversidad/PanelBiodiversidad";
 import { fetchSchools, fetchNearbyPOIs } from "../../../api";
 
 import type { Course } from "../../courses/types";
@@ -507,6 +508,30 @@ export default function PlatformPage() {
                         <PointPanel point={selectedPoi} onClose={() => setSelectedPoi(null)} />
                       </div>
                     )}
+
+                    {/* Qué vive aquí. El punto elegido manda sobre la escuela:
+                        si el docente marcó un estero concreto, es de ese estero
+                        de lo que quiere saber, no del pueblo entero.
+                        Las coordenadas vienen en orden GeoJSON, longitud antes
+                        que latitud, que es al revés de como se leen. */}
+                    <PanelBiodiversidad
+                      key={selectedPoi?.properties.id ?? selectedSchool.id}
+                      lat={
+                        selectedPoi
+                          ? selectedPoi.geometry.coordinates[1]
+                          : selectedSchool.coordinates[1]
+                      }
+                      lng={
+                        selectedPoi
+                          ? selectedPoi.geometry.coordinates[0]
+                          : selectedSchool.coordinates[0]
+                      }
+                      nombreDelLugar={
+                        selectedPoi
+                          ? String(selectedPoi.properties.name)
+                          : selectedSchool.name
+                      }
+                    />
                   </div>
                 )}
               </div>

@@ -22,7 +22,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* 1. Hero Principal Preservado (Sin Makerspaces) */}
+      {/* 1. Portada */}
       <HeroSection onStart={goStart} onExplore={goExplore} />
 
       {/* 2. Oportunidades STEM contextualizadas (Selector Chile / Brasil) */}
