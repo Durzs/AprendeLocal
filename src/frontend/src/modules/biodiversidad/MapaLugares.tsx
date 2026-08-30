@@ -24,6 +24,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { leerLugares, type Lugar } from "../../shared/lib/catalogos";
+import { esSugerido, juntarConSugeridos, LUGARES_SUGERIDOS } from "./sugeridos";
 import { enPalabras } from "../sequences/lib/etiquetas";
 import PanelBiodiversidad from "./PanelBiodiversidad";
 import MapView from "../../components/MapView";
@@ -38,9 +39,11 @@ function normalizar(s: string): string {
 
 export default function MapaLugares() {
   const { t } = useTranslation();
-  const [lugares, setLugares] = useState<Lugar[]>([]);
+  const [lugares, setLugares] = useState<Lugar[]>(LUGARES_SUGERIDOS);
   const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
+  /** Cuántos de los que se ven vienen dentro de la aplicación y no de la base. */
+  const [sugeridos, setSugeridos] = useState(LUGARES_SUGERIDOS.length);
 
   const [busqueda, setBusqueda] = useState("");
   const [comuna, setComuna] = useState<string | null>(null);
@@ -49,16 +52,22 @@ export default function MapaLugares() {
   useEffect(() => {
     let vigente = true;
     leerLugares()
-      .then((l) => {
+      .then(({ lugares: deLaBase, filas }) => {
         if (!vigente) return;
-        setLugares(l);
-        // Una lista vacía sin explicación es lo que había antes. Si la consulta
-        // funciona pero no trae nada, eso también se dice.
-        if (l.length === 0) setError(t("bio.noPlaces"));
+        const { lugares: todos, sugeridosUsados } = juntarConSugeridos(deLaBase);
+        setLugares(todos);
+        setSugeridos(sugeridosUsados);
+
+        // Los dos motivos por los que la base puede no aportar nada tienen
+        // arreglos distintos, así que se distinguen en vez de dejarlo en un
+        // «no devolvió ningún lugar» que obliga a adivinar.
+        if (deLaBase.length === 0) {
+          setAviso(filas > 0 ? t("bio.noGeometry", { filas }) : t("bio.emptyTable"));
+        }
       })
       .catch((e: unknown) => {
         if (!vigente) return;
-        setError(
+        setAviso(
           t("bio.loadFailed", {
             detail: e instanceof Error ? e.message : String(e),
           })
@@ -146,21 +155,23 @@ export default function MapaLugares() {
           ))}
         </div>
 
-        {/* El fallo se enseña. Antes esto era una lista vacía sin motivo, que
-            es la peor manera de estar roto: parece que no hay datos. */}
-        {error && (
+        {/* Lo que pase con la base se cuenta, pero ya no deja la pantalla
+            muerta: los cuatro sugeridos siguen ahí y se puede trabajar. */}
+        {aviso && (
           <p
-            role="alert"
+            role="status"
             className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
           >
-            {error}
+            {aviso}{" "}
+            {sugeridos > 0 && <strong>{t("bio.usingSuggested", { count: sugeridos })}</strong>}
           </p>
         )}
 
-        {cargando ? (
-          <p className="py-8 text-center text-sm text-slate-400">{t("bio.loading")}</p>
-        ) : (
-          <ul className="mt-4 max-h-[45vh] space-y-1.5 overflow-y-auto pr-1">
+        {cargando && (
+          <p className="mt-3 text-xs text-slate-400">{t("bio.loading")}</p>
+        )}
+
+        <ul className="mt-4 max-h-[45vh] space-y-1.5 overflow-y-auto pr-1">
             {filtrados.map((l, i) => {
               const activo = elegido?.id === l.id;
               return (
@@ -179,7 +190,17 @@ export default function MapaLugares() {
                         : "border-slate-200 bg-white hover:border-slate-400",
                     ].join(" ")}
                   >
-                    <p className="text-sm font-semibold text-slate-900">{l.nombre}</p>
+                    <p className="flex items-baseline gap-2 text-sm font-semibold text-slate-900">
+                      {l.nombre}
+                      {/* Se dice cuál viaja con la aplicación. Un docente que
+                          no encuentra su estero merece saber si es que la base
+                          no cargó o es que ese lugar no está cargado. */}
+                      {esSugerido(l.id) && (
+                        <span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                          {t("bio.suggested")}
+                        </span>
+                      )}
+                    </p>
                     <p className="text-xs text-slate-500">
                       {l.comuna}
                       {l.ecosistema ? ` · ${enPalabras(l.ecosistema)}` : ""}
@@ -188,13 +209,12 @@ export default function MapaLugares() {
                 </li>
               );
             })}
-            {filtrados.length === 0 && !error && (
-              <li className="py-6 text-center text-sm text-slate-400">
-                {t("bio.noMatch")}
-              </li>
-            )}
-          </ul>
-        )}
+          {filtrados.length === 0 && (
+            <li className="py-6 text-center text-sm text-slate-400">
+              {t("bio.noMatch")}
+            </li>
+          )}
+        </ul>
 
         {elegido && (
           <div className="mt-4 animar-asoma">

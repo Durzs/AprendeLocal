@@ -16,6 +16,9 @@
 import { supabase } from "./supabaseClient";
 import { decodificarPunto, type Punto } from "./geometria";
 
+/** Lo leído, y cuántas filas trajo la base aunque no se pudieran usar. */
+export type LecturaLugares = { lugares: Lugar[]; filas: number };
+
 /** Un lugar del territorio, ya listo para pintarse en un mapa. */
 export type Lugar = {
   id: string;
@@ -58,7 +61,7 @@ export async function leerObjetivos(): Promise<CurriculumObjective[]> {
  * romper la pantalla: vale más un mapa con ciento veintinueve puntos que una
  * excepción con ciento treinta.
  */
-export async function leerLugares(): Promise<Lugar[]> {
+export async function leerLugares(): Promise<LecturaLugares> {
   const { data, error } = await supabase
     .from("points_of_interest")
     .select(
@@ -69,8 +72,9 @@ export async function leerLugares(): Promise<Lugar[]> {
 
   if (error) throw new Error(error.message);
 
+  const filas = data ?? [];
   const salida: Lugar[] = [];
-  for (const fila of data ?? []) {
+  for (const fila of filas) {
     const p = fila as Record<string, unknown>;
     const punto = decodificarPunto(p.location);
     if (!punto) continue;
@@ -86,7 +90,12 @@ export async function leerLugares(): Promise<Lugar[]> {
       punto,
     });
   }
-  return salida;
+
+  // La diferencia importa para poder arreglarlo: una tabla vacía se puebla
+  // con el seed; una tabla con filas cuya geometría no se lee es un problema
+  // de permisos o de formato de la columna. Antes las dos salían con el mismo
+  // mensaje y había que adivinar cuál era.
+  return { lugares: salida, filas: filas.length };
 }
 
 export async function leerPuntos(): Promise<POIFeature[]> {

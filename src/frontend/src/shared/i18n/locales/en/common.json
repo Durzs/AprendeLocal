@@ -835,7 +835,11 @@
     "allCommunes": "All",
     "loading": "Loading places…",
     "noMatch": "No place matches that search.",
-    "noPlaces": "The query worked but returned no places. The table may be empty, or their coordinates may be unreadable.",
-    "loadFailed": "The places could not be loaded from the database. Detail: {{detail}}"
+    "loadFailed": "The places could not be loaded from the database. Detail: {{detail}}",
+    "suggested": "Suggested",
+    "usingSuggested_one": "In the meantime you can work with the {{count}} place bundled with the app.",
+    "usingSuggested_other": "In the meantime you can work with the {{count}} places bundled with the app.",
+    "emptyTable": "The places table is empty in this Supabase project: the seed in infra/pois_expansion.sql needs to be loaded.",
+    "noGeometry": "The database returned {{filas}} places, but none of their coordinates could be read. Usually the «location» column is not exposed."
   }
 }

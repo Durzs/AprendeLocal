@@ -835,7 +835,11 @@
     "allCommunes": "Todas",
     "loading": "Cargando lugares…",
     "noMatch": "Ningún lugar coincide con esa búsqueda.",
-    "noPlaces": "La consulta funcionó pero no devolvió ningún lugar. Puede que la tabla esté vacía o que sus coordenadas no se puedan leer.",
-    "loadFailed": "No se pudieron cargar los lugares desde la base de datos. Detalle: {{detail}}"
+    "loadFailed": "No se pudieron cargar los lugares desde la base de datos. Detalle: {{detail}}",
+    "suggested": "Sugerido",
+    "usingSuggested_one": "Mientras tanto puedes trabajar con {{count}} lugar que viene con la aplicación.",
+    "usingSuggested_other": "Mientras tanto puedes trabajar con los {{count}} lugares que vienen con la aplicación.",
+    "emptyTable": "La tabla de lugares está vacía en este proyecto de Supabase: hay que cargar el seed de infra/pois_expansion.sql.",
+    "noGeometry": "La base devolvió {{filas}} lugares, pero no se pudo leer la coordenada de ninguno. Suele ser que la columna «location» no está expuesta."
   }
 }
