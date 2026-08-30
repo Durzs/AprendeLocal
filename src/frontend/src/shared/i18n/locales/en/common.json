@@ -828,6 +828,14 @@
       "en_peligro": "Endangered",
       "vulnerable": "Vulnerable",
       "casi_amenazada": "Near threatened"
-    }
+    },
+    "pickPlace": "Pick a place",
+    "pickPlaceLead": "A stream, a forest, a road cut. Then we tell you what has been recorded there.",
+    "searchPlace": "Search: stream, forest, spring…",
+    "allCommunes": "All",
+    "loading": "Loading places…",
+    "noMatch": "No place matches that search.",
+    "noPlaces": "The query worked but returned no places. The table may be empty, or their coordinates may be unreadable.",
+    "loadFailed": "The places could not be loaded from the database. Detail: {{detail}}"
   }
 }

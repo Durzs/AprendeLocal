@@ -7,12 +7,27 @@
  * consultarlas sin intermediario: menos infraestructura, menos configuración
  * que se olvida, y un servicio menos que pueda estar caído.
  *
- * Solo se piden las columnas que la pantalla usa. En particular no se pide
- * `location`, que es geometría de PostGIS y llegaría en un formato que aquí no
- * hace falta interpretar.
+ * Solo se piden las columnas que cada pantalla usa. `location` es geometría de
+ * PostGIS y llega en hexadecimal, así que solo la pide quien va a dibujar un
+ * mapa: `leerLugares`. Quien únicamente necesita nombres usa `leerPuntos`, que
+ * es más barata.
  */
 
 import { supabase } from "./supabaseClient";
+import { decodificarPunto, type Punto } from "./geometria";
+
+/** Un lugar del territorio, ya listo para pintarse en un mapa. */
+export type Lugar = {
+  id: string;
+  nombre: string;
+  comuna: string;
+  tipo: string;
+  ecosistema: string;
+  descripcion: string;
+  patrimonio: string;
+  amenazas: string[];
+  punto: Punto;
+};
 import type {
   CurriculumObjective,
   POIFeature,
@@ -28,6 +43,50 @@ export async function leerObjetivos(): Promise<CurriculumObjective[]> {
   if (error) throw new Error(error.message);
 
   return (data ?? []).map((o) => ({ ...o, project_count: 0 }) as CurriculumObjective);
+}
+
+/**
+ * Los lugares CON sus coordenadas de verdad.
+ *
+ * `leerPuntos`, más abajo, devuelve `[0, 0]` a propósito: la pantalla que la
+ * usa elige un lugar por su nombre y nunca lo dibuja. El mapa sí lo dibuja, y
+ * con ceros acababa poniendo los ciento treinta puntos frente a la costa de
+ * África.
+ *
+ * Las coordenadas viven en `location`, que PostgREST entrega como hexadecimal
+ * de PostGIS. Un lugar cuya geometría no se pueda leer se descarta en vez de
+ * romper la pantalla: vale más un mapa con ciento veintinueve puntos que una
+ * excepción con ciento treinta.
+ */
+export async function leerLugares(): Promise<Lugar[]> {
+  const { data, error } = await supabase
+    .from("points_of_interest")
+    .select(
+      "id, name, type, commune, ecosystem_type, description, stem_areas, heritage_type, threats, location"
+    )
+    .order("commune")
+    .order("name");
+
+  if (error) throw new Error(error.message);
+
+  const salida: Lugar[] = [];
+  for (const fila of data ?? []) {
+    const p = fila as Record<string, unknown>;
+    const punto = decodificarPunto(p.location);
+    if (!punto) continue;
+    salida.push({
+      id: String(p.id),
+      nombre: String(p.name ?? ""),
+      comuna: String(p.commune ?? ""),
+      tipo: String(p.type ?? ""),
+      ecosistema: String(p.ecosystem_type ?? ""),
+      descripcion: String(p.description ?? ""),
+      patrimonio: String(p.heritage_type ?? ""),
+      amenazas: Array.isArray(p.threats) ? (p.threats as string[]) : [],
+      punto,
+    });
+  }
+  return salida;
 }
 
 export async function leerPuntos(): Promise<POIFeature[]> {
