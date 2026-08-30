@@ -29,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { cursoCorto, type Ruta } from "./catalogo";
 import { fechaLegible, type AjustesEscuela, type AjustesRuta } from "./ajustes";
 import type { Secuencia } from "../../../types";
+import type { Guardado } from "./inaturalist";
 import { nombreLegible } from "../lib/etiquetas";
 
 /**
@@ -82,19 +83,22 @@ function Hoja({
   );
 }
 
-type Cual = "terreno" | "guia" | "familia" | "producto";
+type Cual = "terreno" | "guia" | "familia" | "producto" | "especies";
 
 export default function Documentos({
   ruta,
   secuencia,
   escuela,
   ajustes,
+  naturaleza,
 }: {
   ruta: Ruta;
   /** Ya recortada a los cursos que esta escuela tiene en la sala. */
   secuencia: Secuencia;
   escuela: AjustesEscuela;
   ajustes: AjustesRuta;
+  /** La lista de iNaturalist, si el docente la consultó. */
+  naturaleza: Guardado | null;
 }) {
   const { t, i18n } = useTranslation();
   const [marcados, setMarcados] = useState<Record<Cual, boolean>>({
@@ -102,6 +106,7 @@ export default function Documentos({
     guia: true,
     familia: true,
     producto: true,
+    especies: true,
   });
 
   const opciones: { clave: Cual; etiqueta: string; ayuda: string }[] = [
@@ -109,6 +114,17 @@ export default function Documentos({
     { clave: "guia", etiqueta: t("rutas.docGuide"), ayuda: t("rutas.docGuideHelp") },
     { clave: "familia", etiqueta: t("rutas.docLetter"), ayuda: t("rutas.docLetterHelp") },
     { clave: "producto", etiqueta: t("rutas.docProduct"), ayuda: t("rutas.docProductHelp") },
+    // Solo se ofrece si hay algo que imprimir: una casilla que no produce
+    // nada es peor que no tener la casilla.
+    ...(naturaleza
+      ? [
+          {
+            clave: "especies" as Cual,
+            etiqueta: t("rutas.docSpecies"),
+            ayuda: t("rutas.docSpeciesHelp"),
+          },
+        ]
+      : []),
   ];
 
   const protocolo = secuencia.salida_terreno?.protocolo ?? [];
@@ -379,6 +395,36 @@ export default function Documentos({
           </ul>
 
           <p className="mt-6 text-xs text-slate-600">{t("rutas.productReminder")}</p>
+        </Hoja>
+      )}
+
+      {/* ── Lo que se ha visto por aquí, para comparar en terreno ── */}
+      {marcados.especies && naturaleza && (
+        <Hoja
+          titulo={t("rutas.docSpecies")}
+          subtitulo={lugarPropio || ruta.titulo}
+          membrete={membrete}
+        >
+          <p className="text-xs">{t("rutas.speciesIntro")}</p>
+
+          {/* Dos columnas y una casilla al lado de cada nombre: la hoja sirve
+              para marcar lo que el curso encuentre, no solo para leerla. */}
+          <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+            {naturaleza.especies.slice(0, 44).map((e) => (
+              <li key={e.cientifico} className="flex items-baseline gap-2">
+                <span className="mt-0.5 inline-block h-3 w-3 shrink-0 border border-slate-500" />
+                <span className="min-w-0">
+                  <span className="font-semibold">{e.comun || e.cientifico}</span>
+                  {e.comun && <span className="italic"> · {e.cientifico}</span>}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-5 font-semibold">{t("rutas.speciesNotListed")}</p>
+          <Renglones cuantos={5} />
+
+          <p className="mt-4 text-[11px]">{t("rutas.speciesSource")}</p>
         </Hoja>
       )}
     </>

@@ -24,6 +24,7 @@
  */
 
 import type { Secuencia } from "../../../types";
+import type { Grupo } from "./inaturalist";
 
 /**
  * La postura desde la que trabaja cada curso.
@@ -102,6 +103,14 @@ export type Ruta = {
    * escuela ni nosotros.
    */
   kimun?: { pregunta: string; aQuien: string };
+  /**
+   * Qué grupos de seres vivos le interesan a esta ruta.
+   *
+   * Solo lo declaran las rutas a las que de verdad les aporta. Al suelo y al
+   * calor no les sirve saber qué pájaros hay cerca, y ofrecerlo ahí sería
+   * ruido con aspecto de función.
+   */
+  naturaleza?: { grupos: Grupo[]; para: string };
   secuencia: Secuencia;
 };
 
@@ -1152,6 +1161,10 @@ export const RUTAS: Ruta[] = [
       pregunta: "¿Hasta dónde llegaba el estero cuando usted era niño, y en qué mes bajaba?",
       aQuien: "Una persona mayor de la comunidad, o el educador tradicional de la escuela.",
     },
+    naturaleza: {
+      grupos: ["Amphibia", "Actinopterygii", "Insecta", "Plantae"],
+      para: "Lo que vive en el agua y en la orilla, para saber a quién le importa este estero además de a ustedes.",
+    },
     secuencia: AGUA,
   },
   {
@@ -1222,6 +1235,10 @@ export const RUTAS: Ruta[] = [
     kimun: {
       pregunta: "¿Qué plantas de este monte se usan, para qué, y en qué época se recogen?",
       aQuien: "La lawentuchefe de la comunidad, si la hay, o el educador tradicional.",
+    },
+    naturaleza: {
+      grupos: ["Plantae", "Insecta", "Aves", "Fungi", "Mollusca"],
+      para: "Las piezas de la red alimentaria que ya se han registrado por aquí, con su nombre.",
     },
     secuencia: REDES,
   },

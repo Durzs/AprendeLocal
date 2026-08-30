@@ -54,7 +54,6 @@
     "logoAlt": "AprendeLocal site logo",
     "nav": {
       "courses": "Courses",
-      "makerspaces": "Makerspaces",
       "profile": "Profile",
       "prepare": "Prepare a lesson",
       "routes": "Routes"
@@ -276,21 +275,6 @@
     },
     "notConfirmed": "If you just signed up, confirm your email using the link we sent you first.",
     "forgot": "Forgot your password?"
-  },
-  "makerspaces": {
-    "title": "Makerspaces",
-    "subtitle": "Connect with local maker spaces to apply what you learned in the courses. Access equipment, join events, and collaborate with other makers.",
-    "tabs": {
-      "locals": "Meeting Places",
-      "map": "Map"
-    },
-    "map": {
-      "placeholder": "Interactive map not implemented yet"
-    },
-    "cta": {
-      "title": "Ready to transform your learning?",
-      "subtitle": "Join thousands of students applying STEM in real projects through maker culture!"
-    }
   },
   "notFound": {
     "title": "Page not found",
@@ -521,8 +505,7 @@
     "subtitle": "Courses, STEM map and makerspaces in one place",
     "tabs": {
       "courses": "Courses",
-      "map": "STEM Map",
-      "makerspaces": "Makerspaces"
+      "map": "STEM Map"
     },
     "map": {
       "selectSchool": "Select a school",
@@ -805,6 +788,29 @@
     "recipientHelp": "The route suggests one. Change it for whoever it is in your community.",
     "savedHere": "This is saved on this device. No account and no internet needed.",
     "letterDate2": "The outing is on {{date}}.",
-    "letterSignedBy": "Yours sincerely, {{teacher}}."
+    "letterSignedBy": "Yours sincerely, {{teacher}}.",
+    "docSpecies": "What has been seen around here",
+    "docSpeciesHelp": "The iNaturalist list, with boxes to tick what they find.",
+    "speciesIntro": "Mark an X next to what you find today. These species have already been recorded near your school.",
+    "speciesNotListed": "What we found and is NOT on the list:",
+    "speciesSource": "iNaturalist list, confirmed observations within 10 km. Anything not shown here is worth uploading."
+  },
+  "natura": {
+    "title": "What has been seen around here",
+    "useMyLocation": "Use my location",
+    "locating": "Finding where you are…",
+    "search": "Search what is within {{km}} km",
+    "searchAgain": "Search again",
+    "searching": "Checking…",
+    "changeLocation": "Change the location",
+    "found": "{{count}} species recorded within {{km}} km, most seen first.",
+    "empty": "No confirmed observations within {{km}} km of here. That says something too: almost nobody has been recording in your area, and what the class finds may be new.",
+    "timeout": "The request took too long. It is usually the signal. Try again on a better connection.",
+    "failed": "It could not be checked right now ({{detail}}). The lesson works fine without this list.",
+    "denied": "You did not grant location permission. You can enable it in the browser and try again.",
+    "noLocation": "The location could not be obtained. Try outdoors or with a better signal.",
+    "contribute": "Whatever the class finds that is not on this list, have them upload it to iNaturalist. Rural areas have very few records: their observations are genuinely new data, not an exercise.",
+    "source": "Data from",
+    "savedOffline": "Saved on this device: it works without signal now."
   }
 }

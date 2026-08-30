@@ -28,6 +28,16 @@ export type AjustesEscuela = {
   docente: string;
   /** Los cursos que de verdad hay en la sala. Vacío significa «todavía no lo dijo». */
   cursos: string[];
+  /**
+   * Dónde queda la escuela. Se pide una vez, con el botón de ubicación, y
+   * sirve para preguntarle a iNaturalist qué se ha visto alrededor.
+   *
+   * Es opcional de verdad: sin ella todo lo demás funciona igual. Y no se
+   * manda a ningún servidor nuestro; solo sale del navegador hacia
+   * iNaturalist, y únicamente cuando el docente pulsa buscar.
+   */
+  lat?: number;
+  lng?: number;
 };
 
 export type AjustesRuta = {

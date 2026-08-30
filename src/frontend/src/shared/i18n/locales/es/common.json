@@ -54,7 +54,6 @@
     "logoAlt": "Logo del sitio AprendeLocal",
     "nav": {
       "courses": "Cursos",
-      "makerspaces": "Makerspaces",
       "profile": "Perfil",
       "prepare": "Preparar clase",
       "routes": "Rutas"
@@ -276,21 +275,6 @@
     },
     "notConfirmed": "Si acabas de registrarte, primero confirma tu correo con el enlace que te enviamos.",
     "forgot": "¿Olvidaste tu contraseña?"
-  },
-  "makerspaces": {
-    "title": "Makerspaces",
-    "subtitle": "Conéctate con espacios maker locales para aplicar lo aprendido en los cursos. Accede a equipos, participa en eventos y colabora con otros makers.",
-    "tabs": {
-      "locals": "Lugares de Encuentro",
-      "map": "Mapa"
-    },
-    "map": {
-      "placeholder": "Mapa interactivo aún no implementado"
-    },
-    "cta": {
-      "title": "¿Listo para transformar tu aprendizaje?",
-      "subtitle": "¡Únete a miles de estudiantes aplicando STEM en proyectos reales a través de la cultura maker!"
-    }
   },
   "notFound": {
     "title": "Página no encontrada",
@@ -521,8 +505,7 @@
     "subtitle": "Cursos, mapa STEM y makerspaces en un solo lugar",
     "tabs": {
       "courses": "Cursos",
-      "map": "Mapa STEM",
-      "makerspaces": "Makerspaces"
+      "map": "Mapa STEM"
     },
     "map": {
       "selectSchool": "Selecciona una escuela",
@@ -805,6 +788,29 @@
     "recipientHelp": "La ruta propone uno. Cámbialo por el que corresponda en tu comunidad.",
     "savedHere": "Esto queda guardado en este dispositivo. No hace falta cuenta ni internet.",
     "letterDate2": "La salida es el {{date}}.",
-    "letterSignedBy": "Atentamente, {{teacher}}."
+    "letterSignedBy": "Atentamente, {{teacher}}.",
+    "docSpecies": "Lo que se ha visto por aquí",
+    "docSpeciesHelp": "La lista de iNaturalist, con casillas para marcar lo que encuentren.",
+    "speciesIntro": "Marca con una X lo que encuentres hoy. Estas especies ya han sido registradas cerca de tu escuela.",
+    "speciesNotListed": "Lo que encontramos y NO está en la lista:",
+    "speciesSource": "Lista de iNaturalist, observaciones confirmadas a menos de 10 km. Lo que no aparezca aquí conviene subirlo."
+  },
+  "natura": {
+    "title": "Qué se ha visto por aquí",
+    "useMyLocation": "Usar mi ubicación",
+    "locating": "Buscando dónde estás…",
+    "search": "Buscar qué hay a {{km}} km",
+    "searchAgain": "Volver a buscar",
+    "searching": "Consultando…",
+    "changeLocation": "Cambiar la ubicación",
+    "found": "{{count}} especies registradas a menos de {{km}} km, ordenadas de más a menos vistas.",
+    "empty": "No hay observaciones confirmadas a {{km}} km de aquí. Eso también dice algo: por su zona no ha pasado casi nadie registrando, y lo que el curso encuentre puede ser nuevo.",
+    "timeout": "La consulta tardó demasiado. Suele ser la señal. Vuelve a intentarlo con mejor conexión.",
+    "failed": "No se pudo consultar ahora ({{detail}}). La clase funciona igual sin esta lista.",
+    "denied": "No diste permiso de ubicación. Puedes activarlo en el navegador y volver a intentarlo.",
+    "noLocation": "No se pudo obtener la ubicación. Prueba al aire libre o con mejor señal.",
+    "contribute": "Lo que el curso encuentre y no esté en esta lista, súbanlo a iNaturalist. En zonas rurales hay muy pocos registros: sus observaciones son datos nuevos de verdad, no un ejercicio.",
+    "source": "Datos de",
+    "savedOffline": "Guardado en este dispositivo: ya se ve sin señal."
   }
 }
