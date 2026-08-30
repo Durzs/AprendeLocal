@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Mail, MapPin, Github, Send, CheckCircle2 } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
 
 export default function ContactSection() {
   const { t } = useTranslation();
@@ -72,23 +72,6 @@ export default function ContactSection() {
                   <div className="font-semibold text-white">
                     Temuco · La Araucanía, Chile
                   </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-emerald-400">
-                  <Github className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-xs text-slate-400">Código Abierto</div>
-                  <a
-                    href="https://github.com/Durzs/AprendeLocal"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-white transition hover:text-emerald-400"
-                  >
-                    github.com/Durzs/AprendeLocal
-                  </a>
                 </div>
               </div>
             </div>
