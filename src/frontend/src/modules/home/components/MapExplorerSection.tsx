@@ -19,21 +19,28 @@ export default function MapExplorerSection() {
             {t("home.map.title", "¿Qué vive en tu territorio?")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">
-            {t("home.map.subtitle", "Explora especies, cuencas hídricas y proyectos activos en el mapa interactivo de tu región:")}
+            {t(
+              "home.map.subtitle",
+              "Elige un lugar del territorio y pregunta qué se ha registrado ahí, con lo que sabe la ciencia ciudadana y lo que guardan las colecciones científicas:"
+            )}
           </p>
         </div>
 
         {/* Mockup del Mapa Interactivo */}
         <div className="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-xl">
-          <div className="p-4 bg-slate-900 text-white flex items-center justify-between text-xs sm:text-sm font-semibold">
+          {/* Aquí decía «24 Escuelas conectadas · 180+ Puntos de datos». No
+              son ciertos: la tabla de lugares del proyecto está vacía, así que
+              esos números no salían de ninguna parte. En una portada que leen
+              escuelas y socios, un dato inventado cuesta más que un dato que
+              falta, así que se dice lo que sí se puede sostener: de dónde
+              vienen los datos. */}
+          <div className="p-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-semibold">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Mapa STEM en Vivo · Región de La Araucanía & Sur</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" aria-hidden></span>
+              <span>{t("home.map.bar", "Qué vive aquí · Región de La Araucanía")}</span>
             </div>
-            <div className="flex items-center gap-3 text-slate-300 hidden sm:flex">
-              <span>24 Escuelas conectadas</span>
-              <span>·</span>
-              <span>180+ Puntos de datos</span>
+            <div className="hidden items-center gap-3 text-slate-300 sm:flex">
+              <span>{t("home.map.sources", "Datos de iNaturalist y GBIF")}</span>
             </div>
           </div>
           
@@ -46,15 +53,20 @@ export default function MapExplorerSection() {
               <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-3">
                 <MapPin className="w-6 h-6 text-[#f97316]" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 mb-1">Explorador de Cuencas y Biodiversidad</h4>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">
+                {t("home.map.cardTitle", "Qué vive alrededor de tu escuela")}
+              </h4>
               <p className="text-xs text-slate-600 leading-relaxed mb-5">
-                Descubre puntos de muestreo de agua, sensores en escuelas y registros botánicos de tu comuna.
+                {t(
+                  "home.map.cardBody",
+                  "Elige un lugar y mira qué especies se han registrado ahí: cuáles son nativas, cómo se llaman en mapuzugun y cuáles no son de acá."
+                )}
               </p>
               <button
                 onClick={() => navigate("/plataforma?tab=map")}
                 className="px-6 py-2.5 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white text-xs font-bold shadow-md shadow-[#0a0047]/20 transition cursor-pointer"
               >
-                Abrir Mapa Completo
+                {t("home.map.cta", "Abrir el mapa")}
               </button>
             </div>
           </div>

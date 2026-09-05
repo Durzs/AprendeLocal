@@ -116,12 +116,14 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            {/* Preparar clase (botón ámbar directo al planificador) */}
+            {/* La puerta del docente son las rutas: cuatro clases ya escritas.
+                El generador sigue existiendo en /preparar, pero dejo de ser la
+                entrada cuando las rutas pasaron a ser el producto. */}
             <Link
-              to="/preparar"
+              to="/rutas"
               className="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block hover:bg-amber-400/20 transition"
             >
-              {t("header.nav.prepare", "Preparar clase")}
+              {t("header.nav.routes", "Rutas")}
             </Link>
 
             {/* Language switcher - desktop */}
@@ -222,11 +224,11 @@ export default function Header() {
             </div>
 
             <Link
-              to="/preparar"
+              to="/rutas"
               onClick={closeMobile}
               className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
-              {t("header.nav.prepare", "Preparar clase")}
+              {t("header.nav.routes", "Rutas")}
             </Link>
             
             <button

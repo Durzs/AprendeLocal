@@ -1,4 +1,4 @@
-import { MapPin, FileCheck, Cpu } from "lucide-react";
+import { MapPin, FileCheck, HandHeart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function MethodologySection() {
@@ -78,28 +78,39 @@ export default function MethodologySection() {
               </div>
             </div>
 
-            {/* Etapa 3: Crea Soluciones Maker */}
+            {/* Etapa 3.
+                Antes decía «Crea Soluciones Maker», y prometía guiar la
+                construcción de prototipos con Arduino y micro:bit. La
+                plataforma no hace eso: sus rutas se resuelven con huincha,
+                vara, termómetro y tarros, que es lo que hay en una escuela
+                rural. La tercera fase que las rutas SÍ tienen es la que
+                cierra el proyecto: entregarle el resultado a alguien de la
+                comunidad, que es lo que separa un proyecto de una actividad
+                larga. */}
             <div className="bg-white rounded-2xl p-7 text-slate-900 border-t-4 border-[#f97316] shadow-lg flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="w-9 h-9 rounded-xl bg-orange-100 text-[#f97316] font-extrabold text-sm flex items-center justify-center">03</span>
                   <span className="text-xs font-bold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full">
-                    Fase 3 · Prototipado
+                    {t("home.methodology.p3badge", "Fase 3 · Entrega")}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  Crea Soluciones Maker
+                  {t("home.methodology.p3title", "Entregan a la comunidad")}
                 </h3>
                 <div className="text-xs font-bold text-orange-600 uppercase tracking-wide mb-3">
-                  Tecnología de Bajo Costo
+                  {t("home.methodology.p3kicker", "Con material que ya está en la escuela")}
                 </div>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  Guía a tus estudiantes en la construcción de prototipos y estaciones de monitoreo accesibles con Arduino, micro:bit y materiales reciclables para responder a los desafíos locales.
+                  {t(
+                    "home.methodology.p3body",
+                    "El curso sale a medir con huincha, vara y termómetro, saca sus propios números y se los entrega a alguien de verdad: el comité de agua, la dirección o las familias. Los datos tienen que estar bien porque alguien los va a usar, no porque los revise el profesor."
+                  )}
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                <Cpu className="w-4 h-4 text-[#f97316] shrink-0" />
-                <span>Guías maker de ensamble paso a paso</span>
+                <HandHeart className="w-4 h-4 text-[#f97316] shrink-0" aria-hidden />
+                <span>{t("home.methodology.p3foot", "Un destinatario real esperando el resultado")}</span>
               </div>
             </div>
 
