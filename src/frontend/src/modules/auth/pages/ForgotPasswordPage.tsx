@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Mail } from "lucide-react";
 import { enviarEnlaceDeRecuperacion } from "../../../shared/lib/confirmacion";
-import AprendeLocalLogo from "../../../shared/components/ui/AprendeLocalLogo";
+import AprendeLocalLogo, { TINTA } from "../../../shared/components/ui/AprendeLocalLogo";
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation();
@@ -52,9 +52,9 @@ export default function ForgotPasswordPage() {
         <div className="mb-8 flex flex-col items-center">
           <Link to="/">
             <AprendeLocalLogo
-              layout="stacked"
+              variante="apilado"
               className="h-16 w-auto transition-transform hover:scale-105"
-              textColor="#0a0047"
+              color={TINTA}
             />
           </Link>
         </div>

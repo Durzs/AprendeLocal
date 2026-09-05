@@ -5,6 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "../../contexts/AuthContext";
+import AprendeLocalLogo from "../ui/AprendeLocalLogo";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 
 export default function Header() {
@@ -47,21 +48,8 @@ export default function Header() {
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group" onClick={closeMobile}>
-            <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#f97316]"></span>
-            </div>
-            <div className="text-white flex items-center gap-1">
-              <span className="text-base sm:text-lg font-light tracking-tight text-slate-200">aprende</span>
-              <div className="text-base sm:text-lg font-black tracking-tight flex items-center gap-0.5 text-white">
-                <span>l</span>
-                <svg className="w-4 h-4 inline-block -mt-0.5" viewBox="0 0 100 100" fill="none">
-                  <circle cx="50" cy="50" r="42" stroke="white" strokeWidth="11"/>
-                  <circle cx="50" cy="50" r="16" fill="#f97316"/>
-                </svg>
-                <span>cal</span>
-              </div>
-            </div>
+          <Link to="/" className="group flex items-center" onClick={closeMobile}>
+            <AprendeLocalLogo className="h-8 w-auto transition-transform group-hover:scale-[1.03] sm:h-10" />
           </Link>
 
           {/* Desktop Nav */}
@@ -116,12 +104,14 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            {/* Preparar clase (botón ámbar directo al planificador) */}
+            {/* La puerta del docente son las rutas: cuatro clases ya escritas.
+                El generador sigue existiendo en /preparar, pero dejo de ser la
+                entrada cuando las rutas pasaron a ser el producto. */}
             <Link
-              to="/preparar"
+              to="/rutas"
               className="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block hover:bg-amber-400/20 transition"
             >
-              {t("header.nav.prepare", "Preparar clase")}
+              {t("header.nav.routes", "Rutas")}
             </Link>
 
             {/* Language switcher - desktop */}
@@ -222,11 +212,11 @@ export default function Header() {
             </div>
 
             <Link
-              to="/preparar"
+              to="/rutas"
               onClick={closeMobile}
               className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
-              {t("header.nav.prepare", "Preparar clase")}
+              {t("header.nav.routes", "Rutas")}
             </Link>
             
             <button

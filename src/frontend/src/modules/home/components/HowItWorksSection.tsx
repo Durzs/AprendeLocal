@@ -3,33 +3,54 @@ import { useTranslation } from "react-i18next";
 export default function HowItWorksSection() {
   const { t } = useTranslation();
 
+  /**
+   * Los cuatro pasos son los que la aplicación hace de verdad.
+   *
+   * Antes describían otro producto: «diagnostica el entorno», «genera
+   * objetivos y cronograma», «implementa guías maker con sensores», «evalúa
+   * con rúbricas integradas». Nada de eso existe. Lo que existe son cuatro
+   * rutas ya escritas que se ajustan a la escuela y se imprimen, y prometer
+   * en la portada un flujo que el docente no encuentra al entrar es la manera
+   * más rápida de perderlo en la primera visita.
+   */
   const steps = [
     {
       number: "01",
-      title: "Diagnostica el Entorno",
-      desc: "Identifica desafíos socioambientales locales: cuencas hídricas, calidad de suelo, clima o gestión de residuos.",
+      title: t("home.howItWorks.s1t", "Elige una ruta"),
+      desc: t(
+        "home.howItWorks.s1d",
+        "Cuatro clases ya escritas, cada una con su pregunta y los objetivos del programa que cubre. Sin configurar nada ni esperar a que se genere."
+      ),
       color: "bg-blue-100 text-blue-900",
     },
     {
       number: "02",
-      title: "Planifica la Unidad",
-      desc: "Genera objetivos de aprendizaje, cronograma clase a clase, preguntas guía y criterios de evaluación oficial.",
+      title: t("home.howItWorks.s2t", "Ajústala a tu escuela"),
+      desc: t(
+        "home.howItWorks.s2d",
+        "Dices qué cursos tienes en la sala y cómo se llama tu estero. La clase se recorta a esos cursos y el lugar toma su nombre."
+      ),
       color: "bg-blue-100 text-blue-900",
     },
     {
       number: "03",
-      title: "Implementa Guías Maker",
-      desc: "Aplica estaciones de medición, sensores accesibles y actividades prácticas paso a paso con tus alumnos.",
+      title: t("home.howItWorks.s3t", "Imprime lo que se lleva"),
+      desc: t(
+        "home.howItWorks.s3d",
+        "Hoja de terreno por curso con la tabla en blanco, guía del estudiante, carta a la familia con la autorización, y la hoja del producto."
+      ),
       color: "bg-orange-100 text-[#f97316]",
     },
     {
       number: "04",
-      title: "Evalúa Competencias",
-      desc: "Mide pensamiento crítico, resolución de problemas y conciencia territorial con rúbricas formativas integradas.",
+      title: t("home.howItWorks.s4t", "Salen a medir y lo entregan"),
+      desc: t(
+        "home.howItWorks.s4d",
+        "El curso levanta sus propios datos y entrega el resultado a alguien de la comunidad: el comité de agua, las familias, la dirección."
+      ),
       color: "bg-orange-100 text-[#f97316]",
     },
   ];
-
   return (
     <section id="como-funciona" className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
       <div className="max-w-7xl mx-auto">
