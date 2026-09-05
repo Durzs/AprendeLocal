@@ -1,11 +1,34 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle2, Loader2 } from "lucide-react";
+
+import { supabase } from "../../../shared/lib/supabaseClient";
+
+/** A donde llegan los mensajes que escribe la gente en este formulario. */
+const CORREO = "contacto@aprendelocal.cl";
+
+/**
+ * El formulario de contacto.
+ *
+ * Antes decia «¡Mensaje recibido! Nos comunicaremos contigo a la brevedad» y
+ * no enviaba nada: el submit solo cambiaba una variable de la pantalla. Una
+ * escuela que escribia quedaba esperando una respuesta que no podia llegar,
+ * porque el mensaje no salia del navegador.
+ *
+ * Ahora se guarda en la tabla `contactos`. Si esa tabla todavia no existe en
+ * el proyecto, o el envio falla por lo que sea, se abre el correo del
+ * computador con el mensaje ya escrito y se muestra la direccion para
+ * copiarla. Lo que no vuelve a pasar es dar las gracias por un mensaje que
+ * nadie recibio.
+ *
+ * El SQL de la tabla esta en infra/contactos.sql.
+ */
+type Estado = "escribiendo" | "enviando" | "guardado" | "por_correo";
 
 export default function ContactSection() {
   const { t } = useTranslation();
-  const [submitted, setSubmitted] = useState(false);
+  const [estado, setEstado] = useState<Estado>("escribiendo");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,10 +36,46 @@ export default function ContactSection() {
     message: "",
   });
 
-  const handleSubmit = (e: FormEvent) => {
+  /** Arma el correo de respaldo con lo que la persona ya escribio. */
+  function abrirCorreo() {
+    const asunto = `AprendeLocal · ${formData.name || "mensaje desde el sitio"}`;
+    const cuerpo = [
+      `Nombre: ${formData.name}`,
+      `Correo: ${formData.email}`,
+      formData.role ? `Rol: ${formData.role}` : "",
+      "",
+      formData.message,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    window.location.href = `mailto:${CORREO}?subject=${encodeURIComponent(
+      asunto
+    )}&body=${encodeURIComponent(cuerpo)}`;
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setEstado("enviando");
+
+    try {
+      const { error } = await supabase.from("contactos").insert({
+        nombre: formData.name,
+        correo: formData.email,
+        rol: formData.role || null,
+        mensaje: formData.message,
+      });
+      if (error) throw error;
+      setEstado("guardado");
+      return;
+    } catch {
+      // Sin tabla o sin red, el mensaje sigue saliendo: por el correo de quien
+      // escribe, que es el camino que no depende de nosotros.
+      setEstado("por_correo");
+      abrirCorreo();
+    }
   };
+
+  const enviado = estado === "guardado" || estado === "por_correo";
 
   return (
     <section id="contacto" className="relative overflow-hidden bg-slate-900 py-20 md:py-28 text-white">
@@ -43,7 +102,7 @@ export default function ContactSection() {
             <p className="text-base leading-relaxed text-slate-300">
               {t(
                 "home.contact.subtitle",
-                "Acompañamos a docentes, directivos y comunidades con herramientas pedagógicas abiertas, guías maker y acompañamiento en proyectos de ciencia territorial."
+                "Acompañamos a docentes, directivos y comunidades con clases ya escritas, documentos para imprimir y salidas a terreno alrededor de la escuela."
               )}
             </p>
 
@@ -79,20 +138,42 @@ export default function ContactSection() {
 
           {/* Right form card */}
           <div className="rounded-[2.5rem] border border-slate-700/80 bg-slate-800/90 p-8 shadow-2xl backdrop-blur-sm lg:col-span-6">
-            {submitted ? (
+            {enviado ? (
               <div className="py-12 text-center">
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
                   <CheckCircle2 className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {t("home.contact.successTitle", "¡Mensaje recibido!")}
-                </h3>
-                <p className="text-slate-300 text-sm">
-                  {t(
-                    "home.contact.successMessage",
-                    "Gracias por contactarnos. Nos comunicaremos contigo a la brevedad para coordinar la vinculación."
-                  )}
-                </p>
+                {estado === "guardado" ? (
+                  <>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      {t("home.contact.successTitle", "Mensaje recibido")}
+                    </h3>
+                    <p className="text-slate-300 text-sm">
+                      {t(
+                        "home.contact.successMessage",
+                        "Lo tenemos. Te respondemos a este mismo correo."
+                      )}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      {t("home.contact.mailTitle", "Te abrimos el correo")}
+                    </h3>
+                    <p className="text-slate-300 text-sm">
+                      {t(
+                        "home.contact.mailBody",
+                        "El mensaje quedó escrito en tu programa de correo y falta que le des a enviar. Si no se abrió, escríbenos a:"
+                      )}
+                    </p>
+                    <a
+                      href={`mailto:${CORREO}`}
+                      className="mt-3 inline-block font-semibold text-orange-400 underline underline-offset-4"
+                    >
+                      {CORREO}
+                    </a>
+                  </>
+                )}
               </div>
             ) : (
               <>
@@ -173,10 +254,19 @@ export default function ContactSection() {
 
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] border border-blue-900/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-[#0a0047]/50 transition hover:-translate-y-0.5 cursor-pointer"
+                    disabled={estado === "enviando"}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] border border-blue-900/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-[#0a0047]/50 transition hover:-translate-y-0.5 cursor-pointer disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
                   >
-                    <Send className="h-4 w-4 text-amber-300" />
-                    <span>{t("home.contact.send", "Enviar Mensaje")}</span>
+                    {estado === "enviando" ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-amber-300" />
+                    ) : (
+                      <Send className="h-4 w-4 text-amber-300" />
+                    )}
+                    <span>
+                      {estado === "enviando"
+                        ? t("home.contact.sending", "Enviando…")
+                        : t("home.contact.send", "Enviar Mensaje")}
+                    </span>
                   </button>
                 </form>
               </>

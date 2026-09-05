@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { BookOpen, Cpu, Award } from "lucide-react";
+import { BookOpen, Binoculars, Award } from "lucide-react";
 
 export default function TeacherTrainingSection() {
   const { t } = useTranslation();
@@ -16,13 +16,16 @@ export default function TeacherTrainingSection() {
       iconColor: "text-blue-600 bg-blue-50",
     },
     {
-      badge: "Laboratorio Maker",
+      // Aquí decía «Integra Arduino, micro:bit y estaciones ambientales».
+      // Se sacó: ninguna de las cuatro rutas pide una placa, y prometerle
+      // electrónica a una escuela rural que no la tiene es prometer de más.
+      badge: "Terreno",
       badgeColor: "bg-orange-100 text-orange-950",
-      title: "Tecnología y Sensores de Bajo Costo",
-      desc: "Integra Arduino, micro:bit y estaciones ambientales sin necesidad de conocimientos previos en programación.",
+      title: "Salir a mirar y volver con datos",
+      desc: "Cómo se prepara la salida, qué se anota en terreno y cómo se reconoce lo que vive alrededor con iNaturalist y GBIF.",
       modules: "⏱️ 5 micro-módulos",
-      resources: "🛠️ Guías de armado",
-      icon: Cpu,
+      resources: "🛠️ Hojas de terreno",
+      icon: Binoculars,
       iconColor: "text-[#f97316] bg-orange-50",
     },
     {
@@ -50,7 +53,7 @@ export default function TeacherTrainingSection() {
             {t("home.training.title", "Micro-capacitaciones para profesores")}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">
-            {t("home.training.subtitle", "Cursos prácticos para dominar el Aprendizaje Basado en el Lugar y la cultura maker:")}
+            {t("home.training.subtitle", "Cursos prácticos para llevar la ciencia al lugar donde está la escuela:")}
           </p>
         </div>
 

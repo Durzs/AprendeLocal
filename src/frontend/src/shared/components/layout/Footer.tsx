@@ -15,25 +15,25 @@ export default function Footer() {
             <p className="mt-2.5 text-sm text-slate-500">{t("footer.tagline")}</p>
           </div>
 
+          {/* Aqui habia seis enlaces y cinco de ellos eran href="#": Equipo,
+              Aliados, Preguntas frecuentes, Contacto y Terminos saltaban al
+              principio de la pagina. Quedan los que llevan a alguna parte. */}
           <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
+            <Link to="/rutas" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.routes", "Rutas")}
+            </Link>
+            <Link
+              to="/plataforma?tab=map"
+              className="text-slate-600 transition hover:text-slate-950"
+            >
+              {t("footer.links.map", "Qué vive aquí")}
+            </Link>
             <Link to="/instructor/login" className="text-slate-600 transition hover:text-slate-950">
               {t("footer.links.instructorAccess")}
             </Link>
-            <a href="#" className="text-slate-600 transition hover:text-slate-950">
-              {t("footer.links.team")}
-            </a>
-            <a href="#" className="text-slate-600 transition hover:text-slate-950">
-              {t("footer.links.partners")}
-            </a>
-            <a href="#" className="text-slate-600 transition hover:text-slate-950">
-              {t("footer.links.faq")}
-            </a>
-            <a href="#" className="text-slate-600 transition hover:text-slate-950">
+            <Link to="/#contacto" className="text-slate-600 transition hover:text-slate-950">
               {t("footer.links.contact")}
-            </a>
-            <a href="#" className="text-slate-600 transition hover:text-slate-950">
-              {t("footer.links.terms")}
-            </a>
+            </Link>
           </nav>
         </div>
 

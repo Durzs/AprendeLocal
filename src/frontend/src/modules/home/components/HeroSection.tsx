@@ -11,20 +11,31 @@ interface HeroSectionProps {
 export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
 
-  // Dynamic Typewriter Effect for Title
+  // El titulo se escribe letra por letra.
   const fullText = t("home.hero.title", "Tu territorio es tu mejor laboratorio STEM");
-  const [displayedText, setDisplayedText] = useState("");
-  const [charIndex, setCharIndex] = useState(0);
+  const [letras, setLetras] = useState(0);
+
+  // Al cambiar de idioma el titulo cambia entero, asi que se vuelve a escribir
+  // desde cero. Sin esto, si el titulo nuevo era mas corto que el anterior el
+  // contador ya lo pasaba y en pantalla quedaba el titulo viejo para siempre.
+  useEffect(() => {
+    setLetras(0);
+  }, [fullText]);
 
   useEffect(() => {
-    if (charIndex < fullText.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText(fullText.slice(0, charIndex + 1));
-        setCharIndex(charIndex + 1);
-      }, 35);
-      return () => clearTimeout(timeout);
+    // Quien pidio menos movimiento en su sistema ve el titulo completo de una.
+    const quieto = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (quieto) {
+      setLetras(fullText.length);
+      return;
     }
-  }, [charIndex, fullText]);
+    if (letras >= fullText.length) return;
+    const t = setTimeout(() => setLetras((n) => n + 1), 35);
+    return () => clearTimeout(t);
+  }, [letras, fullText]);
+
+  const displayedText = fullText.slice(0, letras);
+  const escribiendo = letras < fullText.length;
 
   return (
     <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-24 md:pt-20 bg-white border-b border-slate-100">
@@ -46,9 +57,17 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </div>
 
         {/* Title */}
+        {/* El titulo completo va en el DOM para quien lo lee con lector de
+            pantalla o buscador; lo que se escribe letra a letra es la copia
+            visible, que por eso queda oculta a la lectura. */}
         <h1 className="mx-auto max-w-5xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
-          {displayedText}
-          <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
+          <span className="sr-only">{fullText}</span>
+          <span aria-hidden>
+            {displayedText}
+            {escribiendo && (
+              <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
+            )}
+          </span>
         </h1>
 
         {/* Subtitle with Teacher focus */}

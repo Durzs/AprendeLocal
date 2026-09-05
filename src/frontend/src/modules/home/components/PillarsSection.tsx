@@ -201,7 +201,7 @@ export default function PillarsSection() {
       title: t("home.pillars.contribute.title", "Contribuir"),
       desc: t(
         "home.pillars.contribute.desc",
-        "a la ciencia comunitaria con soluciones maker"
+        "a la ciencia del territorio con lo que observan y miden"
       ),
       floatClass: "animate-float-slow-4",
       hoverColor: "group-hover:text-orange-600",
