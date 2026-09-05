@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import AprendeLocalLogo, { TINTA } from "../ui/AprendeLocalLogo";
+
 export default function Footer() {
   const { t } = useTranslation();
 
@@ -9,8 +11,8 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
           <div>
-            <h3 className="text-base font-semibold text-slate-950">AprendeLocal</h3>
-            <p className="mt-1 text-sm text-slate-500">{t("footer.tagline")}</p>
+            <AprendeLocalLogo className="h-7 w-auto" color={TINTA} />
+            <p className="mt-2.5 text-sm text-slate-500">{t("footer.tagline")}</p>
           </div>
 
           <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">

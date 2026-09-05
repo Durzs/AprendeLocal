@@ -1,140 +1,88 @@
-interface LogoProps {
+/**
+ * El logotipo de AprendeLocal, en curvas.
+ *
+ * Son dos piezas: el monte, que es la marca, y la palabra en dos lineas. En la
+ * 'o' de local va un punto naranjo, que es el lugar donde uno esta parado. Esa
+ * es toda la idea del logo y conviene no perderla al recortarlo.
+ *
+ * Antes esto se dibujaba con <text> y la fuente del sistema, asi que el
+ * logotipo cambiaba de forma segun el computador que lo abriera. Ahora son
+ * curvas: se ve igual en todas partes y escala sin romperse.
+ *
+ * El color del monte y de las letras se puede cambiar con `color`, porque el
+ * logo va sobre fondos oscuros y claros. El punto naranjo nunca cambia.
+ */
+
+/** Crema del logotipo, para fondos oscuros. */
+export const CREMA = "#e4ded2";
+/** Verde tinta del logotipo, para fondos claros. */
+export const TINTA = "#1e2a24";
+/** El punto de la 'o'. No se altera en ninguna variante. */
+export const NARANJO = "#c9612a";
+
+const MONTE =
+  "M43.4 79.7C43.4 79.5 42.9 79.2 42.4 79.1C37.9 77.7 34.9 71.1 36.5 66.2C39.7 56.7 52.7 55.8 57.0 64.9C59.4 69.9 56.1 77.9 51.1 79.1C50.8 79.2 50.4 79.5 50.3 79.7C50.1 80.1 43.6 80.2 43.4 79.7ZM76.9 78.7C76.5 78.6 75.4 78.3 74.5 78.1C72.5 77.6 69.6 76.2 67.9 74.9C66.6 73.9 64.3 71.5 64.3 71.2C64.3 71.1 64.0 70.7 63.7 70.3C62.8 69.2 60.5 64.6 59.5 61.9C59.2 61.0 58.7 59.9 58.5 59.4C58.2 58.8 58.0 58.3 58.0 58.1C58.0 58.0 57.6 56.9 57.1 55.7C56.6 54.6 56.1 53.3 56.0 52.8C55.9 52.4 55.7 51.8 55.5 51.6C55.4 51.5 55.1 51.0 55.0 50.6C54.9 50.2 54.5 49.1 54.1 48.1C53.2 45.6 53.3 45.1 54.6 44.0C55.1 43.4 55.9 42.7 56.2 42.4C57.1 41.6 56.6 39.0 55.4 38.0C55.2 37.8 55.0 37.6 55.0 37.5C55.0 37.3 54.0 35.7 53.6 35.1C53.4 35.0 53.0 34.2 52.5 33.4C49.4 28.2 48.6 27.2 47.2 27.3C46.2 27.3 44.5 29.2 42.8 32.3C41.7 34.1 40.7 35.7 40.4 36.0C40.2 36.2 40.0 36.4 40.0 36.6C40.0 36.7 39.5 37.5 39.0 38.4C37.6 40.5 37.7 43.2 39.2 43.3C40.7 43.3 41.4 45.8 40.4 47.9C40.0 48.6 39.5 49.9 39.1 50.7C36.5 56.5 36.1 56.9 30.8 59.7C29.8 60.2 28.6 60.8 28.3 61.0C27.9 61.2 25.9 62.3 23.7 63.4C21.6 64.6 19.7 65.6 19.5 65.8C19.3 65.9 17.8 66.7 16.1 67.6C14.5 68.5 12.4 69.5 11.6 70.0C7.6 72.2 5.1 73.5 4.8 73.8C3.7 74.4 1.9 75.0 1.0 75.0L0.0 75.0L0.0 73.8C0.0 73.1 0.1 72.5 0.2 72.5C0.4 72.5 0.7 72.1 0.9 71.7C1.1 71.2 1.9 70.0 2.6 68.9C3.8 67.1 4.4 66.1 6.4 62.9C6.7 62.4 7.3 61.6 7.6 61.1C7.9 60.5 8.8 59.2 9.5 58.0C10.3 56.8 11.0 55.7 11.1 55.5C11.9 54.2 12.9 52.8 13.4 52.0C13.7 51.5 14.0 51.0 14.0 50.8C14.0 50.7 14.2 50.4 14.4 50.2C14.6 50.1 15.2 49.2 15.6 48.4C16.1 47.6 17.0 46.2 17.5 45.4C18.1 44.5 18.7 43.5 18.9 43.1C19.1 42.7 19.5 42.1 19.7 41.8C20.0 41.4 20.6 40.5 21.1 39.7C22.3 37.8 23.7 35.6 24.4 34.5C24.7 34.0 26.1 31.8 27.5 29.5C28.9 27.2 30.3 25.0 30.6 24.6C30.9 24.1 31.6 23.1 32.1 22.2C32.6 21.3 33.4 20.1 33.9 19.4C35.5 16.7 36.2 15.7 37.1 14.1C37.7 13.2 38.8 11.4 39.6 10.1C41.3 7.5 42.7 5.3 44.0 3.2C44.5 2.3 45.1 1.4 45.4 1.1C45.7 0.8 46.0 0.4 46.0 0.3C46.0 -0.2 48.5 -0.1 48.9 0.4C49.8 1.6 50.8 3.1 52.5 5.9C53.0 6.7 53.5 7.7 53.8 8.0C54.3 8.8 56.4 12.1 58.9 16.2C59.4 17.1 60.5 18.8 61.3 20.0C62.1 21.2 62.9 22.5 63.1 22.9C63.3 23.3 64.0 24.4 64.6 25.3C65.2 26.2 66.3 28.1 67.1 29.4C68.0 30.7 68.8 32.1 69.1 32.5C69.3 32.8 69.7 33.5 70.0 34.0C70.3 34.5 70.7 35.2 71.0 35.6C71.3 36.0 71.7 36.8 72.0 37.2C72.3 37.7 73.0 38.8 73.5 39.6C74.0 40.5 74.7 41.5 74.9 41.9C75.1 42.3 75.7 43.2 76.1 43.9C76.6 44.6 77.8 46.5 78.9 48.2C79.9 50.0 81.1 51.8 81.4 52.2C82.7 54.3 84.7 57.5 86.1 59.8C87.0 61.2 87.5 62.1 89.4 65.0C89.7 65.5 90.3 66.5 90.8 67.2C91.3 68.0 92.0 69.1 92.4 69.8C95.6 74.8 96.0 75.5 96.0 76.5C96.0 77.2 95.8 77.7 95.4 78.2L94.8 78.9L86.2 78.9C81.5 78.9 77.3 78.9 76.9 78.7Z";
+
+const PALABRA =
+  "M16.5 62.7C6.1 60.4 2.5 47.8 10.0 40.4C18.4 32.1 32.4 38.0 32.3 49.7C32.3 58.2 24.7 64.4 16.5 62.7ZM21.8 60.4C30.0 58.5 33.0 48.1 27.0 42.0C21.5 36.5 12.4 38.1 9.2 45.3C5.4 53.5 13.0 62.5 21.8 60.4ZM40.0 59.1C35.3 58.1 33.5 55.4 33.5 49.3C33.5 42.2 36.0 39.2 42.0 39.3C46.9 39.3 49.5 41.6 49.6 46.0L49.6 46.7L48.0 46.7L46.4 46.7L46.4 46.1C46.4 43.5 44.7 41.9 42.2 41.9C38.4 41.8 36.7 44.0 36.7 49.2C36.8 54.3 38.2 56.3 41.8 56.4C44.6 56.6 46.0 55.5 46.4 52.9L46.6 51.7L48.1 51.7L49.6 51.7L49.6 52.3C49.5 57.0 45.1 60.2 40.0 59.1ZM54.9 59.0C52.0 58.2 50.6 56.0 51.0 53.0C51.6 49.4 54.5 47.9 61.0 47.5C63.9 47.4 63.8 47.5 63.7 45.6C63.5 42.6 62.5 41.8 59.3 41.8C56.5 41.8 55.0 42.8 55.0 44.7L55.0 45.3L53.4 45.3L51.8 45.3L51.9 44.1C52.2 41.0 54.4 39.5 58.7 39.2C62.7 39.0 65.5 40.2 66.5 42.7C66.8 43.5 66.8 43.8 66.9 49.7C66.9 56.9 66.9 56.5 68.4 56.5C69.4 56.5 69.5 56.6 69.5 57.7C69.5 58.6 69.2 58.8 68.2 59.0C66.1 59.5 64.6 58.9 64.2 57.3C63.9 56.2 63.8 56.2 62.9 57.1C60.9 58.9 57.6 59.7 54.9 59.0ZM1.4 45.6L1.4 32.4L3.0 32.4L4.7 32.4L4.7 45.6L4.7 58.7L3.0 58.7L1.4 58.7L1.4 45.6ZM70.8 45.6L70.8 32.4L72.4 32.4C73.9 32.4 74.0 32.4 74.1 32.8C74.1 33.0 74.1 38.9 74.1 45.9L74.1 58.6L72.4 58.7L70.8 58.7L70.8 45.6ZM60.0 56.1C62.1 55.4 63.5 53.7 63.6 51.3C63.8 49.6 63.9 49.7 61.0 49.9C56.1 50.3 54.4 51.3 54.4 53.7C54.4 56.1 56.8 57.2 60.0 56.1ZM22.0 20.3L22.0 7.2L24.4 7.2L26.8 7.2L26.9 8.0C27.0 8.4 27.1 9.0 27.2 9.3C27.3 10.1 27.4 10.1 28.1 9.2C30.4 6.2 36.2 6.1 38.9 9.0C42.3 12.6 42.1 22.0 38.6 25.1C36.0 27.5 31.3 27.6 28.8 25.3L27.9 24.5L27.9 28.9L27.8 33.3L24.9 33.3L22.0 33.4L22.0 20.3ZM4.2 26.7C1.2 26.1 0.1 24.4 0.2 21.1C0.4 16.8 4.0 14.8 11.9 14.8L12.9 14.8L12.8 13.7C12.6 11.8 11.8 11.1 9.8 11.1C8.0 11.1 6.7 11.8 6.7 12.8L6.7 13.2L3.7 13.2L0.8 13.2L0.8 12.2C1.1 8.7 4.1 7.0 9.8 7.0C14.6 7.0 16.9 7.9 18.3 10.5L18.7 11.3L18.8 16.5C18.9 22.7 18.8 22.6 20.6 22.6L21.3 22.6L21.3 24.4C21.3 26.4 21.4 26.4 20.0 26.7C17.4 27.4 14.4 26.6 13.7 25.1C13.4 24.4 13.3 24.4 12.4 25.1C10.3 26.7 7.2 27.4 4.2 26.7ZM62.7 26.8C58.6 26.1 56.2 24.1 55.3 20.3C54.9 18.8 54.9 15.1 55.2 13.7C55.6 12.2 55.7 12.3 54.0 12.4C49.6 12.7 49.1 13.6 49.1 21.8L49.1 26.5L46.1 26.5L43.2 26.5L43.2 16.9L43.2 7.3L45.6 7.3C48.3 7.2 48.1 7.1 48.3 8.8C48.5 10.3 48.7 10.5 49.1 9.6C50.2 7.5 52.6 6.4 54.9 7.0L55.4 7.2L55.5 9.7L55.6 12.3L56.1 11.4C57.5 8.4 60.4 7.0 65.1 7.0C71.6 7.0 74.6 10.0 74.7 16.2L74.7 18.1L67.8 18.1L61.0 18.1L61.0 18.7C61.0 23.2 68.1 24.6 68.8 20.2L68.9 19.7L71.9 19.6L74.8 19.6L74.8 20.1C74.8 24.8 69.2 27.9 62.7 26.8ZM102.4 26.7C98.6 25.7 96.8 22.5 96.9 16.8C96.9 13.0 97.5 10.9 99.2 9.0C101.6 6.4 106.7 6.1 109.3 8.4C109.7 8.8 110.1 9.1 110.1 9.1C110.2 9.1 110.2 7.1 110.2 4.7L110.2 0.2L113.2 0.2L116.2 0.2L116.2 13.3L116.2 26.5L113.8 26.5C111.1 26.5 111.3 26.6 111.1 25.2C111.0 23.9 110.8 23.7 110.4 24.3C108.7 26.6 105.6 27.5 102.4 26.7ZM126.3 26.9C120.4 25.7 118.2 23.1 118.2 16.9C118.2 10.0 121.3 7.0 128.3 7.0C134.8 7.0 137.8 10.0 137.8 16.4L137.8 18.1L131.0 18.1L124.2 18.1L124.2 18.7C124.2 23.3 131.1 24.6 132.0 20.3L132.2 19.7L135.0 19.6L137.9 19.6L137.8 20.7C137.6 23.5 135.6 25.6 132.1 26.6C131.2 26.8 127.2 27.0 126.3 26.9ZM76.6 16.9L76.6 7.3L79.0 7.3L81.4 7.2L81.5 7.6C81.6 7.8 81.7 8.4 81.8 9.0C81.9 10.2 82.0 10.2 83.0 9.1C85.6 6.4 91.1 6.1 93.2 8.4C95.0 10.4 95.0 10.6 95.1 19.2L95.2 26.5L92.1 26.5L89.1 26.5L89.0 20.0C89.0 13.8 89.0 13.5 88.6 12.9C87.6 10.9 84.3 11.2 83.1 13.5L82.6 14.4L82.5 20.4L82.5 26.5L79.5 26.5L76.5 26.5L76.6 16.9ZM10.9 22.3C12.1 21.7 12.8 20.4 12.8 18.7L12.8 18.1L11.1 18.2C7.3 18.4 5.3 19.9 6.4 21.8C7.1 22.8 9.3 23.1 10.9 22.3ZM33.6 21.8C35.5 20.7 36.0 14.6 34.3 12.6C33.3 11.4 30.8 11.2 29.3 12.3C28.0 13.3 27.4 16.9 28.2 19.7C28.8 21.9 31.5 22.9 33.6 21.8ZM108.3 21.9C110.6 20.7 111.1 15.0 109.2 12.7C108.1 11.4 105.5 11.2 104.2 12.3C102.3 13.8 102.4 20.3 104.3 21.6C105.2 22.3 107.3 22.5 108.3 21.9ZM68.5 14.2C68.1 9.9 62.0 9.9 61.1 14.2L60.9 14.8L64.8 14.7L68.6 14.7L68.5 14.2ZM131.7 14.0C131.3 9.7 124.2 10.3 124.2 14.6C124.2 14.7 125.9 14.8 128.0 14.8L131.8 14.8L131.7 14.0Z";
+
+interface Props {
   className?: string;
-  /** 'horizontal' para la barra de navegación o 'stacked' para acceso/portada */
-  layout?: "horizontal" | "stacked";
-  /** Color del texto: 'currentColor', '#ffffff' o tono personalizado */
-  textColor?: string;
+  /**
+   * `horizontal` es el bloque completo, monte y palabra, para cabeceras.
+   * `apilado` pone el monte encima, para pantallas de acceso y portadas.
+   * `marca` deja solo el monte, para espacios cuadrados y chicos.
+   */
+  variante?: "horizontal" | "apilado" | "marca";
+  /** Color del monte y de las letras. */
+  color?: string;
+  /**
+   * Lo que lee alguien que no ve la pantalla. Ponlo en "" cuando al lado ya
+   * esta escrito el nombre, para que no se repita dos veces seguidas.
+   */
+  titulo?: string;
 }
 
 export default function AprendeLocalLogo({
   className = "h-8 w-auto",
-  layout = "horizontal",
-  textColor = "currentColor",
-}: LogoProps) {
-  if (layout === "horizontal") {
+  variante = "horizontal",
+  color = CREMA,
+  titulo = "AprendeLocal",
+}: Props) {
+  const accesible = titulo
+    ? { role: "img" as const, "aria-label": titulo }
+    : { role: "presentation" as const, "aria-hidden": true };
+
+  if (variante === "marca") {
     return (
-      <svg
-        viewBox="0 0 270 42"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className={className}
-        aria-label="AprendeLocal"
-        role="img"
-      >
-        {/* 'aprende' */}
-        <text
-          x="0"
-          y="30"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-          fontSize="33"
-          fontWeight="800"
-          letterSpacing="-0.03em"
-          fill={textColor}
-        >
-          aprende
-        </text>
-
-        {/* 'l' */}
-        <text
-          x="142"
-          y="30"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-          fontSize="33"
-          fontWeight="800"
-          letterSpacing="-0.03em"
-          fill={textColor}
-        >
-          l
-        </text>
-
-        {/* 'o' como icono de diana concéntrica con simetría geométrica */}
-        <g transform="translate(167, 20.5)">
-          {/* Anillo exterior */}
-          <circle cx="0" cy="0" r="11.5" stroke={textColor} strokeWidth="2.8" fill="none" />
-          {/* Anillo medio verde bosque */}
-          <circle cx="0" cy="0" r="8" fill="#7a9785" />
-          {/* Núcleo terracota */}
-          <circle cx="0" cy="0" r="4.5" fill="#cc6138" />
-          {/* Centro blanco */}
-          <circle cx="0" cy="0" r="1.6" fill="#ffffff" />
-        </g>
-
-        {/* 'cal' */}
-        <text
-          x="185"
-          y="30"
-          fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-          fontSize="33"
-          fontWeight="800"
-          letterSpacing="-0.03em"
-          fill={textColor}
-        >
-          cal
-        </text>
+      <svg viewBox="0 0 96 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...accesible}>
+        <path fill={color} fillRule="evenodd" d={MONTE} />
       </svg>
     );
   }
 
-  // Layout apilado con alineación y espaciado simétrico
+  if (variante === "apilado") {
+    return (
+      <svg viewBox="0 0 138 139" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...accesible}>
+        {/* El monte, centrado sobre la palabra y a 66 de alto. */}
+        <g transform="translate(29.4 0) scale(0.825)">
+          <path fill={color} fillRule="evenodd" d={MONTE} />
+        </g>
+        <g transform="translate(0 76)">
+          <path fill={color} fillRule="evenodd" d={PALABRA} />
+          <circle cx="19.1" cy="49.66" r="4.84" fill={NARANJO} />
+        </g>
+      </svg>
+    );
+  }
+
   return (
-    <svg
-      viewBox="0 0 170 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-label="AprendeLocal"
-      role="img"
-    >
-      {/* Línea 1: 'aprende' */}
-      <text
-        x="0"
-        y="38"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-        fontSize="42"
-        fontWeight="800"
-        letterSpacing="-0.035em"
-        fill={textColor}
-      >
-        aprende
-      </text>
-
-      {/* Línea 2: 'l' */}
-      <text
-        x="0"
-        y="88"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-        fontSize="42"
-        fontWeight="800"
-        letterSpacing="-0.035em"
-        fill={textColor}
-      >
-        l
-      </text>
-
-      {/* 'o' concéntrica */}
-      <g transform="translate(31, 76)">
-        {/* Anillo exterior */}
-        <circle cx="0" cy="0" r="15" stroke={textColor} strokeWidth="3.4" fill="none" />
-        {/* Anillo medio verde bosque */}
-        <circle cx="0" cy="0" r="10.5" fill="#7a9785" />
-        {/* Núcleo terracota */}
-        <circle cx="0" cy="0" r="5.8" fill="#cc6138" />
-        {/* Centro blanco */}
-        <circle cx="0" cy="0" r="2" fill="#ffffff" />
+    <svg viewBox="0 0 257 80" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} {...accesible}>
+      <path fill={color} fillRule="evenodd" d={MONTE} />
+      <g transform="translate(119 17.25)">
+        <path fill={color} fillRule="evenodd" d={PALABRA} />
+        <circle cx="19.1" cy="49.66" r="4.84" fill={NARANJO} />
       </g>
-
-      {/* 'cal' */}
-      <text
-        x="54"
-        y="88"
-        fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', 'Montserrat', sans-serif"
-        fontSize="42"
-        fontWeight="800"
-        letterSpacing="-0.035em"
-        fill={textColor}
-      >
-        cal
-      </text>
     </svg>
   );
 }
