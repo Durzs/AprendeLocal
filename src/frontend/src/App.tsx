@@ -27,6 +27,7 @@ import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
 import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import RutasPage from "./modules/sequences/pages/RutasPage";
+import CrearPage from "./modules/sequences/pages/CrearPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
@@ -95,6 +96,13 @@ const router = createBrowserRouter([
     // Retorno del enlace de recuperación: aquí se fija la contraseña nueva.
     path: "/auth/reset",
     element: <ResetPasswordPage />,
+  },
+  {
+    // Crear una ruta propia, por diapositivas. Va fuera del Layout a
+    // proposito: las laminas ocupan la pantalla entera y la cabecera pegajosa
+    // del sitio les come el alto justo donde se llenan los campos.
+    path: "/crear",
+    element: <CrearPage />,
   },
   {
     path: "/plataforma-legacy",
