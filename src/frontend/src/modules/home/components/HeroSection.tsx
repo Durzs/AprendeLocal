@@ -35,7 +35,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   }, [letras, fullText]);
 
   const displayedText = fullText.slice(0, letras);
-  const escribiendo = letras < fullText.length;
 
   return (
     <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-24 md:pt-20 bg-white border-b border-slate-100">
@@ -64,9 +63,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
           <span className="sr-only">{fullText}</span>
           <span aria-hidden>
             {displayedText}
-            {escribiendo && (
-              <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
-            )}
+            <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
           </span>
         </h1>
 

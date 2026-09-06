@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 body {
   margin: 0;
@@ -44,12 +44,14 @@ body {
   animation: floatGentle 4s ease-in-out infinite;
 }
 
-.animate-float-slow-1 {
-  animation: floatTilt1 5s ease-in-out infinite;
+.animate-float-slow-1,
+.animate-float-1 {
+  animation: floatTilt1 4s ease-in-out infinite;
 }
 
-.animate-float-slow-2 {
-  animation: floatTilt2 6s ease-in-out 0.8s infinite;
+.animate-float-slow-2,
+.animate-float-2 {
+  animation: floatTilt2 5s ease-in-out 0.8s infinite;
 }
 
 .animate-float-slow-3 {
