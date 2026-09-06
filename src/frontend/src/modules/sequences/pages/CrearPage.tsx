@@ -1,0 +1,95 @@
+/**
+ * Crear una ruta, por diapositivas.
+ *
+ * Reemplaza el formulario largo que había antes: todo a la vista, todo
+ * obligatorio, y la sensación de trámite antes de haber escrito una palabra.
+ * Ahora son cuatro láminas, una cosa a la vez, y lo escrito se guarda solo
+ * después de cada tecla.
+ *
+ * El paso uno viene partido en dos porque son dos conversaciones distintas:
+ * una se contesta con la planificación al lado y la otra mirando por la
+ * ventana. Juntarlas era lo que hacía pesado el formulario viejo.
+ */
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import Diapositivas, { type Lamina } from "../crear/Diapositivas";
+import { PasoLugar, PasoPrograma } from "../crear/Paso1";
+import Paso2 from "../crear/Paso2";
+import Paso3 from "../crear/Paso3";
+import { completitudPaso1, guardar, leer, type Expedicion } from "../crear/expedicion";
+
+export default function CrearPage() {
+  const navegar = useNavigate();
+  const [e, setE] = useState<Expedicion>(() => leer());
+  const [indice, setIndice] = useState(0);
+
+  // Se guarda en cada cambio. En una escuela rural la luz se corta y la sesión
+  // se cierra sola; que veinte minutos de trabajo dependan de que eso no pase
+  // es pedir demasiado.
+  useEffect(() => {
+    guardar(e);
+  }, [e]);
+
+  const completo = completitudPaso1(e);
+  const hayLugar = Boolean(e.entorno || e.ubicacion.trim() || e.fenomeno.trim());
+  const hayPregunta = Boolean(e.preguntaGuia.trim());
+
+  const laminas: Lamina[] = [
+    {
+      id: "programa",
+      marca: "I · Lo que pide el programa",
+      titulo: "Antes de salir, lo que ya está decidido",
+      bajada:
+        "Los cursos que tienes, las semanas que hay y lo que la unidad exige. Es lo que no se elige, y por eso conviene ponerlo primero.",
+      contenido: <PasoPrograma e={e} onCambio={setE} />,
+      puedeAvanzar: true,
+    },
+    {
+      id: "lugar",
+      marca: "II · Lo que pone el lugar",
+      titulo: "Qué hay al otro lado de la puerta",
+      bajada:
+        "Lo que se alcanza caminando, cómo se llama y qué pasa ahí que en otra escuela no pasaría igual. De aquí sale todo lo demás.",
+      contenido: <PasoLugar e={e} onCambio={setE} />,
+      puedeAvanzar: hayLugar,
+      faltaPara: "Falta decir qué hay alrededor de la escuela.",
+    },
+    {
+      id: "preguntas",
+      marca: "III · Las preguntas",
+      titulo: "La pregunta que aguanta tres semanas",
+      bajada:
+        "Aquí el sistema propone y tú corriges. Las de abajo son borradores armados con lo que escribiste; la que llegue a la ruta debería llevar tus palabras.",
+      contenido: <Paso2 e={e} onCambio={setE} />,
+      puedeAvanzar: hayPregunta,
+      faltaPara: "Falta la pregunta que va al centro.",
+    },
+    {
+      id: "ruta",
+      marca: "IV · La ruta armada",
+      titulo: "Las sesiones, el curso y lo que vive ahí",
+      bajada:
+        "La ruta que más calza con lo que contaste, con su material, la evaluación que marcaste y lo que la ciencia ciudadana ha registrado alrededor.",
+      contenido: <Paso3 e={e} onCambio={setE} />,
+    },
+  ];
+
+  return (
+    <>
+      <Diapositivas
+        laminas={laminas}
+        indice={indice}
+        onIndice={setIndice}
+        onSalir={() => navegar("/rutas")}
+      />
+      {/* Lo escrito no se pierde al salir: se lee de vuelta al entrar. Se dice
+          en voz baja, para que nadie tenga que averiguarlo probando. */}
+      <p className="sr-only">
+        Llevas {completo}% del primer paso. Todo queda guardado en este
+        computador.
+      </p>
+    </>
+  );
+}

@@ -12,6 +12,7 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RUTAS, cursoCorto, type Postura, type Ruta } from "../rutas/catalogo";
 import Recorrido from "../rutas/Recorrido";
@@ -299,7 +300,30 @@ export default function RutasPage() {
         <p className="mt-3 max-w-2xl text-slate-600">{t("rutas.lead")}</p>
       </header>
 
-      <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+      {/* La puerta a la ruta propia. Va arriba de las cuatro y no abajo: quien
+          llega con un lugar concreto en la cabeza no debería tener que leerse
+          el catalogo entero para descubrir que puede armar la suya. */}
+      <Link
+        to="/crear"
+        className="animar-asoma mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-300 bg-slate-900 px-5 py-4 text-left transition hover:bg-slate-800"
+      >
+        <span className="min-w-0">
+          <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-orange-400">
+            {t("rutas.buildOwnEyebrow", "Armar la tuya")}
+          </span>
+          <span className="mt-1 block text-[15px] leading-snug text-white">
+            {t(
+              "rutas.buildOwnLead",
+              "Si el lugar de tu escuela no calza con estas cuatro, arma la ruta paso a paso desde lo que hay ahí."
+            )}
+          </span>
+        </span>
+        <span aria-hidden className="shrink-0 text-xl text-orange-400">
+          →
+        </span>
+      </Link>
+
+      <ul className="mt-6 grid gap-4 sm:grid-cols-2">
         {RUTAS.map((r, i) => (
           <Tarjeta key={r.id} ruta={r} orden={i + 1} onAbrir={() => setAbierta(r)} />
         ))}
