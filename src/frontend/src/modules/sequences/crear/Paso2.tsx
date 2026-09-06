@@ -71,7 +71,7 @@ export default function Paso2({
   return (
     <div className="space-y-4">
       {/* ── La pregunta que queda al centro ──────────────────────────── */}
-      <Hoja titulo="La que va al centro">
+      <Hoja titulo="La que va al centro" orden={4}>
         <p className="mb-3.5 text-sm leading-relaxed text-[#e4ded2]/70">
           De todas, una queda escrita en el pizarrón las tres semanas. Elígela
           abajo o escríbela aquí directamente.
@@ -86,10 +86,10 @@ export default function Paso2({
       </Hoja>
 
       {/* ── Las propuestas, por familia ──────────────────────────────── */}
-      {FAMILIAS.map((f) => {
+      {FAMILIAS.map((f, i) => {
         const suyas = propuestas.filter((p) => p.familia === f.id);
         return (
-          <Hoja key={f.id} titulo={f.titulo}>
+          <Hoja key={f.id} titulo={f.titulo} orden={5 + i}>
             <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
               {f.porque}
             </p>
@@ -163,7 +163,7 @@ export default function Paso2({
       })}
 
       {/* ── Las del docente ──────────────────────────────────────────── */}
-      <Hoja titulo="Las tuyas">
+      <Hoja titulo="Las tuyas" orden={8}>
         <p className="mb-3.5 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
           Lo de arriba son borradores armados con lo que escribiste. Lo que
           sabes tú del lugar no está ahí. Escríbelo.

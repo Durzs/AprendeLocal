@@ -106,10 +106,28 @@ export function Fichas<T extends string>({
   );
 }
 
-/** Una tarjeta de papel sobre el verde, para agrupar sin encerrar. */
-export function Hoja({ children, titulo }: { children: ReactNode; titulo?: string }) {
+/**
+ * Una tarjeta de papel sobre el verde, para agrupar sin encerrar.
+ *
+ * `orden` la hace asomar después de las anteriores. Al llegar a una lámina
+ * nueva hay entre tres y seis hojas, y aparecerlas todas juntas es una pared;
+ * escalonadas se leen como una lista en orden. Pasada la octava entran sin
+ * retraso, que es mejor que hacer esperar a nadie.
+ */
+export function Hoja({
+  children,
+  titulo,
+  orden,
+}: {
+  children: ReactNode;
+  titulo?: string;
+  orden?: number;
+}) {
+  const retraso = orden && orden <= 8 ? ` animar-hoja-${orden}` : "";
   return (
-    <section className="rounded-2xl border border-[#e4ded2]/14 bg-[#e4ded2]/[0.035] p-6">
+    <section
+      className={`animar-hoja${retraso} rounded-2xl border border-[#e4ded2]/14 bg-[#e4ded2]/[0.035] p-6`}
+    >
       {titulo && (
         <h2 className="mb-5 font-mono text-[11px] uppercase tracking-[0.18em] text-[#c9612a]">
           {titulo}

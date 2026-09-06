@@ -43,7 +43,7 @@ export function PasoPrograma({ e, onCambio }: Props) {
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="Quién y cuánto">
+      <Hoja titulo="Quién y cuánto" orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo etiqueta="Tu nombre" ayuda="Va firmado en la carta a las familias.">
             <Texto
@@ -92,7 +92,7 @@ export function PasoPrograma({ e, onCambio }: Props) {
         </div>
       </Hoja>
 
-      <Hoja titulo="Lo que el programa exige">
+      <Hoja titulo="Lo que el programa exige" orden={5}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo
             etiqueta="Objetivos de aprendizaje"
@@ -138,7 +138,7 @@ export function PasoLugar({ e, onCambio }: Props) {
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="Dónde queda la escuela">
+      <Hoja titulo="Dónde queda la escuela" orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Fichas
             etiqueta="Qué hay a distancia de caminata"
@@ -163,7 +163,7 @@ export function PasoLugar({ e, onCambio }: Props) {
         </div>
       </Hoja>
 
-      <Hoja titulo="Qué pasa ahí">
+      <Hoja titulo="Qué pasa ahí" orden={5}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo etiqueta="Asignatura" ayuda="Desde dónde entras al tema.">
             <Texto

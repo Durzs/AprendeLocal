@@ -30,6 +30,9 @@ export type Lamina = {
   faltaPara?: string;
 };
 
+/** Lo que dura la salida en el CSS. Si cambia allá, cambia aquí. */
+const SALIDA_MS = 190;
+
 export default function Diapositivas({
   laminas,
   indice,
@@ -41,27 +44,54 @@ export default function Diapositivas({
   onIndice: (n: number) => void;
   onSalir?: () => void;
 }) {
-  // Guarda de qué lado entra la lámina nueva.
-  const anterior = useRef(indice);
-  const [sentido, setSentido] = useState<"avanza" | "retrocede">("avanza");
+  /*
+   * El cambio de lámina va en dos tiempos.
+   *
+   * Antes era uno solo: React reemplazaba el contenido y la lámina nueva
+   * entraba, pero la vieja desaparecía de golpe. Con eso la transición se ve a
+   * medias, que es casi lo mismo que no verla. Ahora la que se va sale
+   * primero, y recién cuando terminó se monta la que llega.
+   *
+   * `visible` es la lámina que está en pantalla, que durante la salida sigue
+   * siendo la vieja aunque `indice` ya apunte a la nueva.
+   */
+  const [visible, setVisible] = useState(indice);
+  const [saliendo, setSaliendo] = useState(false);
+  const sentido = useRef<"avanza" | "retrocede">("avanza");
+  const reloj = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    setSentido(indice >= anterior.current ? "avanza" : "retrocede");
-    anterior.current = indice;
-  }, [indice]);
+    if (indice === visible) return;
+    sentido.current = indice > visible ? "avanza" : "retrocede";
+    setSaliendo(true);
+    reloj.current = window.setTimeout(() => {
+      setVisible(indice);
+      setSaliendo(false);
+    }, SALIDA_MS);
+    return () => window.clearTimeout(reloj.current);
+  }, [indice, visible]);
 
-  const actual = laminas[indice];
+  const actual = laminas[visible];
   const primera = indice === 0;
   const ultima = indice === laminas.length - 1;
-  const puede = actual?.puedeAvanzar !== false;
+  const puede = laminas[indice]?.puedeAvanzar !== false;
 
   const ir = (n: number) => {
-    if (n < 0 || n >= laminas.length) return;
+    if (n < 0 || n >= laminas.length || n === indice || saliendo) return;
     onIndice(n);
     // Al cambiar de lámina el foco se queda donde estaba, que puede ser un
     // campo que ya no existe. Se sube al principio para no dejarlo perdido.
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Sin `smooth`: la lámina está saliendo y las dos cosas juntas marean.
+    window.scrollTo({ top: 0 });
   };
+
+  const claseLamina = saliendo
+    ? sentido.current === "avanza"
+      ? "lamina-sale-izquierda"
+      : "lamina-sale-derecha"
+    : sentido.current === "avanza"
+      ? "lamina-entra-derecha"
+      : "lamina-entra-izquierda";
 
   useEffect(() => {
     function teclas(e: KeyboardEvent) {
@@ -142,18 +172,17 @@ export default function Diapositivas({
         </ol>
 
         {/* ── La lámina ────────────────────────────────────────────────── */}
-        <main
-          key={actual.id}
-          className={`flex-1 pt-9 ${sentido === "avanza" ? "animar-avanza" : "animar-retrocede"}`}
-        >
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#c9612a]">
+        {/* La clave incluye si está saliendo, para que el navegador vuelva a
+            correr la animación en vez de dar por buena la anterior. */}
+        <main key={`${actual.id}-${saliendo}`} className={`flex-1 pt-9 ${claseLamina}`}>
+          <p className="animar-hoja animar-hoja-1 font-mono text-[11px] uppercase tracking-[0.22em] text-[#c9612a]">
             {actual.marca}
           </p>
-          <h1 className="mt-2.5 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[#f3efe7] sm:text-[2.4rem]">
+          <h1 className="animar-hoja animar-hoja-2 mt-2.5 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[#f3efe7] sm:text-[2.4rem]">
             {actual.titulo}
           </h1>
           {actual.bajada && (
-            <p className="mt-3.5 max-w-2xl text-[15px] leading-relaxed text-[#e4ded2]/70">
+            <p className="animar-hoja animar-hoja-3 mt-3.5 max-w-2xl text-[15px] leading-relaxed text-[#e4ded2]/70">
               {actual.bajada}
             </p>
           )}

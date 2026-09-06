@@ -70,7 +70,7 @@ export default function Paso3({
   return (
     <div className="space-y-4">
       {/* ── Qué ruta ─────────────────────────────────────────────────── */}
-      <Hoja titulo="La ruta que calza">
+      <Hoja titulo="La ruta que calza" orden={4}>
         {ninguna ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
             Ninguna de las cuatro calza con lo que contaste. Puedes tomar la que
@@ -141,7 +141,7 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
   const materiales = ruta.secuencia.materiales ?? [];
 
   return (
-    <Hoja titulo="Las sesiones">
+    <Hoja titulo="Las sesiones" orden={5}>
       <ol className="space-y-3">
         {ruta.fases.map((f, i) => (
           <li
@@ -216,7 +216,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
   }
 
   return (
-    <Hoja titulo="El curso">
+    <Hoja titulo="El curso" orden={6}>
       <div className="flex flex-wrap items-end gap-5">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
@@ -268,7 +268,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
 function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   if (!e.evaluacion.length) {
     return (
-      <Hoja titulo="Evaluación">
+      <Hoja titulo="Evaluación" orden={7}>
         <p className="text-sm leading-relaxed text-[#e4ded2]/60">
           No marcaste ningún método en el primer paso. Vuelve a la primera lámina
           y elige al menos uno: sin eso, la ruta llega al final sin manera de
@@ -279,7 +279,7 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   }
 
   return (
-    <Hoja titulo="Evaluación">
+    <Hoja titulo="Evaluación" orden={7}>
       <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
         Lo que marcaste en el primer paso, puesto contra lo que la ruta produce.
       </p>
@@ -351,7 +351,7 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   }
 
   return (
-    <Hoja titulo="Qué vive ahí">
+    <Hoja titulo="Qué vive ahí" orden={8}>
       <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
         Lo que la ciencia ciudadana ha registrado alrededor de{" "}
         {e.ubicacion.trim() || "tu escuela"}, para saber qué se puede encontrar
