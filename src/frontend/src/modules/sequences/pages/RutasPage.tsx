@@ -13,6 +13,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import ProjectsSection from "../../home/components/ProjectsSection";
+import MapExplorerSection from "../../home/components/MapExplorerSection";
 import { useTranslation } from "react-i18next";
 import { RUTAS, cursoCorto, type Postura, type Ruta } from "../rutas/catalogo";
 import Recorrido from "../rutas/Recorrido";
@@ -289,7 +291,8 @@ export default function RutasPage() {
   if (abierta) return <Detalle ruta={abierta} onVolver={() => setAbierta(null)} />;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <>
+      <div className="mx-auto max-w-6xl px-4 py-10">
       <header>
         <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
           {t("rutas.eyebrow")}
@@ -334,6 +337,15 @@ export default function RutasPage() {
       <p className="mt-8 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
         {t("rutas.draftNotice")}
       </p>
-    </div>
+      </div>
+
+      {/* Estas dos venían de la portada. Ahí eran dos pantallas más que
+          empujaban el botón hacia abajo; aquí, al lado de las rutas, están
+          donde alguien las busca: cómo se arma una, y qué vive alrededor. */}
+      <div className="mt-14 border-t border-slate-100">
+        <ProjectsSection />
+        <MapExplorerSection />
+      </div>
+    </>
   );
 }

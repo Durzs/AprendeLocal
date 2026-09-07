@@ -23,8 +23,8 @@ export default function HowItWorksSection() {
           <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
           <polygon points="40,95 140,150 140,225 40,170" fill="#059669" />
           <polygon points="140,150 240,95 240,170 140,225" fill="#047857" />
-          <polygon points="105,62 160,92 140,150 110,133" fill="#38bdf8" />
-          <polygon points="110,133 140,150 140,225 110,208" fill="#0284c7" />
+          <polygon points="105,62 160,92 140,150 110,133" fill="var(--tinta-400)" />
+          <polygon points="110,133 140,150 140,225 110,208" fill="var(--tinta-600)" />
           <rect x="72" y="65" width="8" height="20" fill="#78350f" />
           <polygon points="76,35 95,65 57,65" fill="#10b981" />
           <polygon points="76,48 91,72 61,72" fill="#059669" />
@@ -62,22 +62,22 @@ export default function HowItWorksSection() {
           <line x1="160" y1="105" x2="180" y2="94" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
           <path d="M112,183 C150,203 175,215 214,231" stroke="#f59e0b" strokeWidth="9" fill="none" strokeLinecap="round" />
           <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
-          <circle cx="106" cy="180" r="9" fill="#38bdf8" stroke="#0284c7" strokeWidth="2" />
+          <circle cx="106" cy="180" r="9" fill="var(--tinta-400)" stroke="var(--tinta-600)" strokeWidth="2" />
         </svg>
       )
     },
     {
       id: 2,
       name: "Currículum",
-      bgColor: "#1d4ed8", // 3. Azul Cobalto
+      bgColor: "var(--tinta-800)", // 3. Azul Cobalto
       title: "Marcas los objetivos que te toca pasar y la ruta sale de ahí",
       desc: "Los sesenta y dos de Ciencias Naturales de 5º a 8º, en una lista. La ruta que se arma te dice cuáles cubre y cuáles no, sin adornar la cuenta.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="140,45 240,100 140,155 40,100" fill="#0a0047" stroke="#3b82f6" strokeWidth="2" />
+          <polygon points="140,45 240,100 140,155 40,100" fill="#0a0047" stroke="var(--tinta-600)" strokeWidth="2" />
           <polygon points="40,100 140,155 140,205 40,150" fill="#050024" />
           <polygon points="140,155 240,100 240,150 140,205" fill="#140066" />
-          <polygon points="140,20 220,65 140,115 60,65" fill="#ffffff" stroke="#2563eb" strokeWidth="2.5" />
+          <polygon points="140,20 220,65 140,115 60,65" fill="#ffffff" stroke="var(--tinta-600)" strokeWidth="2.5" />
           <line x1="95" y1="62" x2="185" y2="62" stroke="#cbd5e1" strokeWidth="2.5" />
           <line x1="90" y1="75" x2="190" y2="75" stroke="#cbd5e1" strokeWidth="2.5" />
           <line x1="90" y1="88" x2="165" y2="88" stroke="#f97316" strokeWidth="3.5" strokeLinecap="round" />
@@ -100,13 +100,13 @@ export default function HowItWorksSection() {
       desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="140,55 235,110 140,165 45,110" fill="#3b82f6" stroke="#60a5fa" strokeWidth="1.5" />
-          <polygon points="45,110 140,165 140,220 45,165" fill="#1d4ed8" />
-          <polygon points="140,165 235,110 235,165 140,220" fill="#1e40af" />
+          <polygon points="140,55 235,110 140,165 45,110" fill="var(--tinta-600)" stroke="#60a5fa" strokeWidth="1.5" />
+          <polygon points="45,110 140,165 140,220 45,165" fill="var(--tinta-800)" />
+          <polygon points="140,165 235,110 235,165 140,220" fill="var(--tinta-800)" />
           <polygon points="140,20 185,45 140,70 95,45" fill="#fbbf24" stroke="#f59e0b" strokeWidth="2" />
           <polygon points="95,45 140,70 140,115 95,90" fill="#f59e0b" />
           <polygon points="140,70 185,45 185,90 140,115" fill="#d97706" />
-          <circle cx="140,45" r="8" fill="#38bdf8" />
+          <circle cx="140,45" r="8" fill="var(--tinta-400)" />
           <circle cx="78" cy="90" r="13" fill="#f97316" stroke="#ffffff" strokeWidth="2" />
           <circle cx="202" cy="90" r="13" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
           <g transform="translate(75, 170)">

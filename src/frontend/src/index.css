@@ -19,6 +19,32 @@ body {
   min-height: 100vh;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+ * Un solo azul, en siete tonos.
+ *
+ * Había once azules distintos en la aplicación: el índigo de la marca
+ * (#0a0047), un azul cian saturado (#3b82f6), un cobalto (#1d4ed8), un
+ * celeste (#38bdf8) y varios grises azulados. El de marca tira a violeta y
+ * los otros tiran a cian: puestos uno al lado del otro pelean, y esa pelea
+ * es lo que se ve en la sección de los dibujos.
+ *
+ * Estos siete salen todos del mismo matiz que #0a0047 —248,5°— cambiando
+ * solo la luz y la saturación. Por construcción combinan entre ellos, que es
+ * lo que un puñado de azules elegidos de a uno no puede garantizar.
+ *
+ * El naranjo de marca no se toca: es el acento, y es lo único que debe
+ * destacar sobre este azul.
+ * ───────────────────────────────────────────────────────────────────────── */
+:root {
+  --tinta-950: #0a0047; /* la marca: cabecera, pie, botón principal */
+  --tinta-800: #201372;
+  --tinta-600: #3b29ae; /* acentos e ilustraciones */
+  --tinta-400: #7a6cd0;
+  --tinta-200: #cfcaec;
+  --tinta-100: #e6e3f7;
+  --tinta-50:  #f3f2fc; /* fondos */
+}
+
 /* Animaciones flotantes y orgánicas */
 @keyframes floatGentle {
   0%, 100% { transform: translateY(0px); }
