@@ -12,3 +12,10 @@ project_id = "aprendelocal"
 # dentro de la función, que consulta con el token de quien llama cuando lo hay
 # para que sigan aplicándose las políticas RLS.
 verify_jwt = false
+
+[functions.generar-ruta]
+# Igual que la anterior: la invoca el navegador con la clave anónima, así que
+# el portón de Supabase la dejaría pasar de todos modos. La comprobación se
+# hace dentro para poder responder «entra con tu cuenta» en vez de un 401 seco,
+# y ahí mismo se aplica el tope diario por persona.
+verify_jwt = false

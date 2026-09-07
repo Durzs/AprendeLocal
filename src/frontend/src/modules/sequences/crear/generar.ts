@@ -89,6 +89,10 @@ export const HUECOS: {
 export type Resultado =
   | { estado: "ok"; ruta: RutaIA }
   | { estado: "sin_clave"; mensaje: string }
+  /** Hay que entrar con cuenta: armar con el modelo cuesta plata. */
+  | { estado: "sin_sesion"; mensaje: string }
+  /** Se acabó el cupo del día. */
+  | { estado: "tope"; mensaje: string }
   | { estado: "error"; mensaje: string };
 
 /** Lo que le falta a una ruta para poder darse por lista. */
@@ -139,6 +143,12 @@ export async function generar(e: Expedicion): Promise<Resultado> {
       const cuerpo = await leerErrorDeFuncion(error);
       if (cuerpo?.error === "sin_clave") {
         return { estado: "sin_clave", mensaje: cuerpo.mensaje };
+      }
+      if (cuerpo?.error === "sin_sesion") {
+        return { estado: "sin_sesion", mensaje: cuerpo.mensaje };
+      }
+      if (cuerpo?.error === "tope") {
+        return { estado: "tope", mensaje: cuerpo.mensaje };
       }
       return {
         estado: "error",
