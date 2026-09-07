@@ -257,11 +257,16 @@ export default function ProfilePage() {
                       Explora el mapa y descubre los puntos de interés patrimoniales, biológicos y geológicos en el territorio de tu escuela en {profile.school_commune}.
                     </p>
                   </div>
+                  {/* Apuntaba a /plataforma?tab=map, que dejo de existir al
+                      sacar las vistas antiguas y hoy redirige a la portada: el
+                      boton prometia un mapa y devolvia al inicio. Lo que vive
+                      alrededor de la escuela ahora se consulta al armar la
+                      ruta, asi que lleva ahi. */}
                   <Link
-                    to="/plataforma?tab=map"
+                    to="/crear"
                     className="shrink-0 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-800 transition"
                   >
-                    Ver lugares y proyectos
+                    Armar una ruta aquí
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
