@@ -23,7 +23,7 @@ export default function Footer() {
               {t("footer.links.routes", "Rutas")}
             </Link>
             <Link
-              to="/plataforma?tab=map"
+              to="/#mapa"
               className="text-slate-600 transition hover:text-slate-950"
             >
               {t("footer.links.map", "Qué vive aquí")}

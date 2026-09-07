@@ -18,8 +18,6 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
 import HomePage from "./modules/home/pages/HomePage";
-import PlatformPage from "./modules/platform/pages/PlatformPage";
-import PlataformaApp from "./PlataformaApp";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
@@ -29,9 +27,7 @@ import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import RutasPage from "./modules/sequences/pages/RutasPage";
 import CrearPage from "./modules/sequences/pages/CrearPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
-import CourseLearningPage from "./modules/courses/pages/CourseLearningPage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
-import NotFoundPage from "./modules/errors/pages/NotFoundPage";
 import EstadoConexion from "./shared/components/ui/EstadoConexion";
 import "./shared/i18n";
 
@@ -47,15 +43,9 @@ const router = createBrowserRouter([
       { path: "registro", element: <RegisterPage /> },
       { path: "recuperar", element: <ForgotPasswordPage /> },
 
-      /* ── Plataforma unificada ── */
-      { path: "plataforma", element: <PlatformPage /> },
-      // Entrada del docente: empieza por el objetivo de aprendizaje, no por el mapa.
-      { path: "preparar", element: <PrepararPage /> },
-      // Clases ya escritas. Es la puerta que no obliga a generar nada.
+      /* ── Módulo Pedagógico & Rutas Docentes ── */
       { path: "rutas", element: <RutasPage /> },
-
-      /* ── Redirects de rutas antiguas ── */
-      { path: "cursos", element: <Navigate to="/plataforma?tab=courses" replace /> },
+      { path: "preparar", element: <PrepararPage /> },
 
       /* ── Rutas protegidas ── */
       {
@@ -63,14 +53,6 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ProfilePage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "cursos/:cursoId",
-        element: (
-          <ProtectedRoute>
-            <CourseLearningPage />
           </ProtectedRoute>
         ),
       },
@@ -83,8 +65,14 @@ const router = createBrowserRouter([
         ),
       },
 
-      /* ── 404 ── */
-      { path: "*", element: <NotFoundPage /> },
+      /* ── Redirección de rutas antiguas / eliminadas al inicio ── */
+      { path: "plataforma", element: <Navigate to="/" replace /> },
+      { path: "plataforma-legacy", element: <Navigate to="/" replace /> },
+      { path: "cursos", element: <Navigate to="/rutas" replace /> },
+      { path: "cursos/*", element: <Navigate to="/rutas" replace /> },
+
+      /* ── Redirección 404 a la página principal ── */
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
   {
@@ -98,15 +86,9 @@ const router = createBrowserRouter([
     element: <ResetPasswordPage />,
   },
   {
-    // Crear una ruta propia, por diapositivas. Va fuera del Layout a
-    // proposito: las laminas ocupan la pantalla entera y la cabecera pegajosa
-    // del sitio les come el alto justo donde se llenan los campos.
+    // Crear una ruta propia, por diapositivas.
     path: "/crear",
     element: <CrearPage />,
-  },
-  {
-    path: "/plataforma-legacy",
-    element: <PlataformaApp />,
   },
 ]);
 
