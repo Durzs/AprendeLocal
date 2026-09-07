@@ -11,6 +11,8 @@
  * dependa de que nada de eso pase es pedir demasiado.
  */
 
+import type { RutaIA } from "./generar";
+
 const LLAVE = "aprendelocal:expedicion";
 
 /** Cómo el curso va a mostrar lo que aprendió. */
@@ -66,6 +68,11 @@ export type Expedicion = {
   preguntaGuia: string;
 
   /* ── Paso 3, la ruta y el curso ──────────────────────────────────────── */
+  /**
+   * La ruta armada para esta escuela, con los huecos que el docente llena.
+   * Cuando está puesta, manda sobre `rutaId`: la escrita pasa a ser el plan B.
+   */
+  rutaIA: RutaIA | null;
   rutaId: string | null;
   /** Código con que los estudiantes entran a esta expedición. */
   codigoCurso: string;
@@ -89,6 +96,7 @@ export const VACIA: Expedicion = {
   producto: "",
   preguntas: [],
   preguntaGuia: "",
+  rutaIA: null,
   rutaId: null,
   codigoCurso: "",
 };

@@ -16,8 +16,8 @@ export default function HowItWorksSection() {
       id: 0,
       name: "Territorio",
       bgColor: "#0a0047", // 1. Azul Marino Profundo
-      title: "Aprender desde el río, el bosque y la cuenca local",
-      desc: "Transforma los ecosistemas locales y sus problemáticas socioambientales en el eje de indagación científica de tus estudiantes, fomentando pertenencia e identidad territorial.",
+      title: "La clase empieza en el estero que está detrás de la cancha",
+      desc: "Dices qué hay a distancia de caminata de tu escuela y qué pasa ahí que en otra parte no pasaría igual. De eso sale el proyecto, no de un tema general.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
@@ -42,20 +42,27 @@ export default function HowItWorksSection() {
     },
     {
       id: 1,
-      name: "Maker",
+      name: "Terreno",
       bgColor: "#ea580c", // 2. Naranja Terracota Marca
-      title: "Sensores e instrumentos de bajo costo construibles en el aula",
-      desc: "Dispositivos accesibles para medir pH, turbidez, temperatura y clima que los estudiantes arman y calibran con sus manos sin depender de presupuestos elevados.",
+      title: "Se mide con una huincha, un palo y un reloj",
+      desc: "El curso sale, anota en la hoja de terreno y vuelve con números. Nada que haya que comprar: lo que hace falta está en la escuela o en una casa.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 235,95 140,150 45,95" fill="#ffffff" stroke="#f1f5f9" strokeWidth="1.5" />
           <polygon points="45,95 140,150 140,215 45,160" fill="#cbd5e1" />
           <polygon points="140,150 235,95 235,160 140,215" fill="#94a3b8" />
-          <polygon points="140,65 195,95 140,125 85,95" fill="#0f172a" stroke="#334155" strokeWidth="2" />
-          <text x="140" y="101" fontFamily="monospace" fontSize="14" fontWeight="800" fill="#4ade80" textAnchor="middle">pH: 7.2</text>
-          <circle cx="185" cy="72" r="6" fill="#22c55e" stroke="#16a34a" strokeWidth="1.5" />
-          <path d="M140,175 C140,225 160,235 200,235" stroke="#f59e0b" strokeWidth="8" fill="none" strokeLinecap="round" />
-          <rect x="200" y="225" width="28" height="18" rx="5" fill="#38bdf8" stroke="#0284c7" strokeWidth="2" />
+          {/* Un cuaderno de terreno abierto y una huincha, que es con lo que
+              se mide de verdad. Antes aquí había una caja de sensor con sonda
+              de pH: la escuela rural no la tiene y la aplicación no la usa. */}
+          <polygon points="140,62 200,95 140,128 80,95" fill="#f8fafc" stroke="#cbd5e1" strokeWidth="2" />
+          <line x1="140" y1="62" x2="140" y2="128" stroke="#cbd5e1" strokeWidth="1.5" />
+          <line x1="112" y1="86" x2="133" y2="98" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+          <line x1="104" y1="93" x2="126" y2="105" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+          <line x1="152" y1="98" x2="174" y2="86" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+          <line x1="160" y1="105" x2="180" y2="94" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+          <path d="M112,183 C150,203 175,215 214,231" stroke="#f59e0b" strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="106" cy="180" r="9" fill="#38bdf8" stroke="#0284c7" strokeWidth="2" />
         </svg>
       )
     },
@@ -63,8 +70,8 @@ export default function HowItWorksSection() {
       id: 2,
       name: "Currículum",
       bgColor: "#1d4ed8", // 3. Azul Cobalto
-      title: "Secuencias de 4 clases con objetivos curriculares listos",
-      desc: "Unidades didácticas completas alineadas a las bases curriculares oficiales de ciencias, con preguntas de indagación, hojas de terreno y rúbricas formativas.",
+      title: "Marcas los objetivos que te toca pasar y la ruta sale de ahí",
+      desc: "Los sesenta y dos de Ciencias Naturales de 5º a 8º, en una lista. La ruta que se arma te dice cuáles cubre y cuáles no, sin adornar la cuenta.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,45 240,100 140,155 40,100" fill="#0a0047" stroke="#3b82f6" strokeWidth="2" />
@@ -89,8 +96,8 @@ export default function HowItWorksSection() {
       id: 3,
       name: "Comunidad",
       bgColor: "#c2410c", // 4. Naranja Ámbar Cálido
-      title: "Los datos recopilados generan impacto real en el territorio",
-      desc: "Los hallazgos de los estudiantes no quedan archivados: se entregan formalmente al Comité de Agua Potable Rural (APR), familias y escuela para la toma de decisiones.",
+      title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
+      desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,55 235,110 140,165 45,110" fill="#3b82f6" stroke="#60a5fa" strokeWidth="1.5" />
@@ -104,7 +111,10 @@ export default function HowItWorksSection() {
           <circle cx="202" cy="90" r="13" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
           <g transform="translate(75, 170)">
             <rect x="0" y="0" width="130" height="28" rx="8" fill="#0a0047" stroke="#f97316" strokeWidth="2" />
-            <text x="65" y="19" fill="#ffffff" fontFamily="sans-serif" fontSize="11" fontWeight="800" textAnchor="middle">🤝 COMITÉ APR</text>
+            {/* Decía «COMITÉ APR». Ese destinatario no lo pone la plataforma: lo
+                escribe el docente, porque es el único que sabe quién recibe el
+                trabajo en su comunidad. */}
+            <text x="65" y="19" fill="#ffffff" fontFamily="sans-serif" fontSize="11" fontWeight="800" textAnchor="middle">🤝 LO ESCRIBES TÚ</text>
           </g>
         </svg>
       )

@@ -7,25 +7,25 @@ export default function MethodologySection() {
   const visualPillars = [
     {
       icon: Trees,
-      label: "Territorio Vivo",
+      label: "Tu lugar",
       bgIcon: "bg-emerald-100 text-emerald-700",
       border: "hover:border-emerald-300",
     },
     {
       icon: Atom,
-      label: "Ciencia STEM",
+      label: "El programa",
       bgIcon: "bg-blue-100 text-blue-700",
       border: "hover:border-blue-300",
     },
     {
       icon: Compass,
-      label: "Rutas Didácticas",
+      label: "Clases escritas",
       bgIcon: "bg-orange-100 text-[#ea580c]",
       border: "hover:border-orange-300",
     },
     {
       icon: Users2,
-      label: "Impacto Comunitario",
+      label: "Alguien lo recibe",
       bgIcon: "bg-indigo-100 text-[#0a0047]",
       border: "hover:border-indigo-300",
     },
@@ -46,14 +46,21 @@ export default function MethodologySection() {
             <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-normal">
               {t(
                 "home.whatIs.p1",
-                "AprendeLocal es una plataforma y metodología pedagógica diseñada para que docentes y escuelas transformen su propio entorno —sus ríos, bosques, cuencas y suelos— en un laboratorio vivo de aprendizaje científico y tecnológico."
+                "AprendeLocal arma la clase de ciencias con el lugar donde está tu escuela. Dices qué objetivos te toca pasar y qué hay a distancia de caminata, y sale un proyecto de tres semanas: qué hace cada curso, qué se mide en terreno y qué entregan al final."
               )}
             </p>
 
             <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
               {t(
                 "home.whatIs.p2",
-                "A través de secuencias didácticas completas y alineadas a los objetivos de aprendizaje oficiales, los estudiantes exploran problemas socioambientales reales, realizan mediciones en terreno con instrumentos accesibles y entregan sus resultados a la comunidad escolar y familias."
+                "Una parte la propone el sistema y la otra la escribes tú. El nombre del estero, a quién se le entrega el trabajo, a quién de la comunidad se le pregunta: eso no lo sabe nadie más, y va vacío hasta que lo pongas."
+              )}
+            </p>
+
+            <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
+              {t(
+                "home.whatIs.p3",
+                "Todo se imprime. En una escuela sin señal la clase igual sale."
               )}
             </p>
           </div>
