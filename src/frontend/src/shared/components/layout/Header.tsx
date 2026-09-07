@@ -68,6 +68,22 @@ export default function Header() {
               Cómo funciona
             </button>
             
+            <Link
+              to="/metodologia"
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition"
+              onClick={closeMobile}
+            >
+              Metodología
+            </Link>
+
+            <Link
+              to="/rutas"
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition"
+              onClick={closeMobile}
+            >
+              Rutas
+            </Link>
+
             <button
               onClick={() => scrollTo("contacto")}
               className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
@@ -208,6 +224,22 @@ export default function Header() {
               Cómo funciona
             </button>
             
+            <Link
+              to="/metodologia"
+              onClick={closeMobile}
+              className="rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              Metodología
+            </Link>
+
+            <Link
+              to="/rutas"
+              onClick={closeMobile}
+              className="rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              Rutas escritas
+            </Link>
+
             <button
               onClick={() => scrollTo("contacto")}
               className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"

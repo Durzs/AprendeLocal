@@ -18,6 +18,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
 import HomePage from "./modules/home/pages/HomePage";
+import MetodologiaPage from "./modules/home/pages/MetodologiaPage";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
@@ -45,6 +46,9 @@ const router = createBrowserRouter([
 
       /* ── Módulo Pedagógico & Rutas Docentes ── */
       { path: "rutas", element: <RutasPage /> },
+      // Lo que salio de la portada para que dejara de ser un folleto de ocho
+      // pantallas. No se borro: se mudo.
+      { path: "metodologia", element: <MetodologiaPage /> },
       { path: "preparar", element: <PrepararPage /> },
 
       /* ── Rutas protegidas ── */
