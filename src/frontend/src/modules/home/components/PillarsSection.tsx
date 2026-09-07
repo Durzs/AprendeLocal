@@ -269,16 +269,11 @@ export default function PillarsSection() {
     <section id="habilidades" className="bg-[#f8faff] py-16 sm:py-24 border-y border-blue-900/5 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         
-        {/* Dynamic Title with animated typewriter pill */}
+        {/* Dynamic Title */}
         <div className="mb-14 sm:mb-18">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-bold uppercase tracking-wider mb-3 border border-blue-200">
-            <Sparkles className="w-3.5 h-3.5 text-orange-500" />
-            Pilares Fundamentales
-          </div>
-          
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[1.05]">
             Con AprendeLocal, puedes:{" "}
-            <span className="text-blue-600 underline decoration-orange-400 decoration-wavy decoration-2 inline-block min-w-[170px] text-left">
+            <span className="text-blue-600 inline-block min-w-[170px] text-left">
               {typedAction}
               <span className="ml-0.5 inline-block animate-pulse text-orange-500">|</span>
             </span>

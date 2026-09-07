@@ -140,7 +140,7 @@ export default function HowItWorksSection() {
       {/* Header Superior: Título & Timeline */}
       <div className="max-w-6xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
             ¿Cómo funciona AprendeLocal?
           </h2>
 

@@ -1,11 +1,10 @@
-﻿import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
 import PillarsSection from "../components/PillarsSection";
 import ProjectsSection from "../components/ProjectsSection";
-import TeacherTrainingSection from "../components/TeacherTrainingSection";
 import MapExplorerSection from "../components/MapExplorerSection";
 import ContactSection from "../components/ContactSection";
 import CallToAction from "../components/CallToAction";
@@ -35,7 +34,7 @@ export default function HomePage() {
       {/* 1. Hero Principal */}
       <HeroSection onStart={goStart} onExplore={goExplore} />
 
-      {/* 2. Metodología & Ruta Territorial (3 Etapas Unificadas Foco Docente) */}
+      {/* 2. ¿Qué es AprendeLocal? */}
       <MethodologySection />
 
       {/* 3. ¿Cómo funciona? (Ciclo Pedagógico en 4 Pasos) */}
@@ -47,10 +46,7 @@ export default function HomePage() {
       {/* 5. Banco de Proyectos & Rutas de Aprendizaje */}
       <ProjectsSection />
 
-      {/* 6. Formación y Acompañamiento Docente */}
-      <TeacherTrainingSection />
-
-      {/* 7. Explorador Territorial «¿Qué vive aquí?» */}
+      {/* 6. Explorador Territorial «¿Qué vive aquí?» */}
       <MapExplorerSection />
 
       {/* 8. Contacto y Alianzas */}

@@ -58,7 +58,14 @@ export default function Header() {
               onClick={() => scrollTo("metodologia")}
               className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
-              Metodología
+              ¿Qué es?
+            </button>
+            
+            <button
+              onClick={() => scrollTo("como-funciona")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+            >
+              Cómo funciona
             </button>
             
             <button
@@ -66,13 +73,6 @@ export default function Header() {
               className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
               Rutas & Proyectos
-            </button>
-            
-            <button
-              onClick={() => scrollTo("formacion")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              Formación Docente
             </button>
             
             {/* Dropdown Comunidad ▾ */}
@@ -223,7 +223,14 @@ export default function Header() {
               onClick={() => scrollTo("metodologia")}
               className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
-              Metodología
+              ¿Qué es?
+            </button>
+            
+            <button
+              onClick={() => scrollTo("como-funciona")}
+              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+            >
+              Cómo funciona
             </button>
             
             <button
@@ -231,13 +238,6 @@ export default function Header() {
               className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
               Rutas & Proyectos
-            </button>
-            
-            <button
-              onClick={() => scrollTo("formacion")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              Formación Docente
             </button>
 
             <button

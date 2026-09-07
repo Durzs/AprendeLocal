@@ -1,4 +1,4 @@
-import { MapPin, FileCheck, HandHeart } from "lucide-react";
+import { Trees, FileText, Users2, Compass } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function MethodologySection() {
@@ -8,113 +8,88 @@ export default function MethodologySection() {
     <section id="metodologia" className="py-20 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header */}
+        {/* Header sin mini-título */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-900 bg-blue-100 px-3.5 py-1 rounded-full border border-blue-200">
-            {t("home.methodology.badge", "Metodología Place-Based Learning (PBL) & STEM")}
-          </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-4 leading-[0.95]">
-            {t("home.methodology.title", "Una ruta pedagógica en 3 etapas continuas")}
+            {t("home.whatIs.title", "¿Qué es AprendeLocal?")}
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
             {t(
-              "home.methodology.subtitle",
-              "Diseñado para que docentes de ciencias y tecnología transformen los desafíos de su entorno en experiencias de aprendizaje aplicadas:"
+              "home.whatIs.subtitle",
+              "Una plataforma y metodología de educación STEM contextualizada que permite a docentes y escuelas rurales convertir el entorno local en un laboratorio vivo de aprendizaje científico."
             )}
           </p>
         </div>
 
-        {/* Contenedor Unificado de 3 Bloques Integrados */}
-        <div className="rounded-3xl bg-[#0f172a] p-6 sm:p-10 border border-slate-800 text-white shadow-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Etapa 1: Explora tu Entorno */}
-            <div className="bg-white rounded-2xl p-7 text-slate-900 border-t-4 border-blue-600 shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="w-9 h-9 rounded-xl bg-blue-100 text-blue-900 font-extrabold text-sm flex items-center justify-center">01</span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full">
-                    Fase 1 · Diagnóstico
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  Explora el Territorio
-                </h3>
-                <div className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-3">
-                  Conexión Territorial Real
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Identifica problemáticas ambientales y comunitarias cercanas (cuencas hídricas, agricultura, biodiversidad o microclima) y conviértelas en el eje de indagación científica de tus estudiantes.
-                </p>
+        {/* 3 Pilares Explicativos de AprendeLocal */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          {/* 1. Territorio como Laboratorio */}
+          <div className="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
+                <Trees className="w-6 h-6" />
               </div>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                <span>Salidas a terreno y preguntas guía</span>
-              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
+                {t("home.whatIs.p1Title", "El territorio como aula")}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {t(
+                  "home.whatIs.p1Desc",
+                  "Transforma los ríos, bosques, cuencas hídricas y suelos cercanos a tu escuela en el eje de indagación científica, fortaleciendo el sentido de pertenencia e identidad local."
+                )}
+              </p>
             </div>
-
-            {/* Etapa 2: Planifica con Datos */}
-            <div className="bg-white rounded-2xl p-7 text-slate-900 border-t-4 border-[#0a0047] shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="w-9 h-9 rounded-xl bg-slate-100 text-slate-900 font-extrabold text-sm flex items-center justify-center">02</span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-1 rounded-full">
-                    Fase 2 · Planificación
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  Planifica con Datos
-                </h3>
-                <div className="text-xs font-bold text-slate-800 uppercase tracking-wide mb-3">
-                  Curriculum Ágil & Rúbricas
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Genera unidades didácticas en minutos alineadas a los Objetivos de Aprendizaje (OA) oficiales, con cronograma clase a clase, mediciones científicas y criterios de evaluación formativa.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                <FileCheck className="w-4 h-4 text-[#0a0047] shrink-0" />
-                <span>Alineación curricular y rúbricas</span>
-              </div>
+            <div className="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-blue-700">
+              <Compass className="w-4 h-4" />
+              <span>Salidas a terreno y preguntas de indagación</span>
             </div>
-
-            {/* Etapa 3.
-                Antes decía «Crea Soluciones Maker», y prometía guiar la
-                construcción de prototipos con Arduino y micro:bit. La
-                plataforma no hace eso: sus rutas se resuelven con huincha,
-                vara, termómetro y tarros, que es lo que hay en una escuela
-                rural. La tercera fase que las rutas SÍ tienen es la que
-                cierra el proyecto: entregarle el resultado a alguien de la
-                comunidad, que es lo que separa un proyecto de una actividad
-                larga. */}
-            <div className="bg-white rounded-2xl p-7 text-slate-900 border-t-4 border-[#f97316] shadow-lg flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="w-9 h-9 rounded-xl bg-orange-100 text-[#f97316] font-extrabold text-sm flex items-center justify-center">03</span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-orange-700 bg-orange-50 px-2.5 py-1 rounded-full">
-                    {t("home.methodology.p3badge", "Fase 3 · Entrega")}
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  {t("home.methodology.p3title", "Entregan a la comunidad")}
-                </h3>
-                <div className="text-xs font-bold text-orange-600 uppercase tracking-wide mb-3">
-                  {t("home.methodology.p3kicker", "Con material que ya está en la escuela")}
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  {t(
-                    "home.methodology.p3body",
-                    "El curso sale a medir con huincha, vara y termómetro, saca sus propios números y se los entrega a alguien de verdad: el comité de agua, la dirección o las familias. Los datos tienen que estar bien porque alguien los va a usar, no porque los revise el profesor."
-                  )}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                <HandHeart className="w-4 h-4 text-[#f97316] shrink-0" aria-hidden />
-                <span>{t("home.methodology.p3foot", "Un destinatario real esperando el resultado")}</span>
-              </div>
-            </div>
-
           </div>
+
+          {/* 2. Currículum y Clases Listas */}
+          <div className="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-orange-50 text-[#f97316] flex items-center justify-center mb-6">
+                <FileText className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
+                {t("home.whatIs.p2Title", "Clases listas y alineadas")}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {t(
+                  "home.whatIs.p2Desc",
+                  "Secuencias didácticas completas alineadas a las bases curriculares oficiales, con guías paso a paso, hojas de registro y rúbricas formativas listas para aplicar sin horas extra de preparación."
+                )}
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-orange-600">
+              <Compass className="w-4 h-4" />
+              <span>Alineación curricular y evaluación formativa</span>
+            </div>
+          </div>
+
+          {/* 3. Impacto Real en la Comunidad */}
+          <div className="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-[#0a0047] flex items-center justify-center mb-6">
+                <Users2 className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
+                {t("home.whatIs.p3Title", "Impacto comunitario real")}
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                {t(
+                  "home.whatIs.p3Desc",
+                  "Los datos e informes recopilados por los estudiantes se entregan formalmente a comités de agua (APR), familias y escuelas para aportar a la toma de decisiones comunitarias."
+                )}
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-700">
+              <Compass className="w-4 h-4" />
+              <span>Ciencia ciudadana y vinculación comunitaria</span>
+            </div>
+          </div>
+
         </div>
 
       </div>

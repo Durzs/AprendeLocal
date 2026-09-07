@@ -87,11 +87,6 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left information */}
           <div className="space-y-6 lg:col-span-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-300 border border-blue-500/30">
-              <Mail className="h-3.5 w-3.5 text-orange-400" />
-              {t("home.contact.badge", "Contacto & Alianzas")}
-            </div>
-
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
               {t(
                 "home.contact.title",

@@ -49,12 +49,6 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
       />
 
       <div className="mx-auto max-w-5xl">
-        {/* Badge */}
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200/80 bg-blue-50/90 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-900 shadow-sm animate-pulse-glow">
-          <Compass className="h-4 w-4 text-[#f97316]" />
-          <span>{t("home.hero.badge", "Educación STEM Basada en el Lugar · Foco Docente")}</span>
-        </div>
-
         {/* Title */}
         {/* El titulo completo va en el DOM para quien lo lee con lector de
             pantalla o buscador; lo que se escribe letra a letra es la copia
