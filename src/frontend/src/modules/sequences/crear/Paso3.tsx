@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import { RUTAS, cursoCorto, type Ruta } from "../rutas/catalogo";
 import { consultar, pedirUbicacion, type Especie, type Grupo } from "../rutas/inaturalist";
 import { Hoja } from "./Campos";
+import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
 import { codigoNuevo } from "./expedicion";
@@ -118,6 +119,12 @@ export default function Paso3({
 
   return (
     <div className="space-y-4">
+      {/* La ruta armada para esta escuela manda. Las cuatro escritas quedan
+          detrás, para cuando no hay señal o el docente prefiere una probada. */}
+      <RutaGenerada e={e} onCambio={onCambio} />
+
+      {e.rutaIA ? null : (
+        <>
       {/* ── La ruta designada ────────────────────────────────────────── */}
       <Hoja titulo={cambiada ? "La ruta que elegiste" : "La ruta que te toca"} orden={4}>
         {sinOA ? (
@@ -241,6 +248,8 @@ export default function Paso3({
           <Curso e={e} onCambio={onCambio} />
           <Evaluacion e={e} ruta={elegida} />
           <Alrededor e={e} ruta={elegida} />
+        </>
+      )}
         </>
       )}
     </div>
