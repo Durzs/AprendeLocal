@@ -3,11 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
-import PillarsSection from "../components/PillarsSection";
-import ProjectsSection from "../components/ProjectsSection";
-import MapExplorerSection from "../components/MapExplorerSection";
 import ContactSection from "../components/ContactSection";
-import CallToAction from "../components/CallToAction";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -30,31 +26,32 @@ export default function HomePage() {
     }
   };
 
+  /*
+   * La portada, con lo esencial.
+   *
+   * Tenía ocho secciones y tres de ellas contaban la misma cosa con palabras
+   * distintas: cómo funciona, los pilares, el banco de rutas. Un docente que
+   * baja tres pantallas leyendo variaciones del mismo párrafo no aprende más;
+   * se cansa antes de llegar al botón.
+   *
+   * Quedan cuatro. La entrada, qué es esto, cómo funciona con los dibujos, y
+   * cómo escribirnos. Fuera van los pilares, el banco de rutas —que repetía lo
+   * que ya dicen los dibujos— el mapa, que hoy vive dentro de armar la ruta, y
+   * el llamado final, que repetía el botón de arriba en una página que ya no
+   * es larga.
+   */
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* 1. Hero Principal */}
       <HeroSection onStart={goStart} onExplore={goExplore} />
 
-      {/* 2. ¿Qué es AprendeLocal? */}
+      {/* Qué es esto */}
       <MethodologySection />
 
-      {/* 3. ¿Cómo funciona? (Ciclo Pedagógico en 4 Pasos) */}
+      {/* Cómo funciona, con los dibujos que cambian al bajar */}
       <HowItWorksSection />
 
-      {/* 4. Pilares Fundamentales & Habilidades STEM */}
-      <PillarsSection />
-
-      {/* 5. Banco de Proyectos & Rutas de Aprendizaje */}
-      <ProjectsSection />
-
-      {/* 6. Explorador Territorial «¿Qué vive aquí?» */}
-      <MapExplorerSection />
-
-      {/* 8. Contacto y Alianzas */}
+      {/* La única puerta que queda para una escuela que quiere entrar */}
       <ContactSection />
-
-      {/* 9. Llamado a la Acción Final */}
-      <CallToAction onStart={goStart} />
     </main>
   );
 }

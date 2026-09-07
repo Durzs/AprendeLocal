@@ -69,20 +69,6 @@ export default function Header() {
             </button>
             
             <button
-              onClick={() => scrollTo("proyectos")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              Cómo se arma
-            </button>
-
-            <button
-              onClick={() => scrollTo("mapa")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              Mapa
-            </button>
-
-            <button
               onClick={() => scrollTo("contacto")}
               className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
@@ -222,20 +208,6 @@ export default function Header() {
               Cómo funciona
             </button>
             
-            <button
-              onClick={() => scrollTo("proyectos")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              Cómo se arma
-            </button>
-
-            <button
-              onClick={() => scrollTo("mapa")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              ¿Qué vive aquí? (Mapa)
-            </button>
-
             <button
               onClick={() => scrollTo("contacto")}
               className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
