@@ -37,8 +37,8 @@ export default function ProjectsSection() {
   const [selectedCountry, setSelectedCountry] = useState<"chile" | "brasil">("chile");
 
   return (
-    <section id="proyectos" className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
-      <div className="max-w-7xl mx-auto">
+    <section id="proyectos" className="py-20 px-3 sm:px-6 lg:px-10 bg-white border-b border-slate-100">
+      <div className="max-w-[1400px] mx-auto w-full">
 
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
@@ -52,33 +52,43 @@ export default function ProjectsSection() {
             )}
           </p>
 
-          {/* Country Selector */}
+          {/* Country Selector con banderas SVG visibles en todos los sistemas operativos */}
           <div className="inline-flex p-1.5 bg-[#f8fafc] rounded-full border border-slate-200 shadow-sm mt-6 gap-2">
             <button
               onClick={() => setSelectedCountry("chile")}
               aria-pressed={selectedCountry === "chile"}
               className={[
-                "flex items-center gap-2 px-6 py-2 rounded-full font-bold text-sm transition cursor-pointer",
+                "flex items-center gap-2.5 px-6 py-2 rounded-full font-bold text-sm transition cursor-pointer",
                 selectedCountry === "chile"
                   ? "bg-[#0a0047] text-white shadow-md shadow-[#0a0047]/25"
                   : "text-slate-600 hover:text-slate-900",
               ].join(" ")}
             >
-              <span className="text-base" aria-hidden>🇨🇱</span>
-              <span>{t("home.projects.chileTab", "Chile (La Araucanía & Sur)")}</span>
+              <svg className="w-5 h-3.5 rounded-xs overflow-hidden shadow-xs shrink-0" viewBox="0 0 30 20" fill="none">
+                <rect width="30" height="10" fill="#ffffff" />
+                <rect y="10" width="30" height="10" fill="#d52b1e" />
+                <rect width="10" height="10" fill="#0039a6" />
+                <polygon points="5,2 6,4.5 8.5,4.5 6.5,6 7.5,8.5 5,7 2.5,8.5 3.5,6 1.5,4.5 4,4.5" fill="#ffffff" />
+              </svg>
+              <span>Chile</span>
             </button>
+            
             <button
               onClick={() => setSelectedCountry("brasil")}
               aria-pressed={selectedCountry === "brasil"}
               className={[
-                "flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-sm transition cursor-pointer",
+                "flex items-center gap-2.5 px-6 py-2 rounded-full font-semibold text-sm transition cursor-pointer",
                 selectedCountry === "brasil"
-                  ? "bg-[#f97316] text-white shadow-md shadow-orange-500/20"
-                  : "text-slate-400 hover:text-slate-600",
+                  ? "bg-[#0a0047] text-white shadow-md shadow-[#0a0047]/25"
+                  : "text-slate-500 hover:text-slate-800",
               ].join(" ")}
             >
-              <span className="text-base" aria-hidden>🇧🇷</span>
-              <span>{t("home.projects.brasilTab", "Brasil (Próximamente)")}</span>
+              <svg className="w-5 h-3.5 rounded-xs overflow-hidden shadow-xs shrink-0" viewBox="0 0 30 20" fill="none">
+                <rect width="30" height="20" fill="#009c3b" />
+                <polygon points="15,2 27,10 15,18 3,10" fill="#ffdf00" />
+                <circle cx="15" cy="10" r="4.5" fill="#002776" />
+              </svg>
+              <span>Brasil</span>
             </button>
           </div>
         </div>

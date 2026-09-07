@@ -83,7 +83,7 @@ export default function ContactSection() {
       <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-600/15 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-[1400px] w-full px-3 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left information */}
           <div className="space-y-6 lg:col-span-6">

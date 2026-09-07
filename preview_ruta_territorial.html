@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprendeLocal — Prototipo: Ruta Territorial Dinámica (Opción 2 Refinada)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['Lora', 'serif'],
+          },
+          colors: {
+            forest: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .serif-heading {
+      font-family: 'Lora', Georgia, serif;
+    }
+    
+    /* Animación de pulso suave para el nodo activo */
+    @keyframes pulseRing {
+      0% {
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 16px rgba(22, 163, 74, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+      }
+    }
+    .node-pulse {
+      animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#fbfdf9] text-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+
+  <!-- Encabezado de Contexto -->
+  <div class="max-w-4xl mx-auto text-center mb-10">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-200">
+      <i data-lucide="route" class="w-4 h-4 text-emerald-600"></i>
+      Prototipo Refinado: Ruta Territorial Conectada
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+      Tu viaje de aprendizaje en 3 momentos
+    </h1>
+    <p class="text-slate-600 max-w-2xl mx-auto mt-2 text-sm sm:text-base leading-relaxed">
+      Iconos ilustrados estilo <strong>iNaturalist</strong>, línea de progreso dinámica continua que recorre el camino y paleta verde bosque de la página principal.
+    </p>
+
+    <!-- Controles de prueba rápida -->
+    <div class="flex items-center justify-center gap-3 mt-6">
+      <button id="toggle-autoplay-btn" onclick="toggleAutoPlay()" class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm transition cursor-pointer">
+        <i id="autoplay-icon" data-lucide="pause" class="w-3.5 h-3.5 text-emerald-600"></i>
+        <span id="autoplay-text">Pausar animación automática</span>
+      </button>
+      <span class="text-xs text-slate-400">| Haz clic en cualquier paso para saltar directamente</span>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- COMPONENTE: RUTA TERRITORIAL DINÁMICA (DISEÑADO PARA EL HERO)             -->
+  <!-- ========================================================================= -->
+  <div class="max-w-5xl mx-auto">
+    <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-12 border border-slate-200/80 shadow-xl shadow-slate-950/5 relative overflow-hidden">
+      
+      <!-- Fondo sutil con halo natural -->
+      <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+      <!-- CONTENEDOR DE LA RUTA CONECTADA -->
+      <div class="relative">
+        
+        <!-- Línea conectora base (Gris clara de fondo) -->
+        <div class="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 bg-slate-100 -translate-y-1/2 z-0 rounded-full"></div>
+
+        <!-- Línea conectora activa con gradiente y progreso dinámico -->
+        <div class="hidden md:block absolute top-[44px] left-[15%] right-[15%] h-1.5 -translate-y-1/2 z-0 rounded-full overflow-hidden pointer-events-none">
+          <div id="active-path-bar" class="h-full bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 rounded-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+        </div>
+
+        <!-- GRID DE LOS 3 PASOS / NODOS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+          
+          <!-- ==================== PASO 1: EXPLORA ==================== -->
+          <div id="node-card-0" onclick="goToStep(0)" class="group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500 bg-white/60 hover:bg-white">
+            
+            <!-- Nodo Circular con Icono Ilustrado iNaturalist -->
+            <div id="node-circle-0" class="w-22 h-22 rounded-3xl bg-emerald-50 border-2 border-emerald-500 text-emerald-800 flex items-center justify-center mb-5 transform transition-all duration-500 node-pulse shadow-md">
+              <!-- SVG Ilustrado iNaturalist: Escáner / Hoja con Brackets -->
+              <svg class="w-12 h-12 text-emerald-800" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M22 35V24H35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M65 24H78V35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 65V76H35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M65 76H78V65" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M50 32C38 32 34 46 36 64C54 66 68 62 68 50C68 38 58 32 50 32Z" fill="#2d6a4f" stroke="#1b4332" stroke-width="2"/>
+                <path d="M36 64C48 54 56 46 64 36" stroke="#d8f3dc" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+
+            <!-- Badge Paso -->
+            <div id="node-badge-0" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition bg-emerald-100 text-emerald-800">
+              <span class="w-4 h-4 rounded-full bg-emerald-700 text-white text-[10px] flex items-center justify-center font-black">1</span>
+              <span>Explora</span>
+            </div>
+
+            <!-- Título -->
+            <h3 id="node-title-0" class="text-lg font-bold text-slate-900 mb-2 transition">
+              Conoce tu territorio
+            </h3>
+
+            <!-- Descripción -->
+            <p id="node-desc-0" class="text-sm leading-relaxed text-slate-600 max-w-xs transition">
+              Identifica ecosistemas, cuencas hídricas y biodiversidad local como punto de partida.
+            </p>
+
+            <!-- Barra individual de progreso de tiempo -->
+            <div class="w-24 h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+              <div id="step-timer-0" class="h-full bg-emerald-600 rounded-full transition-all duration-100" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- ==================== PASO 2: APRENDE ==================== -->
+          <div id="node-card-1" onclick="goToStep(1)" class="group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500 bg-white/60 hover:bg-white opacity-70">
+            
+            <!-- Nodo Circular con Icono Ilustrado iNaturalist -->
+            <div id="node-circle-1" class="w-22 h-22 rounded-3xl bg-slate-50 border-2 border-slate-200 text-slate-500 flex items-center justify-center mb-5 transform transition-all duration-500 shadow-sm">
+              <!-- SVG Ilustrado iNaturalist: Binoculares + Lente de Ciencia -->
+              <svg class="w-12 h-12" viewBox="0 0 100 100" fill="none">
+                <circle cx="34" cy="50" r="17" fill="#52b788" stroke="#1b4332" stroke-width="3.5"/>
+                <circle cx="66" cy="50" r="17" fill="#52b788" stroke="#1b4332" stroke-width="3.5"/>
+                <rect x="44" y="46" width="12" height="8" rx="2" fill="#1b4332"/>
+                <circle cx="34" cy="50" r="4" fill="#1b4332"/>
+                <path d="M34 42V40M34 60V58M26 50H24M44 50H42" stroke="#1b4332" stroke-width="2" stroke-linecap="round"/>
+                <path d="M66 44L68 47L72 47L69 50L70 54L66 52L62 54L63 50L60 47L64 47Z" fill="#d8f3dc"/>
+              </svg>
+            </div>
+
+            <!-- Badge Paso -->
+            <div id="node-badge-1" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition bg-slate-100 text-slate-500">
+              <span class="w-4 h-4 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center font-black">2</span>
+              <span>Aprende</span>
+            </div>
+
+            <!-- Título -->
+            <h3 id="node-title-1" class="text-lg font-bold text-slate-700 mb-2 transition">
+              Conecta con STEM
+            </h3>
+
+            <!-- Descripción -->
+            <p id="node-desc-1" class="text-sm leading-relaxed text-slate-500 max-w-xs transition">
+              Cursos y herramientas que unen ciencia y sensores con los desafíos reales de tu entorno.
+            </p>
+
+            <!-- Barra individual de progreso de tiempo -->
+            <div class="w-24 h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+              <div id="step-timer-1" class="h-full bg-emerald-600 rounded-full transition-all duration-100" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- ==================== PASO 3: CREA ==================== -->
+          <div id="node-card-2" onclick="goToStep(2)" class="group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500 bg-white/60 hover:bg-white opacity-70">
+            
+            <!-- Nodo Circular con Icono Ilustrado iNaturalist -->
+            <div id="node-circle-2" class="w-22 h-22 rounded-3xl bg-slate-50 border-2 border-slate-200 text-slate-500 flex items-center justify-center mb-5 transform transition-all duration-500 shadow-sm">
+              <!-- SVG Ilustrado iNaturalist: Globo con Brote / Pin Comunitario -->
+              <svg class="w-12 h-12" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="54" r="22" fill="#334155"/>
+                <path d="M36 46C40 44 45 48 48 44C52 40 56 42 60 46C64 50 68 52 64 58C60 64 52 68 46 68C40 68 34 62 36 54Z" fill="#94a3b8"/>
+                <path d="M58 16C52 16 48 20.5 48 26C48 33.5 58 43 58 43C58 43 68 33.5 68 26C68 20.5 64 16 58 16Z" fill="#16a34a"/>
+                <circle cx="58" cy="25" r="3" fill="white"/>
+              </svg>
+            </div>
+
+            <!-- Badge Paso -->
+            <div id="node-badge-2" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition bg-slate-100 text-slate-500">
+              <span class="w-4 h-4 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center font-black">3</span>
+              <span>Crea</span>
+            </div>
+
+            <!-- Título -->
+            <h3 id="node-title-2" class="text-lg font-bold text-slate-700 mb-2 transition">
+              Construye soluciones
+            </h3>
+
+            <!-- Descripción -->
+            <p id="node-desc-2" class="text-sm leading-relaxed text-slate-500 max-w-xs transition">
+              Diseña proyectos y prototipos reales que impacten positivamente a tu comunidad.
+            </p>
+
+            <!-- Barra individual de progreso de tiempo -->
+            <div class="w-24 h-1 bg-slate-100 rounded-full mt-4 overflow-hidden">
+              <div id="step-timer-2" class="h-full bg-emerald-600 rounded-full transition-all duration-100" style="width: 0%;"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Resumen Dinámico Inferior de la Fase Activa -->
+      <div class="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-500">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="summary-text">Fase 1: Mapeo y exploración del ecosistema territorial</span>
+        </div>
+        <div class="text-emerald-700 font-bold">
+          Ruta Continua AprendeLocal
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT DE ANIMACIÓN Y CONTROL INTERACTIVO -->
+  <script>
+    lucide.createIcons();
+
+    let currentStep = 0;
+    const TOTAL_STEPS = 3;
+    const STEP_DURATION_MS = 4500; // 4.5 segundos por paso
+    let isAutoPlay = true;
+    let stepStartTime = Date.now();
+    let animFrameId = null;
+
+    const summaries = [
+      "Fase 1: Mapeo y exploración del ecosistema territorial",
+      "Fase 2: Conexión de hipótesis con sensores y metodología STEM",
+      "Fase 3: Construcción de prototipos y divulgación comunitaria"
+    ];
+
+    // Porcentaje de la línea conectora según el paso
+    const pathWidths = ["0%", "50%", "100%"];
+
+    function updateStepUI(stepIndex) {
+      currentStep = stepIndex;
+
+      // Actualizar línea conectora principal
+      document.getElementById('active-path-bar').style.width = pathWidths[stepIndex];
+      document.getElementById('summary-text').innerText = summaries[stepIndex];
+
+      // Actualizar cada nodo
+      for (let i = 0; i < TOTAL_STEPS; i++) {
+        const card = document.getElementById(`node-card-${i}`);
+        const circle = document.getElementById(`node-circle-${i}`);
+        const badge = document.getElementById(`node-badge-${i}`);
+        const title = document.getElementById(`node-title-${i}`);
+        const desc = document.getElementById(`node-desc-${i}`);
+        const timer = document.getElementById(`step-timer-${i}`);
+
+        if (i === stepIndex) {
+          // Activo
+          card.className = "group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500 bg-white shadow-lg shadow-emerald-950/5 scale-105 opacity-100";
+          circle.className = "w-22 h-22 rounded-3xl bg-emerald-50 border-2 border-emerald-500 text-emerald-800 flex items-center justify-center mb-5 transform transition-all duration-500 node-pulse shadow-md";
+          badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition bg-emerald-100 text-emerald-800";
+          title.className = "text-lg font-bold text-slate-900 mb-2 transition";
+          desc.className = "text-sm leading-relaxed text-slate-600 max-w-xs transition";
+        } else {
+          // Inactivo
+          card.className = "group flex flex-col items-center text-center cursor-pointer p-4 rounded-3xl transition-all duration-500 bg-white/40 hover:bg-white hover:opacity-100 opacity-60";
+          circle.className = "w-22 h-22 rounded-3xl bg-slate-50 border-2 border-slate-200 text-slate-400 flex items-center justify-center mb-5 transform transition-all duration-500 shadow-sm";
+          badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2.5 transition bg-slate-100 text-slate-500";
+          title.className = "text-lg font-bold text-slate-700 mb-2 transition";
+          desc.className = "text-sm leading-relaxed text-slate-400 max-w-xs transition";
+          timer.style.width = i < stepIndex ? "100%" : "0%";
+        }
+      }
+    }
+
+    function goToStep(stepIndex) {
+      stepStartTime = Date.now();
+      updateStepUI(stepIndex);
+    }
+
+    function loop() {
+      if (isAutoPlay) {
+        const elapsed = Date.now() - stepStartTime;
+        const progress = Math.min((elapsed / STEP_DURATION_MS) * 100, 100);
+        
+        const currentTimer = document.getElementById(`step-timer-${currentStep}`);
+        if (currentTimer) {
+          currentTimer.style.width = `${progress}%`;
+        }
+
+        if (elapsed >= STEP_DURATION_MS) {
+          const next = (currentStep + 1) % TOTAL_STEPS;
+          goToStep(next);
+        }
+      }
+      animFrameId = requestAnimationFrame(loop);
+    }
+
+    function toggleAutoPlay() {
+      isAutoPlay = !isAutoPlay;
+      const icon = document.getElementById('autoplay-icon');
+      const text = document.getElementById('autoplay-text');
+
+      if (isAutoPlay) {
+        stepStartTime = Date.now();
+        text.innerText = "Pausar animación automática";
+        icon.setAttribute('data-lucide', 'pause');
+      } else {
+        text.innerText = "Reanudar animación";
+        icon.setAttribute('data-lucide', 'play');
+      }
+      lucide.createIcons();
+    }
+
+    // Iniciar loop de animación
+    updateStepUI(0);
+    animFrameId = requestAnimationFrame(loop);
+  </script>
+
+</body>
+</html>

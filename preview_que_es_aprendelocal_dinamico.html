@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprendeLocal — Pilares Dinámicos (Estilo Oficial Plano: Azul & Naranja)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Lora -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['Lora', 'Georgia', 'serif'],
+          },
+          colors: {
+            brandBlue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#0a0047', // Azul marino corporativo profundo
+            },
+            brandOrange: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              400: '#fb923c',
+              500: '#f97316', // Naranja vibrante de la marca
+              600: '#ea580c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #ffffff;
+    }
+
+    /* Subrayado ondulado naranja idéntico al diseño actual */
+    .wavy-orange {
+      text-decoration-line: underline;
+      text-decoration-style: wavy;
+      text-decoration-color: #f97316;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 6px;
+    }
+
+    /* Animación flotante suave y limpia */
+    @keyframes float-clean {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .floating-clean {
+      animation: float-clean 3.5s ease-in-out infinite;
+    }
+
+    /* Barra de progreso plana y continua */
+    .progress-fill {
+      transition: width 0.05s linear;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+
+  <!-- ========================================================================= -->
+  <!-- SECCIÓN DINÁMICA DE PILARES (FONDO PLANO, ESTILO AZUL & NARANJA OFICIAL)  -->
+  <!-- ========================================================================= -->
+  <section class="max-w-6xl mx-auto">
+
+    <!-- CABECERA CON BADGE Y TÍTULO REACTIVO -->
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      
+      <!-- Badge oficial: Azul claro con borde e icono naranja -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-900 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
+        <i data-lucide="sparkles" class="w-4 h-4 text-[#f97316]"></i>
+        <span>Pilares Fundamentales</span>
+      </div>
+
+      <!-- Título con palabra cambiante y subrayado ondulado naranja -->
+      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+        Con AprendeLocal, puedes: <br class="hidden sm:inline" />
+        <span id="dynamic-verb" class="text-blue-600 wavy-orange transition-all duration-300">
+          Monitorear
+        </span>
+      </h2>
+
+      <p id="dynamic-subtitle" class="text-slate-600 text-sm sm:text-base mt-4 max-w-xl mx-auto leading-relaxed transition-all duration-300">
+        Registra variables ambientales, calidad de agua y microclima en tu propio territorio escolar.
+      </p>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ESCENARIO DINÁMICO CENTRAL (FONDO PLANO, SIN OSCURIDAD NI PROFUNDIDAD NEGRA)-->
+    <!-- ========================================================================= -->
+    <div class="bg-[#f8fafc] rounded-3xl border border-slate-200/80 p-6 sm:p-10 mb-10 relative overflow-hidden shadow-sm">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- LADO IZQUIERDO: DETALLE DE LA ACCIÓN ACTIVA -->
+        <div class="lg:col-span-6 space-y-4 text-left">
+          
+          <div class="flex items-center gap-3">
+            <span id="active-step-badge" class="px-3 py-1 rounded-full bg-blue-100 text-blue-900 font-extrabold text-xs">
+              02 / 05
+            </span>
+            <span id="active-category" class="text-xs font-bold uppercase tracking-wider text-orange-600">
+              Ciencia Territorial en Acción
+            </span>
+          </div>
+
+          <h3 id="active-title" class="text-2xl sm:text-3xl font-extrabold text-[#0a0047] leading-snug">
+            Monitorear variables ambientales y clima
+          </h3>
+
+          <p id="active-desc" class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Tus estudiantes recopilan datos reales sobre pH, turbidez, temperatura y caudal directamente en el estero, canal o humedal cercano a su escuela.
+          </p>
+
+          <!-- Tarjeta de ejemplo de aplicación práctica (Fondo plano blanco) -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200/70 shadow-sm flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 mt-0.5">
+              <i id="active-action-icon" data-lucide="activity" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-slate-900 uppercase">Aplicación en Terreno:</div>
+              <div id="active-application" class="text-xs text-slate-600 mt-0.5">
+                Salida a terreno con tabla en blanco y medidores sencillos sin pantallas distractivas.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- LADO DERECHO: ILUSTRACIÓN VECTORIAL LIMPIA Y VIBRANTE (COLORES AZUL & NARANJA) -->
+        <div class="lg:col-span-6 flex justify-center items-center">
+          <div id="active-illustration" class="w-full max-w-sm aspect-square bg-white rounded-3xl border border-slate-200/80 p-8 flex items-center justify-center shadow-sm floating-clean transition-all duration-500">
+            <!-- Renderizado dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SELECTOR DE 5 PILARES CON BARRA DE PROGRESO AUTOMÁTICA (1 -> 2 -> 3 -> 4 -> 5)-->
+    <!-- ========================================================================= -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      
+      <!-- 1. Identificar -->
+      <button onclick="selectPillar(0)" id="pillar-card-0" class="pillar-btn p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-center transition flex flex-col justify-between cursor-pointer group shadow-sm text-left">
+        <div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition">
+            <!-- Icono 1: Identificar (Hoja + Cuadro de Enfoque) -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m4 0v-4m0 4l-5-5"/>
+              <path d="M12 7c-2.76 0-5 2.24-5 5s5 7 5 7 5-4.24 5-7-2.24-5-5-5z" stroke="#2563eb" fill="#eff6ff"/>
+            </svg>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-sm sm:text-base text-center mb-1">Identificar</h4>
+          <p class="text-[11px] text-slate-500 text-center leading-tight">
+            ecosistemas, flora, fauna y cuencas locales
+          </p>
+        </div>
+        <!-- Barra de progreso individual -->
+        <div class="h-1 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="prog-0" class="progress-fill h-full bg-blue-600 w-0"></div>
+        </div>
+      </button>
+
+      <!-- 2. Monitorear -->
+      <button onclick="selectPillar(1)" id="pillar-card-1" class="pillar-btn p-4 sm:p-5 rounded-2xl bg-white border-2 border-blue-600 text-center transition flex flex-col justify-between cursor-pointer group shadow-md text-left">
+        <div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:scale-105 transition">
+            <!-- Icono 2: Monitorear (Sensores & Ondas de Agua) -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v6m0 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 8v6" stroke="#f97316"/>
+              <path d="M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M2 12h6m8 0h6M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24" stroke="#2563eb" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-sm sm:text-base text-center mb-1">Monitorear</h4>
+          <p class="text-[11px] text-slate-500 text-center leading-tight">
+            variables ambientales y clima de tu territorio
+          </p>
+        </div>
+        <div class="h-1 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="prog-1" class="progress-fill h-full bg-orange-500 w-0"></div>
+        </div>
+      </button>
+
+      <!-- 3. Descubrir -->
+      <button onclick="selectPillar(2)" id="pillar-card-2" class="pillar-btn p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-center transition flex flex-col justify-between cursor-pointer group shadow-sm text-left">
+        <div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition">
+            <!-- Icono 3: Descubrir (Binoculares / Lupa y Estrella) -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="8" cy="14" r="5" stroke="#2563eb" fill="#eff6ff"/>
+              <circle cx="16" cy="14" r="5" stroke="#2563eb" fill="#eff6ff"/>
+              <path d="M12 14v-4m-3-3h6" stroke="#0a0047"/>
+              <polygon points="12,2 13,5 16,5 13.5,7 14.5,10 12,8 9.5,10 10.5,7 8,5 11,5" fill="#f97316" stroke="none"/>
+            </svg>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-sm sm:text-base text-center mb-1">Descubrir</h4>
+          <p class="text-[11px] text-slate-500 text-center leading-tight">
+            saberes ancestrales y naturaleza a tu alrededor
+          </p>
+        </div>
+        <div class="h-1 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="prog-2" class="progress-fill h-full bg-blue-600 w-0"></div>
+        </div>
+      </button>
+
+      <!-- 4. Contribuir -->
+      <button onclick="selectPillar(3)" id="pillar-card-3" class="pillar-btn p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-center transition flex flex-col justify-between cursor-pointer group shadow-sm text-left">
+        <div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center group-hover:scale-105 transition">
+            <!-- Icono 4: Contribuir (Pin territorial + Soluciones Maker) -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z" stroke="#f97316" fill="#fff7ed"/>
+              <circle cx="12" cy="11" r="2.5" fill="#0a0047"/>
+            </svg>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-sm sm:text-base text-center mb-1">Contribuir</h4>
+          <p class="text-[11px] text-slate-500 text-center leading-tight">
+            a la ciencia comunitaria con soluciones maker
+          </p>
+        </div>
+        <div class="h-1 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="prog-3" class="progress-fill h-full bg-orange-500 w-0"></div>
+        </div>
+      </button>
+
+      <!-- 5. Aprender -->
+      <button onclick="selectPillar(4)" id="pillar-card-4" class="pillar-btn p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-center transition flex flex-col justify-between cursor-pointer group shadow-sm text-left">
+        <div>
+          <div class="w-12 h-12 mx-auto mb-3 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition">
+            <!-- Icono 5: Aprender (Diálogo en Comunidad) -->
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="#2563eb" fill="#eff6ff"/>
+              <circle cx="12" cy="11" r="1.5" fill="#f97316"/>
+            </svg>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-sm sm:text-base text-center mb-1">Aprender</h4>
+          <p class="text-[11px] text-slate-500 text-center leading-tight">
+            en comunidad con profesores y escuelas rurales
+          </p>
+        </div>
+        <div class="h-1 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="prog-4" class="progress-fill h-full bg-blue-600 w-0"></div>
+        </div>
+      </button>
+
+    </div>
+
+    <!-- CONTROLES INFERIORES SUTILES -->
+    <div class="mt-8 flex items-center justify-between text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+        <span>Rotación automática activa (4.5s)</span>
+      </div>
+      <button onclick="togglePause()" id="pause-btn" class="text-blue-600 hover:text-blue-800 font-bold transition cursor-pointer">
+        Pausar
+      </button>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: LÓGICA DE ROTACIÓN AUTOMÁTICA Y CONTENIDO DE PILARES          -->
+  <!-- ========================================================================= -->
+  <script>
+    const pillars = [
+      {
+        id: 0,
+        verb: "Identificar",
+        verbColor: "text-blue-600",
+        badgeText: "01 / 05",
+        category: "Diagnóstico & Ecosistemas",
+        title: "Identificar problemáticas, flora y cuencas",
+        subtitle: "Reconoce los desafíos ambientales, especies nativas y bioindicadores de tu localidad.",
+        desc: "El punto de partida de cada proyecto es el diagnóstico del propio entorno: qué río o estero pasa cerca, qué especies nativas habitan y qué desafíos de agua o suelo enfrenta la comunidad.",
+        app: "Salidas breves de observación con guías de reconocimiento de flora nativa y cuencas.",
+        icon: "search",
+        illustration: () => `
+          <!-- Ilustración Limpia: Lente de Enfoque Territorial -->
+          <svg class="w-full h-full max-w-[220px]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Fondo de foco circular -->
+            <circle cx="100" cy="100" r="80" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2" />
+            <!-- Esquinas de Enfoque Azul y Naranja -->
+            <path d="M40 70V50H60" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M160 70V50H140" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M40 130V150H60" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M160 130V150H140" stroke="#f97316" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Hoja Nativa Central Limpia -->
+            <path d="M100 45C70 75 70 125 100 155C130 125 130 75 100 45Z" fill="#2563eb" opacity="0.9" />
+            <path d="M100 55V145" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+            <path d="M100 85L80 100" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M100 115L120 130" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+            <!-- Tag Naranja Flotante -->
+            <rect x="110" y="130" width="60" height="24" rx="6" fill="#f97316" />
+            <text x="140" y="146" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="bold" text-anchor="middle">NATURA</text>
+          </svg>
+        `
+      },
+      {
+        id: 1,
+        verb: "Monitorear",
+        verbColor: "text-blue-600",
+        badgeText: "02 / 05",
+        category: "Ciencia Territorial en Acción",
+        title: "Monitorear variables ambientales y clima",
+        subtitle: "Registra variables ambientales, calidad de agua y microclima en tu propio territorio escolar.",
+        desc: "Tus estudiantes recopilan datos reales sobre pH, turbidez, temperatura y caudal directamente en el estero, canal o humedal cercano a su escuela, convirtiendo la ciencia en algo tangible.",
+        app: "Salida a terreno con tabla en blanco y medidores sencillos sin pantallas distractivas.",
+        icon: "activity",
+        illustration: () => `
+          <!-- Ilustración Limpia: Monitoreo & Gotas con Sensores -->
+          <svg class="w-full h-full max-w-[220px]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="#fff7ed" stroke="#fed7aa" stroke-width="2" />
+            <!-- Gota de Agua Azul Central -->
+            <path d="M100 40C80 80 60 105 60 130C60 152 78 170 100 170C122 170 140 152 140 130C140 105 120 80 100 40Z" fill="#2563eb" />
+            <!-- Ondas Concéntricas de Medición -->
+            <circle cx="100" cy="130" r="25" stroke="#93c5fd" stroke-width="2" stroke-dasharray="3 3" />
+            <circle cx="100" cy="130" r="12" fill="#ffffff" />
+            <!-- Sensor de Medición Naranja -->
+            <rect x="120" y="70" width="45" height="50" rx="10" fill="#f97316" stroke="#ea580c" stroke-width="2" />
+            <rect x="128" y="80" width="29" height="18" rx="4" fill="#ffffff" />
+            <text x="142" y="93" fill="#0a0047" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">7.2</text>
+            <path d="M142 120V145" stroke="#f97316" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        `
+      },
+      {
+        id: 2,
+        verb: "Descubrir",
+        verbColor: "text-blue-600",
+        badgeText: "03 / 05",
+        category: "Saberes & Patrimonio",
+        title: "Descubrir saberes y naturaleza local",
+        subtitle: "Conecta el conocimiento científico con la historia y el patrimonio biocultural de tu comunidad.",
+        desc: "Las rutas pedagógicas integran preguntas sobre el origen del nombre del estero, el uso histórico del agua y las historias que los habitantes mayores conocen sobre el paisaje.",
+        app: "Fichas de diálogo comunitario e indagación en la biblioteca o con vecinos.",
+        icon: "compass",
+        illustration: () => `
+          <!-- Ilustración Limpia: Binoculares & Descubrimiento -->
+          <svg class="w-full h-full max-w-[220px]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2" />
+            <!-- Binoculares Azules -->
+            <circle cx="75" cy="110" r="32" fill="#0a0047" />
+            <circle cx="75" cy="110" r="24" fill="#2563eb" />
+            <circle cx="75" cy="110" r="12" fill="#dbeafe" />
+
+            <circle cx="125" cy="110" r="32" fill="#0a0047" />
+            <circle cx="125" cy="110" r="24" fill="#2563eb" />
+            <circle cx="125" cy="110" r="12" fill="#dbeafe" />
+
+            <!-- Puente de Unión -->
+            <rect x="95" y="100" width="10" height="20" rx="3" fill="#f97316" />
+            
+            <!-- Estrella Naranja de Hallazgo -->
+            <polygon points="100,35 106,48 120,48 109,57 113,70 100,61 87,70 91,57 80,48 94,48" fill="#f97316" />
+          </svg>
+        `
+      },
+      {
+        id: 3,
+        verb: "Contribuir",
+        verbColor: "text-blue-600",
+        badgeText: "04 / 05",
+        category: "Cultura Maker & Soluciones",
+        title: "Contribuir con tecnología maker accesible",
+        subtitle: "Diseña y construye prototipos funcionales para resolver problemas reales del territorio.",
+        desc: "Los alumnos fabrican estaciones de medición de bajo costo, trampas de sedimentos o filtros artesanales con materiales accesibles, fomentando la vocación técnica y científica.",
+        app: "Manuales de ensamble paso a paso con piezas económicas y reciclables.",
+        icon: "cpu",
+        illustration: () => `
+          <!-- Ilustración Limpia: Pin Territorial + Engranaje Maker -->
+          <svg class="w-full h-full max-w-[220px]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="#fff7ed" stroke="#fed7aa" stroke-width="2" />
+            <!-- Pin de Mapa Territorial Naranja -->
+            <path d="M100 160C100 160 60 115 60 85C60 62.9 77.9 45 100 45C122.1 45 140 62.9 140 85C140 115 100 160 100 160Z" fill="#f97316" />
+            <!-- Engranaje / Circuito Maker Interior -->
+            <circle cx="100" cy="85" r="20" fill="#ffffff" />
+            <circle cx="100" cy="85" r="10" fill="#0a0047" />
+            <!-- Conexiones Maker -->
+            <line x1="100" y1="65" x2="100" y2="60" stroke="#2563eb" stroke-width="3" stroke-linecap="round" />
+            <line x1="100" y1="105" x2="100" y2="110" stroke="#2563eb" stroke-width="3" stroke-linecap="round" />
+            <line x1="80" y1="85" x2="75" y2="85" stroke="#2563eb" stroke-width="3" stroke-linecap="round" />
+            <line x1="120" y1="85" x2="125" y2="85" stroke="#2563eb" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        `
+      },
+      {
+        id: 4,
+        verb: "Aprender",
+        verbColor: "text-blue-600",
+        badgeText: "05 / 05",
+        category: "Comunidad & Trabajo en Red",
+        title: "Aprender en red con docentes y comunidades",
+        subtitle: "Comparte experiencias, rúbricas y proyectos con escuelas de diferentes territorios.",
+        desc: "AprendeLocal une a docentes rurales y urbanos en una red colaborativa donde las clases, datos recopilados y soluciones se comparten para inspirar a otros colegios.",
+        app: "Encuentros virtuales y reporte final entregado al comité de agua o dirección.",
+        icon: "users",
+        illustration: () => `
+          <!-- Ilustración Limpia: Burbujas de Diálogo Comunitario -->
+          <svg class="w-full h-full max-w-[220px]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2" />
+            <!-- Globo de Diálogo Azul (Docentes / Escuela) -->
+            <path d="M60 60H130C141 60 150 69 150 80V105C150 116 141 125 130 125H80L50 145V80C50 69 59 60 60 60Z" fill="#2563eb" />
+            <circle cx="85" cy="92" r="4" fill="#ffffff" />
+            <circle cx="100" cy="92" r="4" fill="#ffffff" />
+            <circle cx="115" cy="92" r="4" fill="#ffffff" />
+
+            <!-- Globo de Diálogo Naranja (Comunidad / Familias) -->
+            <path d="M140 100H90C84.5 100 80 104.5 80 110V135C80 140.5 84.5 145 90 145H130L155 160V110C155 104.5 150.5 100 140 100Z" fill="#f97316" />
+            <circle cx="110" cy="125" r="3" fill="#ffffff" />
+            <circle cx="125" cy="125" r="3" fill="#ffffff" />
+          </svg>
+        `
+      }
+    ];
+
+    let currentIdx = 1; // Iniciar en "Monitorear" como en la captura
+    let isPaused = false;
+    const stepDuration = 4500; // 4.5 segundos por paso
+    const updateInterval = 50; // ms
+    let elapsed = 0;
+    let timer = null;
+
+    function applyPillar(index) {
+      currentIdx = index;
+      const data = pillars[currentIdx];
+
+      // Título reactivo
+      const verbEl = document.getElementById('dynamic-verb');
+      verbEl.innerText = data.verb;
+      document.getElementById('dynamic-subtitle').innerText = data.subtitle;
+
+      // Tarjeta principal
+      document.getElementById('active-step-badge').innerText = data.badgeText;
+      document.getElementById('active-category').innerText = data.category;
+      document.getElementById('active-title').innerText = data.title;
+      document.getElementById('active-desc').innerText = data.desc;
+      document.getElementById('active-application').innerText = data.app;
+      document.getElementById('active-action-icon').setAttribute('data-lucide', data.icon);
+
+      // Ilustración
+      document.getElementById('active-illustration').innerHTML = data.illustration();
+
+      // Actualizar bordes de tarjetas inferiores
+      for (let i = 0; i < pillars.length; i++) {
+        const card = document.getElementById(`pillar-card-${i}`);
+        if (i === currentIdx) {
+          card.className = "pillar-btn p-4 sm:p-5 rounded-2xl bg-white border-2 border-blue-600 text-center transition flex flex-col justify-between cursor-pointer group shadow-md text-left";
+        } else {
+          card.className = "pillar-btn p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 text-center transition flex flex-col justify-between cursor-pointer group shadow-sm text-left";
+        }
+      }
+
+      lucide.createIcons();
+    }
+
+    function startLoop() {
+      if (timer) clearInterval(timer);
+
+      timer = setInterval(() => {
+        if (isPaused) return;
+
+        elapsed += updateInterval;
+        const pct = Math.min((elapsed / stepDuration) * 100, 100);
+
+        // Barra activa
+        const prog = document.getElementById(`prog-${currentIdx}`);
+        if (prog) prog.style.width = `${pct}%`;
+
+        // Llenar previas y vaciar posteriores
+        for (let i = 0; i < pillars.length; i++) {
+          if (i < currentIdx) {
+            document.getElementById(`prog-${i}`).style.width = '100%';
+          } else if (i > currentIdx) {
+            document.getElementById(`prog-${i}`).style.width = '0%';
+          }
+        }
+
+        // Pasar al siguiente
+        if (elapsed >= stepDuration) {
+          elapsed = 0;
+          currentIdx = (currentIdx + 1) % pillars.length;
+          applyPillar(currentIdx);
+        }
+      }, updateInterval);
+    }
+
+    function selectPillar(index) {
+      elapsed = 0;
+      applyPillar(index);
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      document.getElementById('pause-btn').innerText = isPaused ? "Reanudar" : "Pausar";
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyPillar(1);
+      startLoop();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

@@ -34,7 +34,7 @@
   <!-- BARRA SUPERIOR (HEADER AZUL NOCHE #0a0047 CON LOGO Y NAVEGACIÓN)         -->
   <!-- ========================================================================= -->
   <header class="sticky top-0 z-50 w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-lg backdrop-blur-md">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-[1440px] px-3 sm:px-6 lg:px-10">
       <div class="flex h-16 sm:h-18 items-center justify-between gap-4">
         
         <!-- Logo -->
@@ -105,15 +105,15 @@
   <!-- ========================================================================= -->
   <!-- 1. HERO PRINCIPAL                                                         -->
   <!-- ========================================================================= -->
-  <section id="hero" class="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pt-16 pb-20 text-center bg-white border-b border-slate-100">
-    <div class="mx-auto max-w-5xl">
+  <section id="hero" class="relative isolate overflow-hidden px-3 sm:px-6 lg:px-10 pt-16 pb-20 text-center bg-white border-b border-slate-100">
+    <div class="mx-auto max-w-[1400px] w-full">
       
       <h1 class="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-[-0.07em] text-[#111217] leading-[0.92] mb-6">
         Tu territorio es tu mejor <br class="hidden sm:inline"/>
         <span class="text-[#f97316]">laboratorio STEM</span>
       </h1>
 
-      <p class="mx-auto max-w-3xl text-base sm:text-lg leading-relaxed text-slate-600 mb-10">
+      <p class="mx-auto max-w-4xl text-base sm:text-lg leading-relaxed text-slate-600 mb-10">
         Diseña, planifica e implementa experiencias científicas conectadas a los ríos, cuencas, agricultura y biodiversidad de tu escuela rural, con alineación curricular inmediata.
       </p>
 
@@ -132,76 +132,100 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- 2. ¿QUÉ ES APRENDELOCAL? (NUEVA SECCIÓN REEMPLAZO)                       -->
+  <!-- 2. ¿QUÉ ES APRENDELOCAL? (2 COLUMNAS SIN RECUADROS SEPARADOS)             -->
   <!-- ========================================================================= -->
-  <section id="metodologia" class="py-20 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]">
-    <div class="max-w-7xl mx-auto">
+  <section id="metodologia" class="py-16 sm:py-20 px-3 sm:px-6 lg:px-10 bg-[#f8fafc] border-b border-slate-200/60">
+    <div class="max-w-[1400px] mx-auto w-full">
       
-      <div class="text-center max-w-3xl mx-auto mb-14">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-4 leading-[0.95]">
-          ¿Qué es AprendeLocal?
-        </h2>
-        <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-          Una plataforma y metodología de educación STEM contextualizada que permite a docentes y escuelas rurales convertir el entorno local en un laboratorio vivo de aprendizaje científico.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
-        <!-- 1. Territorio como Laboratorio -->
-        <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-          <div>
-            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
-              <i data-lucide="trees" class="w-6 h-6"></i>
+        <!-- LADO IZQUIERDO: TEXTO Y PROPUESTA DIRECTA -->
+        <div class="lg:col-span-7 space-y-6 text-left">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95]">
+            ¿Qué es AprendeLocal?
+          </h2>
+
+          <p class="text-slate-700 text-base sm:text-lg leading-relaxed">
+            AprendeLocal es una plataforma y metodología pedagógica diseñada para que docentes y escuelas rurales transformen su propio territorio —sus ríos, bosques, cuencas y suelos— en un laboratorio vivo de aprendizaje científico y tecnológico.
+          </p>
+
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            A través de secuencias didácticas completas y alineadas a los objetivos de aprendizaje oficiales, los estudiantes exploran problemas socioambientales reales, realizan mediciones en terreno con instrumentos accesibles y entregan sus resultados a la comunidad escolar, familias y comités locales.
+          </p>
+
+          <div class="pt-2 space-y-3.5 text-sm sm:text-base text-slate-800">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span className="font-bold text-slate-900">Ciencia contextualizada:</span>{" "}
+                <span class="text-slate-600">Aprender desde el río, bosque y biodiversidad de la propia comunidad escolar.</span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              El territorio como aula
-            </h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Transforma los ríos, bosques, cuencas hídricas y suelos cercanos a tu escuela en el eje de indagación científica, fortaleciendo el sentido de pertenencia e identidad local.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-blue-700">
-            <i data-lucide="compass" class="w-4 h-4"></i>
-            <span>Salidas a terreno y preguntas de indagación</span>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-orange-100 text-[#ea580c] flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="file-check-2" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span class="font-bold text-slate-900">Clases listas para el aula:</span>{" "}
+                <span class="text-slate-600">Secuencias didácticas clase a clase con preguntas de indagación y rúbricas.</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-xl bg-indigo-100 text-[#0a0047] flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="users-2" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <span class="font-bold text-slate-900">Impacto ciudadano real:</span>{" "}
+                <span class="text-slate-600">Los datos medidos se entregan formalmente a comités de agua (APR) y familias.</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 2. Currículum y Clases Listas -->
-        <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-          <div>
-            <div class="w-12 h-12 rounded-2xl bg-orange-50 text-[#f97316] flex items-center justify-center mb-6">
-              <i data-lucide="file-text" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              Clases listas y alineadas
-            </h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Secuencias didácticas completas alineadas a las bases curriculares oficiales, con guías paso a paso, hojas de registro y rúbricas formativas listas para aplicar sin horas extra de preparación.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-orange-600">
-            <i data-lucide="compass" class="w-4 h-4"></i>
-            <span>Alineación curricular y evaluación formativa</span>
-          </div>
-        </div>
+        <!-- LADO DERECHO: MODELO ISOMÉTRICO -->
+        <div class="lg:col-span-5 flex justify-center items-center">
+          <div class="w-full max-w-[460px] aspect-square rounded-3xl bg-gradient-to-br from-white to-slate-100 border border-slate-200/80 p-6 sm:p-8 shadow-xl relative overflow-hidden flex items-center justify-center group hover:shadow-2xl transition duration-500">
+            <div class="absolute top-0 right-0 w-48 h-48 bg-orange-200/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-200/30 rounded-full blur-3xl pointer-events-none"></div>
 
-        <!-- 3. Impacto Real en la Comunidad -->
-        <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-          <div>
-            <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-[#0a0047] flex items-center justify-center mb-6">
-              <i data-lucide="users-2" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-3">
-              Impacto comunitario real
-            </h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Los datos e informes recopilados por los estudiantes se entregan formalmente a comités de agua (APR), familias y escuelas para aportar a la toma de decisiones comunitarias.
-            </p>
-          </div>
-          <div class="mt-8 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs font-semibold text-slate-700">
-            <i data-lucide="compass" class="w-4 h-4"></i>
-            <span>Ciencia ciudadana y vinculación comunitaria</span>
+            <svg class="w-full h-full drop-shadow-xl transition-transform duration-500 group-hover:scale-105" viewBox="0 0 320 320" fill="none">
+              <polygon points="160,50 280,115 160,180 40,115" fill="#38bdf8" stroke="#0284c7" stroke-width="2" />
+              <polygon points="40,115 160,180 160,255 40,190" fill="#0369a1" />
+              <polygon points="160,180 280,115 280,190 160,255" fill="#075985" />
+              <polygon points="160,70 255,120 160,170 65,120" fill="#34d399" stroke="#10b981" stroke-width="2" />
+              <polygon points="120,95 180,125 160,170 135,155" fill="#38bdf8" />
+              <polygon points="135,155 160,170 160,255 135,240" fill="#0284c7" />
+              <g transform="translate(85, 80)">
+                <rect x="10" y="25" width="6" height="18" fill="#78350f" />
+                <polygon points="13,0 28,26 -2,26" fill="#059669" />
+                <polygon points="13,10 25,32 1,32" fill="#047857" />
+              </g>
+              <g transform="translate(200, 105)">
+                <rect x="8" y="20" width="5" height="15" fill="#78350f" />
+                <polygon points="10,0 22,22 -2,22" fill="#059669" />
+              </g>
+              <g transform="translate(155, 80)">
+                <polygon points="25,0 50,14 25,28 0,14" fill="#f97316" stroke="#ea580c" stroke-width="1.5" />
+                <polygon points="0,14 25,28 25,50 0,36" fill="#c2410c" />
+                <polygon points="25,28 50,14 50,36 25,50" fill="#9a3412" />
+                <rect x="8" y="22" width="8" height="10" fill="#fef08a" />
+                <line x1="25" y1="0" x2="25" y2="-18" stroke="#0a0047" stroke-width="2.5" stroke-linecap="round" />
+                <circle cx="25" cy="-20" r="4" fill="#ef4444" />
+              </g>
+              <g transform="translate(90, 160)">
+                <rect x="0" y="0" width="46" height="34" rx="8" fill="#0a0047" stroke="#ffffff" stroke-width="2.5" />
+                <text x="23" y="22" fill="#4ade80" font-family="monospace" font-size="12" font-weight="800" text-anchor="middle">pH 7.2</text>
+              </g>
+              <g transform="translate(205, 175) rotate(-15)">
+                <circle cx="20" cy="20" r="16" stroke="#f97316" stroke-width="4.5" fill="#ffffff" fill-opacity="0.8" />
+                <line x1="32" y1="32" x2="48" y2="48" stroke="#f97316" stroke-width="5.5" stroke-linecap="round" />
+                <circle cx="20" cy="20" r="8" fill="#38bdf8" />
+              </g>
+            </svg>
           </div>
         </div>
 
@@ -213,9 +237,9 @@
   <!-- ========================================================================= -->
   <!-- 3. ¿CÓMO FUNCIONA APRENDELOCAL? (ESCENARIO DINÁMICO CROMÁTICO CON 3D)     -->
   <!-- ========================================================================= -->
-  <section id="como-funciona" class="relative overflow-hidden transition-colors duration-700 px-4 sm:px-8 lg:px-16 pt-12 sm:pt-14 pb-10 sm:pb-12 bg-[#0a0047] text-white flex flex-col justify-between">
+  <section id="como-funciona" class="relative overflow-hidden transition-colors duration-700 px-3 sm:px-6 lg:px-10 pt-12 sm:pt-14 pb-10 sm:pb-12 bg-[#0a0047] text-white flex flex-col justify-between">
     
-    <div class="max-w-6xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
+    <div class="max-w-[1400px] mx-auto w-full relative z-20 mb-6 sm:mb-8">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
           ¿Cómo funciona AprendeLocal?
@@ -256,14 +280,14 @@
     </div>
 
     <!-- Escenario Principal Compacto -->
-    <div class="max-w-6xl mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
+    <div class="max-w-[1400px] mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
       <!-- Lado Izquierdo: Título y Descripción -->
       <div class="lg:col-span-6 space-y-4 text-left">
         <h3 id="landing-stage-title" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight tracking-tight min-h-[75px] sm:min-h-[85px] flex flex-wrap items-center">
           Aprender desde el río, el bosque y la cuenca local
         </h3>
 
-        <p id="landing-stage-desc" class="text-white/85 text-sm sm:text-base leading-relaxed max-w-lg transition-opacity duration-500">
+        <p id="landing-stage-desc" class="text-white/85 text-sm sm:text-base leading-relaxed max-w-xl transition-opacity duration-500">
           Transforma los ecosistemas locales y sus problemáticas socioambientales en el eje de indagación científica de tus estudiantes, fomentando pertenencia e identidad territorial.
         </p>
       </div>
@@ -283,8 +307,8 @@
   <!-- ========================================================================= -->
   <!-- 4. PILARES FUNDAMENTALES / HABILIDADES STEM                               -->
   <!-- ========================================================================= -->
-  <section id="habilidades" class="py-20 px-4 sm:px-6 lg:px-8 bg-[#f8fafc]">
-    <div class="max-w-7xl mx-auto">
+  <section id="habilidades" class="py-20 px-3 sm:px-6 lg:px-10 bg-[#f8fafc]">
+    <div class="max-w-[1400px] mx-auto w-full">
       
       <div class="text-center max-w-3xl mx-auto mb-14">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mt-3 mb-4 leading-[0.95]">
@@ -364,8 +388,8 @@
   <!-- ========================================================================= -->
   <!-- 5. BANCO DE PROYECTOS & RUTAS TERRITORIALES (4 RUTAS CHILE ACTIVAS)       -->
   <!-- ========================================================================= -->
-  <section id="proyectos" class="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
-    <div class="max-w-7xl mx-auto">
+  <section id="proyectos" class="py-20 px-3 sm:px-6 lg:px-10 bg-white border-b border-slate-100">
+    <div class="max-w-[1400px] mx-auto w-full">
       
       <div class="text-center max-w-3xl mx-auto mb-10">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-3 leading-[0.95]">
@@ -375,15 +399,25 @@
           Experiencias listas para llevar a cabo con objetivos alineados al currículum:
         </p>
 
-        <!-- Selector de País -->
+        <!-- Selector de País con Banderas SVG -->
         <div class="inline-flex p-1.5 bg-[#f8fafc] rounded-full border border-slate-200 shadow-sm mt-6 gap-2">
-          <button class="flex items-center gap-2 px-6 py-2 rounded-full font-bold text-sm bg-[#0a0047] text-white shadow-md cursor-pointer">
-            <span>🇨🇱</span>
-            <span>Chile (La Araucanía & Sur)</span>
+          <button class="flex items-center gap-2.5 px-6 py-2 rounded-full font-bold text-sm bg-[#0a0047] text-white shadow-md cursor-pointer">
+            <svg class="w-5 h-3.5 rounded-xs overflow-hidden shadow-xs shrink-0" viewBox="0 0 30 20" fill="none">
+              <rect width="30" height="10" fill="#ffffff" />
+              <rect y="10" width="30" height="10" fill="#d52b1e" />
+              <rect width="10" height="10" fill="#0039a6" />
+              <polygon points="5,2 6,4.5 8.5,4.5 6.5,6 7.5,8.5 5,7 2.5,8.5 3.5,6 1.5,4.5 4,4.5" fill="#ffffff" />
+            </svg>
+            <span>Chile</span>
           </button>
-          <button class="flex items-center gap-2 px-5 py-2 rounded-full font-semibold text-sm text-slate-400 hover:text-slate-600 cursor-not-allowed">
-            <span>🇧🇷</span>
-            <span>Brasil (Próximamente)</span>
+          
+          <button class="flex items-center gap-2.5 px-6 py-2 rounded-full font-semibold text-sm text-slate-500 hover:text-slate-800 cursor-not-allowed">
+            <svg class="w-5 h-3.5 rounded-xs overflow-hidden shadow-xs shrink-0" viewBox="0 0 30 20" fill="none">
+              <rect width="30" height="20" fill="#009c3b" />
+              <polygon points="15,2 27,10 15,18 3,10" fill="#ffdf00" />
+              <circle cx="15" cy="10" r="4.5" fill="#002776" />
+            </svg>
+            <span>Brasil</span>
           </button>
         </div>
       </div>
@@ -485,56 +519,10 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- 6. EXPLORADOR TERRITORIAL: «¿QUÉ VIVE AQUÍ?» (MAPA STEM)                  -->
+  <!-- 6. CONTACTO & ALIANZAS INSTITUCIONALES                                    -->
   <!-- ========================================================================= -->
-  <section id="mapa" class="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
-    <div class="max-w-7xl mx-auto">
-      
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] mb-3 leading-[0.95]">
-          ¿Qué vive en tu territorio?
-        </h2>
-        <p class="text-slate-600 text-sm sm:text-base">
-          Explora especies, cuencas hídricas y proyectos activos en el mapa interactivo de tu región:
-        </p>
-      </div>
-
-      <!-- Mockup del Mapa Interactivo -->
-      <div class="rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-xl">
-        <div class="p-4 bg-slate-900 text-white flex items-center justify-between text-xs sm:text-sm font-semibold">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Mapa STEM en Vivo · Región de La Araucanía</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <span>Datos de iNaturalist y GBIF</span>
-          </div>
-        </div>
-        
-        <div class="relative h-96 bg-slate-100 flex items-center justify-center overflow-hidden">
-          <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
-          
-          <div class="relative z-10 flex flex-col items-center text-center p-6 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-2xl max-w-md">
-            <i data-lucide="map-pin" class="w-10 h-10 text-[#f97316] mb-3 animate-bounce"></i>
-            <h4 class="text-lg font-bold text-slate-900 mb-1">Explorador de Cuencas y Biodiversidad</h4>
-            <p class="text-xs text-slate-600 mb-4">
-              Descubre puntos de muestreo de agua, sensores en escuelas y registros botánicos de tu comuna.
-            </p>
-            <button class="px-6 py-2.5 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white text-xs font-bold shadow transition cursor-pointer">
-              Abrir Mapa Completo
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 7. CONTACTO & ALIANZAS INSTITUCIONALES                                    -->
-  <!-- ========================================================================= -->
-  <section id="contacto" class="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0047] text-white">
-    <div class="max-w-7xl mx-auto">
+  <section id="contacto" class="py-24 px-3 sm:px-6 lg:px-10 bg-[#0a0047] text-white">
+    <div class="max-w-[1400px] mx-auto w-full">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
         <div class="space-y-6 lg:col-span-6">
@@ -587,10 +575,10 @@
   </section>
 
   <!-- ========================================================================= -->
-  <!-- 8. LLAMADO A LA ACCIÓN FINAL (CTA)                                        -->
+  <!-- 7. LLAMADO A LA ACCIÓN FINAL (CTA)                                        -->
   <!-- ========================================================================= -->
-  <section id="cta" class="py-20 px-4 sm:px-6 lg:px-8 bg-white text-center">
-    <div class="max-w-4xl mx-auto">
+  <section id="cta" class="py-20 px-3 sm:px-6 lg:px-10 bg-white text-center">
+    <div class="max-w-[1400px] mx-auto w-full">
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95] mb-4">
         ¿Listo para transformar el aprendizaje en tu territorio?
       </h2>
@@ -607,8 +595,8 @@
   <!-- ========================================================================= -->
   <!-- FOOTER INSTITUCIONAL                                                      -->
   <!-- ========================================================================= -->
-  <footer class="bg-slate-950 text-slate-400 py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-xs">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+  <footer class="bg-slate-950 text-slate-400 py-12 px-3 sm:px-6 lg:px-10 border-t border-slate-800 text-xs">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2 text-white font-bold text-sm">
         <span>🌱 AprendeLocal</span>
         <span class="text-slate-600">·</span>
@@ -712,6 +700,7 @@
 
     let landingStep = 0;
     let landingPaused = false;
+    let landingInView = false;
     const landingDuration = 4500;
     const landingTick = 50;
     let landingElapsed = 0;
@@ -764,8 +753,9 @@
       }
     }
 
+    // Intervalo solo cuando la sección está a la vista
     setInterval(() => {
-      if (landingPaused) return;
+      if (!landingInView || landingPaused) return;
       landingElapsed += landingTick;
       const pct = (landingElapsed / landingDuration) * 100;
       const bar = document.getElementById('landing-progress-bar');
@@ -778,6 +768,19 @@
       }
     }, landingTick);
 
+    // IntersectionObserver para iniciar en paso 1 al llegar a la sección
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          landingInView = true;
+          landingElapsed = 0;
+          applyLandingStage(0);
+        } else {
+          landingInView = false;
+        }
+      });
+    }, { threshold: 0.35 });
+
     // Dynamic typewriter in section 4
     const actionVerbs = ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"];
     let actionIdx = 0;
@@ -788,6 +791,8 @@
     }, 2000);
 
     document.addEventListener('DOMContentLoaded', () => {
+      const section = document.getElementById('como-funciona');
+      if (section) observer.observe(section);
       applyLandingStage(0);
       lucide.createIcons();
     });

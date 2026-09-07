@@ -35,9 +35,10 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   }, [letras, fullText]);
 
   const displayedText = fullText.slice(0, letras);
+  const escribiendo = letras < fullText.length;
 
   return (
-    <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-24 md:pt-20 bg-white border-b border-slate-100">
+    <section id="hero" className="relative isolate overflow-hidden px-3 sm:px-6 lg:px-10 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-24 md:pt-20 bg-white border-b border-slate-100">
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat opacity-40 pointer-events-none"
@@ -48,21 +49,23 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         }}
       />
 
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-[1400px] w-full">
         {/* Title */}
         {/* El titulo completo va en el DOM para quien lo lee con lector de
             pantalla o buscador; lo que se escribe letra a letra es la copia
             visible, que por eso queda oculta a la lectura. */}
-        <h1 className="mx-auto max-w-5xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
+        <h1 className="mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
           <span className="sr-only">{fullText}</span>
           <span aria-hidden>
             {displayedText}
-            <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
+            {escribiendo && (
+              <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
+            )}
           </span>
         </h1>
 
         {/* Subtitle with Teacher focus */}
-        <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+        <p className="mx-auto mt-6 max-w-4xl text-base leading-relaxed text-slate-600 sm:text-lg">
           {t(
             "home.hero.subtitle",
             "Diseña, planifica e implementa experiencias científicas conectadas a los ríos, cuencas, agricultura y biodiversidad de tu escuela rural, con alineación curricular inmediata."

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprendeLocal — Tu territorio es tu mejor laboratorio STEM (Prototipo)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans / Merriweather -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            serif: ['Lora', 'Georgia', 'serif'],
+          },
+          colors: {
+            forest: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+              950: '#052e16',
+            },
+            earth: {
+              50: '#fbfaf7',
+              100: '#f5f3ec',
+              200: '#ece7db',
+              300: '#dfd7c2',
+              400: '#cdbf9f',
+              800: '#443825',
+              900: '#272015',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .serif-heading {
+      font-family: 'Lora', Georgia, serif;
+    }
+    .inat-banner {
+      background-color: #f1f6ed;
+    }
+    .card-zoom:hover img {
+      transform: scale(1.05);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+    }
+    .gradient-hero-bg {
+      background: radial-gradient(circle at 50% 10%, rgba(34, 197, 94, 0.08) 0%, rgba(248, 250, 252, 0) 65%),
+                  linear-gradient(180deg, #fbfdf9 0%, #ffffff 100%);
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 selection:bg-forest-500 selection:text-white">
+
+  <!-- ==================== HEADER DE NAVEGACIÓN ==================== -->
+  <header class="fixed top-0 inset-x-0 z-50 glass-nav border-b border-slate-100 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      
+      <!-- Logotipo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-10 h-10 rounded-xl bg-forest-600 flex items-center justify-center text-white shadow-md shadow-forest-600/20 group-hover:scale-105 transition">
+          <i data-lucide="sprout" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">Aprende<span class="text-forest-600">Local</span></span>
+          <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block -mt-0.5">STEM Territorial</span>
+        </div>
+      </a>
+
+      <!-- Menú Desktop -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="#territorio" class="hover:text-forest-600 transition">Territorios</a>
+        <a href="#pilares" class="hover:text-forest-600 transition">Cómo Funciona</a>
+        <a href="#proyectos" class="hover:text-forest-600 transition">Proyectos</a>
+        <a href="#contacto" class="hover:text-forest-600 transition">Contacto</a>
+      </nav>
+
+      <!-- Botones de Acción -->
+      <div class="flex items-center gap-3">
+        <a href="#contacto" class="hidden sm:inline-flex text-sm font-semibold text-slate-700 hover:text-forest-700 px-4 py-2 rounded-lg transition">
+          Docentes & Escuelas
+        </a>
+        <a href="#territorio" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-forest-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
+          <span>Explorar Mapa</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== SECCIÓN 1: HERO ==================== -->
+  <section class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden gradient-hero-bg">
+    
+    <!-- Elementos decorativos sutiles de fondo -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-forest-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+      
+      <!-- Pill Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-forest-50 border border-forest-200/80 text-forest-800 text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 shadow-sm animate-fade-in">
+        <i data-lucide="compass" class="w-4 h-4 text-forest-600"></i>
+        Educación STEM Basada en el Lugar
+      </div>
+
+      <!-- Título Principal -->
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.08] mb-6">
+        Tu territorio es tu mejor <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-forest-600 via-emerald-600 to-teal-700">laboratorio STEM</span>
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+        Transforma ríos, bosques, cuencas y saberes comunitarios en proyectos vivos de ciencia y tecnología. Diseña soluciones reales para los desafíos de tu entorno.
+      </p>
+
+      <!-- Botones CTA Principales -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+        <a href="#territorio" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-forest-600 hover:bg-forest-700 text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-forest-600/25 transition hover:-translate-y-0.5 hover:shadow-xl">
+          <i data-lucide="map" class="w-5 h-5"></i>
+          <span>Comenzar en mi Territorio</span>
+        </a>
+        <a href="#pilares" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-800 font-bold text-base px-8 py-4 rounded-full border border-slate-200 shadow-sm transition hover:-translate-y-0.5">
+          <i data-lucide="play-circle" class="w-5 h-5 text-slate-500"></i>
+          <span>Conoce cómo funciona</span>
+        </a>
+      </div>
+
+      <!-- Micro-estadísticas de impacto -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-6 border-t border-slate-200/70 text-left sm:text-center">
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">+45</div>
+          <div class="text-xs font-medium text-slate-500">Escuelas Rurales</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-extrabold text-forest-600">+120</div>
+          <div class="text-xs font-medium text-slate-500">Proyectos STEM Activos</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">2</div>
+          <div class="text-xs font-medium text-slate-500">Países Piloto</div>
+        </div>
+        <div class="p-3">
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600">100%</div>
+          <div class="text-xs font-medium text-slate-500">Abierto y Comunitario</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 2: OPORTUNIDADES STEM CONTEXTUALIZADAS (SELECTOR CHILE / BRASIL) ==================== -->
+  <section id="territorio" class="py-20 bg-slate-50/70 border-y border-slate-200/60 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabecera de la sección -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-xs uppercase font-bold tracking-widest text-forest-700 bg-forest-100 px-3 py-1 rounded-full">
+          Territorios en Acción
+        </span>
+        <h2 class="serif-heading text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-3">
+          Oportunidades STEM contextualizadas
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg">
+          Elige un país para explorar los desafíos ambientales, biomas y proyectos diseñados específicamente para su realidad territorial:
+        </p>
+
+        <!-- Selector de País (Pills interactivos) -->
+        <div class="inline-flex p-1.5 bg-white rounded-full border border-slate-200 shadow-sm mt-8 gap-2">
+          <button id="btn-chile" onclick="selectCountry('chile')" class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition bg-forest-600 text-white shadow-md">
+            <span class="text-lg">🇨🇱</span>
+            <span>Chile (Araucanía & Sur)</span>
+          </button>
+          <button id="btn-brasil" onclick="selectCountry('brasil')" class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition text-slate-600 hover:text-slate-900">
+            <span class="text-lg">🇧🇷</span>
+            <span>Brasil (Biomas & Comunidades)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Panel País: CHILE (Default) -->
+      <div id="content-chile" class="grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300">
+        
+        <!-- Card 1: Bosque Templado & Araucarias -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80" alt="Bosque Araucarias" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Bosque Templado Valdiviano
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-forest-700 uppercase tracking-wider mb-2">
+            <i data-lucide="trees" class="w-4 h-4"></i> Biodiversidad & Conservación
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Monitoreo de Araucarias y Ecosistema Nativo</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Estudio de la microfauna, hongos micorrícicos y salud de especies milenarias ante el cambio climático.
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Comunas: Curarrehue, Lonquimay</span>
+            <span class="text-forest-600 font-bold">14 Proyectos</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Gestión Hídrica y Cuencas -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Ríos y Cuencas del Sur" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Cuencas & Humedales
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-blue-700 uppercase tracking-wider mb-2">
+            <i data-lucide="droplets" class="w-4 h-4"></i> Gestión de Recursos Hídricos
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Sensores IoT para Calidad y Caudal de Agua</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Prototipos de bajo costo para monitorear turbidez, pH y abastecimiento en escuelas rurales aisladas.
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Cuenca Río Trancura y Toltén</span>
+            <span class="text-blue-600 font-bold">18 Proyectos</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Patrimonio Biocultural Mapuche -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80" alt="Agricultura Sostenible" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Saberes Tradicionales
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider mb-2">
+            <i data-lucide="sun" class="w-4 h-4"></i> Agricultura & Etnobotánica
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Huertos Escolares y Plantas Medicinales</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Integración de botánica científica con el saber ancestral del Lawen y soberanía alimentaria comunitaria.
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Sector Melipeuco y Galvarino</span>
+            <span class="text-amber-600 font-bold">11 Proyectos</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Panel País: BRASIL (Oculto inicialmente) -->
+      <div id="content-brasil" class="hidden grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-300">
+        
+        <!-- Card 1 Brasil: Cerrado & Regeneración -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1619856699906-09e1f58c98b1?auto=format&fit=crop&w=800&q=80" alt="Cerrado Brasileiro" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Bioma Cerrado
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">
+            <i data-lucide="sprout" class="w-4 h-4"></i> Manejo de Solo e Água
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Conservação de Nascentes e Solo do Cerrado</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Projetos maker para contenção hídrica, estudo das raízes profundas e recuperação de áreas degradadas.
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Região Centro-Oeste</span>
+            <span class="text-forest-600 font-bold">16 Projetos</span>
+          </div>
+        </div>
+
+        <!-- Card 2 Brasil: Mata Atlântica & Agroecologia -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" alt="Mata Atlantica" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Mata Atlântica
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-teal-700 uppercase tracking-wider mb-2">
+            <i data-lucide="leaf" class="w-4 h-4"></i> Corredores Ecológicos
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Monitoramento de Polinizadores e Agrofloresta</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Sensores acústicos e ciência cidadã para catalogar abelhas nativas sem ferrão (meliponíneos).
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Vale do Ribeira & Sul</span>
+            <span class="text-teal-600 font-bold">22 Projetos</span>
+          </div>
+        </div>
+
+        <!-- Card 3 Brasil: Amazônia & Tecnologias Tradicionais -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition group">
+          <div class="h-44 rounded-xl overflow-hidden mb-5 relative">
+            <img src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" alt="Amazonia" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+              Comunidades Ribeirinhas
+            </span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider mb-2">
+            <i data-lucide="zap" class="w-4 h-4"></i> Energia & Bioeconomia
+          </div>
+          <h3 class="text-lg font-bold text-slate-900 mb-2">Soluções Solares e Cadeias de Frutos Nativos</h3>
+          <p class="text-sm text-slate-600 mb-4">
+            Secadores solares e termometria digital para processamento sustentable de açaí, cacau e castanha.
+          </p>
+          <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+            <span>📍 Escolas Ribeirinhas do Pará</span>
+            <span class="text-amber-600 font-bold">19 Projetos</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 3: PILARES FUNDAMENTALES (ESTILO iNATURALIST) ==================== -->
+  <section id="pilares" class="py-24 inat-banner border-b border-forest-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      
+      <!-- Título de sección idéntico al estilo referenciado -->
+      <h2 class="serif-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-slate-800 mb-16 tracking-tight">
+        Con AprendeLocal, puedes:
+      </h2>
+
+      <!-- Los 5 Pilares con Iconos Ilustrados estilo iNaturalist -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 items-start">
+        
+        <!-- Pilar 1: Identificar -->
+        <div class="flex flex-col items-center text-center group">
+          <!-- Icono estilizado: Escáner / Hoja -->
+          <div class="w-24 h-24 mb-5 flex items-center justify-center relative transition transform group-hover:-translate-y-1">
+            <svg class="w-20 h-20 text-forest-700" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+              <!-- Corner brackets -->
+              <path d="M22 35V24H35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M65 24H78V35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 65V76H35" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M65 76H78V65" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Central Leaf -->
+              <path d="M50 32C38 32 34 46 36 64C54 66 68 62 68 50C68 38 58 32 50 32Z" fill="#2d6a4f" stroke="#1b4332" stroke-width="2"/>
+              <path d="M36 64C48 54 56 46 64 36" stroke="#d8f3dc" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-1.5">Identificar</h3>
+          <p class="text-sm text-slate-600 leading-snug max-w-[200px]">
+            ecosistemas, flora, fauna, cuencas y problemáticas locales
+          </p>
+        </div>
+
+        <!-- Pilar 2: Monitorear / Registrar -->
+        <div class="flex flex-col items-center text-center group">
+          <!-- Icono estilizado: Hongos / Ave / Escarabajo con Checkmarks -->
+          <div class="w-24 h-24 mb-5 flex items-center justify-center relative transition transform group-hover:-translate-y-1">
+            <svg class="w-20 h-20 text-forest-700" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+              <!-- Mushroom -->
+              <path d="M30 36C30 25 46 25 46 36H30Z" fill="#52b788"/>
+              <path d="M36 36V46H40V36" fill="#74c69d"/>
+              <!-- Bug -->
+              <ellipse cx="50" cy="68" rx="8" ry="11" fill="#40916c"/>
+              <circle cx="50" cy="54" r="5" fill="#2d6a4f"/>
+              <path d="M42 63H34M58 63H66M42 72H35M58 72H65" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+              <!-- Bird icon -->
+              <path d="M62 30C66 26 74 27 76 34C70 36 64 42 60 40C60 36 60 32 62 30Z" fill="#1b4332"/>
+              <!-- Green Checkmark Badges -->
+              <circle cx="58" cy="24" r="5.5" fill="#22c55e"/>
+              <path d="M56 24L57.5 25.5L60.5 22.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="68" cy="74" r="5.5" fill="#22c55e"/>
+              <path d="M66 74L67.5 75.5L70.5 72.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-1.5">Monitorear</h3>
+          <p class="text-sm text-slate-600 leading-snug max-w-[200px]">
+            variables ambientales y clima de tu territorio
+          </p>
+        </div>
+
+        <!-- Pilar 3: Descubrir -->
+        <div class="flex flex-col items-center text-center group">
+          <!-- Icono estilizado: Binoculares con insecto/hoja -->
+          <div class="w-24 h-24 mb-5 flex items-center justify-center relative transition transform group-hover:-translate-y-1">
+            <svg class="w-20 h-20 text-forest-700" viewBox="0 0 100 100" fill="none">
+              <!-- Binoculars -->
+              <circle cx="34" cy="50" r="18" fill="#52b788" stroke="#1b4332" stroke-width="3.5"/>
+              <circle cx="66" cy="50" r="18" fill="#52b788" stroke="#1b4332" stroke-width="3.5"/>
+              <rect x="44" y="46" width="12" height="8" rx="2" fill="#1b4332"/>
+              <!-- Inside lens icons: Bug & Gear -->
+              <circle cx="34" cy="50" r="4" fill="#1b4332"/>
+              <path d="M34 42V40M34 60V58M26 50H24M44 50H42" stroke="#1b4332" stroke-width="2" stroke-linecap="round"/>
+              <path d="M66 44L68 47L72 47L69 50L70 54L66 52L62 54L63 50L60 47L64 47Z" fill="#d8f3dc"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-1.5">Descubrir</h3>
+          <p class="text-sm text-slate-600 leading-snug max-w-[200px]">
+            saberes ancestrales y naturaleza a tu alrededor
+          </p>
+        </div>
+
+        <!-- Pilar 4: Contribuir -->
+        <div class="flex flex-col items-center text-center group">
+          <!-- Icono estilizado: Globo terráqueo con pin de mapa -->
+          <div class="w-24 h-24 mb-5 flex items-center justify-center relative transition transform group-hover:-translate-y-1">
+            <svg class="w-20 h-20" viewBox="0 0 100 100" fill="none">
+              <!-- Globe -->
+              <circle cx="50" cy="54" r="24" fill="#334155"/>
+              <path d="M36 46C40 44 45 48 48 44C52 40 56 42 60 46C64 50 68 52 64 58C60 64 52 68 46 68C40 68 34 62 36 54Z" fill="#94a3b8"/>
+              <!-- Pin Marker -->
+              <path d="M58 16C52 16 48 20.5 48 26C48 33.5 58 43 58 43C58 43 68 33.5 68 26C68 20.5 64 16 58 16Z" fill="#16a34a"/>
+              <circle cx="58" cy="25" r="3" fill="white"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-1.5">Contribuir</h3>
+          <p class="text-sm text-slate-600 leading-snug max-w-[200px]">
+            a la ciencia comunitaria con soluciones maker
+          </p>
+        </div>
+
+        <!-- Pilar 5: Aprender -->
+        <div class="flex flex-col items-center text-center group">
+          <!-- Icono estilizado: Burbujas de diálogo con peces / naturaleza -->
+          <div class="w-24 h-24 mb-5 flex items-center justify-center relative transition transform group-hover:-translate-y-1">
+            <svg class="w-20 h-20 text-forest-700" viewBox="0 0 100 100" fill="none">
+              <!-- Speech Bubble 1 -->
+              <path d="M22 36C22 26 36 26 48 26C60 26 68 32 68 40C68 48 58 52 48 52C44 52 40 54 34 57C36 53 36 51 34 50C26 48 22 42 22 36Z" fill="#a7f3d0" stroke="#15803d" stroke-width="2.5"/>
+              <path d="M38 38C44 34 52 34 56 38C52 42 44 42 38 38Z" fill="#047857"/>
+              <!-- Speech Bubble 2 -->
+              <path d="M52 56C52 49 61 49 70 49C79 49 84 54 84 60C84 66 77 69 70 69C67 69 64 71 60 73C61 70 61 68 60 67C55 66 52 62 52 56Z" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
+              <circle cx="68" cy="59" r="3" fill="#047857"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-1.5">Aprender</h3>
+          <p class="text-sm text-slate-600 leading-snug max-w-[200px]">
+            en comunidad con profesores y escuelas rurales
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 4: EL PODER DEL APRENDIZAJE BASADO EN EL LUGAR (PROYECTOS) ==================== -->
+  <section id="proyectos" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Título de Sección -->
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="serif-heading text-3xl sm:text-4xl md:text-5xl font-semibold text-slate-900 mb-4 tracking-tight">
+          El poder del aprendizaje basado en el lugar
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg">
+          Historias reales de estudiantes y docentes que crearon ciencia y tecnología conectadas con su entorno:
+        </p>
+      </div>
+
+      <!-- Grid de Proyectos / Historias Destacadas (Estilo de la imagen de referencia) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Tarjeta de Proyecto 1 -->
+        <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group card-zoom">
+          <!-- Imagen con Overlay de Título -->
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img 
+              src="https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=800&q=80" 
+              alt="Monitoreo de Bosque Nativo" 
+              class="w-full h-full object-cover transition duration-700" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6">
+              <h3 class="serif-heading text-xl font-bold text-white leading-snug">
+                Rescatando el saber de las especies amenazadas
+              </h3>
+            </div>
+          </div>
+          <!-- Contenido & Metadatos -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+              Estudiantes de Curarrehue utilizaron visión por computadora y sensores de humedad para registrar árboles milenarios y catalogar hongos medicinales locales.
+            </p>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+              <span>Desarrollado por <strong class="text-slate-700">Escuela Rural San Gabriel</strong></span>
+              <span class="inline-flex items-center text-forest-700 font-semibold">📍 Chile</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Proyecto 2 -->
+        <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group card-zoom">
+          <!-- Imagen con Overlay de Título -->
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img 
+              src="https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?auto=format&fit=crop&w=800&q=80" 
+              alt="Sensores en Huertos" 
+              class="w-full h-full object-cover transition duration-700" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6">
+              <h3 class="serif-heading text-xl font-bold text-white leading-snug">
+                Riego automatizado contra la sequía estacional
+              </h3>
+            </div>
+          </div>
+          <!-- Contenido & Metadatos -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+              Diseño de estaciones meteorológicas y micro-riego solar para optimizar el agua en invernaderos escolares, aumentando el rendimiento de hortalizas en un 40%.
+            </p>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+              <span>Desarrollado por <strong class="text-slate-700">Liceo Lonquimay</strong></span>
+              <span class="inline-flex items-center text-forest-700 font-semibold">📍 Chile</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Proyecto 3 -->
+        <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col group card-zoom">
+          <!-- Imagen con Overlay de Título -->
+          <div class="relative h-64 overflow-hidden bg-slate-100">
+            <img 
+              src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80" 
+              alt="Protección de Ecosistemas" 
+              class="w-full h-full object-cover transition duration-700" 
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6">
+              <h3 class="serif-heading text-xl font-bold text-white leading-snug">
+                Protegiendo los ecosistemas y cuencas locales
+              </h3>
+            </div>
+          </div>
+          <!-- Contenido & Metadatos -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+              Comunidades educativas crearon boyas flotantes con microcontroladores para alertar a vecinos sobre cambios en la calidad del agua de los ríos.
+            </p>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
+              <span>Desarrollado por <strong class="text-slate-700">Club Maker del Sur</strong></span>
+              <span class="inline-flex items-center text-forest-700 font-semibold">📍 Chile & Brasil</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Botón Call to Action centralizado (Estilo iNaturalist verde) -->
+      <div class="mt-14 text-center">
+        <a href="#territorio" class="inline-flex items-center justify-center gap-2 bg-[#709c2a] hover:bg-[#5e8522] text-white font-bold text-base px-8 py-3.5 rounded-lg shadow-md transition hover:shadow-lg hover:-translate-y-0.5">
+          <span>Ver más proyectos e historias</span>
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECCIÓN 5: INFORMACIÓN DE CONTACTO & ALIANZAS ==================== -->
+  <section id="contacto" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+    
+    <!-- Acentos de luz de fondo -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-forest-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Info Izquierda -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-500/20 text-forest-300 text-xs font-bold uppercase tracking-wider">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            Contacto & Comunidad
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            ¿Quieres llevar AprendeLocal a tu escuela, municipio o territorio?
+          </h2>
+          <p class="text-slate-300 text-base leading-relaxed">
+            Acompañamos a docentes, directivos y comunidades rurales con herramientas pedagógicas abiertas, guías maker y acompañamiento en proyectos de ciencia local.
+          </p>
+
+          <div class="space-y-4 pt-4">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-forest-400 border border-slate-700">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Correo directo</div>
+                <a href="mailto:contacto@aprendelocal.cl" class="text-white font-semibold hover:text-forest-400 transition">contacto@aprendelocal.cl</a>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-forest-400 border border-slate-700">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Ubicación piloto</div>
+                <div class="text-white font-semibold">Temuco · La Araucanía, Chile</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-forest-400 border border-slate-700">
+                <i data-lucide="github" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-slate-400">Código Abierto</div>
+                <a href="https://github.com/Durzs/AprendeLocal" target="_blank" class="text-white font-semibold hover:text-forest-400 transition">github.com/Durzs/AprendeLocal</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario Derecha -->
+        <div class="lg:col-span-6 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
+          <h3 class="text-xl font-bold text-white mb-2">Envíanos un mensaje</h3>
+          <p class="text-slate-400 text-sm mb-6">Completa el formulario y nos contactaremos contigo a la brevedad.</p>
+
+          <form onsubmit="event.preventDefault(); alert('¡Gracias por tu mensaje! Nos pondremos en contacto pronto.');" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Nombre</label>
+                <input type="text" placeholder="Tu nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-forest-500" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Correo electrónico</label>
+                <input type="email" placeholder="tu@escuela.org" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-forest-500" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Rol / Institución</label>
+              <input type="text" placeholder="Ej: Docente Escuela Rural, Encargado Comunal, Investigador" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-forest-500" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mensaje o Territorio de Interés</label>
+              <textarea rows="3" placeholder="Cuéntanos sobre tu escuela o qué proyecto STEM te gustaría impulsar..." required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-forest-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-forest-600 hover:bg-forest-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-forest-600/30 flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Enviar Mensaje</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-forest-600 flex items-center justify-center text-white font-bold">
+            🌱
+          </div>
+          <div>
+            <span class="text-white font-bold">AprendeLocal</span> · STEM Comunitario y Rural
+          </div>
+        </div>
+
+        <div class="flex items-center gap-6 text-xs">
+          <a href="#" class="hover:text-white transition">Términos de Uso</a>
+          <a href="#" class="hover:text-white transition">Privacidad</a>
+          <a href="https://github.com/Durzs/AprendeLocal" target="_blank" class="hover:text-white transition">GitHub</a>
+          <a href="#contacto" class="hover:text-white transition">Contacto</a>
+        </div>
+
+        <div class="text-xs text-slate-500">
+          © 2026 AprendeLocal. Licencia MIT.
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script interactivo para selector de países y carga de Lucide Icons -->
+  <script>
+    lucide.createIcons();
+
+    function selectCountry(country) {
+      const btnChile = document.getElementById('btn-chile');
+      const btnBrasil = document.getElementById('btn-brasil');
+      const contentChile = document.getElementById('content-chile');
+      const contentBrasil = document.getElementById('content-brasil');
+
+      if (country === 'chile') {
+        // Estilos botones
+        btnChile.className = "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition bg-forest-600 text-white shadow-md";
+        btnBrasil.className = "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition text-slate-600 hover:text-slate-900";
+        
+        // Visibilidad contenido
+        contentChile.classList.remove('hidden');
+        contentChile.classList.add('grid');
+        contentBrasil.classList.remove('grid');
+        contentBrasil.classList.add('hidden');
+      } else {
+        // Estilos botones
+        btnBrasil.className = "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition bg-forest-600 text-white shadow-md";
+        btnChile.className = "flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition text-slate-600 hover:text-slate-900";
+        
+        // Visibilidad contenido
+        contentBrasil.classList.remove('hidden');
+        contentBrasil.classList.add('grid');
+        contentChile.classList.remove('grid');
+        contentChile.classList.add('hidden');
+      }
+
+      // Reiniciar iconos de Lucide en caso de recarga de dom
+      setTimeout(() => lucide.createIcons(), 50);
+    }
+  </script>
+
+</body>
+</html>

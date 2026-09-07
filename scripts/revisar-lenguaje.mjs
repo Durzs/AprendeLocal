@@ -130,7 +130,7 @@ const catalogo = readFileSync(
   resolve(RAIZ, "src/modules/sequences/rutas/catalogo.ts"),
   "utf8",
 );
-const cursos = catalogo.match(/nivel: "\w+",\n\s+objetivo_codigo/g)?.length ?? 0;
+const cursos = catalogo.match(/nivel:\s*"\w+",\s*objetivo_codigo/g)?.length ?? 0;
 const esperas = catalogo.match(/mientras_esperan:/g)?.length ?? 0;
 if (cursos !== esperas) {
   console.error(

@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Play, Pause } from "lucide-react";
 
 export default function HowItWorksSection() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const durationPerStep = 4500; // 4.5s por etapa
   const tickInterval = 50;
@@ -17,7 +19,7 @@ export default function HowItWorksSection() {
       title: "Aprender desde el río, el bosque y la cuenca local",
       desc: "Transforma los ecosistemas locales y sus problemáticas socioambientales en el eje de indagación científica de tus estudiantes, fomentando pertenencia e identidad territorial.",
       render3D: () => (
-        <svg className="w-full h-full max-w-[390px] max-h-[350px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
           <polygon points="40,95 140,150 140,225 40,170" fill="#059669" />
           <polygon points="140,150 240,95 240,170 140,225" fill="#047857" />
@@ -45,7 +47,7 @@ export default function HowItWorksSection() {
       title: "Sensores e instrumentos de bajo costo construibles en el aula",
       desc: "Dispositivos accesibles para medir pH, turbidez, temperatura y clima que los estudiantes arman y calibran con sus manos sin depender de presupuestos elevados.",
       render3D: () => (
-        <svg className="w-full h-full max-w-[390px] max-h-[350px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 235,95 140,150 45,95" fill="#ffffff" stroke="#f1f5f9" strokeWidth="1.5" />
           <polygon points="45,95 140,150 140,215 45,160" fill="#cbd5e1" />
           <polygon points="140,150 235,95 235,160 140,215" fill="#94a3b8" />
@@ -64,7 +66,7 @@ export default function HowItWorksSection() {
       title: "Secuencias de 4 clases con objetivos curriculares listos",
       desc: "Unidades didácticas completas alineadas a las bases curriculares oficiales de ciencias, con preguntas de indagación, hojas de terreno y rúbricas formativas.",
       render3D: () => (
-        <svg className="w-full h-full max-w-[390px] max-h-[350px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,45 240,100 140,155 40,100" fill="#0a0047" stroke="#3b82f6" strokeWidth="2" />
           <polygon points="40,100 140,155 140,205 40,150" fill="#050024" />
           <polygon points="140,155 240,100 240,150 140,205" fill="#140066" />
@@ -90,7 +92,7 @@ export default function HowItWorksSection() {
       title: "Los datos recopilados generan impacto real en el territorio",
       desc: "Los hallazgos de los estudiantes no quedan archivados: se entregan formalmente al Comité de Agua Potable Rural (APR), familias y escuela para la toma de decisiones.",
       render3D: () => (
-        <svg className="w-full h-full max-w-[390px] max-h-[350px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,55 235,110 140,165 45,110" fill="#3b82f6" stroke="#60a5fa" strokeWidth="1.5" />
           <polygon points="45,110 140,165 140,220 45,165" fill="#1d4ed8" />
           <polygon points="140,165 235,110 235,165 140,220" fill="#1e40af" />
@@ -109,9 +111,32 @@ export default function HowItWorksSection() {
     }
   ];
 
-  // Ciclo automático con barra de progreso
+  // Observador de intersección: Solo inicia y resetea a Paso 1 cuando el usuario llega a la sección
   useEffect(() => {
-    if (isPaused) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCurrentStep(0);
+          setProgress(0);
+          setIsInView(true);
+        } else {
+          setIsInView(false);
+          setProgress(0);
+        }
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Ciclo automático con barra de progreso cuando está a la vista y no pausado
+  useEffect(() => {
+    if (!isInView || isPaused) return;
 
     let elapsed = 0;
     const interval = setInterval(() => {
@@ -126,19 +151,20 @@ export default function HowItWorksSection() {
     }, tickInterval);
 
     return () => clearInterval(interval);
-  }, [isPaused, currentStep]);
+  }, [isInView, isPaused, currentStep]);
 
   const activeStage = stages[currentStep];
   const titleWords = activeStage.title.split(" ");
 
   return (
     <section 
+      ref={sectionRef}
       id="como-funciona"
-      className="relative overflow-hidden transition-colors duration-700 px-4 sm:px-8 lg:px-16 pt-12 sm:pt-14 pb-10 sm:pb-12 flex flex-col justify-between"
+      className="relative overflow-hidden transition-colors duration-700 px-3 sm:px-6 lg:px-10 pt-12 sm:pt-14 pb-10 sm:pb-12 flex flex-col justify-between"
       style={{ backgroundColor: activeStage.bgColor }}
     >
       {/* Header Superior: Título & Timeline */}
-      <div className="max-w-6xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
+      <div className="max-w-[1400px] mx-auto w-full relative z-20 mb-6 sm:mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
             ¿Cómo funciona AprendeLocal?
@@ -191,7 +217,7 @@ export default function HowItWorksSection() {
       </div>
 
       {/* Contenido Principal Compacto: Título + Descripción + 3D */}
-      <div className="max-w-6xl mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
+      <div className="max-w-[1400px] mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
         
         {/* Lado Izquierdo: Título y Descripción Limpia */}
         <div className="lg:col-span-6 space-y-4 text-left">
@@ -211,7 +237,7 @@ export default function HowItWorksSection() {
             ))}
           </h3>
 
-          <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-lg transition-opacity duration-500">
+          <p className="text-white/85 text-sm sm:text-base leading-relaxed max-w-xl transition-opacity duration-500">
             {activeStage.desc}
           </p>
 
@@ -219,7 +245,7 @@ export default function HowItWorksSection() {
 
         {/* Lado Derecho: Modelo 3D Isométrico */}
         <div className="lg:col-span-6 flex justify-center items-center">
-          <div className="w-full max-w-[420px] aspect-square flex items-center justify-center relative">
+          <div className="w-full max-w-[440px] aspect-square flex items-center justify-center relative">
             <div className="w-full h-full flex items-center justify-center animate-bounce-slow">
               {activeStage.render3D()}
             </div>

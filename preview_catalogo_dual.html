@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AprendeLocal — Catálogo Dual (Estudiantes & Docentes)</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-900 min-h-screen">
+
+  <!-- ========================================================================= -->
+  <!-- BARRA SUPERIOR (HEADER AZUL NOCHE #0a0047 CON ACCESOS DUALES)             -->
+  <!-- ========================================================================= -->
+  <header class="w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-md">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 sm:h-18 items-center justify-between gap-4">
+        
+        <!-- Logo -->
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+            <span class="w-3.5 h-3.5 rounded-full bg-[#f97316]"></span>
+          </div>
+          <div class="text-white flex items-center gap-1">
+            <span class="text-base sm:text-lg font-light">aprende</span>
+            <span class="text-base sm:text-lg font-black">local</span>
+          </div>
+        </div>
+
+        <!-- Links Principales -->
+        <nav class="hidden md:flex items-center gap-2">
+          <button onclick="setAudience('students')" id="nav-btn-students" class="px-4 py-2 rounded-full text-sm font-semibold transition text-slate-200 hover:text-white hover:bg-white/10">
+            🌱 Para Estudiantes
+          </button>
+          <button onclick="setAudience('teachers')" id="nav-btn-teachers" class="px-4 py-2 rounded-full text-sm font-semibold transition text-slate-200 hover:text-white hover:bg-white/10">
+            👩‍🏫 Portal Docente
+          </button>
+          <a href="#mapa" class="px-4 py-2 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10">
+            Mapa STEM
+          </a>
+          <a href="#proyectos" class="px-4 py-2 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10">
+            Proyectos
+          </a>
+        </nav>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center gap-3">
+          <span class="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block">
+            Preparar clase
+          </span>
+          <button class="px-5 py-2 rounded-full bg-[#f97316] hover:bg-orange-600 text-white font-bold text-sm shadow-md transition">
+            Entrar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- HERO DEL CATÁLOGO CON SELECTOR DE AUDIENCIA DUAL                           -->
+  <!-- ========================================================================= -->
+  <section class="bg-gradient-to-b from-[#0a0047] via-[#0f172a] to-[#f8fafc] text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-4xl mx-auto">
+      
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-amber-300 text-xs font-bold uppercase tracking-wider mb-4 border border-white/15">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-[#f97316]"></i>
+        Experiencia Adaptada por Rol
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+        ¿Qué deseas aprender hoy?
+      </h1>
+      
+      <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+        Elige tu perfil para acceder a contenidos diseñados específicamente para ti:
+      </p>
+
+      <!-- SWITCHER DE AUDIENCIA (ESTUDIANTES VS DOCENTES) -->
+      <div class="inline-flex p-1.5 bg-slate-900/90 rounded-2xl border border-slate-700/80 shadow-2xl gap-2 max-w-xl mx-auto w-full sm:w-auto">
+        
+        <button
+          onclick="setAudience('students')"
+          id="tab-students"
+          class="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition bg-[#f97316] text-white shadow-lg cursor-pointer"
+        >
+          <span class="text-lg">🧒</span>
+          <div class="text-left">
+            <div class="text-xs opacity-90 leading-tight">Misiones & Ciencia</div>
+            <div class="font-black">Para Estudiantes</div>
+          </div>
+        </button>
+
+        <button
+          onclick="setAudience('teachers')"
+          id="tab-teachers"
+          class="flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
+        >
+          <span class="text-lg">👩‍🏫</span>
+          <div class="text-left">
+            <div class="text-xs opacity-80 leading-tight">Pedagogía & ABL</div>
+            <div class="font-bold">Para Docentes</div>
+          </div>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- SECCIÓN 1: VISTA PARA ESTUDIANTES (MISIONES DE CAMPO, BIODIVERSIDAD, XP)  -->
+  <!-- ========================================================================= -->
+  <main id="section-students" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-24 transition-all duration-300">
+    
+    <!-- Filtros Temáticos de Estudiantes -->
+    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm mb-8 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-2">Filtrar por:</span>
+        <button class="px-3.5 py-1.5 rounded-lg bg-blue-50 text-blue-800 text-xs font-bold border border-blue-200">
+          🌿 Todos los Cursos
+        </button>
+        <button class="px-3.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600 text-xs font-semibold">
+          🦅 Flora & Fauna
+        </button>
+        <button class="px-3.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600 text-xs font-semibold">
+          💧 Agua & Clima
+        </button>
+        <button class="px-3.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-600 text-xs font-semibold">
+          ⚡ Sensores & Maker
+        </button>
+      </div>
+      <div class="text-xs text-slate-500 font-medium">
+        🎯 6 Misiones activas en tu territorio
+      </div>
+    </div>
+
+    <!-- Grilla de Cursos Estudiantiles -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1: Flora Nativa -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-100">
+            <img
+              src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80"
+              alt="Bosque nativo"
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-bold shadow-md">
+              🌿 Biodiversidad
+            </span>
+            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-amber-300 text-[11px] font-bold">
+              +150 XP
+            </span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <span>Nivel: Básico</span> · <span>📍 La Araucanía</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition">
+              Guardianes del Bosque Templado
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Aprende a identificar araucarias, canelos y plantas medicinales en tu entorno usando una lupa botánica.
+            </p>
+            <!-- Badge de Logro -->
+            <div class="flex items-center gap-2 p-2.5 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-900 text-xs font-semibold">
+              <span>🏆 Recompensa:</span>
+              <span class="font-bold">Insignia Botánico Junior</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Comenzar Misión</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 2: Monitoreo de Agua -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-100">
+            <img
+              src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"
+              alt="Río y estero"
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-blue-600 text-white text-[11px] font-bold shadow-md">
+              💧 Cuencas & Agua
+            </span>
+            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-amber-300 text-[11px] font-bold">
+              +200 XP
+            </span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <span>Nivel: Intermedio</span> · <span>📍 Esteros y Ríos</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition">
+              Detectives del Agua y pH
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Mide la temperatura, turbidez y salud del estero cercano a tu escuela con tiras reactivas y sensores simples.
+            </p>
+            <div class="flex items-center gap-2 p-2.5 rounded-xl bg-blue-50 border border-blue-200/60 text-blue-900 text-xs font-semibold">
+              <span>🔬 Misión de campo:</span>
+              <span class="font-bold">Muestreo en 3 puntos</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Comenzar Misión</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 3: Estación Solar Maker -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="relative h-48 overflow-hidden bg-slate-100">
+            <img
+              src="https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80"
+              alt="Energía solar"
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#f97316] text-white text-[11px] font-bold shadow-md">
+              ⚡ Energía & Maker
+            </span>
+            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-amber-300 text-[11px] font-bold">
+              +300 XP
+            </span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+              <span>Nivel: Avanzado</span> · <span>📍 Taller Escolar</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition">
+              Riego Inteligente con Sol
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              Construye un sistema automatizado para regar la huerta de tu escuela usando paneles solares y sensores de humedad.
+            </p>
+            <div class="flex items-center gap-2 p-2.5 rounded-xl bg-orange-50 border border-orange-200/60 text-orange-950 text-xs font-semibold">
+              <span>🛠️ Prototipo:</span>
+              <span class="font-bold">Micro-bomba solar</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Comenzar Misión</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- SECCIÓN 2: VISTA PARA DOCENTES (METODOLOGÍA ABL, PLANIFICACIÓN, KITS)    -->
+  <!-- ========================================================================= -->
+  <main id="section-teachers" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-24 transition-all duration-300">
+    
+    <!-- Banner de Herramientas para el Docente -->
+    <div class="bg-gradient-to-r from-blue-950 via-[#0a0047] to-slate-900 rounded-3xl p-6 sm:p-8 text-white mb-8 border border-blue-900/60 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+          Acreditación & Currículum Oficial
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold">
+          Capacitaciones y Recursos de Aula
+        </h2>
+        <p class="text-slate-300 text-sm max-w-xl">
+          Cursos metodológicos para diseñar proyectos de Aprendizaje Basado en el Lugar (ABL) con rúbricas y fichas listas para imprimir.
+        </p>
+      </div>
+      <button class="shrink-0 px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm shadow-lg transition flex items-center gap-2 cursor-pointer">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>Generador de Unidades</span>
+      </button>
+    </div>
+
+    <!-- Grilla de Cursos de Formación Docente -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card Docente 1: Fundamentos ABL -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="p-6 pb-4 border-b border-slate-100 bg-blue-50/50">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-bold">
+                Metodología ABL
+              </span>
+              <span class="text-xs font-bold text-slate-500">
+                ⏱️ 12 Horas
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug">
+              Fundamentos del Aprendizaje Basado en el Lugar
+            </h3>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Cómo transformar los problemas ambientales y saberes locales de tu comuna en el motor de aprendizaje de tu escuela rural.
+            </p>
+            <div class="space-y-2 text-xs text-slate-600 border-t border-slate-100 pt-3">
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>4 Módulos prácticos aplicados</span>
+              </div>
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="download" class="w-4 h-4 text-blue-600"></i>
+                <span>Plantilla de planificación descargable</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Ver Programa del Curso</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card Docente 2: Integración Curricular STEM -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="p-6 pb-4 border-b border-slate-100 bg-amber-50/50">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
+                Currículum & Ciencias
+              </span>
+              <span class="text-xs font-bold text-slate-500">
+                ⏱️ 16 Horas
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug">
+              Diseño Curricular con Objetivos de Aprendizaje (OA)
+            </h3>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Estrategias para articular Ciencias Naturales, Matemáticas y Tecnología en proyectos integrados para aulas multigrado.
+            </p>
+            <div class="space-y-2 text-xs text-slate-600 border-t border-slate-100 pt-3">
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>Alineación oficial con Mineduc / MEC</span>
+              </div>
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="download" class="w-4 h-4 text-blue-600"></i>
+                <span>Banco de 20 casos territoriales</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Ver Programa del Curso</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card Docente 3: Evaluación y Rúbricas -->
+      <article class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between group">
+        <div>
+          <div class="p-6 pb-4 border-b border-slate-100 bg-indigo-50/50">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold">
+                Evaluación Auténtica
+              </span>
+              <span class="text-xs font-bold text-slate-500">
+                ⏱️ 8 Horas
+              </span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug">
+              Rúbricas de Desempeño y Salidas a Terreno
+            </h3>
+          </div>
+          <div class="p-6 space-y-4">
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Evalúa procesos de indagación científica y trabajo colaborativo en salidas de campo sin sobrecargar tu tiempo de corrección.
+            </p>
+            <div class="space-y-2 text-xs text-slate-600 border-t border-slate-100 pt-3">
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+                <span>Fichas de co-evaluación escolar</span>
+              </div>
+              <div class="flex items-center gap-2 font-medium">
+                <i data-lucide="download" class="w-4 h-4 text-blue-600"></i>
+                <span>Rúbricas editables en Excel / PDF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 pt-0">
+          <button class="w-full py-3 rounded-xl bg-[#0a0047] hover:bg-[#140066] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Ver Programa del Curso</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 text-amber-300"></i>
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    function setAudience(audience) {
+      const btnStudents = document.getElementById('tab-students');
+      const btnTeachers = document.getElementById('tab-teachers');
+      const navBtnStudents = document.getElementById('nav-btn-students');
+      const navBtnTeachers = document.getElementById('nav-btn-teachers');
+      
+      const secStudents = document.getElementById('section-students');
+      const secTeachers = document.getElementById('section-teachers');
+
+      if (audience === 'students') {
+        btnStudents.className = "flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition bg-[#f97316] text-white shadow-lg cursor-pointer";
+        btnTeachers.className = "flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer";
+        
+        secStudents.classList.remove('hidden');
+        secTeachers.classList.add('hidden');
+      } else {
+        btnTeachers.className = "flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition bg-blue-600 text-white shadow-lg cursor-pointer";
+        btnStudents.className = "flex-1 sm:flex-initial flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm transition text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer";
+        
+        secTeachers.classList.remove('hidden');
+        secStudents.classList.add('hidden');
+      }
+    }
+  </script>
+
+</body>
+</html>
