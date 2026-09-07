@@ -38,7 +38,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const escribiendo = letras < fullText.length;
 
   return (
-    <section id="hero" className="relative isolate overflow-hidden px-3 sm:px-6 lg:px-10 pb-16 pt-12 text-center sm:pb-20 sm:pt-16 md:pb-24 md:pt-20 bg-white border-b border-slate-100">
+    <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-28 min-h-[calc(100vh-4rem)] flex flex-col justify-center text-center bg-white border-b border-slate-100">
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat opacity-40 pointer-events-none"
@@ -49,7 +49,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         }}
       />
 
-      <div className="mx-auto max-w-[1400px] w-full">
+      <div className="mx-auto max-w-7xl w-full flex flex-col items-center justify-center">
         {/* Title */}
         {/* El titulo completo va en el DOM para quien lo lee con lector de
             pantalla o buscador; lo que se escribe letra a letra es la copia

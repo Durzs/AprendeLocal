@@ -37,8 +37,8 @@ export default function ProjectsSection() {
   const [selectedCountry, setSelectedCountry] = useState<"chile" | "brasil">("chile");
 
   return (
-    <section id="proyectos" className="py-20 px-3 sm:px-6 lg:px-10 bg-white border-b border-slate-100">
-      <div className="max-w-[1400px] mx-auto w-full">
+    <section id="proyectos" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white border-b border-slate-100">
+      <div className="max-w-7xl mx-auto w-full">
 
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">

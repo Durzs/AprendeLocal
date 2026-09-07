@@ -36,7 +36,11 @@ function normalizar(s: string): string {
     .toLowerCase();
 }
 
-export default function MapaLugares() {
+interface MapaLugaresProps {
+  hideHeader?: boolean;
+}
+
+export default function MapaLugares({ hideHeader = false }: MapaLugaresProps) {
   const { t } = useTranslation();
   const [todosLosLugares, setTodosLosLugares] = useState<Lugar[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -135,24 +139,26 @@ export default function MapaLugares() {
   return (
     <div className="space-y-8">
       {/* Cabecera explicativa */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-5">
-        <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-900">
-            🗺️ Territorio & Especies
-          </span>
-          <h2 className="mt-2 text-2xl font-bold text-slate-950">
-            {t("bio.pickPlace")}
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm text-slate-600">
-            Explora 4 ecosistemas emblemáticos de La Araucanía para descubrir las especies nativas, sus nombres en Mapuzugun y su valor educativo en terreno.
-          </p>
-        </div>
+      {!hideHeader && (
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-5">
+          <div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-emerald-900">
+              🗺️ Territorio & Especies
+            </span>
+            <h2 className="mt-2 text-2xl font-bold text-slate-950">
+              {t("bio.pickPlace")}
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-slate-600">
+              Explora 4 ecosistemas emblemáticos de La Araucanía para descubrir las especies nativas, sus nombres en Mapuzugun y su valor educativo en terreno.
+            </p>
+          </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500 font-medium bg-slate-50 border border-slate-200/60 rounded-full px-3 py-1.5 self-start md:self-auto">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>4 Lugares disponibles activos</span>
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium bg-slate-50 border border-slate-200/60 rounded-full px-3 py-1.5 self-start md:self-auto">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>4 Lugares disponibles activos</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {error && (
         <p

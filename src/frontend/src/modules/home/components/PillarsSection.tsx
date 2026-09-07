@@ -266,7 +266,7 @@ export default function PillarsSection() {
 
   return (
     <section id="habilidades" className="bg-[#f8faff] py-16 sm:py-24 border-y border-blue-900/5 overflow-hidden">
-      <div className="mx-auto max-w-[1400px] w-full px-3 sm:px-6 lg:px-10 text-center">
+      <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 text-center">
         
         {/* Dynamic Title */}
         <div className="mb-14 sm:mb-18">

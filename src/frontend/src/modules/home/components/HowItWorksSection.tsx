@@ -160,11 +160,11 @@ export default function HowItWorksSection() {
     <section 
       ref={sectionRef}
       id="como-funciona"
-      className="relative overflow-hidden transition-colors duration-700 px-3 sm:px-6 lg:px-10 pt-12 sm:pt-14 pb-10 sm:pb-12 flex flex-col justify-between"
+      className="relative overflow-hidden transition-colors duration-700 px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-10 sm:pb-14 flex flex-col justify-between"
       style={{ backgroundColor: activeStage.bgColor }}
     >
       {/* Header Superior: Título & Timeline */}
-      <div className="max-w-[1400px] mx-auto w-full relative z-20 mb-6 sm:mb-8">
+      <div className="max-w-7xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
             ¿Cómo funciona AprendeLocal?
@@ -217,7 +217,7 @@ export default function HowItWorksSection() {
       </div>
 
       {/* Contenido Principal Compacto: Título + Descripción + 3D */}
-      <div className="max-w-[1400px] mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
+      <div className="max-w-7xl mx-auto w-full my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center relative z-20 py-2 sm:py-4">
         
         {/* Lado Izquierdo: Título y Descripción Limpia */}
         <div className="lg:col-span-6 space-y-4 text-left">
