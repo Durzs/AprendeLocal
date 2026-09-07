@@ -9,10 +9,23 @@
  * mirando por la ventana.
  */
 
+import { RUTAS } from "../rutas/catalogo";
 import { Campo, Fichas, Hoja, Parrafo, Texto } from "./Campos";
+import SelectorOA from "./SelectorOA";
 import type { Entorno, Evaluacion, Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
+
+/** Cuántas semanas, en las duraciones que de verdad se usan. */
+const SEMANAS = [2, 3, 4, 6];
+
+/**
+ * Los objetivos que alguna ruta escrita ya cubre.
+ *
+ * Se calcula una vez y no en cada tecla: son sesenta y dos objetivos contra
+ * cuatro rutas, y el docente escribe mientras la lista está abierta.
+ */
+const CON_RUTA = new Set(RUTAS.flatMap((r) => r.cubre.flatMap((c) => c.codigos)));
 
 const EVALUACIONES: { valor: Evaluacion; titulo: string }[] = [
   { valor: "cuaderno", titulo: "Cuaderno de campo" },
@@ -43,7 +56,7 @@ export function PasoPrograma({ e, onCambio }: Props) {
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="Quién y cuánto">
+      <Hoja titulo="Quién y cuánto" orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo etiqueta="Tu nombre" ayuda="Va firmado en la carta a las familias.">
             <Texto
@@ -77,32 +90,36 @@ export function PasoPrograma({ e, onCambio }: Props) {
             onElegir={(v) => set("cursos", v)}
           />
 
-          <Campo etiqueta="Cuántas semanas" ayuda="Tres o cuatro es lo habitual.">
-            <Texto
-              type="number"
-              min={1}
-              max={20}
-              value={e.semanas ?? ""}
-              onChange={(ev) =>
-                set("semanas", ev.target.value ? Number(ev.target.value) : null)
-              }
-              placeholder="3"
-            />
-          </Campo>
+          <Fichas
+            etiqueta="Cuántas semanas"
+            ayuda="Tres es lo habitual: una para preparar, una de salida y una para armar lo que entregan."
+            opciones={SEMANAS.map((n) => ({ valor: String(n), titulo: `${n} semanas` }))}
+            elegidas={e.semanas ? [String(e.semanas)] : []}
+            onElegir={(v) => set("semanas", v[0] ? Number(v[0]) : null)}
+            unica
+          />
         </div>
       </Hoja>
 
-      <Hoja titulo="Lo que el programa exige">
+      <Hoja titulo="Lo que el programa exige" orden={5}>
         <div className="grid gap-5 sm:grid-cols-2">
+          <SelectorOA
+            cursos={e.cursos}
+            elegidos={e.oa}
+            onElegir={(v) => set("oa", v)}
+            conRuta={CON_RUTA}
+          />
+
           <Campo
-            etiqueta="Objetivos de aprendizaje"
-            ayuda="Los códigos si los tienes a mano, o escritos con tus palabras."
+            etiqueta="Algo más que quieras que aprendan"
+            ayuda="Con tus palabras, lo que el programa no dice. Opcional."
             ancho="entera"
           >
             <Parrafo
               value={e.objetivos}
               onChange={(ev) => set("objetivos", ev.target.value)}
-              placeholder="OA 12: medir y comparar volúmenes de agua…"
+              placeholder="Que aprendan a preguntarle a un adulto de la comunidad sin vergüenza."
+              rows={2}
             />
           </Campo>
 
@@ -138,7 +155,7 @@ export function PasoLugar({ e, onCambio }: Props) {
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="Dónde queda la escuela">
+      <Hoja titulo="Dónde queda la escuela" orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Fichas
             etiqueta="Qué hay a distancia de caminata"
@@ -163,7 +180,7 @@ export function PasoLugar({ e, onCambio }: Props) {
         </div>
       </Hoja>
 
-      <Hoja titulo="Qué pasa ahí">
+      <Hoja titulo="Qué pasa ahí" orden={5}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo etiqueta="Asignatura" ayuda="Desde dónde entras al tema.">
             <Texto

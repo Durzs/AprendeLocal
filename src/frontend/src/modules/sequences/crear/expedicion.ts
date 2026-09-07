@@ -42,6 +42,12 @@ export type Expedicion = {
   estudiantes: number | null;
   semanas: number | null;
   temasObligatorios: string;
+  /**
+   * Los códigos que marcó en la lista: «OA12_CN_5». Es la parte sugerida.
+   * De aquí sale la ruta que se le arma, así que no es un dato de adorno.
+   */
+  oa: string[];
+  /** Lo que él agrega con sus palabras. Es la parte que pone la escuela. */
   objetivos: string;
   evaluacion: Evaluacion[];
 
@@ -71,6 +77,7 @@ export const VACIA: Expedicion = {
   estudiantes: null,
   semanas: null,
   temasObligatorios: "",
+  oa: [],
   objetivos: "",
   evaluacion: [],
   asignatura: "",
@@ -152,7 +159,7 @@ export function completitudPaso1(e: Expedicion): number {
     e.cursos.length ? "x" : "",
     e.estudiantes ? "x" : "",
     e.semanas ? "x" : "",
-    e.objetivos,
+    e.oa.length ? "x" : "",
     e.evaluacion.length ? "x" : "",
     e.asignatura,
     e.entorno ?? "",

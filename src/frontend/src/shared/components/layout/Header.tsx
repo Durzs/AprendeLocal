@@ -72,7 +72,7 @@ export default function Header() {
               onClick={() => scrollTo("proyectos")}
               className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
             >
-              Rutas & Proyectos
+              Cómo se arma
             </button>
 
             <button
@@ -92,14 +92,15 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            {/* La puerta del docente son las rutas: cuatro clases ya escritas.
-                El generador sigue existiendo en /preparar, pero dejo de ser la
-                entrada cuando las rutas pasaron a ser el producto. */}
+            {/* La puerta del docente es armar su ruta. La lista de cuatro
+                sigue en /rutas como material, pero dejo de ser la entrada: la
+                ruta sale de los objetivos que marca y del lugar que describe,
+                no de escoger de una vitrina. */}
             <Link
-              to="/rutas"
+              to="/crear"
               className="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block hover:bg-amber-400/20 transition"
             >
-              {t("header.nav.routes", "Rutas")}
+              {t("header.nav.create", "Crear ruta")}
             </Link>
 
             {/* Language switcher - desktop */}
@@ -200,11 +201,11 @@ export default function Header() {
             </div>
 
             <Link
-              to="/rutas"
+              to="/crear"
               onClick={closeMobile}
               className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
             >
-              {t("header.nav.routes", "Rutas")}
+              {t("header.nav.create", "Crear ruta")}
             </Link>
             
             <button
@@ -225,7 +226,7 @@ export default function Header() {
               onClick={() => scrollTo("proyectos")}
               className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
             >
-              Rutas & Proyectos
+              Cómo se arma
             </button>
 
             <button

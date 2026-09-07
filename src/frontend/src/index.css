@@ -112,6 +112,67 @@ body {
 .animar-asoma   { animation: asomaAbajo 300ms ease-out both; }
 .animar-esperando { animation: recorreEsperando 1.4s ease-in-out infinite; }
 
+/* ─────────────────────────────────────────────────────────────────────────
+ * Cambio de lámina, para el cuaderno de expedición.
+ *
+ * Las de arriba mueven dieciséis píxeles en 260 ms. Dentro de una tarjeta se
+ * nota; en una lámina que ocupa la pantalla entera el ojo no alcanza a
+ * registrar que algo pasó, y el recorrido se siente como un formulario que
+ * se reemplaza solo. Aquí la lámina que se va sale de verdad, la que entra
+ * llega desde el otro lado, y el paso dura lo bastante para leerse como un
+ * paso y no como un parpadeo.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+@keyframes laminaEntraDerecha {
+  from { opacity: 0; transform: translate3d(56px, 0, 0) scale(0.985); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes laminaEntraIzquierda {
+  from { opacity: 0; transform: translate3d(-56px, 0, 0) scale(0.985); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes laminaSaleIzquierda {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to   { opacity: 0; transform: translate3d(-40px, 0, 0) scale(0.985); }
+}
+
+@keyframes laminaSaleDerecha {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to   { opacity: 0; transform: translate3d(40px, 0, 0) scale(0.985); }
+}
+
+/* La que se va se apura y la que llega se toma su tiempo. Al revés, el
+   recorrido se siente lento aunque dure exactamente lo mismo. */
+.lamina-entra-derecha   { animation: laminaEntraDerecha 420ms cubic-bezier(.22,.68,.28,1) both; }
+.lamina-entra-izquierda { animation: laminaEntraIzquierda 420ms cubic-bezier(.22,.68,.28,1) both; }
+.lamina-sale-izquierda  { animation: laminaSaleIzquierda 190ms cubic-bezier(.5,0,.85,.4) both; }
+.lamina-sale-derecha    { animation: laminaSaleDerecha 190ms cubic-bezier(.5,0,.85,.4) both; }
+
+/*
+ * Dentro de la lámina, las hojas asoman una tras otra.
+ *
+ * Es el momento del recorrido donde el escalonado paga: al llegar a una
+ * lámina nueva hay tres o seis bloques, y aparecerlos juntos es una pared.
+ * Ocho pasos porque el paso de las preguntas tiene seis hojas; de la novena
+ * en adelante entran sin retraso, que es mejor que hacer esperar a nadie.
+ */
+@keyframes hojaAsoma {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.animar-hoja { animation: hojaAsoma 380ms cubic-bezier(.22,.68,.28,1) both; }
+.animar-hoja-1 { animation-delay:  60ms; }
+.animar-hoja-2 { animation-delay: 110ms; }
+.animar-hoja-3 { animation-delay: 160ms; }
+.animar-hoja-4 { animation-delay: 210ms; }
+.animar-hoja-5 { animation-delay: 260ms; }
+.animar-hoja-6 { animation-delay: 310ms; }
+.animar-hoja-7 { animation-delay: 360ms; }
+.animar-hoja-8 { animation-delay: 410ms; }
+
 /*
  * El escalonado hace que tres o cuatro cursos se lean como una lista en
  * orden, y no como una pared que aparece de golpe. Cuatro pasos bastan: en

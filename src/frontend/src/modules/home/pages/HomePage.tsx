@@ -15,12 +15,13 @@ export default function HomePage() {
   /**
    * El boton grande de la portada.
    *
-   * Antes bajaba a la seccion de metodologia, o sea que el llamado principal
-   * del sitio devolvia al visitante a leer mas portada. Ahora lleva a las
-   * rutas, que es donde un docente encuentra la clase escrita y puede
-   * imprimirla. Es lo que promete el boton.
+   * Primero bajaba a la seccion de metodologia, o sea que el llamado principal
+   * del sitio devolvia al visitante a leer mas portada. Despues llevaba a la
+   * lista de cuatro rutas. Ahora lleva a armarla: la ruta sale de los
+   * objetivos que el docente marca y del lugar que describe, no de escoger de
+   * una vitrina. Es lo que promete el boton.
    */
-  const goStart = () => navigate("/rutas");
+  const goStart = () => navigate("/crear");
 
   const goExplore = () => {
     const el = document.getElementById("como-funciona");
