@@ -5,9 +5,10 @@
  * curso, la hoja de evaluación con los métodos que él marcó en el paso uno, y
  * lo que vive alrededor del lugar que escribió.
  *
- * Las rutas que aparecen no se inventan: son las cuatro del catálogo, ordenadas
- * por lo que calza con lo que él contó del lugar. Si ninguna calza del todo se
- * dice, en vez de empujarle la que sobró.
+ * Las rutas que aparecen no se inventan: son las del catálogo, ordenadas por
+ * cuántos de los objetivos que él marcó cubre cada una. Manda el currículo, y
+ * la tarjeta enseña los códigos para que lo compruebe en vez de confiar. Si
+ * ninguna cubre nada de lo marcado se dice, en vez de empujarle la que sobró.
  */
 
 import { useMemo, useState } from "react";
@@ -15,6 +16,7 @@ import { useMemo, useState } from "react";
 import { RUTAS, cursoCorto, type Ruta } from "../rutas/catalogo";
 import { consultar, pedirUbicacion, type Especie, type Grupo } from "../rutas/inaturalist";
 import { Hoja } from "./Campos";
+import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
 import { codigoNuevo } from "./expedicion";
 
@@ -32,16 +34,42 @@ const ENTORNO_DE_RUTA: Record<string, Entorno[]> = {
   calor: ["pueblo", "cordillera"],
 };
 
-/** Cuánto calza una ruta con lo que el docente contó. De 0 a 3. */
-function calce(ruta: Ruta, e: Expedicion): number {
-  let n = 0;
-  if (e.entorno && ENTORNO_DE_RUTA[ruta.id]?.includes(e.entorno)) n += 2;
-  const dicho = `${e.tematicas} ${e.fenomeno} ${e.indagacion}`.toLowerCase();
-  if (dicho && ruta.titulo.toLowerCase().split(/\s+/).some((w) => w.length > 4 && dicho.includes(w))) {
-    n += 1;
-  }
-  if (e.cursos.length && ruta.cubre.some((c) => e.cursos.includes(cursoCorto(c.nivel)))) n += 1;
-  return n;
+/** Por qué una ruta calza, además de cuánto. */
+type Calce = {
+  /** Los OA que el docente marcó y esta ruta efectivamente cubre. */
+  cubiertos: string[];
+  /** Los que marcó y esta ruta no toca. */
+  fuera: string[];
+  mismoEntorno: boolean;
+  mismosCursos: boolean;
+  /** Para ordenar. Manda el currículo. */
+  puntos: number;
+};
+
+/**
+ * Cuánto y por qué calza una ruta con lo que el docente pidió.
+ *
+ * Antes esto miraba el entorno y algunas palabras del título. Podía darle una
+ * ruta de suelo a quien había marcado objetivos de energía, y el docente no
+ * tenía cómo saber por qué. Ahora manda el currículo: cada objetivo que marcó
+ * y la ruta cubre vale tres, y el entorno y los cursos desempatan. Es lo que
+ * hace que la ruta tenga que ver con lo que él dijo que iba a pasar.
+ */
+function calce(ruta: Ruta, e: Expedicion): Calce {
+  const suyos = ruta.cubre.flatMap((c) => c.codigos);
+  const cubiertos = e.oa.filter((c) => suyos.includes(c));
+  const fuera = e.oa.filter((c) => !suyos.includes(c));
+  const mismoEntorno = Boolean(e.entorno && ENTORNO_DE_RUTA[ruta.id]?.includes(e.entorno));
+  const mismosCursos =
+    e.cursos.length > 0 && ruta.cubre.some((c) => e.cursos.includes(cursoCorto(c.nivel)));
+
+  return {
+    cubiertos,
+    fuera,
+    mismoEntorno,
+    mismosCursos,
+    puntos: cubiertos.length * 3 + (mismoEntorno ? 2 : 0) + (mismosCursos ? 1 : 0),
+  };
 }
 
 const ETIQUETA_EVAL: Record<string, string> = {
@@ -61,31 +89,39 @@ export default function Paso3({
 }) {
   const ordenadas = useMemo(
     () =>
-      RUTAS.map((r) => ({ ruta: r, calce: calce(r, e) })).sort((a, b) => b.calce - a.calce),
+      RUTAS.map((r) => ({ ruta: r, c: calce(r, e) })).sort((a, b) => b.c.puntos - a.c.puntos),
     [e]
   );
   const elegida = RUTAS.find((r) => r.id === e.rutaId) ?? null;
-  const ninguna = ordenadas[0]?.calce === 0;
+  const sinOA = e.oa.length === 0;
+  const mejor = ordenadas[0];
+  const ningunaCubre = !sinOA && mejor?.c.cubiertos.length === 0;
 
   return (
     <div className="space-y-4">
       {/* ── Qué ruta ─────────────────────────────────────────────────── */}
-      <Hoja titulo="La ruta que calza" orden={4}>
-        {ninguna ? (
+      <Hoja titulo="La ruta que se te arma" orden={4}>
+        {sinOA ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
-            Ninguna de las cuatro calza con lo que contaste. Puedes tomar la que
-            más se acerque y ajustarla, pero conviene saberlo antes: son cuatro
-            rutas, no un catálogo.
+            No marcaste objetivos de aprendizaje en la primera lámina, así que
+            estas cuatro salen ordenadas solo por tu lugar. Vuelve y márcalos:
+            es lo que hace que la ruta tenga que ver con lo que vas a pasar.
+          </p>
+        ) : ningunaCubre ? (
+          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
+            Ninguna de las rutas escritas cubre los objetivos que marcaste.
+            Puedes tomar la que más se acerque y ajustarla, pero conviene
+            saberlo antes: son cuatro rutas, no un catálogo completo.
           </p>
         ) : (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
-            Ordenadas por lo que calza con tu lugar y tus cursos. La primera es
-            la que más se acerca.
+            Ordenadas por cuántos de tus objetivos cubre cada una. La primera es
+            la que más se acerca a lo que dijiste que ibas a pasar.
           </p>
         )}
 
         <ul className="grid gap-3 sm:grid-cols-2">
-          {ordenadas.map(({ ruta, calce: c }) => {
+          {ordenadas.map(({ ruta, c }) => {
             const puesta = ruta.id === e.rutaId;
             return (
               <li key={ruta.id}>
@@ -104,16 +140,35 @@ export default function Paso3({
                     <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a]">
                       {ruta.titulo}
                     </span>
-                    <span className="font-mono text-[10px] text-[#e4ded2]/35">
-                      {c > 0 ? "•".repeat(c) : "—"}
-                    </span>
+                    {c.cubiertos.length > 0 && (
+                      <span className="shrink-0 rounded-full bg-[#c9612a] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1e2a24]">
+                        {c.cubiertos.length} de {e.oa.length} OA
+                      </span>
+                    )}
                   </div>
                   <p className="mt-2 text-[15px] leading-snug text-[#f3efe7]">
                     {ruta.preguntaGuia}
                   </p>
+
+                  {/* Qué objetivos, no solo cuántos. Un número sin los códigos
+                      obliga a confiar; con los códigos el docente comprueba. */}
+                  {c.cubiertos.length > 0 && (
+                    <span className="mt-2.5 flex flex-wrap gap-1.5">
+                      {c.cubiertos.map((cod) => (
+                        <span
+                          key={cod}
+                          className="rounded bg-[#e4ded2]/12 px-1.5 py-0.5 font-mono text-[10px] text-[#e4ded2]/80"
+                        >
+                          {cod.replace(/_CN_/, " · ")}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+
                   <p className="mt-2.5 text-xs text-[#e4ded2]/50">
                     {ruta.semanas} semanas ·{" "}
                     {ruta.cubre.map((x) => cursoCorto(x.nivel)).join(" ")}
+                    {c.mismoEntorno ? " · calza con tu entorno" : ""}
                   </p>
                 </button>
               </li>
@@ -124,6 +179,7 @@ export default function Paso3({
 
       {elegida && (
         <>
+          <Cobertura ruta={elegida} e={e} />
           <Sesiones ruta={elegida} e={e} />
           <Curso e={e} onCambio={onCambio} />
           <Evaluacion e={e} ruta={elegida} />
@@ -141,7 +197,7 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
   const materiales = ruta.secuencia.materiales ?? [];
 
   return (
-    <Hoja titulo="Las sesiones" orden={5}>
+    <Hoja titulo="Las sesiones" orden={6}>
       <ol className="space-y-3">
         {ruta.fases.map((f, i) => (
           <li
@@ -216,7 +272,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
   }
 
   return (
-    <Hoja titulo="El curso" orden={6}>
+    <Hoja titulo="El curso" orden={7}>
       <div className="flex flex-wrap items-end gap-5">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
@@ -268,7 +324,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
 function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   if (!e.evaluacion.length) {
     return (
-      <Hoja titulo="Evaluación" orden={7}>
+      <Hoja titulo="Evaluación" orden={8}>
         <p className="text-sm leading-relaxed text-[#e4ded2]/60">
           No marcaste ningún método en el primer paso. Vuelve a la primera lámina
           y elige al menos uno: sin eso, la ruta llega al final sin manera de
@@ -279,7 +335,7 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   }
 
   return (
-    <Hoja titulo="Evaluación" orden={7}>
+    <Hoja titulo="Evaluación" orden={8}>
       <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
         Lo que marcaste en el primer paso, puesto contra lo que la ruta produce.
       </p>
@@ -306,14 +362,32 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
           </li>
         ))}
       </ul>
-      {e.objetivos.trim() && (
+      {(e.oa.length > 0 || e.objetivos.trim()) && (
         <div className="mt-4 border-t border-[#e4ded2]/12 pt-4">
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
             Contra estos objetivos
           </p>
-          <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-[#e4ded2]/75">
-            {e.objetivos}
-          </p>
+          <ul className="mt-2.5 space-y-1.5">
+            {e.oa.map((cod) => {
+              const oa = buscarOA(cod);
+              return (
+                <li key={cod} className="flex gap-2.5 text-sm leading-relaxed">
+                  <span className="shrink-0 font-mono text-[11px] text-[#c9612a]">
+                    {cod.replace(/_CN_/, " · ")}
+                  </span>
+                  <span className="text-[#e4ded2]/75">{oa?.texto ?? ""}</span>
+                </li>
+              );
+            })}
+          </ul>
+          {e.objetivos.trim() && (
+            <p className="mt-3 whitespace-pre-line border-t border-[#e4ded2]/8 pt-3 text-sm leading-relaxed text-[#e4ded2]/75">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#e4ded2]/45">
+                Y lo tuyo:{" "}
+              </span>
+              {e.objetivos}
+            </p>
+          )}
         </div>
       )}
     </Hoja>
@@ -351,7 +425,7 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   }
 
   return (
-    <Hoja titulo="Qué vive ahí" orden={8}>
+    <Hoja titulo="Qué vive ahí">
       <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
         Lo que la ciencia ciudadana ha registrado alrededor de{" "}
         {e.ubicacion.trim() || "tu escuela"}, para saber qué se puede encontrar
@@ -397,6 +471,69 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
             </li>
           ))}
         </ul>
+      )}
+    </Hoja>
+  );
+}
+
+/**
+ * Qué objetivos cubre la ruta elegida y cuáles no.
+ *
+ * Es la hoja que evita el malentendido más caro: creer que porque la ruta
+ * salió primera cubre todo lo que se marcó. Casi nunca cubre todo. Decirlo
+ * aquí, con los códigos a la vista, le deja al docente decidir si estira la
+ * ruta o si esos objetivos los pasa por otro lado.
+ */
+function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
+  if (!e.oa.length) return null;
+  const c = calce(ruta, e);
+
+  return (
+    <Hoja titulo="Qué cubre y qué no" orden={5}>
+      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+        De los {e.oa.length} objetivos que marcaste, esta ruta trabaja{" "}
+        {c.cubiertos.length}.
+      </p>
+
+      <ul className="space-y-2">
+        {e.oa.map((cod) => {
+          const oa = buscarOA(cod);
+          const dentro = c.cubiertos.includes(cod);
+          return (
+            <li
+              key={cod}
+              className={`flex gap-3 rounded-xl border p-3.5 ${
+                dentro
+                  ? "border-[#c9612a]/45 bg-[#c9612a]/[0.06]"
+                  : "border-[#e4ded2]/12"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`mt-0.5 shrink-0 font-mono text-xs ${
+                  dentro ? "text-[#c9612a]" : "text-[#e4ded2]/30"
+                }`}
+              >
+                {dentro ? "✓" : "○"}
+              </span>
+              <span className="min-w-0">
+                <span className="font-mono text-[11px] font-semibold text-[#e4ded2]/70">
+                  {cod.replace(/_CN_/, " · ")}
+                </span>
+                <span className="mt-1 block text-sm leading-relaxed text-[#e4ded2]/75">
+                  {oa?.texto ?? cod}
+                </span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      {c.fuera.length > 0 && (
+        <p className="mt-4 rounded-lg border border-[#e0a678]/35 bg-[#e0a678]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[#e0a678]">
+          Los {c.fuera.length} sin marca no los toca esta ruta. Habrá que
+          pasarlos por otro lado, o estirar la ruta para que entren.
+        </p>
       )}
     </Hoja>
   );

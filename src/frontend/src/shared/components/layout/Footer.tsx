@@ -1,49 +1,47 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Mail, MapPin } from "lucide-react";
-import AprendeLocalLogo from "../ui/AprendeLocalLogo";
+
+import AprendeLocalLogo, { TINTA } from "../ui/AprendeLocalLogo";
 
 export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-blue-950/80 bg-[#0a0047] px-4 py-12 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-          {/* Logo & Tagline */}
-          <div className="space-y-3">
-            <AprendeLocalLogo className="h-8 w-auto" color="#ffffff" />
-            <p className="text-sm text-slate-300 max-w-md">
-              {t("footer.tagline", "Educación STEM contextualizada para docentes, escuelas y comunidades rurales.")}
-            </p>
+    <footer className="border-t border-slate-100 bg-white px-4 py-10 text-slate-600">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
+          <div>
+            <AprendeLocalLogo className="h-7 w-auto" color={TINTA} />
+            <p className="mt-2.5 text-sm text-slate-500">{t("footer.tagline")}</p>
           </div>
 
-          {/* Información de Contacto */}
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 text-sm">
-            <div className="flex items-center gap-2.5">
-              <Mail className="h-4 w-4 text-[#f97316]" />
-              <a
-                href="mailto:contacto@aprendelocal.cl"
-                className="text-white hover:text-orange-400 font-medium transition"
-              >
-                contacto@aprendelocal.cl
-              </a>
-            </div>
-
-            <div className="flex items-center gap-2.5 text-slate-300">
-              <MapPin className="h-4 w-4 text-blue-400" />
-              <span>La Araucanía, Chile</span>
-            </div>
-          </div>
+          {/* Aqui habia seis enlaces y cinco de ellos eran href="#": Equipo,
+              Aliados, Preguntas frecuentes, Contacto y Terminos saltaban al
+              principio de la pagina. Quedan los que llevan a alguna parte. */}
+          <nav className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
+            <Link to="/crear" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.create", "Crear ruta")}
+            </Link>
+            <Link to="/rutas" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.routes", "Rutas escritas")}
+            </Link>
+            <Link
+              to="/plataforma?tab=map"
+              className="text-slate-600 transition hover:text-slate-950"
+            >
+              {t("footer.links.map", "Qué vive aquí")}
+            </Link>
+            <Link to="/instructor/login" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.instructorAccess")}
+            </Link>
+            <Link to="/#contacto" className="text-slate-600 transition hover:text-slate-950">
+              {t("footer.links.contact")}
+            </Link>
+          </nav>
         </div>
 
-        {/* Divider & Copyright */}
-        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-          <div>
-            © {new Date().getFullYear()} AprendeLocal. Todos los derechos reservados.
-          </div>
-          <div className="text-slate-400">
-            Educación STEM Territorial
-          </div>
+        <div className="mt-8 text-xs text-slate-400">
+          {t("footer.copyright")}
         </div>
       </div>
     </footer>
