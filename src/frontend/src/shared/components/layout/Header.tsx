@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { User, ChevronDown, LogIn, Menu, X, Map, Mail } from "lucide-react";
+import { User, LogIn, Menu, X, ChevronDown } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useTranslation } from "react-i18next";
 
@@ -74,32 +74,20 @@ export default function Header() {
             >
               Rutas & Proyectos
             </button>
-            
-            {/* Dropdown Comunidad ▾ */}
-            <div className="relative group">
-              <button className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer">
-                <span>Comunidad</span>
-                <ChevronDown className="w-3.5 h-3.5 transition group-hover:rotate-180" />
-              </button>
-              
-              <div className="absolute left-0 top-full mt-2 w-56 rounded-2xl bg-white text-slate-900 p-2 shadow-2xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
-                <button
-                  onClick={() => scrollTo("mapa")}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 transition text-slate-800 text-left cursor-pointer"
-                >
-                  <Map className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span>¿Qué vive aquí? (Mapa)</span>
-                </button>
-                <div className="my-1 h-px bg-slate-100" />
-                <button
-                  onClick={() => scrollTo("contacto")}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-semibold hover:bg-slate-50 transition text-slate-800 text-left cursor-pointer"
-                >
-                  <Mail className="w-4 h-4 text-orange-500 shrink-0" />
-                  <span>Contacto & Alianzas</span>
-                </button>
-              </div>
-            </div>
+
+            <button
+              onClick={() => scrollTo("mapa")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+            >
+              Mapa
+            </button>
+
+            <button
+              onClick={() => scrollTo("contacto")}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+            >
+              Contacto
+            </button>
           </nav>
 
           {/* Right side */}
