@@ -87,94 +87,151 @@ export default function Paso3({
   e: Expedicion;
   onCambio: (e: Expedicion) => void;
 }) {
+  const [viendoOtras, setViendoOtras] = useState(false);
+
   const ordenadas = useMemo(
     () =>
       RUTAS.map((r) => ({ ruta: r, c: calce(r, e) })).sort((a, b) => b.c.puntos - a.c.puntos),
     [e]
   );
-  const elegida = RUTAS.find((r) => r.id === e.rutaId) ?? null;
+
   const sinOA = e.oa.length === 0;
   const mejor = ordenadas[0];
   const ningunaCubre = !sinOA && mejor?.c.cubiertos.length === 0;
 
+  /*
+   * La ruta se designa, no se escoge de una fila.
+   *
+   * Antes esta lamina ponia las cuatro en tarjetas iguales, o sea la misma
+   * vitrina que se habia sacado de la portada, movida al final. Ahora la que
+   * calza queda designada y las demas se guardan detras de un enlace, para
+   * quien quiera cambiarla.
+   *
+   * La designacion es derivada y no guardada: mientras el docente no elija
+   * otra, `rutaId` sigue vacio y la ruta se recalcula si vuelve atras y cambia
+   * un objetivo. Guardarla congelaria una decision que el todavia no tomo.
+   */
+  const designada = ordenadas.find(({ ruta }) => ruta.id === e.rutaId) ?? mejor;
+  const elegida = designada?.ruta ?? null;
+  const cambiada = Boolean(e.rutaId) && e.rutaId !== mejor?.ruta.id;
+  const otras = ordenadas.filter(({ ruta }) => ruta.id !== elegida?.id);
+
   return (
     <div className="space-y-4">
-      {/* ── Qué ruta ─────────────────────────────────────────────────── */}
-      <Hoja titulo="La ruta que se te arma" orden={4}>
+      {/* ── La ruta designada ────────────────────────────────────────── */}
+      <Hoja titulo={cambiada ? "La ruta que elegiste" : "La ruta que te toca"} orden={4}>
         {sinOA ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
             No marcaste objetivos de aprendizaje en la primera lámina, así que
-            estas cuatro salen ordenadas solo por tu lugar. Vuelve y márcalos:
-            es lo que hace que la ruta tenga que ver con lo que vas a pasar.
+            esta sale solo por tu lugar. Vuelve y márcalos: es lo que hace que
+            la ruta tenga que ver con lo que vas a pasar.
           </p>
         ) : ningunaCubre ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
-            Ninguna de las rutas escritas cubre los objetivos que marcaste.
-            Puedes tomar la que más se acerque y ajustarla, pero conviene
-            saberlo antes: son cuatro rutas, no un catálogo completo.
+            Ninguna de las rutas escritas cubre los objetivos que marcaste. Esta
+            es la que más se acerca por tu lugar y tus cursos, y habrá que
+            ajustarla. Conviene saberlo antes: son cuatro rutas escritas, no un
+            catálogo completo.
           </p>
-        ) : (
-          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
-            Ordenadas por cuántos de tus objetivos cubre cada una. La primera es
-            la que más se acerca a lo que dijiste que ibas a pasar.
-          </p>
+        ) : null}
+
+        {elegida && designada && (
+          <div className="rounded-2xl border border-[#c9612a]/50 bg-[#c9612a]/[0.07] p-5">
+            <div className="flex flex-wrap items-baseline justify-between gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a]">
+                {elegida.titulo}
+              </span>
+              {designada.c.cubiertos.length > 0 && (
+                <span className="shrink-0 rounded-full bg-[#c9612a] px-2.5 py-0.5 font-mono text-[10px] font-semibold text-[#1e2a24]">
+                  {designada.c.cubiertos.length} de {e.oa.length} OA
+                </span>
+              )}
+            </div>
+
+            <p className="mt-2.5 text-lg leading-snug text-[#f3efe7]">
+              {elegida.preguntaGuia}
+            </p>
+
+            {/* Por qué salió esta. Sin el porqué, una designación es una orden;
+                con él, el docente puede darle la contra con argumento. */}
+            <p className="mt-3.5 text-sm leading-relaxed text-[#e4ded2]/70">
+              {designada.c.cubiertos.length > 0 ? (
+                <>
+                  Sale por los objetivos que marcaste
+                  {designada.c.mismoEntorno ? " y porque calza con tu entorno" : ""}.
+                </>
+              ) : designada.c.mismoEntorno ? (
+                <>Sale por tu entorno, no por los objetivos.</>
+              ) : (
+                <>Es la que queda más cerca de lo que contaste.</>
+              )}{" "}
+              {elegida.semanas} semanas · {elegida.cubre.map((x) => cursoCorto(x.nivel)).join(" ")}
+            </p>
+
+            {designada.c.cubiertos.length > 0 && (
+              <p className="mt-2.5 flex flex-wrap gap-1.5">
+                {designada.c.cubiertos.map((cod) => (
+                  <span
+                    key={cod}
+                    className="rounded bg-[#e4ded2]/14 px-1.5 py-0.5 font-mono text-[10px] text-[#e4ded2]/85"
+                  >
+                    {cod.replace(/_CN_/, " · ")}
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
         )}
 
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {ordenadas.map(({ ruta, c }) => {
-            const puesta = ruta.id === e.rutaId;
-            return (
+        {/* Las otras, guardadas. Están para dar la contra, no para elegir de
+            una vitrina: por eso hay que pedirlas. */}
+        <button
+          type="button"
+          onClick={() => setViendoOtras((v) => !v)}
+          aria-expanded={viendoOtras}
+          className="mt-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55 underline underline-offset-4 transition hover:text-[#e4ded2]"
+        >
+          {viendoOtras ? "Cerrar las otras" : `Ver las otras ${otras.length}`}
+        </button>
+
+        {viendoOtras && (
+          <ul className="animar-hoja mt-3 grid gap-2.5 sm:grid-cols-2">
+            {otras.map(({ ruta, c }) => (
               <li key={ruta.id}>
                 <button
                   type="button"
-                  onClick={() => onCambio({ ...e, rutaId: puesta ? null : ruta.id })}
-                  aria-pressed={puesta}
-                  className={[
-                    "flex h-full w-full flex-col rounded-xl border p-4 text-left transition",
-                    puesta
-                      ? "border-[#c9612a] bg-[#c9612a]/[0.1]"
-                      : "border-[#e4ded2]/14 hover:border-[#e4ded2]/35",
-                  ].join(" ")}
+                  onClick={() => {
+                    onCambio({ ...e, rutaId: ruta.id });
+                    setViendoOtras(false);
+                  }}
+                  className="flex h-full w-full flex-col rounded-xl border border-[#e4ded2]/14 p-4 text-left transition hover:border-[#e4ded2]/40"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a]">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#e4ded2]/60">
                       {ruta.titulo}
                     </span>
-                    {c.cubiertos.length > 0 && (
-                      <span className="shrink-0 rounded-full bg-[#c9612a] px-2 py-0.5 font-mono text-[10px] font-semibold text-[#1e2a24]">
-                        {c.cubiertos.length} de {e.oa.length} OA
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-2 text-[15px] leading-snug text-[#f3efe7]">
-                    {ruta.preguntaGuia}
-                  </p>
-
-                  {/* Qué objetivos, no solo cuántos. Un número sin los códigos
-                      obliga a confiar; con los códigos el docente comprueba. */}
-                  {c.cubiertos.length > 0 && (
-                    <span className="mt-2.5 flex flex-wrap gap-1.5">
-                      {c.cubiertos.map((cod) => (
-                        <span
-                          key={cod}
-                          className="rounded bg-[#e4ded2]/12 px-1.5 py-0.5 font-mono text-[10px] text-[#e4ded2]/80"
-                        >
-                          {cod.replace(/_CN_/, " · ")}
-                        </span>
-                      ))}
+                    <span className="shrink-0 font-mono text-[10px] text-[#e4ded2]/45">
+                      {c.cubiertos.length > 0 ? `${c.cubiertos.length} OA` : "—"}
                     </span>
-                  )}
-
-                  <p className="mt-2.5 text-xs text-[#e4ded2]/50">
-                    {ruta.semanas} semanas ·{" "}
-                    {ruta.cubre.map((x) => cursoCorto(x.nivel)).join(" ")}
-                    {c.mismoEntorno ? " · calza con tu entorno" : ""}
+                  </div>
+                  <p className="mt-2 text-sm leading-snug text-[#e4ded2]/85">
+                    {ruta.preguntaGuia}
                   </p>
                 </button>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
+
+        {cambiada && (
+          <button
+            type="button"
+            onClick={() => onCambio({ ...e, rutaId: null })}
+            className="mt-3 block font-mono text-[11px] uppercase tracking-[0.14em] text-[#c9612a] underline underline-offset-4 transition hover:text-[#e08a52]"
+          >
+            Volver a la que me tocaba
+          </button>
+        )}
       </Hoja>
 
       {elegida && (

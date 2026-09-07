@@ -71,7 +71,7 @@ export default function CrearPage() {
       marca: "IV · La ruta armada",
       titulo: "Las sesiones, el curso y lo que vive ahí",
       bajada:
-        "La ruta que más calza con lo que contaste, con su material, la evaluación que marcaste y lo que la ciencia ciudadana ha registrado alrededor.",
+        "De los objetivos que marcaste y del lugar que describiste sale una ruta, con sus sesiones, su material, la evaluación que elegiste y lo que vive alrededor. Si no te convence, hay otras.",
       contenido: <Paso3 e={e} onCambio={setE} />,
     },
   ];
