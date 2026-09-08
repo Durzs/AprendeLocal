@@ -22,7 +22,24 @@
  * entregarle un informe a nadie. Por eso vuelven vacíos y la pantalla no deja
  * dar la ruta por lista hasta que estén escritos: ahí está la co-construcción,
  * no en un botón de editar.
+ *
+ * QUIÉN PUEDE LLAMARLA
+ *
+ * Solo alguien con sesión iniciada, y con un tope por día.
+ *
+ * Cada llamada le cuesta plata a AprendeLocal. La clave anónima con que el
+ * navegador invoca las funciones va dentro del JavaScript que se descarga: es
+ * pública por diseño, la lee cualquiera con la consola abierta. Sin esta
+ * comprobación, cualquiera en internet puede escribir un bucle y gastarse el
+ * presupuesto de la cuenta en una tarde.
+ *
+ * Todo lo demás de armar una ruta sigue sin pedir cuenta: las cuatro rutas
+ * escritas, las cuatro láminas, las preguntas y los documentos para imprimir
+ * funcionan sin sesión y sin señal. Lo único detrás de la puerta es lo que
+ * cuesta dinero.
  */
+
+import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const MODELOS_CANDIDATOS = [
   Deno.env.get("ANTHROPIC_MODEL"),
@@ -31,6 +48,9 @@ const MODELOS_CANDIDATOS = [
 ].filter(Boolean) as string[];
 
 const MAX_TOKENS = 8000;
+
+/** Cuántas rutas puede armar una persona en un día. */
+const TOPE_DIARIO = 20;
 const TIEMPO_MAXIMO_MS = 100_000;
 
 const CORS = {
@@ -144,6 +164,68 @@ Deno.serve(async (req: Request) => {
     return responder({ error: "Solo POST." }, 405);
   }
 
+  /*
+   * Quién llama. La clave anónima es un JWT válido, así que el portón de
+   * Supabase la deja pasar: hay que preguntar por el usuario de verdad.
+   */
+  const autorizacion = req.headers.get("Authorization") ?? "";
+  const token = autorizacion.replace(/^Bearer\s+/i, "");
+  const urlSupabase = Deno.env.get("SUPABASE_URL");
+  const claveServicio = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!urlSupabase || !claveServicio) {
+    return responder(
+      { error: "sin_configurar", mensaje: "Falta configurar el proyecto de Supabase." },
+      503
+    );
+  }
+
+  const admin = createClient(urlSupabase, claveServicio);
+  const { data: quien } = await admin.auth.getUser(token);
+  const usuario = quien?.user ?? null;
+
+  if (!usuario) {
+    return responder(
+      {
+        error: "sin_sesion",
+        mensaje:
+          "Para armar una ruta con el modelo hay que entrar con una cuenta. " +
+          "Todo lo demás —las rutas escritas, las láminas y los documentos— " +
+          "funciona sin cuenta.",
+      },
+      401
+    );
+  }
+
+  /*
+   * El tope diario. Un docente arma una o dos rutas por unidad, no cuarenta;
+   * si alguien llega a veinte en un día, o está probando o algo va mal, y en
+   * los dos casos conviene parar antes de que la cuenta lo note.
+   *
+   * Se lleva con la clave de servicio para que nadie pueda editarse su propio
+   * contador desde el navegador.
+   */
+  const hoy = new Date().toISOString().slice(0, 10);
+  const { data: uso } = await admin
+    .from("usos_ia")
+    .select("veces")
+    .eq("usuario", usuario.id)
+    .eq("dia", hoy)
+    .maybeSingle();
+
+  const veces = uso?.veces ?? 0;
+  if (veces >= TOPE_DIARIO) {
+    return responder(
+      {
+        error: "tope",
+        mensaje:
+          `Llegaste a ${TOPE_DIARIO} rutas armadas hoy. Mañana se puede de nuevo, ` +
+          "y mientras tanto las rutas escritas siguen ahí.",
+      },
+      429
+    );
+  }
+
   const clave = Deno.env.get("ANTHROPIC_API_KEY");
   if (!clave) {
     return responder(
@@ -246,6 +328,12 @@ Deno.serve(async (req: Request) => {
       }
 
       const inventados = vaciarHuecos(ruta);
+
+      // Se cuenta solo cuando la llamada salió bien: cobrarle al docente un
+      // intento que falló por nuestra parte sería cobrarle nuestro error.
+      await admin
+        .from("usos_ia")
+        .upsert({ usuario: usuario.id, dia: hoy, veces: veces + 1 }, { onConflict: "usuario,dia" });
 
       return responder({
         ruta,

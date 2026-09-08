@@ -15,7 +15,9 @@
  */
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
+import { useAuth } from "../../../shared/contexts/AuthContext";
 import { Hoja } from "./Campos";
 import { HUECOS, generar, huecosPendientes, type RutaIA } from "./generar";
 import type { Expedicion } from "./expedicion";
@@ -27,6 +29,7 @@ export default function RutaGenerada({
   e: Expedicion;
   onCambio: (e: Expedicion) => void;
 }) {
+  const { user } = useAuth();
   const [pidiendo, setPidiendo] = useState(false);
   const [aviso, setAviso] = useState<{ tono: "malo" | "neutro"; texto: string } | null>(null);
 
@@ -47,7 +50,8 @@ export default function RutaGenerada({
       onCambio({ ...e, rutaIA: r.ruta });
       return;
     }
-    setAviso({ tono: r.estado === "sin_clave" ? "neutro" : "malo", texto: r.mensaje });
+    const suave = r.estado === "sin_clave" || r.estado === "sin_sesion" || r.estado === "tope";
+    setAviso({ tono: suave ? "neutro" : "malo", texto: r.mensaje });
   }
 
   /* ── Todavía no hay ruta armada ──────────────────────────────────────── */
@@ -64,16 +68,48 @@ export default function RutaGenerada({
           las puede saber y te las va a preguntar.
         </p>
 
-        <button
-          type="button"
-          onClick={pedir}
-          disabled={pidiendo || e.oa.length === 0}
-          className="rounded-full bg-[#c9612a] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[#e4ded2]/15 disabled:text-[#e4ded2]/40"
-        >
-          {pidiendo ? "Armando…" : "Armar mi ruta"}
-        </button>
+        {/* Sin sesión se dice aquí y no después de pulsar. Que el docente
+            escriba media lámina y recién entonces le pidan entrar es hacerle
+            perder el trabajo o hacerle abrir otra pestaña a mitad de camino. */}
+        {user ? (
+          <button
+            type="button"
+            onClick={pedir}
+            disabled={pidiendo || e.oa.length === 0}
+            className="rounded-full bg-[#c9612a] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[#e4ded2]/15 disabled:text-[#e4ded2]/40"
+          >
+            {pidiendo ? "Armando…" : "Armar mi ruta"}
+          </button>
+        ) : (
+          <div className="rounded-xl border border-[#e4ded2]/20 bg-[#e4ded2]/[0.04] p-4">
+            <p className="text-sm leading-relaxed text-[#e4ded2]/80">
+              Armar una con el modelo pide entrar con cuenta, porque cada una
+              nos cuesta. Lo que estuviste haciendo no se pierde: queda guardado
+              en este computador y sigue aquí cuando vuelvas.
+            </p>
+            <div className="mt-3.5 flex flex-wrap items-center gap-4">
+              <Link
+                to="/entrar"
+                className="rounded-full bg-[#c9612a] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
+              >
+                Entrar
+              </Link>
+              <Link
+                to="/cadastrar"
+                className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/60 underline underline-offset-4 transition hover:text-[#e4ded2]"
+              >
+                Crear una cuenta
+              </Link>
+            </div>
+            <p className="mt-3.5 border-t border-[#e4ded2]/12 pt-3 text-xs leading-relaxed text-[#e4ded2]/50">
+              Las cuatro rutas escritas, las láminas y los documentos para
+              imprimir siguen funcionando sin cuenta y sin señal. Lo único
+              detrás de la puerta es lo que cuesta plata.
+            </p>
+          </div>
+        )}
 
-        {e.oa.length === 0 && (
+        {user && e.oa.length === 0 && (
           <p className="mt-2.5 text-xs text-[#e0a678]">
             Antes marca al menos un objetivo en la primera lámina.
           </p>
