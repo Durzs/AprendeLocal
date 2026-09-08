@@ -93,7 +93,7 @@ export default function Personalizar({
         className="flex w-full items-center gap-3 px-6 py-4 text-left"
       >
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-[11px] uppercase tracking-widest text-slate-500">
+          <span className="block rotulo text-slate-500">
             {t("rutas.customize")}
           </span>
           <span className="mt-0.5 block truncate text-sm text-slate-700">

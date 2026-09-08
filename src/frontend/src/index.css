@@ -43,6 +43,133 @@ body {
   --tinta-200: #cfcaec;
   --tinta-100: #e6e3f7;
   --tinta-50:  #f3f2fc; /* fondos */
+
+  /* ───────────────────────────────────────────────────────────────────────
+   * Un solo acento cálido, en nueve tonos.
+   *
+   * Había tres peleando por el mismo puesto: el terracota del logotipo
+   * (#c9612a), un naranjo puro de botón (#f97316) y toda la familia ámbar de
+   * Tailwind (#fbbf24, amber-300, amber-400). El terracota es apagado y tira
+   * a tierra; el naranjo puro es saturado y tira a señalética. Puestos en la
+   * misma pantalla —y lo estaban: la cabecera tenía el botón naranjo al lado
+   * de la insignia ámbar— no se leen como una familia, se leen como un
+   * descuido. Eso es lo que desentonaba.
+   *
+   * Estos nueve salen del matiz del logotipo, 20,75°, moviendo solo luz y
+   * saturación. El de marca sigue siendo el 600, idéntico al de antes.
+   * ─────────────────────────────────────────────────────────────────────── */
+  --tierra-900: #3f2212;
+  --tierra-800: #623218;
+  --tierra-700: #8b431d; /* texto de acento sobre fondo claro, con contraste */
+  --tierra-600: #c9612a; /* la marca */
+  --tierra-500: #d97b4a; /* hover */
+  --tierra-400: #e2976f;
+  --tierra-300: #e7b59a; /* acento sobre fondo oscuro */
+  --tierra-200: #f1d5c6; /* bordes */
+  --tierra-100: #f6e5dc;
+  --tierra-50:  #fcf4f1;
+
+  /* El verde de los dibujos isométricos.
+   *
+   * Eran esmeraldas de librería —#34d399, #10b981, #6ee7b7—, que son verdes de
+   * pantalla: al lado del índigo de la marca vibran, y ese vibrar es la mitad
+   * de lo que se veía desafinado en esa sección. Estos cuatro son el mismo
+   * verde del logotipo (#1e2a24, matiz 156°) subido de luz, que es lo que
+   * hace falta para dibujar con él sin cambiar de color. */
+  --monte-200: #a8ddc0;
+  --monte-300: #7fc9a4;
+  --monte-500: #3f9b72;
+  --monte-700: #2b6f52;
+  --monte-900: #1e4a38;
+
+  /* Y el agua, que en los dibujos era violeta: `--tinta-400` sobre el verde
+   * del terreno se leía como una grieta, no como un estero. Es el matiz que
+   * queda entre el verde del monte y el índigo de la marca. */
+  --agua-400: #6fb3c4;
+  --agua-600: #3d7f92;
+
+  /* Los dos fondos oscuros y las dos cremas del logotipo. */
+  --bosque-950: #1e2a24;
+  --crema:      #e4ded2;
+  --crema-clara: #f3efe7;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * TRES PAPELES PARA LA TIPOGRAFÍA, Y NINGUNO MÁS
+ *
+ * `font-mono` estaba haciendo dieciocho trabajos distintos: rótulos,
+ * números, palabras en mapuzugun, nombres comunes, insignias de estado. Con
+ * tamaños que iban de 9 a 96 px y seis espaciados distintos. El caso peor
+ * estaba en la ficha de una especie: el nombre común salía en monoespaciada
+ * grande cuando no había nombre en mapuzugun, y en sans chica cuando sí lo
+ * había. El mismo dato, dos tipografías, según un campo vecino.
+ *
+ * La regla, de aquí en adelante:
+ *
+ *   · `.rotulo` — la monoespaciada es para ANOTAR: rótulos diminutos en
+ *     mayúscula que dicen qué es la pieza que viene abajo. Un tamaño, un
+ *     espaciado. El color lo pone quien la usa.
+ *   · `.cifra`  — y para NUMERAR: etapas, coordenadas, cantidades. Cifras de
+ *     ancho fijo, que es justamente para lo que sirve una monoespaciada.
+ *   · Todo lo demás —incluidas las palabras en mapuzugun— va en la sans del
+ *     sitio. Una palabra en mapuzugun no es un código ni un dato: ponerla en
+ *     la tipografía de la consola la trata como si lo fuera. Se distingue por
+ *     tamaño, peso y color, como se distingue cualquier otra palabra.
+ *
+ * `.nombre` y `.glosa` son las dos caras de ese último caso: el término y su
+ * traducción, misma tipografía y mismo tamaño, distinto peso y distinto
+ * color. Se leen como lo que son, un par.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* Van en la capa `components` a propósito: así una utilidad de Tailwind puesta
+   en el mismo elemento —`text-2xl` sobre un `.nombre`, por ejemplo— sigue
+   ganando. Fuera de toda capa, el papel le ganaría a la utilidad y el tamaño
+   escrito en el componente no haría nada. */
+@layer components {
+  .rotulo {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.625rem; /* 10px */
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+  }
+
+  .cifra {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* El término y su traducción. El tamaño lo pone quien las usa, pero se lo
+     tiene que poner a las dos: son un par y se leen como un par. */
+  .nombre {
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .glosa {
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    font-weight: 400;
+  }
+
+  /* Los titulares, con una sola manera de componerse. Había h2 en `semibold`
+     con -0.055em y h3 en `extrabold` con `tracking-tight`, uno debajo del
+     otro: dos jerarquías distintas para el mismo nivel. */
+  .display {
+    font-weight: 600;
+    letter-spacing: -0.055em;
+    line-height: 0.95;
+  }
+
+  .titulo {
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
 }
 
 /* Animaciones flotantes y orgánicas */
@@ -209,6 +336,51 @@ body {
 .animar-asoma-2 { animation-delay: 80ms; }
 .animar-asoma-3 { animation-delay: 120ms; }
 .animar-asoma-4 { animation-delay: 160ms; }
+
+/*
+ * Dos clases que se usaban sin existir.
+ *
+ * En la sección de los dibujos, cada palabra del titular lleva
+ * `animate-fadeInUp` con su retraso escalonado, y el modelo isométrico lleva
+ * `animate-bounce-slow`. Ninguna de las dos estaba definida en ninguna parte:
+ * este proyecto usa Tailwind 4 sin archivo de configuración, así que esas
+ * clases no producían nada. El escalonado palabra por palabra y la flotación
+ * del dibujo llevaban meses en el código sin verse. Aquí están.
+ */
+@keyframes palabraAsoma {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes flotaLento {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -10px, 0); }
+}
+
+.animate-fadeInUp   { animation: palabraAsoma 380ms cubic-bezier(.22,.68,.28,1) both; }
+.animate-bounce-slow { animation: flotaLento 5s ease-in-out infinite; }
+
+/*
+ * El grano de papel. Es la misma capa en la portada, en el territorio y en el
+ * cuaderno: una sección oscura sin textura se ve como un rectángulo de color,
+ * y con ella se ve como papel. Estaba repetida a mano con seis líneas de
+ * estilo en línea cada vez.
+ */
+@layer components {
+  .grano::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.14;
+    mix-blend-mode: overlay;
+    background-image:
+      radial-gradient(var(--crema) 0.5px, transparent 0.5px),
+      radial-gradient(var(--crema) 0.5px, transparent 0.5px);
+    background-size: 7px 7px, 7px 7px;
+    background-position: 0 0, 3.5px 3.5px;
+  }
+}
 
 /*
  * Quien pidió que nada se mueva, no ve nada moverse. Incluye las animaciones

@@ -20,7 +20,7 @@ export default function MetodologiaPage() {
     <main className="min-h-screen bg-white text-[#111217]">
       <header className="border-b border-slate-100 bg-[var(--tinta-50)] px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">
+          <p className="rotulo text-slate-500">
             En qué se apoya
           </p>
           <h1 className="mt-3 text-3xl font-semibold leading-[0.95] tracking-[-0.055em] text-[#111217] sm:text-4xl md:text-5xl">

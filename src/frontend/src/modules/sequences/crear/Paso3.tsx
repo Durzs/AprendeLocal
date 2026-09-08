@@ -128,13 +128,13 @@ export default function Paso3({
       {/* ── La ruta designada ────────────────────────────────────────── */}
       <Hoja titulo={cambiada ? "La ruta que elegiste" : "La ruta que te toca"} orden={4}>
         {sinOA ? (
-          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
+          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
             No marcaste objetivos de aprendizaje en la primera lámina, así que
             esta sale solo por tu lugar. Vuelve y márcalos: es lo que hace que
             la ruta tenga que ver con lo que vas a pasar.
           </p>
         ) : ningunaCubre ? (
-          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e0a678]">
+          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
             Ninguna de las rutas escritas cubre los objetivos que marcaste. Esta
             es la que más se acerca por tu lugar y tus cursos, y habrá que
             ajustarla. Conviene saberlo antes: son cuatro rutas escritas, no un
@@ -143,25 +143,25 @@ export default function Paso3({
         ) : null}
 
         {elegida && designada && (
-          <div className="rounded-2xl border border-[#c9612a]/50 bg-[#c9612a]/[0.07] p-5">
+          <div className="rounded-2xl border border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.07] p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a]">
+              <span className="rotulo text-[var(--tierra-600)]">
                 {elegida.titulo}
               </span>
               {designada.c.cubiertos.length > 0 && (
-                <span className="shrink-0 rounded-full bg-[#c9612a] px-2.5 py-0.5 font-mono text-[10px] font-semibold text-[#1e2a24]">
+                <span className="shrink-0 rounded-full bg-[var(--tierra-600)] px-2.5 py-0.5 font-mono text-[10px] font-semibold text-[#1e2a24]">
                   {designada.c.cubiertos.length} de {e.oa.length} OA
                 </span>
               )}
             </div>
 
-            <p className="mt-2.5 text-lg leading-snug text-[#f3efe7]">
+            <p className="mt-2.5 text-lg leading-snug text-[var(--crema-clara)]">
               {elegida.preguntaGuia}
             </p>
 
             {/* Por qué salió esta. Sin el porqué, una designación es una orden;
                 con él, el docente puede darle la contra con argumento. */}
-            <p className="mt-3.5 text-sm leading-relaxed text-[#e4ded2]/70">
+            <p className="mt-3.5 text-sm leading-relaxed text-[var(--crema)]/70">
               {designada.c.cubiertos.length > 0 ? (
                 <>
                   Sale por los objetivos que marcaste
@@ -180,7 +180,7 @@ export default function Paso3({
                 {designada.c.cubiertos.map((cod) => (
                   <span
                     key={cod}
-                    className="rounded bg-[#e4ded2]/14 px-1.5 py-0.5 font-mono text-[10px] text-[#e4ded2]/85"
+                    className="rounded bg-[var(--crema)]/14 px-1.5 py-0.5 font-mono text-[10px] text-[var(--crema)]/85"
                   >
                     {cod.replace(/_CN_/, " · ")}
                   </span>
@@ -196,7 +196,7 @@ export default function Paso3({
           type="button"
           onClick={() => setViendoOtras((v) => !v)}
           aria-expanded={viendoOtras}
-          className="mt-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55 underline underline-offset-4 transition hover:text-[#e4ded2]"
+          className="mt-3.5 rotulo text-[var(--crema)]/55 underline underline-offset-4 transition hover:text-[var(--crema)]"
         >
           {viendoOtras ? "Cerrar las otras" : `Ver las otras ${otras.length}`}
         </button>
@@ -211,17 +211,17 @@ export default function Paso3({
                     onCambio({ ...e, rutaId: ruta.id });
                     setViendoOtras(false);
                   }}
-                  className="flex h-full w-full flex-col rounded-xl border border-[#e4ded2]/14 p-4 text-left transition hover:border-[#e4ded2]/40"
+                  className="flex h-full w-full flex-col rounded-xl border border-[var(--crema)]/14 p-4 text-left transition hover:border-[var(--crema)]/40"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#e4ded2]/60">
+                    <span className="rotulo text-[var(--crema)]/60">
                       {ruta.titulo}
                     </span>
-                    <span className="shrink-0 font-mono text-[10px] text-[#e4ded2]/45">
+                    <span className="shrink-0 font-mono text-[10px] text-[var(--crema)]/45">
                       {c.cubiertos.length > 0 ? `${c.cubiertos.length} OA` : "—"}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm leading-snug text-[#e4ded2]/85">
+                  <p className="mt-2 text-sm leading-snug text-[var(--crema)]/85">
                     {ruta.preguntaGuia}
                   </p>
                 </button>
@@ -234,7 +234,7 @@ export default function Paso3({
           <button
             type="button"
             onClick={() => onCambio({ ...e, rutaId: null })}
-            className="mt-3 block font-mono text-[11px] uppercase tracking-[0.14em] text-[#c9612a] underline underline-offset-4 transition hover:text-[#e08a52]"
+            className="mt-3 block rotulo text-[var(--tierra-600)] underline underline-offset-4 transition hover:text-[var(--tierra-500)]"
           >
             Volver a la que me tocaba
           </button>
@@ -268,15 +268,15 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
         {ruta.fases.map((f, i) => (
           <li
             key={f.titulo}
-            className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex gap-4 rounded-xl border border-[#e4ded2]/12 p-4`}
+            className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex gap-4 rounded-xl border border-[var(--crema)]/12 p-4`}
           >
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#c9612a]/50 font-mono text-xs text-[#c9612a]">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--tierra-600)]/50 font-mono text-xs text-[var(--tierra-600)]">
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="text-[15px] font-medium text-[#f3efe7]">{f.titulo}</p>
+              <p className="text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
               {f.queOcurre && (
-                <p className="mt-1 text-sm leading-relaxed text-[#e4ded2]/65">{f.queOcurre}</p>
+                <p className="mt-1 text-sm leading-relaxed text-[var(--crema)]/65">{f.queOcurre}</p>
               )}
             </div>
           </li>
@@ -284,21 +284,21 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
       </ol>
 
       {materiales.length ? (
-        <div className="mt-5 border-t border-[#e4ded2]/12 pt-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
+        <div className="mt-5 border-t border-[var(--crema)]/12 pt-4">
+          <p className="rotulo text-[var(--crema)]/55">
             Material disponible
           </p>
           <ul className="mt-2.5 flex flex-wrap gap-2">
             {materiales.map((m) => (
               <li
                 key={m}
-                className="rounded-full border border-[#e4ded2]/18 px-3 py-1 text-xs text-[#e4ded2]/75"
+                className="rounded-full border border-[var(--crema)]/18 px-3 py-1 text-xs text-[var(--crema)]/75"
               >
                 {m}
               </li>
             ))}
           </ul>
-          <p className="mt-2.5 text-xs text-[#e4ded2]/45">
+          <p className="mt-2.5 text-xs text-[var(--crema)]/45">
             Nada de esto hay que comprarlo. Si algo falta, la hoja de terreno se
             imprime igual y se anota a mano.
           </p>
@@ -306,7 +306,7 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
       ) : null}
 
       {e.semanas && e.semanas !== ruta.semanas && (
-        <p className="mt-4 rounded-lg border border-[#e0a678]/35 bg-[#e0a678]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[#e0a678]">
+        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
           Dijiste {e.semanas} semanas y la ruta está escrita para {ruta.semanas}.
           Se puede estirar o apretar, pero la salida a terreno necesita su
           sesión completa.
@@ -341,10 +341,10 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
     <Hoja titulo="El curso" orden={7}>
       <div className="flex flex-wrap items-end gap-5">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
+          <p className="rotulo text-[var(--crema)]/55">
             Código de la expedición
           </p>
-          <p className="mt-1.5 font-mono text-3xl tracking-[0.14em] text-[#f3efe7]">
+          <p className="mt-1.5 font-mono text-3xl tracking-[0.14em] text-[var(--crema-clara)]">
             {e.codigoCurso || "— — —"}
           </p>
         </div>
@@ -354,7 +354,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
             onClick={() =>
               onCambio({ ...e, codigoCurso: codigoNuevo(e.docente || "ruta") })
             }
-            className="rounded-full border border-[#e4ded2]/25 px-4 py-2 text-sm text-[#e4ded2]/85 transition hover:border-[#e4ded2]/55 hover:text-[#e4ded2]"
+            className="rounded-full border border-[var(--crema)]/25 px-4 py-2 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)]"
           >
             {e.codigoCurso ? "Otro código" : "Generar código"}
           </button>
@@ -362,7 +362,7 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
             <button
               type="button"
               onClick={copiar}
-              className="rounded-full bg-[#e4ded2]/12 px-4 py-2 text-sm text-[#e4ded2] transition hover:bg-[#e4ded2]/22"
+              className="rounded-full bg-[var(--crema)]/12 px-4 py-2 text-sm text-[var(--crema)] transition hover:bg-[var(--crema)]/22"
             >
               {copiado ? "Copiado" : "Copiar"}
             </button>
@@ -370,13 +370,13 @@ function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => vo
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-[#e4ded2]/60">
+      <p className="mt-4 text-sm leading-relaxed text-[var(--crema)]/60">
         Se dicta en voz alta y se escribe en el pizarrón: sin O ni I ni ceros ni
         unos, que ahí se confunden.
         {e.estudiantes ? ` Son ${e.estudiantes} estudiantes.` : ""}
       </p>
 
-      <p className="mt-3 rounded-lg border border-[#e0a678]/35 bg-[#e0a678]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[#e0a678]">
+      <p className="mt-3 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
         Todavía no crea las cuentas. El código queda guardado en este computador
         y sirve para anotarlo, pero enlazar la expedición con las cuentas de los
         estudiantes está por escribirse. Vale saberlo antes de dictárselo al
@@ -391,7 +391,7 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   if (!e.evaluacion.length) {
     return (
       <Hoja titulo="Evaluación" orden={8}>
-        <p className="text-sm leading-relaxed text-[#e4ded2]/60">
+        <p className="text-sm leading-relaxed text-[var(--crema)]/60">
           No marcaste ningún método en el primer paso. Vuelve a la primera lámina
           y elige al menos uno: sin eso, la ruta llega al final sin manera de
           mostrar lo que aprendieron.
@@ -402,19 +402,19 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
 
   return (
     <Hoja titulo="Evaluación" orden={8}>
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
         Lo que marcaste en el primer paso, puesto contra lo que la ruta produce.
       </p>
       <ul className="space-y-2.5">
         {e.evaluacion.map((v) => (
           <li
             key={v}
-            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border border-[#e4ded2]/12 p-3.5"
+            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border border-[var(--crema)]/12 p-3.5"
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#c9612a]">
+            <span className="rotulo text-[var(--tierra-600)]">
               {ETIQUETA_EVAL[v] ?? v}
             </span>
-            <span className="min-w-0 flex-1 text-sm leading-relaxed text-[#e4ded2]/75">
+            <span className="min-w-0 flex-1 text-sm leading-relaxed text-[var(--crema)]/75">
               {v === "producto"
                 ? `Se evalúa lo que entregan: ${ruta.producto.que}`
                 : v === "cuaderno"
@@ -429,8 +429,8 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
         ))}
       </ul>
       {(e.oa.length > 0 || e.objetivos.trim()) && (
-        <div className="mt-4 border-t border-[#e4ded2]/12 pt-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/55">
+        <div className="mt-4 border-t border-[var(--crema)]/12 pt-4">
+          <p className="rotulo text-[var(--crema)]/55">
             Contra estos objetivos
           </p>
           <ul className="mt-2.5 space-y-1.5">
@@ -438,17 +438,17 @@ function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
               const oa = buscarOA(cod);
               return (
                 <li key={cod} className="flex gap-2.5 text-sm leading-relaxed">
-                  <span className="shrink-0 font-mono text-[11px] text-[#c9612a]">
+                  <span className="shrink-0 font-mono text-[11px] text-[var(--tierra-600)]">
                     {cod.replace(/_CN_/, " · ")}
                   </span>
-                  <span className="text-[#e4ded2]/75">{oa?.texto ?? ""}</span>
+                  <span className="text-[var(--crema)]/75">{oa?.texto ?? ""}</span>
                 </li>
               );
             })}
           </ul>
           {e.objetivos.trim() && (
-            <p className="mt-3 whitespace-pre-line border-t border-[#e4ded2]/8 pt-3 text-sm leading-relaxed text-[#e4ded2]/75">
-              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#e4ded2]/45">
+            <p className="mt-3 whitespace-pre-line border-t border-[var(--crema)]/8 pt-3 text-sm leading-relaxed text-[var(--crema)]/75">
+              <span className="rotulo text-[var(--crema)]/45">
                 Y lo tuyo:{" "}
               </span>
               {e.objetivos}
@@ -492,7 +492,7 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
 
   return (
     <Hoja titulo="Qué vive ahí">
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
         Lo que la ciencia ciudadana ha registrado alrededor de{" "}
         {e.ubicacion.trim() || "tu escuela"}, para saber qué se puede encontrar
         el día de la salida. Los datos vienen de iNaturalist.
@@ -502,17 +502,17 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
         type="button"
         onClick={buscar}
         disabled={estado === "pidiendo"}
-        className="rounded-full border border-[#e4ded2]/25 px-5 py-2 text-sm text-[#e4ded2]/85 transition hover:border-[#e4ded2]/55 hover:text-[#e4ded2] disabled:opacity-50"
+        className="rounded-full border border-[var(--crema)]/25 px-5 py-2 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:opacity-50"
       >
         {estado === "pidiendo" ? "Preguntando…" : "Usar mi ubicación"}
       </button>
 
       {estado === "error" && (
-        <p className="mt-3.5 text-sm leading-relaxed text-[#e0a678]">{motivo}</p>
+        <p className="mt-3.5 text-sm leading-relaxed text-[var(--tierra-300)]">{motivo}</p>
       )}
 
       {estado === "listo" && especies.length === 0 && (
-        <p className="mt-3.5 text-sm leading-relaxed text-[#e4ded2]/60">
+        <p className="mt-3.5 text-sm leading-relaxed text-[var(--crema)]/60">
           No hay registros a cinco kilómetros. Pasa en zonas rurales, y es una
           buena noticia para el curso: lo que anoten va a ser el primer registro
           del lugar.
@@ -524,13 +524,13 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
           {especies.slice(0, 12).map((sp, i) => (
             <li
               key={sp.cientifico || i}
-              className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} rounded-lg border border-[#e4ded2]/12 px-3.5 py-2.5`}
+              className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} rounded-lg border border-[var(--crema)]/12 px-3.5 py-2.5`}
             >
-              <p className="text-sm text-[#f3efe7]">
+              <p className="text-sm text-[var(--crema-clara)]">
                 {sp.comun || sp.cientifico}
               </p>
               {sp.comun && (
-                <p className="mt-0.5 font-mono text-[11px] italic text-[#e4ded2]/45">
+                <p className="mt-0.5 font-mono text-[11px] italic text-[var(--crema)]/45">
                   {sp.cientifico}
                 </p>
               )}
@@ -556,7 +556,7 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
 
   return (
     <Hoja titulo="Qué cubre y qué no" orden={5}>
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
         De los {e.oa.length} objetivos que marcaste, esta ruta trabaja{" "}
         {c.cubiertos.length}.
       </p>
@@ -570,23 +570,23 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
               key={cod}
               className={`flex gap-3 rounded-xl border p-3.5 ${
                 dentro
-                  ? "border-[#c9612a]/45 bg-[#c9612a]/[0.06]"
-                  : "border-[#e4ded2]/12"
+                  ? "border-[var(--tierra-600)]/45 bg-[var(--tierra-600)]/[0.06]"
+                  : "border-[var(--crema)]/12"
               }`}
             >
               <span
                 aria-hidden
                 className={`mt-0.5 shrink-0 font-mono text-xs ${
-                  dentro ? "text-[#c9612a]" : "text-[#e4ded2]/30"
+                  dentro ? "text-[var(--tierra-600)]" : "text-[var(--crema)]/30"
                 }`}
               >
                 {dentro ? "✓" : "○"}
               </span>
               <span className="min-w-0">
-                <span className="font-mono text-[11px] font-semibold text-[#e4ded2]/70">
+                <span className="font-mono text-[11px] font-semibold text-[var(--crema)]/70">
                   {cod.replace(/_CN_/, " · ")}
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-[#e4ded2]/75">
+                <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/75">
                   {oa?.texto ?? cod}
                 </span>
               </span>
@@ -596,7 +596,7 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
       </ul>
 
       {c.fuera.length > 0 && (
-        <p className="mt-4 rounded-lg border border-[#e0a678]/35 bg-[#e0a678]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[#e0a678]">
+        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
           Los {c.fuera.length} sin marca no los toca esta ruta. Habrá que
           pasarlos por otro lado, o estirar la ruta para que entren.
         </p>

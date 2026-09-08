@@ -181,7 +181,7 @@ export default function PrepararPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <header className="print:hidden">
-        <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
+        <p className="rotulo text-slate-500">
           {t("preparar.eyebrow")}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">

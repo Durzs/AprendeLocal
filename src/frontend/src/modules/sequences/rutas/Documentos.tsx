@@ -141,7 +141,7 @@ export default function Documentos({
   return (
     <>
       <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 print:hidden">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+        <p className="rotulo text-slate-500">
           {t("rutas.printTitle")}
         </p>
         <p className="mt-1.5 text-sm text-slate-600">{t("rutas.printLead")}</p>

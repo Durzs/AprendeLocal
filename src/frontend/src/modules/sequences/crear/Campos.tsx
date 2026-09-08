@@ -25,17 +25,17 @@ export function Campo({
 }) {
   return (
     <label className={`block ${ancho === "entera" ? "sm:col-span-2" : ""}`}>
-      <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/60">
+      <span className="mb-1.5 block rotulo text-[var(--crema)]/60">
         {etiqueta}
       </span>
       {children}
-      {ayuda && <span className="mt-1.5 block text-xs text-[#e4ded2]/45">{ayuda}</span>}
+      {ayuda && <span className="mt-1.5 block text-xs text-[var(--crema)]/45">{ayuda}</span>}
     </label>
   );
 }
 
 const PIEL =
-  "w-full rounded-lg border border-[#e4ded2]/20 bg-[#e4ded2]/[0.045] px-3.5 py-2.5 text-[15px] text-[#f3efe7] outline-none transition placeholder:text-[#e4ded2]/30 focus:border-[#c9612a] focus:bg-[#e4ded2]/[0.08]";
+  "w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--crema)]/[0.045] px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] outline-none transition placeholder:text-[var(--crema)]/30 focus:border-[var(--tierra-600)] focus:bg-[var(--crema)]/[0.08]";
 
 export function Texto(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input {...props} className={PIEL} />;
@@ -77,7 +77,7 @@ export function Fichas<T extends string>({
 
   return (
     <fieldset className="sm:col-span-2">
-      <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/60">
+      <legend className="mb-2 rotulo text-[var(--crema)]/60">
         {etiqueta}
       </legend>
       <div className="flex flex-wrap gap-2">
@@ -92,8 +92,8 @@ export function Fichas<T extends string>({
               className={[
                 "rounded-full border px-4 py-2 text-sm transition",
                 puesta
-                  ? "border-[#c9612a] bg-[#c9612a] font-semibold text-[#1e2a24]"
-                  : "border-[#e4ded2]/22 text-[#e4ded2]/80 hover:border-[#e4ded2]/45 hover:text-[#e4ded2]",
+                  ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] font-semibold text-[#1e2a24]"
+                  : "border-[var(--crema)]/22 text-[var(--crema)]/80 hover:border-[var(--crema)]/45 hover:text-[var(--crema)]",
               ].join(" ")}
             >
               {o.titulo}
@@ -101,7 +101,7 @@ export function Fichas<T extends string>({
           );
         })}
       </div>
-      {ayuda && <p className="mt-2 text-xs text-[#e4ded2]/45">{ayuda}</p>}
+      {ayuda && <p className="mt-2 text-xs text-[var(--crema)]/45">{ayuda}</p>}
     </fieldset>
   );
 }
@@ -126,10 +126,10 @@ export function Hoja({
   const retraso = orden && orden <= 8 ? ` animar-hoja-${orden}` : "";
   return (
     <section
-      className={`animar-hoja${retraso} rounded-2xl border border-[#e4ded2]/14 bg-[#e4ded2]/[0.035] p-6`}
+      className={`animar-hoja${retraso} rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.035] p-6`}
     >
       {titulo && (
-        <h2 className="mb-5 font-mono text-[11px] uppercase tracking-[0.18em] text-[#c9612a]">
+        <h2 className="mb-5 rotulo text-[var(--tierra-600)]">
           {titulo}
         </h2>
       )}

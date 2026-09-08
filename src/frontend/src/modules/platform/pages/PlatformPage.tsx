@@ -132,7 +132,7 @@ export default function PlatformPage() {
             className="mt-6 flex flex-col gap-3 rounded-2xl border border-emerald-600/30 bg-emerald-50/60 p-5 transition hover:border-emerald-600/60 hover:bg-emerald-50 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-emerald-700">
+              <p className="rotulo text-emerald-700">
                 {t("platform.teacherEntry.eyebrow")}
               </p>
               <p className="mt-1 text-lg font-semibold tracking-tight text-slate-950">
