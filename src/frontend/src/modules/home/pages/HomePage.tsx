@@ -4,7 +4,7 @@ import { useAuth } from "../../../shared/contexts/AuthContext";
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
-import FuncionesSection from "../components/FuncionesSection";
+import TerritorioSection from "../components/TerritorioSection";
 import ContactSection from "../components/ContactSection";
 import EscritorioPage from "./EscritorioPage";
 
@@ -51,10 +51,9 @@ export default function HomePage() {
    * baja tres pantallas leyendo variaciones del mismo párrafo no aprende más;
    * se cansa antes de llegar al botón.
    *
-   * Quedan cinco. La entrada, qué es esto, cómo funciona con los dibujos, qué
-   * se va a encontrar al entrar, y cómo escribirnos. Los pilares y la
-   * formación se fueron a /metodologia y el banco de rutas a /rutas: no se
-   * borraron, se mudaron.
+   * Quedan cinco. La entrada, qué es esto, cómo funciona con los dibujos, el
+   * territorio, y cómo escribirnos. Los pilares y la formación se fueron a
+   * /metodologia y el banco de rutas a /rutas: no se borraron, se mudaron.
    */
   if (loading) {
     return (
@@ -79,8 +78,11 @@ export default function HomePage() {
       {/* Cómo funciona, con los dibujos que cambian al bajar */}
       <HowItWorksSection />
 
-      {/* Qué se va a encontrar al entrar, con el nombre que tiene adentro */}
-      <FuncionesSection />
+      {/* El territorio: la metodología como etapas del viaje, y lo que vive
+          ahí con su nombre en mapuzugun. Reemplaza a la rejilla de seis
+          tarjetas con enlaces, que era un índice del sitio disfrazado de
+          sección: explicaba la aplicación y no decía nada del lugar. */}
+      <TerritorioSection />
 
       {/* La única puerta que queda para una escuela que quiere entrar */}
       <ContactSection />

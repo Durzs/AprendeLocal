@@ -78,23 +78,23 @@ export default function ContactSection() {
   const enviado = estado === "guardado" || estado === "por_correo";
 
   return (
-    <section id="contacto" className="relative overflow-hidden bg-slate-900 py-20 md:py-28 text-white">
+    <section id="contacto" className="relative overflow-hidden bg-white py-20 text-[#111217] md:py-28">
       {/* Background glow accents */}
-      <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-600/15 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-[var(--tinta-100)] blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-50 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left information */}
           <div className="space-y-6 lg:col-span-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-white leading-[0.95]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[0.95]">
               {t(
                 "home.contact.title",
                 "¿Quieres llevar AprendeLocal a tu escuela o comunidad?"
               )}
             </h2>
 
-            <p className="text-base leading-relaxed text-slate-300">
+            <p className="text-base leading-relaxed text-slate-600">
               {t(
                 "home.contact.subtitle",
                 "Acompañamos a docentes, directivos y comunidades con clases ya escritas, documentos para imprimir y salidas a terreno alrededor de la escuela."
@@ -103,14 +103,14 @@ export default function ContactSection() {
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-orange-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-200 bg-orange-50 text-orange-700">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Correo directo</div>
+                  <div className="text-xs text-slate-500">Correo directo</div>
                   <a
                     href="mailto:contacto@aprendelocal.cl"
-                    className="font-semibold text-white transition hover:text-orange-400"
+                    className="font-semibold text-slate-900 transition hover:text-orange-700"
                   >
                     contacto@aprendelocal.cl
                   </a>
@@ -118,12 +118,12 @@ export default function ContactSection() {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800 text-emerald-400">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Zona piloto</div>
-                  <div className="font-semibold text-white">
+                  <div className="text-xs text-slate-500">Zona piloto</div>
+                  <div className="font-semibold text-slate-900">
                     Temuco · La Araucanía, Chile
                   </div>
                 </div>
@@ -132,18 +132,18 @@ export default function ContactSection() {
           </div>
 
           {/* Right form card */}
-          <div className="rounded-[2.5rem] border border-slate-700/80 bg-slate-800/90 p-8 shadow-2xl backdrop-blur-sm lg:col-span-6">
+          <div className="rounded-[2.5rem] border border-slate-200 bg-[var(--tinta-50)] p-8 shadow-sm lg:col-span-6">
             {enviado ? (
               <div className="py-12 text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                   <CheckCircle2 className="h-8 w-8" />
                 </div>
                 {estado === "guardado" ? (
                   <>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <h3 className="mb-2 text-xl font-bold text-slate-900">
                       {t("home.contact.successTitle", "Mensaje recibido")}
                     </h3>
-                    <p className="text-slate-300 text-sm">
+                    <p className="text-sm text-slate-600">
                       {t(
                         "home.contact.successMessage",
                         "Lo tenemos. Te respondemos a este mismo correo."
@@ -152,10 +152,10 @@ export default function ContactSection() {
                   </>
                 ) : (
                   <>
-                    <h3 className="text-xl font-bold text-white mb-2">
+                    <h3 className="mb-2 text-xl font-bold text-slate-900">
                       {t("home.contact.mailTitle", "Te abrimos el correo")}
                     </h3>
-                    <p className="text-slate-300 text-sm">
+                    <p className="text-sm text-slate-600">
                       {t(
                         "home.contact.mailBody",
                         "El mensaje quedó escrito en tu programa de correo y falta que le des a enviar. Si no se abrió, escríbenos a:"
@@ -163,7 +163,7 @@ export default function ContactSection() {
                     </p>
                     <a
                       href={`mailto:${CORREO}`}
-                      className="mt-3 inline-block font-semibold text-orange-400 underline underline-offset-4"
+                      className="mt-3 inline-block font-semibold text-orange-700 underline underline-offset-4"
                     >
                       {CORREO}
                     </a>
@@ -172,10 +172,10 @@ export default function ContactSection() {
               </div>
             ) : (
               <>
-                <h3 className="mb-2 text-xl font-bold text-white">
+                <h3 className="mb-2 text-xl font-bold text-slate-900">
                   {t("home.contact.formTitle", "Envíanos un mensaje")}
                 </h3>
-                <p className="mb-6 text-sm text-slate-400">
+                <p className="mb-6 text-sm text-slate-500">
                   {t(
                     "home.contact.formSubtitle",
                     "Completa el formulario y nos contactaremos contigo."
@@ -185,7 +185,7 @@ export default function ContactSection() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-slate-300">
+                      <label className="mb-1.5 block text-xs font-semibold text-slate-700">
                         {t("home.contact.name", "Nombre")}
                       </label>
                       <input
@@ -196,11 +196,11 @@ export default function ContactSection() {
                           setFormData({ ...formData, name: e.target.value })
                         }
                         placeholder="Tu nombre"
-                        className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block text-xs font-semibold text-slate-300">
+                      <label className="mb-1.5 block text-xs font-semibold text-slate-700">
                         {t("home.contact.email", "Correo electrónico")}
                       </label>
                       <input
@@ -211,13 +211,13 @@ export default function ContactSection() {
                           setFormData({ ...formData, email: e.target.value })
                         }
                         placeholder="tu@escuela.org"
-                        className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-slate-300">
+                    <label className="mb-1.5 block text-xs font-semibold text-slate-700">
                       {t("home.contact.role", "Rol / Institución")}
                     </label>
                     <input
@@ -227,12 +227,12 @@ export default function ContactSection() {
                         setFormData({ ...formData, role: e.target.value })
                       }
                       placeholder="Ej: Docente Rural, Directivo, Investigador"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-slate-300">
+                    <label className="mb-1.5 block text-xs font-semibold text-slate-700">
                       {t("home.contact.message", "Mensaje o Territorio de Interés")}
                     </label>
                     <textarea
@@ -243,7 +243,7 @@ export default function ContactSection() {
                         setFormData({ ...formData, message: e.target.value })
                       }
                       placeholder="Cuéntanos sobre tu escuela o qué proyecto STEM te gustaría impulsar..."
-                      className="w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                     />
                   </div>
 
