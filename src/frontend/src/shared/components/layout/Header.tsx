@@ -52,21 +52,32 @@ export default function Header() {
             <AprendeLocalLogo className="h-8 w-auto transition-transform group-hover:scale-[1.03] sm:h-10" />
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav.
+
+              Los dos primeros bajan por la portada, y la portada solo existe
+              para quien no entró: con la sesión iniciada el inicio es el
+              escritorio y esas secciones no están ahí. `scrollTo` no encuentra
+              el elemento y no hace nada, o sea dos botones que no responden y
+              no explican por qué. Con cuenta se muestran los que llevan a
+              alguna parte. */}
           <nav className="hidden items-center gap-1 md:flex">
-            <button
-              onClick={() => scrollTo("metodologia")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              ¿Qué es?
-            </button>
-            
-            <button
-              onClick={() => scrollTo("como-funciona")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              Cómo funciona
-            </button>
+            {!user && (
+              <>
+                <button
+                  onClick={() => scrollTo("metodologia")}
+                  className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                >
+                  ¿Qué es?
+                </button>
+
+                <button
+                  onClick={() => scrollTo("como-funciona")}
+                  className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+                >
+                  Cómo funciona
+                </button>
+              </>
+            )}
             
             <Link
               to="/metodologia"
@@ -84,12 +95,22 @@ export default function Header() {
               Rutas
             </Link>
 
-            <button
-              onClick={() => scrollTo("contacto")}
-              className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
-            >
-              Contacto
-            </button>
+            {user ? (
+              <Link
+                to="/perfil"
+                className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition"
+                onClick={closeMobile}
+              >
+                Mi escuela
+              </Link>
+            ) : (
+              <button
+                onClick={() => scrollTo("contacto")}
+                className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-200 hover:text-white hover:bg-white/10 transition cursor-pointer"
+              >
+                Contacto
+              </button>
+            )}
           </nav>
 
           {/* Right side */}
@@ -210,19 +231,23 @@ export default function Header() {
               {t("header.nav.create", "Crear ruta")}
             </Link>
             
-            <button
-              onClick={() => scrollTo("metodologia")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              ¿Qué es?
-            </button>
+            {!user && (
+              <button
+                onClick={() => scrollTo("metodologia")}
+                className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+              >
+                ¿Qué es?
+              </button>
+            )}
             
-            <button
-              onClick={() => scrollTo("como-funciona")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              Cómo funciona
-            </button>
+            {!user && (
+              <button
+                onClick={() => scrollTo("como-funciona")}
+                className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+              >
+                Cómo funciona
+              </button>
+            )}
             
             <Link
               to="/metodologia"
@@ -240,12 +265,22 @@ export default function Header() {
               Rutas escritas
             </Link>
 
-            <button
-              onClick={() => scrollTo("contacto")}
-              className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
-            >
-              Contacto & Alianzas
-            </button>
+            {user ? (
+              <Link
+                to="/perfil"
+                onClick={closeMobile}
+                className="rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-200 hover:bg-white/10"
+              >
+                Mi escuela
+              </Link>
+            ) : (
+              <button
+                onClick={() => scrollTo("contacto")}
+                className="text-left rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-white/10"
+              >
+                Contacto & Alianzas
+              </button>
+            )}
 
             {user && (
               <Link
