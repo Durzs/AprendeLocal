@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { NATIVAS } from "../../biodiversidad/nativas";
-import { FAMILIAS } from "../../sequences/crear/preguntas";
+import EtapasSobel from "./EtapasSobel";
 
 /**
  * El territorio, en la portada.
@@ -184,37 +184,16 @@ export default function TerritorioSection() {
 
         {/* ── La metodología, como las etapas del viaje ────────────────── */}
         <div className="mt-16">
-          <Rotulo tono="naranjo">Cómo se recorre</Rotulo>
-          <ol className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.08] sm:grid-cols-2 lg:grid-cols-4">
-            {FAMILIAS.map((f, i) => (
-              <li
-                key={f.id}
-                className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} relative flex flex-col overflow-hidden p-6 sm:p-7`}
-                style={{ backgroundColor: TINTA }}
-              >
-                {/* El número, grande y fantasma, como en la referencia: marca
-                    el orden sin competir con el título. */}
-                <span
-                  aria-hidden
-                  className="cifra pointer-events-none absolute -right-2 -top-3 text-[5.5rem] font-semibold leading-none text-[var(--crema)]/[0.06]"
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <Rotulo>Etapa {String(i + 1).padStart(2, "0")}</Rotulo>
-                <h3 className="titulo mt-3.5 text-lg text-[var(--crema-clara)]">
-                  {f.titulo}
-                </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--crema)]/60">
-                  {f.porque}
-                </p>
-              </li>
-            ))}
-          </ol>
+          {/* Eran cuatro párrafos en una rejilla. Ahora cada etapa trae su
+              dibujo y su pregunta, y la pregunta se rehace con lo que el
+              visitante escoge que hay cerca de su escuela. Está aparte porque
+              tiene estado propio y esta sección ya es larga. */}
+          <EtapasSobel />
 
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
-            Las cuatro vienen de David Sobel: los menores conocen el lugar, los
-            mayores hacen algo por él. En una sala con varios cursos eso deja de
-            ser un estorbo y pasa a ser el reparto del trabajo.{" "}
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
+            Los menores conocen el lugar y los mayores hacen algo por él: en
+            una sala con varios cursos a la vez, eso deja de ser un estorbo y
+            pasa a ser el reparto del trabajo.{" "}
             <Link
               to="/metodologia"
               className="text-[var(--tierra-400)] underline underline-offset-4 transition hover:text-[var(--tierra-300)]"

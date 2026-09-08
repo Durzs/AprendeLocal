@@ -19,6 +19,21 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  * que quedó guardada en este computador, y el perfil de la persona. No hay
  * paneles con números, porque no hay números que contar todavía; inventar un
  * «3 rutas creadas» sería el mismo error de las 24 escuelas conectadas.
+ *
+ * CADA BLOQUE CON SU FONDO
+ *
+ * Era una pantalla blanca con cuatro montones de tarjetas, y los cuatro se
+ * leían como uno: había que ir leyendo los títulos para saber dónde terminaba
+ * una cosa y empezaba otra. Ahora cada bloque va a sangre con su color, y los
+ * colores son los mismos de la portada y en el mismo orden, así que un docente
+ * que vio el sitio antes de tener cuenta reconoce dónde está por el fondo
+ * antes de leer nada:
+ *
+ *   · el saludo, en el índigo de la marca, como la entrada;
+ *   · la ruta a medias, en el lila claro: es la mesa de trabajo, y el trabajo
+ *     se hace sobre fondo claro;
+ *   · lo que hay, en blanco, que es la parte de navegar;
+ *   · las rutas escritas, en el verde del territorio, porque de eso tratan.
  */
 export default function EscritorioPage() {
   const { user } = useAuth();
@@ -67,16 +82,21 @@ export default function EscritorioPage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* ── Saludo ──────────────────────────────────────────────────────── */}
-      <header className="border-b border-slate-100 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div className="mx-auto w-full max-w-6xl">
-          <p className="rotulo text-slate-500">
-            {escuela ?? "Tu escuela"}
-          </p>
-          <h1 className="display mt-3 text-3xl text-[#111217] sm:text-4xl">
+      {/* ── Saludo, en el índigo de la marca ───────────────────────────── */}
+      <header
+        className="grano relative overflow-hidden px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
+        style={{ backgroundColor: "var(--tinta-950)" }}
+      >
+        <div className="relative z-10 mx-auto w-full max-w-6xl">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-white/12 pb-4">
+            <span className="rotulo text-[var(--tierra-300)]">{escuela ?? "Tu escuela"}</span>
+            <span className="rotulo text-white/40">Tu escritorio</span>
+          </div>
+
+          <h1 className="display mt-8 text-3xl text-white sm:text-4xl md:text-5xl">
             {nombre ? `Hola, ${nombre}` : "Hola"}
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base">
             {empezada
               ? "Tienes una ruta a medio armar. Sigue por donde la dejaste."
               : "Arma la clase de esta unidad con el lugar donde está tu escuela."}
@@ -84,17 +104,17 @@ export default function EscritorioPage() {
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* ── Lo que dejó a medias ──────────────────────────────────────── */}
-        {empezada && expedicion ? (
-          <section className="animar-asoma rounded-3xl border border-[var(--tinta-200)] bg-[var(--tinta-50)] p-7 sm:p-9">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-              <div className="min-w-0 max-w-2xl">
-                <p className="rotulo text-[var(--tierra-700)]">
-                  Donde la dejaste
-                </p>
+      {/* ── La mesa de trabajo, en claro ───────────────────────────────── */}
+      <section className="border-b border-slate-200/70 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl">
+          <span className="rotulo block text-[var(--tierra-700)]">
+            {empezada ? "Donde la dejaste" : "Empezar"}
+          </span>
 
-                <h2 className="titulo mt-3 text-xl text-slate-900 sm:text-2xl">
+          {empezada && expedicion ? (
+            <div className="animar-asoma mt-6 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+              <div className="min-w-0 max-w-2xl">
+                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
                   {expedicion.rutaIA?.titulo ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
@@ -129,106 +149,112 @@ export default function EscritorioPage() {
               </div>
 
               <div className="flex shrink-0 flex-col gap-3">
-                <Link
-                  to="/crear"
-                  className="group inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--tinta-950)] px-7 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[var(--tinta-800)]"
-                >
-                  Seguir con esta
-                  <span aria-hidden className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                <Boton a="/crear">Seguir con esta</Boton>
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
                   Va {avance}% del primer paso. Queda guardada en este
                   computador, no en tu cuenta: en otro equipo no va a estar.
                 </p>
               </div>
             </div>
-          </section>
-        ) : (
-          <section className="animar-asoma rounded-3xl border border-[var(--tinta-200)] bg-[var(--tinta-50)] p-7 sm:p-9">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          ) : (
+            <div className="animar-asoma mt-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-xl">
-                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
-                  Armar una ruta
-                </h2>
+                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">Armar una ruta</h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
                   Cuatro láminas: lo que te toca pasar, lo que hay al otro lado
                   de la puerta, la pregunta que la sostiene, y la ruta armada
                   con sus documentos.
                 </p>
               </div>
-              <Link
-                to="/crear"
-                className="group inline-flex shrink-0 items-center gap-2 rounded-xl bg-[var(--tinta-950)] px-7 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[var(--tinta-800)]"
-              >
-                Empezar
-                <span aria-hidden className="transition-transform group-hover:translate-x-1">
-                  →
-                </span>
-              </Link>
+              <Boton a="/crear">Empezar</Boton>
             </div>
-          </section>
-        )}
+          )}
+        </div>
+      </section>
 
-        {/* ── Lo que puede hacer ────────────────────────────────────────── */}
-        <h2 className="rotulo mt-12 mb-4 text-slate-500">
-          Lo que hay
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Tarjeta
-            a="/rutas"
-            titulo="Las cuatro rutas escritas"
-            cuerpo="Agua, bosque, suelo y calor. Se ajustan a tu escuela y se imprimen."
-          />
-          <Tarjeta
-            a="/crear"
-            titulo="Qué vive junto a tu escuela"
-            cuerpo="Lo que se ha registrado alrededor del lugar donde vas a salir."
-          />
-          <Tarjeta
-            a="/metodologia"
-            titulo="En qué se apoya"
-            cuerpo="La educación basada en el lugar, y la formación para llevarla a la sala."
-          />
-          <Tarjeta
-            a="/comunidades"
-            titulo="Comunidades"
-            cuerpo="Otras escuelas y docentes trabajando lo mismo."
-          />
-          <Tarjeta
-            a="/perfil"
-            titulo="Tu perfil y tu escuela"
-            cuerpo="Los datos que salen firmados en la carta a las familias."
-          />
-        </ul>
+      {/* ── Lo que hay, en blanco ──────────────────────────────────────── */}
+      <section className="border-b border-slate-200/70 bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl">
+          <span className="rotulo block text-[var(--tierra-700)]">Lo que hay</span>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Tarjeta
+              a="/rutas"
+              titulo="Las cuatro rutas escritas"
+              cuerpo="Agua, bosque, suelo y calor. Se ajustan a tu escuela y se imprimen."
+            />
+            <Tarjeta
+              a="/crear"
+              titulo="Qué vive junto a tu escuela"
+              cuerpo="Lo que se ha registrado alrededor del lugar donde vas a salir."
+            />
+            <Tarjeta
+              a="/metodologia"
+              titulo="En qué se apoya"
+              cuerpo="La educación basada en el lugar, y la formación para llevarla a la sala."
+            />
+            <Tarjeta
+              a="/comunidades"
+              titulo="Comunidades"
+              cuerpo="Otras escuelas y docentes trabajando lo mismo."
+            />
+            <Tarjeta
+              a="/perfil"
+              titulo="Tu perfil y tu escuela"
+              cuerpo="Los datos que salen firmados en la carta a las familias."
+            />
+          </ul>
+        </div>
+      </section>
 
-        {/* ── Las rutas escritas, de un vistazo ─────────────────────────── */}
-        <h2 className="rotulo mt-12 mb-4 text-slate-500">
-          Rutas escritas
-        </h2>
-        <ul className="grid gap-4 sm:grid-cols-2">
-          {RUTAS.map((r, i) => (
-            <li key={r.id} className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}>
-              <Link
-                to="/rutas"
-                className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-sm"
-              >
-                <span className="rotulo text-[var(--tierra-700)]">
-                  {r.titulo}
-                </span>
-                <span className="mt-2 text-[15px] leading-snug text-slate-900">
-                  {r.preguntaGuia}
-                </span>
-                <span className="mt-2.5 text-xs text-slate-500">
-                  {r.semanas} semanas · {r.cubre.map((c) => cursoCorto(c.nivel)).join(" ")}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* ── Las rutas escritas, en el verde del territorio ─────────────── */}
+      <section
+        className="grano relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
+        style={{ backgroundColor: "var(--bosque-950)" }}
+      >
+        <div className="relative z-10 mx-auto w-full max-w-6xl">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[var(--crema)]/12 pb-4">
+            <span className="rotulo text-[var(--tierra-400)]">Rutas escritas</span>
+            <span className="rotulo text-[var(--crema)]/40">
+              {RUTAS.length} listas para ajustar
+            </span>
+          </div>
+
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {RUTAS.map((r, i) => (
+              <li key={r.id} className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}>
+                <Link
+                  to="/rutas"
+                  className="flex h-full flex-col rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.04] p-5 transition hover:-translate-y-0.5 hover:border-[var(--crema)]/35"
+                >
+                  <span className="rotulo text-[var(--tierra-300)]">{r.titulo}</span>
+                  <span className="mt-3 text-[15px] leading-snug text-[var(--crema-clara)]">
+                    {r.preguntaGuia}
+                  </span>
+                  <span className="mt-2.5 text-xs text-[var(--crema)]/50">
+                    {r.semanas} semanas · {r.cubre.map((c) => cursoCorto(c.nivel)).join(" ")}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </main>
+  );
+}
+
+/** El botón que lleva al cuaderno. Uno solo, para que los dos casos coincidan. */
+function Boton({ a, children }: { a: string; children: React.ReactNode }) {
+  return (
+    <Link
+      to={a}
+      className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[var(--tinta-950)] px-7 py-3.5 text-sm font-bold text-white transition hover:bg-[var(--tinta-800)]"
+    >
+      {children}
+      <span aria-hidden className="transition-transform group-hover:translate-x-1">
+        →
+      </span>
+    </Link>
   );
 }
 
@@ -258,7 +284,7 @@ function Tarjeta({ a, titulo, cuerpo }: { a: string; titulo: string; cuerpo: str
           <h3 className="titulo text-slate-900">{titulo}</h3>
           <span
             aria-hidden
-            className="shrink-0 text-[var(--tinta-600)] transition-transform group-hover:translate-x-1"
+            className="shrink-0 text-[var(--tierra-700)] transition-transform group-hover:translate-x-1"
           >
             →
           </span>
