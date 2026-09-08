@@ -72,7 +72,7 @@ export default function Paso2({
     <div className="space-y-4">
       {/* ── La pregunta que queda al centro ──────────────────────────── */}
       <Hoja titulo="La que va al centro" orden={4}>
-        <p className="mb-3.5 text-sm leading-relaxed text-[#e4ded2]/70">
+        <p className="mb-3.5 text-sm leading-relaxed text-[var(--crema)]/70">
           De todas, una queda escrita en el pizarrón las tres semanas. Elígela
           abajo o escríbela aquí directamente.
         </p>
@@ -90,7 +90,7 @@ export default function Paso2({
         const suyas = propuestas.filter((p) => p.familia === f.id);
         return (
           <Hoja key={f.id} titulo={f.titulo} orden={5 + i}>
-            <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+            <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
               {f.porque}
             </p>
             <ul className="space-y-2.5">
@@ -102,8 +102,8 @@ export default function Paso2({
                       className={[
                         "rounded-xl border p-3.5 transition",
                         puesta
-                          ? "border-[#c9612a]/60 bg-[#c9612a]/[0.08]"
-                          : "border-[#e4ded2]/14 hover:border-[#e4ded2]/30",
+                          ? "border-[var(--tierra-600)]/60 bg-[var(--tierra-600)]/[0.08]"
+                          : "border-[var(--crema)]/14 hover:border-[var(--crema)]/30",
                       ].join(" ")}
                     >
                       <div className="flex items-start gap-3">
@@ -115,8 +115,8 @@ export default function Paso2({
                           className={[
                             "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-xs font-bold transition",
                             puesta
-                              ? "border-[#c9612a] bg-[#c9612a] text-[#1e2a24]"
-                              : "border-[#e4ded2]/30 text-transparent hover:border-[#e4ded2]/60",
+                              ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                              : "border-[var(--crema)]/30 text-transparent hover:border-[var(--crema)]/60",
                           ].join(" ")}
                         >
                           ✓
@@ -129,14 +129,14 @@ export default function Paso2({
                                 value={puesta.texto}
                                 onChange={(ev) => reescribir(p.id, ev.target.value)}
                                 rows={2}
-                                className="w-full resize-y rounded-lg border border-transparent bg-transparent text-[15px] leading-relaxed text-[#f3efe7] outline-none transition focus:border-[#e4ded2]/25 focus:bg-[#e4ded2]/[0.05] focus:px-3 focus:py-2"
+                                className="w-full resize-y rounded-lg border border-transparent bg-transparent text-[15px] leading-relaxed text-[var(--crema-clara)] outline-none transition focus:border-[var(--crema)]/25 focus:bg-[var(--crema)]/[0.05] focus:px-3 focus:py-2"
                               />
                               <div className="mt-1.5 flex flex-wrap items-center gap-3">
                                 <Marca origen={puesta.origen} />
                                 <button
                                   type="button"
                                   onClick={() => alCentro(puesta.texto)}
-                                  className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a] underline underline-offset-4 transition hover:text-[#e08a52]"
+                                  className="rotulo text-[var(--tierra-600)] underline underline-offset-4 transition hover:text-[var(--tierra-500)]"
                                 >
                                   Poner al centro
                                 </button>
@@ -146,7 +146,7 @@ export default function Paso2({
                             <button
                               type="button"
                               onClick={() => alternar(p.id)}
-                              className="block w-full text-left text-[15px] leading-relaxed text-[#e4ded2]/70 transition hover:text-[#e4ded2]"
+                              className="block w-full text-left text-[15px] leading-relaxed text-[var(--crema)]/70 transition hover:text-[var(--crema)]"
                             >
                               {p.texto}
                             </button>
@@ -164,7 +164,7 @@ export default function Paso2({
 
       {/* ── Las del docente ──────────────────────────────────────────── */}
       <Hoja titulo="Las tuyas" orden={8}>
-        <p className="mb-3.5 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/60">
+        <p className="mb-3.5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
           Lo de arriba son borradores armados con lo que escribiste. Lo que
           sabes tú del lugar no está ahí. Escríbelo.
         </p>
@@ -177,21 +177,21 @@ export default function Paso2({
               .map((p) => (
                 <li
                   key={p.id}
-                  className="flex items-start gap-3 rounded-xl border border-[#c9612a]/60 bg-[#c9612a]/[0.08] p-3.5"
+                  className="flex items-start gap-3 rounded-xl border border-[var(--tierra-600)]/60 bg-[var(--tierra-600)]/[0.08] p-3.5"
                 >
                   <div className="min-w-0 flex-1">
                     <textarea
                       value={p.texto}
                       onChange={(ev) => reescribir(p.id, ev.target.value)}
                       rows={2}
-                      className="w-full resize-y rounded-lg border border-transparent bg-transparent text-[15px] leading-relaxed text-[#f3efe7] outline-none transition focus:border-[#e4ded2]/25 focus:bg-[#e4ded2]/[0.05] focus:px-3 focus:py-2"
+                      className="w-full resize-y rounded-lg border border-transparent bg-transparent text-[15px] leading-relaxed text-[var(--crema-clara)] outline-none transition focus:border-[var(--crema)]/25 focus:bg-[var(--crema)]/[0.05] focus:px-3 focus:py-2"
                     />
                     <div className="mt-1.5 flex flex-wrap items-center gap-3">
                       <Marca origen="docente" />
                       <button
                         type="button"
                         onClick={() => alCentro(p.texto)}
-                        className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#c9612a] underline underline-offset-4 transition hover:text-[#e08a52]"
+                        className="rotulo text-[var(--tierra-600)] underline underline-offset-4 transition hover:text-[var(--tierra-500)]"
                       >
                         Poner al centro
                       </button>
@@ -200,7 +200,7 @@ export default function Paso2({
                         onClick={() =>
                           onCambio({ ...e, preguntas: e.preguntas.filter((x) => x.id !== p.id) })
                         }
-                        className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#e4ded2]/40 underline underline-offset-4 transition hover:text-[#e4ded2]/75"
+                        className="rotulo text-[var(--crema)]/40 underline underline-offset-4 transition hover:text-[var(--crema)]/75"
                       >
                         Quitar
                       </button>
@@ -222,7 +222,7 @@ export default function Paso2({
             type="button"
             onClick={agregar}
             disabled={!nueva.trim()}
-            className="shrink-0 self-start rounded-full border border-[#e4ded2]/25 px-5 py-2.5 text-sm font-medium text-[#e4ded2]/85 transition hover:border-[#e4ded2]/55 hover:text-[#e4ded2] disabled:cursor-not-allowed disabled:opacity-30"
+            className="shrink-0 self-start rounded-full border border-[var(--crema)]/25 px-5 py-2.5 text-sm font-medium text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:cursor-not-allowed disabled:opacity-30"
           >
             Agregar
           </button>
@@ -231,7 +231,7 @@ export default function Paso2({
       </Hoja>
 
       {elegidas.length > 0 && (
-        <p className="px-1 font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/40">
+        <p className="px-1 rotulo text-[var(--crema)]/40">
           {elegidas.length} pregunta{elegidas.length === 1 ? "" : "s"} en la ruta ·{" "}
           {elegidas.filter((p) => p.origen === "docente").length} escrita
           {elegidas.filter((p) => p.origen === "docente").length === 1 ? "" : "s"} por ti
@@ -246,10 +246,10 @@ function Marca({ origen }: { origen: "propuesta" | "docente" }) {
   return (
     <span
       className={[
-        "rounded px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em]",
+        "rounded px-1.5 py-0.5 rotulo",
         origen === "docente"
-          ? "bg-[#e4ded2]/15 text-[#e4ded2]/80"
-          : "bg-transparent text-[#e4ded2]/40 ring-1 ring-inset ring-[#e4ded2]/20",
+          ? "bg-[var(--crema)]/15 text-[var(--crema)]/80"
+          : "bg-transparent text-[var(--crema)]/40 ring-1 ring-inset ring-[var(--crema)]/20",
       ].join(" ")}
     >
       {origen === "docente" ? "tuya" : "borrador"}
@@ -264,7 +264,7 @@ function Reparos({ texto }: { texto: string }) {
   return (
     <ul className="mt-2.5 space-y-1">
       {dichos.map((d) => (
-        <li key={d} className="text-xs leading-snug text-[#e0a678]">
+        <li key={d} className="text-xs leading-snug text-[var(--tierra-300)]">
           {d}
         </li>
       ))}

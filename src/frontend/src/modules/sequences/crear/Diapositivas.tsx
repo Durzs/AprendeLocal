@@ -108,7 +108,7 @@ export default function Diapositivas({
   if (!actual) return null;
 
   return (
-    <div className="min-h-screen bg-[#1e2a24] text-[#e4ded2]">
+    <div className="min-h-screen bg-[#1e2a24] text-[var(--crema)]">
       {/* Grano de papel. Sostiene el resto del diseño: sin esta capa el verde
           queda plano y el conjunto se lee como una diapositiva de empresa. */}
       <div
@@ -125,14 +125,14 @@ export default function Diapositivas({
       <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col px-5 py-7 sm:px-8">
         {/* ── Cabecera: dónde va y cuánto falta ────────────────────────── */}
         <header className="flex flex-wrap items-center justify-between gap-4">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#e4ded2]/55">
+          <p className="rotulo text-[var(--crema)]/55">
             Cuaderno de expedición
           </p>
           {onSalir && (
             <button
               type="button"
               onClick={onSalir}
-              className="rounded-full border border-[#e4ded2]/25 px-3.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-[#e4ded2]/70 transition hover:border-[#e4ded2]/50 hover:text-[#e4ded2]"
+              className="rounded-full border border-[var(--crema)]/25 px-3.5 py-1 rotulo text-[var(--crema)]/70 transition hover:border-[var(--crema)]/50 hover:text-[var(--crema)]"
             >
               Guardar y salir
             </button>
@@ -152,16 +152,16 @@ export default function Diapositivas({
                   className={[
                     "block h-[3px] w-full rounded-full transition-all duration-500",
                     i < indice
-                      ? "bg-[#c9612a]"
+                      ? "bg-[var(--tierra-600)]"
                       : i === indice
-                        ? "bg-[#e4ded2]"
-                        : "bg-[#e4ded2]/18 group-hover:bg-[#e4ded2]/35",
+                        ? "bg-[var(--crema)]"
+                        : "bg-[var(--crema)]/18 group-hover:bg-[var(--crema)]/35",
                   ].join(" ")}
                 />
                 <span
                   className={[
-                    "mt-2 hidden font-mono text-[10px] uppercase tracking-[0.14em] transition sm:block",
-                    i === indice ? "text-[#e4ded2]" : "text-[#e4ded2]/40",
+                    "mt-2 hidden rotulo transition sm:block",
+                    i === indice ? "text-[var(--crema)]" : "text-[var(--crema)]/40",
                   ].join(" ")}
                 >
                   {l.marca}
@@ -175,14 +175,14 @@ export default function Diapositivas({
         {/* La clave incluye si está saliendo, para que el navegador vuelva a
             correr la animación en vez de dar por buena la anterior. */}
         <main key={`${actual.id}-${saliendo}`} className={`flex-1 pt-9 ${claseLamina}`}>
-          <p className="animar-hoja animar-hoja-1 font-mono text-[11px] uppercase tracking-[0.22em] text-[#c9612a]">
+          <p className="animar-hoja animar-hoja-1 rotulo text-[var(--tierra-600)]">
             {actual.marca}
           </p>
-          <h1 className="animar-hoja animar-hoja-2 mt-2.5 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[#f3efe7] sm:text-[2.4rem]">
+          <h1 className="animar-hoja animar-hoja-2 mt-2.5 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[var(--crema-clara)] sm:text-[2.4rem]">
             {actual.titulo}
           </h1>
           {actual.bajada && (
-            <p className="animar-hoja animar-hoja-3 mt-3.5 max-w-2xl text-[15px] leading-relaxed text-[#e4ded2]/70">
+            <p className="animar-hoja animar-hoja-3 mt-3.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/70">
               {actual.bajada}
             </p>
           )}
@@ -191,23 +191,23 @@ export default function Diapositivas({
         </main>
 
         {/* ── Pie: avanzar y volver ────────────────────────────────────── */}
-        <footer className="sticky bottom-0 -mx-5 flex items-center justify-between gap-4 border-t border-[#e4ded2]/12 bg-[#1e2a24]/95 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
+        <footer className="sticky bottom-0 -mx-5 flex items-center justify-between gap-4 border-t border-[var(--crema)]/12 bg-[#1e2a24]/95 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
           <button
             type="button"
             onClick={() => ir(indice - 1)}
             disabled={primera}
-            className="rounded-full border border-[#e4ded2]/25 px-5 py-2 text-sm font-medium text-[#e4ded2]/85 transition hover:border-[#e4ded2]/55 hover:text-[#e4ded2] disabled:cursor-not-allowed disabled:opacity-25"
+            className="rounded-full border border-[var(--crema)]/25 px-5 py-2 text-sm font-medium text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:cursor-not-allowed disabled:opacity-25"
           >
             Volver
           </button>
 
           <div className="flex items-center gap-4">
             {!puede && actual.faltaPara && (
-              <p className="hidden max-w-xs text-right text-xs leading-snug text-[#e4ded2]/50 sm:block">
+              <p className="hidden max-w-xs text-right text-xs leading-snug text-[var(--crema)]/50 sm:block">
                 {actual.faltaPara}
               </p>
             )}
-            <span className="font-mono text-[11px] tracking-[0.14em] text-[#e4ded2]/40">
+            <span className="font-mono text-[11px] tracking-[0.14em] text-[var(--crema)]/40">
               {indice + 1} / {laminas.length}
             </span>
             {!ultima && (
@@ -215,7 +215,7 @@ export default function Diapositivas({
                 type="button"
                 onClick={() => ir(indice + 1)}
                 disabled={!puede}
-                className="group inline-flex items-center gap-2 rounded-full bg-[#c9612a] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[#e4ded2]/15 disabled:text-[#e4ded2]/40"
+                className="group inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[var(--crema)]/15 disabled:text-[var(--crema)]/40"
               >
                 Seguir
                 <span aria-hidden className="transition-transform group-enabled:group-hover:translate-x-1">

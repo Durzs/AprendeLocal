@@ -106,7 +106,7 @@ export default function Naturaleza({
 
   return (
     <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6 print:hidden">
-      <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+      <p className="rotulo text-slate-500">
         {t("natura.title")}
       </p>
       <p className="mt-1.5 text-sm text-slate-600">{ruta.naturaleza.para}</p>

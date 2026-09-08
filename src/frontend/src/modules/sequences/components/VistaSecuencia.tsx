@@ -27,7 +27,7 @@ function Procedencia({ tipo }: { tipo: "dato" | "generado" }) {
   return (
     <span
       className={[
-        "ml-2 rounded border px-1.5 py-0.5 align-middle font-mono text-[10px] uppercase tracking-wider",
+        "ml-2 rounded border px-1.5 py-0.5 align-middle rotulo",
         esDato
           ? "border-slate-300 bg-slate-50 text-slate-600"
           : "border-amber-300 bg-amber-50 text-amber-800",
@@ -381,7 +381,7 @@ export default function VistaSecuencia({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[420px] text-left text-sm">
               <thead>
-                <tr className="border-b border-slate-200 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-200 rotulo text-slate-500">
                   <th className="py-2 pr-3">{t("preparar.colWhat")}</th>
                   <th className="py-2 pr-3">{t("preparar.colHow")}</th>
                   <th className="py-2">{t("preparar.colUnit")}</th>
@@ -423,7 +423,7 @@ export default function VistaSecuencia({
           <ul className="space-y-2">
             {(s.recuperacion_espaciada ?? []).map((m) => (
               <li key={m.semanas_despues} className="rounded-xl bg-slate-50 p-3">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+                <span className="rotulo text-slate-500">
                   {t("preparar.weeksLater", { count: m.semanas_despues })}
                 </span>
                 <p className="mt-1 text-slate-800">{m.pregunta}</p>

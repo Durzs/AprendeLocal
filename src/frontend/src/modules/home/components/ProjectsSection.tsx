@@ -98,7 +98,7 @@ export default function ProjectsSection() {
         <div className="mt-6 rounded-3xl border border-slate-200 bg-[#f8fafc] p-7 sm:p-9">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-xl">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">
+              <span className="rotulo text-slate-500">
                 {t("home.build.outEyebrow", "Y sale de ahí")}
               </span>
               <p className="mt-2 text-lg font-semibold leading-snug text-slate-900">

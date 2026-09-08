@@ -158,7 +158,7 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
       </button>
 
       <header className="mt-5 rounded-2xl border border-slate-200 bg-white p-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
+        <p className="rotulo text-slate-500">
           {t("rutas.drivingQuestion")}
         </p>
         <h1 className="mt-2 text-2xl font-semibold leading-snug tracking-tight text-slate-950">
@@ -167,13 +167,13 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
 
         <div className="mt-5 grid gap-4 border-t border-slate-100 pt-5 sm:grid-cols-2">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            <p className="rotulo text-slate-500">
               {t("rutas.whatTheyDeliver")}
             </p>
             <p className="mt-1.5 text-sm text-slate-800">{ruta.producto.que}</p>
           </div>
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+            <p className="rotulo text-slate-500">
               {t("rutas.toWhom")}
             </p>
             <p className="mt-1.5 text-sm text-slate-800">{ruta.producto.paraQuien}</p>
@@ -187,7 +187,7 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
           distintas de relacionarse con el lugar, y eso deja de ser un estorbo
           cuando los pequeños levantan lo que los grandes necesitan. */}
       <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6">
-        <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+        <p className="rotulo text-slate-500">
           {t("rutas.eachGrade")}
         </p>
         <ul className="mt-3 space-y-2.5">
@@ -215,7 +215,7 @@ function Detalle({ ruta, onVolver }: { ruta: Ruta; onVolver: () => void }) {
       {/* El territorio nombrado en las dos lenguas. */}
       {ruta.mapuzugun?.length ? (
         <section className="mt-4 rounded-2xl border border-slate-200 bg-white p-6">
-          <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+          <p className="rotulo text-slate-500">
             {t("rutas.inMapuzugun")}
           </p>
           <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
@@ -294,7 +294,7 @@ export default function RutasPage() {
     <>
       <div className="mx-auto max-w-6xl px-4 py-10">
       <header>
-        <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
+        <p className="rotulo text-slate-500">
           {t("rutas.eyebrow")}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
@@ -311,7 +311,7 @@ export default function RutasPage() {
         className="animar-asoma mt-7 flex items-center justify-between gap-4 rounded-2xl border border-slate-300 bg-slate-900 px-5 py-4 text-left transition hover:bg-slate-800"
       >
         <span className="min-w-0">
-          <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-orange-400">
+          <span className="block rotulo text-orange-400">
             {t("rutas.buildOwnEyebrow", "Armar la tuya")}
           </span>
           <span className="mt-1 block text-[15px] leading-snug text-white">

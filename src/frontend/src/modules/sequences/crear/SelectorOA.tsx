@@ -67,10 +67,10 @@ export default function SelectorOA({
   return (
     <div className="sm:col-span-2">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e4ded2]/60">
+        <span className="rotulo text-[var(--crema)]/60">
           Objetivos de aprendizaje
         </span>
-        <span className="font-mono text-[11px] text-[#e4ded2]/40">
+        <span className="font-mono text-[11px] text-[var(--crema)]/40">
           {elegidos.length
             ? `${elegidos.length} marcado${elegidos.length === 1 ? "" : "s"}`
             : "ninguno todavía"}
@@ -82,7 +82,7 @@ export default function SelectorOA({
         value={busqueda}
         onChange={(ev) => setBusqueda(ev.target.value)}
         placeholder="Busca por palabra: agua, suelo, energía, células…"
-        className="w-full rounded-lg border border-[#e4ded2]/20 bg-[#e4ded2]/[0.045] px-3.5 py-2.5 text-[15px] text-[#f3efe7] outline-none transition placeholder:text-[#e4ded2]/30 focus:border-[#c9612a] focus:bg-[#e4ded2]/[0.08]"
+        className="w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--crema)]/[0.045] px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] outline-none transition placeholder:text-[var(--crema)]/30 focus:border-[var(--tierra-600)] focus:bg-[var(--crema)]/[0.08]"
       />
 
       {/* Lo marcado, siempre a la vista. Con la lista cerrada el docente tiene
@@ -95,7 +95,7 @@ export default function SelectorOA({
               <button
                 type="button"
                 onClick={() => alternar(c)}
-                className="group inline-flex items-center gap-2 rounded-full bg-[#c9612a] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
+                className="group inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
               >
                 {c.replace(/_CN_/, " · ")}
                 <span aria-hidden className="opacity-60 group-hover:opacity-100">
@@ -120,33 +120,33 @@ export default function SelectorOA({
           return (
             <div
               key={nivel}
-              className="overflow-hidden rounded-xl border border-[#e4ded2]/14"
+              className="overflow-hidden rounded-xl border border-[var(--crema)]/14"
             >
               <button
                 type="button"
                 onClick={() => setAbierto(abierto === nivel ? null : nivel)}
                 aria-expanded={abiertoAhora}
-                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[#e4ded2]/[0.04]"
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[var(--crema)]/[0.04]"
               >
                 <span className="flex items-baseline gap-3">
-                  <span className="font-mono text-[13px] font-semibold text-[#f3efe7]">
+                  <span className="font-mono text-[13px] font-semibold text-[var(--crema-clara)]">
                     {CURSO_CORTO[nivel]} básico
                   </span>
-                  <span className="text-xs text-[#e4ded2]/45">
+                  <span className="text-xs text-[var(--crema)]/45">
                     {vistos.length} objetivo{vistos.length === 1 ? "" : "s"}
                     {marcadosAqui > 0 ? ` · ${marcadosAqui} marcado${marcadosAqui === 1 ? "" : "s"}` : ""}
                   </span>
                 </span>
                 <span
                   aria-hidden
-                  className={`text-[#c9612a] transition-transform duration-300 ${abiertoAhora ? "rotate-180" : ""}`}
+                  className={`text-[var(--tierra-600)] transition-transform duration-300 ${abiertoAhora ? "rotate-180" : ""}`}
                 >
                   ▾
                 </span>
               </button>
 
               {abiertoAhora && (
-                <ul className="animar-hoja border-t border-[#e4ded2]/12">
+                <ul className="animar-hoja border-t border-[var(--crema)]/12">
                   {vistos.map((o, i) => (
                     <Objetivo
                       key={o.codigo}
@@ -164,7 +164,7 @@ export default function SelectorOA({
         })}
       </div>
 
-      <p className="mt-2.5 text-xs leading-relaxed text-[#e4ded2]/45">
+      <p className="mt-2.5 text-xs leading-relaxed text-[var(--crema)]/45">
         Son los de Ciencias Naturales de las Bases Curriculares. Marca los que
         vas a pasar: de ahí sale la ruta que se te arma después.
       </p>
@@ -188,7 +188,7 @@ function Objetivo({
   return (
     <li>
       {primeroDelEje && (
-        <p className="border-t border-[#e4ded2]/8 bg-[#e4ded2]/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#e4ded2]/40 first:border-t-0">
+        <p className="border-t border-[var(--crema)]/8 bg-[var(--crema)]/[0.02] px-4 py-1.5 rotulo text-[var(--crema)]/40 first:border-t-0">
           {EJES[oa.eje] ?? oa.eje}
         </p>
       )}
@@ -197,31 +197,31 @@ function Objetivo({
         onClick={onAlternar}
         aria-pressed={marcado}
         className={`flex w-full items-start gap-3 px-4 py-3 text-left transition ${
-          marcado ? "bg-[#c9612a]/[0.1]" : "hover:bg-[#e4ded2]/[0.04]"
+          marcado ? "bg-[var(--tierra-600)]/[0.1]" : "hover:bg-[var(--crema)]/[0.04]"
         }`}
       >
         <span
           aria-hidden
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[11px] font-bold transition ${
             marcado
-              ? "border-[#c9612a] bg-[#c9612a] text-[#1e2a24]"
-              : "border-[#e4ded2]/30 text-transparent"
+              ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+              : "border-[var(--crema)]/30 text-transparent"
           }`}
         >
           ✓
         </span>
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-            <span className="font-mono text-[11px] font-semibold text-[#c9612a]">
+            <span className="font-mono text-[11px] font-semibold text-[var(--tierra-600)]">
               OA {oa.n}
             </span>
             {tieneRuta && (
-              <span className="rounded bg-[#e4ded2]/12 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-[#e4ded2]/70">
+              <span className="rounded bg-[var(--crema)]/12 px-1.5 py-0.5 rotulo text-[var(--crema)]/70">
                 hay ruta
               </span>
             )}
           </span>
-          <span className="mt-1 block text-sm leading-relaxed text-[#e4ded2]/80">
+          <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/80">
             {oa.texto}
           </span>
         </span>

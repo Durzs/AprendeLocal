@@ -70,10 +70,10 @@ export default function EscritorioPage() {
       {/* ── Saludo ──────────────────────────────────────────────────────── */}
       <header className="border-b border-slate-100 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">
+          <p className="rotulo text-slate-500">
             {escuela ?? "Tu escuela"}
           </p>
-          <h1 className="mt-2.5 text-3xl font-semibold leading-[0.95] tracking-[-0.055em] text-[#111217] sm:text-4xl">
+          <h1 className="display mt-3 text-3xl text-[#111217] sm:text-4xl">
             {nombre ? `Hola, ${nombre}` : "Hola"}
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
@@ -90,11 +90,11 @@ export default function EscritorioPage() {
           <section className="animar-asoma rounded-3xl border border-[var(--tinta-200)] bg-[var(--tinta-50)] p-7 sm:p-9">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 max-w-2xl">
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--tinta-600)]">
+                <p className="rotulo text-[var(--tierra-700)]">
                   Donde la dejaste
                 </p>
 
-                <h2 className="mt-2.5 text-xl font-bold leading-snug text-slate-900 sm:text-2xl">
+                <h2 className="titulo mt-3 text-xl text-slate-900 sm:text-2xl">
                   {expedicion.rutaIA?.titulo ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
@@ -149,7 +149,7 @@ export default function EscritorioPage() {
           <section className="animar-asoma rounded-3xl border border-[var(--tinta-200)] bg-[var(--tinta-50)] p-7 sm:p-9">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-xl">
-                <h2 className="text-xl font-bold leading-snug text-slate-900 sm:text-2xl">
+                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
                   Armar una ruta
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -172,7 +172,7 @@ export default function EscritorioPage() {
         )}
 
         {/* ── Lo que puede hacer ────────────────────────────────────────── */}
-        <h2 className="mt-12 mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">
+        <h2 className="rotulo mt-12 mb-4 text-slate-500">
           Lo que hay
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -204,7 +204,7 @@ export default function EscritorioPage() {
         </ul>
 
         {/* ── Las rutas escritas, de un vistazo ─────────────────────────── */}
-        <h2 className="mt-12 mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500">
+        <h2 className="rotulo mt-12 mb-4 text-slate-500">
           Rutas escritas
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2">
@@ -214,7 +214,7 @@ export default function EscritorioPage() {
                 to="/rutas"
                 className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-sm"
               >
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--tinta-600)]">
+                <span className="rotulo text-[var(--tierra-700)]">
                   {r.titulo}
                 </span>
                 <span className="mt-2 text-[15px] leading-snug text-slate-900">
@@ -239,7 +239,7 @@ function Ficha({ children, listo = false }: { children: React.ReactNode; listo?:
       className={`rounded-full border px-3 py-1 text-xs ${
         listo
           ? "border-[var(--tinta-200)] bg-white text-slate-700"
-          : "border-orange-200 bg-orange-50 text-orange-900"
+          : "border-[var(--tierra-200)] bg-[var(--tierra-50)] text-[var(--tierra-900)]"
       }`}
     >
       {children}
@@ -255,7 +255,7 @@ function Tarjeta({ a, titulo, cuerpo }: { a: string; titulo: string; cuerpo: str
         className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-sm"
       >
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-bold leading-snug text-slate-900">{titulo}</h3>
+          <h3 className="titulo text-slate-900">{titulo}</h3>
           <span
             aria-hidden
             className="shrink-0 text-[var(--tinta-600)] transition-transform group-hover:translate-x-1"

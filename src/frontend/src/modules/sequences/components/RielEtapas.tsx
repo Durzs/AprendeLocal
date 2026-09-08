@@ -60,7 +60,7 @@ export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
           return (
             <li key={e.numero} className="shrink-0 lg:shrink">
               {momentoNuevo && (
-                <p className="mb-1 mt-3 hidden font-mono text-[11px] uppercase tracking-widest text-slate-400 first:mt-0 lg:block">
+                <p className="mb-1 mt-3 hidden rotulo text-slate-400 first:mt-0 lg:block">
                   {e.momento}
                 </p>
               )}

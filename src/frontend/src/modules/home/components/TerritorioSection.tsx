@@ -84,12 +84,21 @@ const MUESTRA = PEDIDAS.map((c) => {
 
 const ESPECIES = [...MUESTRA, ...NATIVAS.filter((n) => !MUESTRA.includes(n))].slice(0, 12);
 
-/** El rótulo diminuto que anota cada pieza. */
+/**
+ * El rótulo diminuto que anota cada pieza.
+ *
+ * El tamaño y el espaciado ya no se escriben aquí: los pone `.rotulo`, en
+ * index.css, que es el único sitio donde se decide cómo se ve una anotación
+ * en todo el sitio. Antes cada sección elegía el suyo y salían seis.
+ */
 function Rotulo({ children, tono = "crema" }: { children: React.ReactNode; tono?: "crema" | "naranjo" }) {
+  // Sobre este verde, el terracota de marca (#c9612a) da 3:1 de contraste, que
+  // a 10 px no se lee. El mismo matiz aclarado da 6:1 y sigue siendo el acento
+  // de la marca.
   return (
     <span
-      className={`block font-mono text-[10px] uppercase leading-none tracking-[0.24em] ${
-        tono === "naranjo" ? "text-[#c9612a]" : "text-[#e4ded2]/40"
+      className={`rotulo block ${
+        tono === "naranjo" ? "text-[var(--tierra-400)]" : "text-[var(--crema)]/40"
       }`}
     >
       {children}
@@ -101,35 +110,23 @@ export default function TerritorioSection() {
   return (
     <section
       id="territorio"
-      className="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
+      className="grano relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
       style={{ backgroundColor: TINTA }}
     >
-      {/* Grano de papel, la misma capa que el cuaderno de expedición. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "radial-gradient(#e4ded2 0.5px, transparent 0.5px), radial-gradient(#e4ded2 0.5px, transparent 0.5px)",
-          backgroundSize: "7px 7px, 7px 7px",
-          backgroundPosition: "0 0, 3.5px 3.5px",
-        }}
-      />
-
-      <div className="relative mx-auto w-full max-w-7xl">
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
         {/* ── Franja de anotación ──────────────────────────────────────── */}
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[#e4ded2]/12 pb-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[var(--crema)]/12 pb-4">
           <Rotulo tono="naranjo">El territorio</Rotulo>
           <Rotulo>La Araucanía · Temuco 38.7°S 72.6°O</Rotulo>
         </div>
 
         {/* ── La invitación ────────────────────────────────────────────── */}
         <div className="mt-10 max-w-4xl">
-          <h2 className="text-[2.1rem] font-semibold leading-[0.98] tracking-[-0.045em] text-[#f3efe7] sm:text-5xl md:text-6xl">
+          <h2 className="display text-[2.1rem] text-[var(--crema-clara)] sm:text-5xl md:text-6xl">
             El lugar que hay detrás de tu escuela alcanza para tres semanas de
             ciencia
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-[#e4ded2]/70 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--crema)]/70 sm:text-lg">
             No hace falta llevar al curso a ninguna parte. El estero, el cerro
             o el camino que se ve por la ventana tiene lo que el programa pide:
             algo que medir, alguien a quien preguntarle y alguien que espera lo
@@ -138,13 +135,17 @@ export default function TerritorioSection() {
         </div>
 
         {/* ── La raíz ──────────────────────────────────────────────────── */}
-        <div className="mt-16 grid gap-x-12 gap-y-8 border-y border-[#e4ded2]/12 py-10 lg:grid-cols-[minmax(0,20rem)_1fr]">
+        <div className="mt-16 grid gap-x-12 gap-y-8 border-y border-[var(--crema)]/12 py-10 lg:grid-cols-[minmax(0,20rem)_1fr]">
           <div>
             <Rotulo>Una raíz</Rotulo>
-            <p className="mt-4 font-mono text-6xl leading-none text-[#f3efe7] sm:text-7xl">
+            {/* En monoespaciada, `ko` se leía como una variable de programa. Es
+                una palabra de una lengua: va en la misma tipografía que todo
+                lo demás, y destaca por tamaño, que es como destaca una
+                palabra. */}
+            <p className="mt-4 text-6xl font-semibold leading-none tracking-[-0.04em] text-[var(--crema-clara)] sm:text-7xl">
               {RAIZ.raiz}
             </p>
-            <p className="mt-3 text-lg text-[#e4ded2]/70">{RAIZ.significa}</p>
+            <p className="mt-3 text-lg text-[var(--crema)]/70">{RAIZ.significa}</p>
           </div>
 
           <div>
@@ -153,19 +154,22 @@ export default function TerritorioSection() {
               {RAIZ.familia.map((f, i) => (
                 <li
                   key={f.palabra}
-                  className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-[#e4ded2]/8 pb-3.5 last:border-0`}
+                  className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-[var(--crema)]/8 pb-3.5 last:border-0`}
                 >
-                  <span className="font-mono text-xl text-[#f3efe7] sm:text-2xl">
+                  {/* La palabra y su traducción son un par: misma tipografía y
+                      mismo tamaño, distinto peso y distinto color. Antes la
+                      palabra iba en monoespaciada a 24 px y la traducción en
+                      sans a 16, o sea dos tipografías para las dos mitades de
+                      una misma línea. */}
+                  <span className="nombre text-[1.35rem] text-[var(--crema-clara)]">
                     {f.palabra}
                   </span>
-                  <span className="text-base text-[#e4ded2]/75">{f.es}</span>
-                  <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.18em] text-[#e4ded2]/35">
-                    {f.nota}
-                  </span>
+                  <span className="glosa text-[1.35rem] text-[var(--crema)]/70">{f.es}</span>
+                  <span className="rotulo ml-auto text-[var(--crema)]/35">{f.nota}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/55">
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/55">
               Una escuela que sabe si lo suyo es un witrunko o un menoko ya sabe
               qué va a medir y a quién tiene que preguntarle. Por eso la ruta
               empieza preguntando cómo se llama el lugar, y no qué unidad toca.
@@ -176,7 +180,7 @@ export default function TerritorioSection() {
         {/* ── La metodología, como las etapas del viaje ────────────────── */}
         <div className="mt-16">
           <Rotulo tono="naranjo">Cómo se recorre</Rotulo>
-          <ol className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-[#e4ded2]/14 bg-[#e4ded2]/[0.08] sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.08] sm:grid-cols-2 lg:grid-cols-4">
             {FAMILIAS.map((f, i) => (
               <li
                 key={f.id}
@@ -187,28 +191,28 @@ export default function TerritorioSection() {
                     el orden sin competir con el título. */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -right-2 -top-3 font-mono text-[5.5rem] font-semibold leading-none text-[#e4ded2]/[0.06]"
+                  className="cifra pointer-events-none absolute -right-2 -top-3 text-[5.5rem] font-semibold leading-none text-[var(--crema)]/[0.06]"
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <Rotulo>Etapa {String(i + 1).padStart(2, "0")}</Rotulo>
-                <h3 className="mt-3.5 text-lg font-semibold leading-snug text-[#f3efe7]">
+                <h3 className="titulo mt-3.5 text-lg text-[var(--crema-clara)]">
                   {f.titulo}
                 </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-[#e4ded2]/60">
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--crema)]/60">
                   {f.porque}
                 </p>
               </li>
             ))}
           </ol>
 
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[#e4ded2]/50">
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
             Las cuatro vienen de David Sobel: los menores conocen el lugar, los
             mayores hacen algo por él. En una sala con varios cursos eso deja de
             ser un estorbo y pasa a ser el reparto del trabajo.{" "}
             <Link
               to="/metodologia"
-              className="text-[#c9612a] underline underline-offset-4 transition hover:text-[#e08a52]"
+              className="text-[var(--tierra-400)] underline underline-offset-4 transition hover:text-[var(--tierra-300)]"
             >
               En qué se apoya
             </Link>
@@ -220,13 +224,13 @@ export default function TerritorioSection() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-2xl">
               <Rotulo tono="naranjo">Qué vive ahí</Rotulo>
-              <h3 className="mt-3 text-2xl font-semibold leading-snug tracking-[-0.03em] text-[#f3efe7] sm:text-3xl">
+              <h3 className="titulo mt-3 text-2xl text-[var(--crema-clara)] sm:text-3xl">
                 Con el nombre que le da la gente de aquí
               </h3>
             </div>
             <Link
               to="/crear"
-              className="group inline-flex items-center gap-2 rounded-full border border-[#e4ded2]/25 px-5 py-2.5 text-sm font-medium text-[#e4ded2]/85 transition hover:border-[#e4ded2]/55 hover:text-[#f3efe7]"
+              className="group inline-flex items-center gap-2 rounded-full border border-[var(--crema)]/25 px-5 py-2.5 text-sm font-medium text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema-clara)]"
             >
               Ver lo de tu escuela
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -243,7 +247,7 @@ export default function TerritorioSection() {
             ))}
           </ul>
 
-          <p className="mt-3 text-xs leading-relaxed text-[#e4ded2]/45">
+          <p className="mt-3 text-xs leading-relaxed text-[var(--crema)]/45">
             Las fotografías vienen de iNaturalist. Los nombres en mapuzugun no
             los ha revisado un hablante todavía: antes de imprimirlos,
             pregúntale al educador tradicional de tu escuela.
@@ -267,8 +271,8 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
 
   return (
     <li className="w-[16rem] shrink-0 snap-start sm:w-[18rem]">
-      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#e4ded2]/14 bg-[#e4ded2]/[0.04]">
-        <div className="relative aspect-[4/3] overflow-hidden bg-[#e4ded2]/[0.06]">
+      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.04]">
+        <div className="relative aspect-[4/3] overflow-hidden bg-[var(--crema)]/[0.06]">
           {n.fotoUrl && !sinFoto ? (
             <img
               src={n.fotoUrl}
@@ -280,7 +284,7 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
           ) : (
             <span
               aria-hidden
-              className="grid h-full w-full place-items-center font-mono text-[10px] uppercase tracking-[0.24em] text-[#e4ded2]/25"
+              className="rotulo grid h-full w-full place-items-center text-[var(--crema)]/25"
             >
               {n.grupo}
             </span>
@@ -288,32 +292,38 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
 
           {/* La numeración va sobre la foto, como la anotación de una lámina
               de herbario. */}
-          <span className="absolute right-3 top-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#e4ded2]/70 mix-blend-difference">
+          <span className="cifra absolute right-3 top-3 text-[10px] tracking-[0.18em] text-[var(--crema)]/70 mix-blend-difference">
             {String(i + 1).padStart(2, "0")}
           </span>
 
           {n.estado && (
-            <span className="absolute left-3 top-3 rounded-full bg-[#1e2a24]/85 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-[#e0a678] backdrop-blur">
+            <span className="rotulo absolute left-3 top-3 rounded-full bg-[#1e2a24]/85 px-2.5 py-1.5 text-[var(--tierra-300)] backdrop-blur">
               {ESTADO[n.estado]}
             </span>
           )}
         </div>
 
+        {/* ── El nombre ────────────────────────────────────────────────────
+            Aquí estaba el peor caso de todo el sitio, y es el que Diego
+            señaló: el nombre común salía en monoespaciada a 18 px cuando la
+            especie no tenía nombre en mapuzugun, y en sans a 14 px cuando sí
+            lo tenía. El mismo dato, dos tipografías y dos tamaños, decidido
+            por lo que tuviera el campo de al lado.
+
+            Un nombre en mapuzugun y su equivalente en castellano son la misma
+            clase de cosa —los dos son el nombre del bicho— y por eso van en la
+            misma tipografía y el mismo tamaño. Lo único que cambia es cuál va
+            primero, y eso sí tiene una razón: la sección se llama «con el
+            nombre que le da la gente de aquí». */}
         <div className="flex flex-1 flex-col p-5">
-          {n.mapuzugun && (
-            <p className="font-mono text-lg leading-tight text-[#f3efe7]">{n.mapuzugun}</p>
-          )}
-          <p
-            className={
-              n.mapuzugun
-                ? "mt-1 text-sm text-[#e4ded2]/65"
-                : "font-mono text-lg leading-tight text-[#f3efe7]"
-            }
-          >
-            {n.comun}
+          <p className="nombre text-[var(--crema-clara)]">
+            {n.mapuzugun || n.comun}
           </p>
-          <p className="mt-0.5 text-[11px] italic text-[#e4ded2]/35">{n.cientifico}</p>
-          <p className="mt-3 flex-1 text-sm leading-relaxed text-[#e4ded2]/70">{n.porQue}</p>
+          {n.mapuzugun && (
+            <p className="glosa mt-1 text-[var(--crema)]/60">{n.comun}</p>
+          )}
+          <p className="mt-1.5 text-[11px] italic text-[var(--crema)]/35">{n.cientifico}</p>
+          <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--crema)]/70">{n.porQue}</p>
         </div>
       </article>
     </li>

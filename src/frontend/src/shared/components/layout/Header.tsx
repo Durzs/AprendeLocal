@@ -43,7 +43,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0a0047] border-b border-blue-950/80 text-white shadow-lg backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full bg-[var(--tinta-950)] border-b border-blue-950/80 text-white shadow-lg backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           
@@ -121,7 +121,7 @@ export default function Header() {
                 no de escoger de una vitrina. */}
             <Link
               to="/crear"
-              className="text-xs px-3.5 py-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 text-amber-300 font-semibold hidden sm:inline-block hover:bg-amber-400/20 transition"
+              className="text-xs px-3.5 py-1.5 rounded-full border border-[var(--tierra-400)]/45 bg-[var(--tierra-400)]/10 text-[var(--tierra-300)] font-semibold hidden sm:inline-block hover:bg-[var(--tierra-400)]/20 transition"
             >
               {t("header.nav.create", "Crear ruta")}
             </Link>
@@ -150,7 +150,7 @@ export default function Header() {
               <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild>
                   <button className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-white transition hover:bg-white/20 cursor-pointer">
-                    <span className="grid h-7 w-7 place-items-center rounded-full bg-amber-400 text-slate-950 font-bold">
+                    <span className="grid h-7 w-7 place-items-center rounded-full bg-[var(--tierra-400)] text-[var(--tierra-900)] font-bold">
                       <User className="h-4 w-4" />
                     </span>
                     <div className="hidden flex-col items-start leading-tight sm:flex">
@@ -204,7 +204,7 @@ export default function Header() {
             ) : (
               <button
                 onClick={() => navigate("/entrar")}
-                className="inline-flex items-center gap-2 rounded-full bg-[#f97316] hover:bg-orange-600 px-5 py-2 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition hover:-translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] hover:bg-[var(--tierra-500)] px-5 py-2 text-sm font-bold text-white shadow-md shadow-[var(--tierra-900)]/25 transition hover:-translate-y-0.5 cursor-pointer"
               >
                 <LogIn className="h-4 w-4" />
                 {t("header.actions.signIn", "Entrar")}
@@ -216,7 +216,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-blue-900/60 bg-[#0a0047] p-4 shadow-xl md:hidden">
+        <div className="border-t border-blue-900/60 bg-[var(--tinta-950)] p-4 shadow-xl md:hidden">
           <nav className="flex flex-col gap-2">
             <div className="mb-2 flex items-center justify-between rounded-xl bg-white/10 px-4 py-2.5">
               <span className="text-sm font-medium text-white">{t("header.user.language", "Idioma")}</span>
@@ -226,7 +226,7 @@ export default function Header() {
             <Link
               to="/crear"
               onClick={closeMobile}
-              className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-2.5 text-sm font-semibold text-amber-300"
+              className="rounded-xl border border-[var(--tierra-400)]/45 bg-[var(--tierra-400)]/10 px-4 py-2.5 text-sm font-semibold text-[var(--tierra-300)]"
             >
               {t("header.nav.create", "Crear ruta")}
             </Link>
@@ -295,7 +295,7 @@ export default function Header() {
             {!user && (
               <button
                 onClick={() => { closeMobile(); navigate("/entrar"); }}
-                className="mt-2 rounded-xl bg-[#f97316] hover:bg-orange-600 px-4 py-3 text-sm font-bold text-white shadow cursor-pointer"
+                className="mt-2 rounded-xl bg-[var(--tierra-600)] hover:bg-[var(--tierra-500)] px-4 py-3 text-sm font-bold text-white shadow cursor-pointer"
               >
                 {t("header.actions.signIn", "Entrar")}
               </button>
