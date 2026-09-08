@@ -15,7 +15,7 @@ export default function HowItWorksSection() {
     {
       id: 0,
       name: "Territorio",
-      bgColor: "#0a0047", // 1. Azul Marino Profundo
+      bgColor: "var(--tinta-950)", // el indigo de la marca
       title: "La clase empieza en el estero que está detrás de la cancha",
       desc: "Dices qué hay a distancia de caminata de tu escuela y qué pasa ahí que en otra parte no pasaría igual. De eso sale el proyecto, no de un tema general.",
       render3D: () => (
@@ -43,7 +43,7 @@ export default function HowItWorksSection() {
     {
       id: 1,
       name: "Terreno",
-      bgColor: "#ea580c", // 2. Naranja Terracota Marca
+      bgColor: "#c9612a", // la terracota del logotipo, no el naranjo de botones
       title: "Se mide con una huincha, un palo y un reloj",
       desc: "El curso sale, anota en la hoja de terreno y vuelve con números. Nada que haya que comprar: lo que hace falta está en la escuela o en una casa.",
       render3D: () => (
@@ -69,7 +69,7 @@ export default function HowItWorksSection() {
     {
       id: 2,
       name: "Currículum",
-      bgColor: "var(--tinta-800)", // 3. Azul Cobalto
+      bgColor: "var(--tinta-800)",
       title: "Marcas los objetivos que te toca pasar y la ruta sale de ahí",
       desc: "Los sesenta y dos de Ciencias Naturales de 5º a 8º, en una lista. La ruta que se arma te dice cuáles cubre y cuáles no, sin adornar la cuenta.",
       render3D: () => (
@@ -95,7 +95,10 @@ export default function HowItWorksSection() {
     {
       id: 3,
       name: "Comunidad",
-      bgColor: "#c2410c", // 4. Naranja Ámbar Cálido
+      // El verde del logotipo. La ultima etapa entrega el color a la
+      // seccion del territorio, que sigue en ese mismo verde: en vez de un
+      // corte entre dos secciones oscuras distintas, hay un solo bloque.
+      bgColor: "#1e2a24",
       title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
       desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
       render3D: () => (
