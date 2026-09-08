@@ -374,6 +374,64 @@ body {
 .animate-fadeInUp   { animation: palabraAsoma 380ms cubic-bezier(.22,.68,.28,1) both; }
 .animate-bounce-slow { animation: flotaLento 5s ease-in-out infinite; }
 
+/* ─────────────────────────────────────────────────────────────────────────
+ * Los cuatro dibujos de las etapas de Sobel.
+ *
+ * Las cuatro etapas eran cuatro párrafos, y un párrafo no muestra un
+ * movimiento: «medir y comparar» dicho con palabras es una definición, y
+ * dicho con dos barras que crecen a alturas distintas es la cosa. Cada dibujo
+ * hace lo que dice su etapa y ninguno hace nada más.
+ *
+ * Todos usan el mismo recurso, un trazo que se dibuja solo: se le pone al
+ * elemento el largo de su línea en `--largo` y la línea aparece como si la
+ * estuvieran trazando. Cuatro marcas distintas con una sola gramática, que es
+ * lo que evita que parezcan cuatro adornos sueltos.
+ *
+ * Duran poco y se mueven poco, como todo lo de aquí. Y quien pidió menos
+ * movimiento en su sistema los ve quietos y completos: la regla general de
+ * más abajo colapsa la duración, así que el estado final se aplica igual y no
+ * queda una línea a medio trazar.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+@keyframes trazo {
+  from { stroke-dashoffset: var(--largo); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes creceDesdeElSuelo {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes asomaMarca {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.trazo {
+  stroke-dasharray: var(--largo);
+  animation: trazo 620ms cubic-bezier(.35,.7,.35,1) both;
+}
+
+.crece {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: creceDesdeElSuelo 480ms cubic-bezier(.22,.68,.28,1) both;
+}
+
+.marca {
+  animation: asomaMarca 320ms ease-out both;
+}
+
+/* El escalonado de los dibujos: cada pieza entra detrás de la anterior, que
+   es lo que hace que se lea como un gesto y no como una imagen que aparece. */
+.paso-1 { animation-delay:  80ms; }
+.paso-2 { animation-delay: 260ms; }
+.paso-3 { animation-delay: 420ms; }
+.paso-4 { animation-delay: 560ms; }
+.paso-5 { animation-delay: 700ms; }
+.paso-6 { animation-delay: 820ms; }
+
 /*
  * El grano de papel. Es la misma capa en la portada, en el territorio y en el
  * cuaderno: una sección oscura sin textura se ve como un rectángulo de color,
