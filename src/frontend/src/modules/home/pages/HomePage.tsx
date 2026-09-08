@@ -1,11 +1,28 @@
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../../../shared/contexts/AuthContext";
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
+import FuncionesSection from "../components/FuncionesSection";
 import ContactSection from "../components/ContactSection";
+import EscritorioPage from "./EscritorioPage";
 
+/**
+ * El inicio, que no es el mismo para todos.
+ *
+ * La portada le habla a alguien que no sabe qué es esto: explica la idea,
+ * enseña los dibujos, invita a escribir. A un docente que ya tiene cuenta y
+ * abrió el sitio un lunes a las siete de la mañana eso le sobra entero; él
+ * viene a seguir con la ruta que dejó a medias. Son dos personas distintas y
+ * hasta ahora recibían la misma pantalla.
+ *
+ * Mientras se comprueba la sesión no se enseña ninguna de las dos. Adivinar y
+ * corregir después hace que la página parpadee de una a otra, y ese parpadeo
+ * se lee como que algo falló.
+ */
 export default function HomePage() {
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   /**
@@ -34,12 +51,24 @@ export default function HomePage() {
    * baja tres pantallas leyendo variaciones del mismo párrafo no aprende más;
    * se cansa antes de llegar al botón.
    *
-   * Quedan cuatro. La entrada, qué es esto, cómo funciona con los dibujos, y
-   * cómo escribirnos. Fuera van los pilares, el banco de rutas —que repetía lo
-   * que ya dicen los dibujos— el mapa, que hoy vive dentro de armar la ruta, y
-   * el llamado final, que repetía el botón de arriba en una página que ya no
-   * es larga.
+   * Quedan cinco. La entrada, qué es esto, cómo funciona con los dibujos, qué
+   * se va a encontrar al entrar, y cómo escribirnos. Los pilares y la
+   * formación se fueron a /metodologia y el banco de rutas a /rutas: no se
+   * borraron, se mudaron.
    */
+  if (loading) {
+    return (
+      <main className="grid min-h-screen place-items-center bg-white">
+        <div className="h-0.5 w-32 overflow-hidden rounded-full bg-slate-200">
+          <div className="animar-esperando h-full w-1/4 rounded-full bg-[var(--tinta-600)]" />
+        </div>
+        <span className="sr-only">Comprobando si tienes la sesión iniciada</span>
+      </main>
+    );
+  }
+
+  if (user) return <EscritorioPage />;
+
   return (
     <main className="min-h-screen bg-white text-[#111217]">
       <HeroSection onStart={goStart} onExplore={goExplore} />
@@ -49,6 +78,9 @@ export default function HomePage() {
 
       {/* Cómo funciona, con los dibujos que cambian al bajar */}
       <HowItWorksSection />
+
+      {/* Qué se va a encontrar al entrar, con el nombre que tiene adentro */}
+      <FuncionesSection />
 
       {/* La única puerta que queda para una escuela que quiere entrar */}
       <ContactSection />
