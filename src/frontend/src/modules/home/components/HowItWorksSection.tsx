@@ -95,10 +95,12 @@ export default function HowItWorksSection() {
     {
       id: 3,
       name: "Comunidad",
-      // El verde del logotipo. La ultima etapa entrega el color a la
-      // seccion del territorio, que sigue en ese mismo verde: en vez de un
-      // corte entre dos secciones oscuras distintas, hay un solo bloque.
-      bgColor: "#1e2a24",
+      // El verde del territorio. La ultima etapa entrega el color a la
+      // seccion que sigue, que esta en ese mismo verde: en vez de un corte
+      // entre dos secciones oscuras distintas, hay un solo bloque. Eso vale
+      // mientras la etapa 04 este a la vista; el resto del tiempo el traspaso
+      // lo hace el degradado del pie, mas abajo.
+      bgColor: "var(--bosque-950)",
       title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
       desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
       render3D: () => (
@@ -176,6 +178,18 @@ export default function HowItWorksSection() {
       className="relative overflow-hidden transition-colors duration-700 px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-10 sm:pb-14 flex flex-col justify-between"
       style={{ backgroundColor: activeStage.bgColor }}
     >
+      {/* El traspaso al territorio.
+          La idea original era que la etapa 04 fuera del mismo verde que la
+          seccion de abajo, para que no hubiera corte. Funciona una vez de
+          cada cuatro: el ciclo pasa la mayor parte del tiempo en indigo o en
+          terracota, y entonces lo que se ve es un borde duro entre dos
+          colores oscuros sin relacion. Este degradado hace el traspaso pase
+          lo que pase, porque no depende de que etapa este a la vista. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-b from-transparent to-[var(--bosque-950)]"
+      />
+
       {/* Header Superior: Título & Timeline */}
       <div className="max-w-7xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
         {/* La misma franja de anotación con la que abren la portada y el

@@ -88,8 +88,22 @@ body {
   --agua-400: #6fb3c4;
   --agua-600: #3d7f92;
 
-  /* Los dos fondos oscuros y las dos cremas del logotipo. */
-  --bosque-950: #1e2a24;
+  /* El fondo oscuro de la sección del territorio, y las dos cremas.
+   *
+   * Era el verde del logotipo tal cual, #1e2a24, que es un verde frío: tira a
+   * azul verdoso. Puesto a sangre debajo del índigo de la marca —248° contra
+   * 156°, los dos oscuros y los dos presentes— la unión se lee como dos
+   * colores peleando, y no como dos partes del mismo sitio. Eso es lo que
+   * Diego vio desentonar.
+   *
+   * Este es el mismo verde girado catorce grados hacia el amarillo y bajado de
+   * azul: un verde musgo, todavía verde, pero de la misma familia cálida que
+   * el terracota que anota toda la sección. Verde de tierra contra índigo de
+   * cielo se lee como una relación; verde frío contra índigo, como un choque.
+   *
+   * `#1e2a24` no desaparece: es la tinta del logotipo y sigue siendo eso. Lo
+   * que cambia es el color del suelo, que es otro trabajo. */
+  --bosque-950: #212a1f;
   --crema:      #e4ded2;
   --crema-clara: #f3efe7;
 }

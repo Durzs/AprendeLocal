@@ -33,8 +33,13 @@ import { FAMILIAS } from "../../sequences/crear/preguntas";
  * palabras salen del catálogo de rutas, no de aquí.
  */
 
-/** El verde y la crema del logotipo. Esta es la única sección a sangre. */
-const TINTA = "#1e2a24";
+/**
+ * El suelo de la sección. Esta es la única sección a sangre.
+ *
+ * Era el verde del logotipo tal cual. La explicación de por qué ahora es un
+ * musgo un poco más cálido está donde vive el color, en index.css.
+ */
+const TINTA = "var(--bosque-950)";
 
 /**
  * Las palabras del agua, con su raíz.
@@ -297,7 +302,7 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
           </span>
 
           {n.estado && (
-            <span className="rotulo absolute left-3 top-3 rounded-full bg-[#1e2a24]/85 px-2.5 py-1.5 text-[var(--tierra-300)] backdrop-blur">
+            <span className="rotulo absolute left-3 top-3 rounded-full bg-[var(--bosque-950)]/85 px-2.5 py-1.5 text-[var(--tierra-300)] backdrop-blur">
               {ESTADO[n.estado]}
             </span>
           )}
