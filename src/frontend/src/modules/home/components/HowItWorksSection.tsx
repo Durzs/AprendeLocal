@@ -95,9 +95,11 @@ export default function HowItWorksSection() {
     {
       id: 3,
       name: "Comunidad",
-      // El verde del logotipo. La ultima etapa entrega el color a la
-      // seccion del territorio, que sigue en ese mismo verde: en vez de un
-      // corte entre dos secciones oscuras distintas, hay un solo bloque.
+      // El verde del logotipo, que es el color de esta etapa: la comunidad.
+      // Antes valia ademas para entregarle el color a la seccion del
+      // territorio, que iba en ese mismo verde a sangre; ahora esa seccion es
+      // clara, asi que el verde se queda aqui por lo que significa y no por
+      // lo que empalma.
       bgColor: "#1e2a24",
       title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
       desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",

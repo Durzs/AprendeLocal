@@ -105,8 +105,8 @@ export default function EtapasSobel() {
     <div ref={caja}>
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="max-w-xl">
-          <span className="rotulo block text-[#f97316]">Cómo se recorre</span>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/60">
+          <span className="rotulo block text-orange-700">Cómo se recorre</span>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">
             Las cuatro vienen de David Sobel y van en este orden. Escoge qué
             hay cerca de tu escuela: las preguntas se rehacen con eso.
           </p>
@@ -125,8 +125,8 @@ export default function EtapasSobel() {
                 aria-pressed={puesto}
                 className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition ${
                   puesto
-                    ? "border-[#f97316] bg-[#f97316]/15 text-[#fbbf24]"
-                    : "border-[var(--crema)]/20 text-[var(--crema)]/65 hover:border-[var(--crema)]/45 hover:text-[var(--crema-clara)]"
+                    ? "border-orange-300 bg-orange-50 text-orange-800"
+                    : "border-slate-300 text-slate-600 hover:border-slate-400 hover:text-[#111217]"
                 }`}
               >
                 {e.etiqueta}
@@ -136,7 +136,7 @@ export default function EtapasSobel() {
         </fieldset>
       </div>
 
-      <ol className="mt-7 grid gap-px overflow-hidden rounded-3xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.08] sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="mt-7 grid gap-px overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-200/70 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         {FAMILIAS.map((f, i) => (
           <Etapa
             key={f.id}
@@ -150,7 +150,7 @@ export default function EtapasSobel() {
         ))}
       </ol>
 
-      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
         Las preguntas son borradores: la que quede escrita con tus palabras
         siempre va a ser mejor que estas. Salen del mismo sitio que las del
         cuaderno, y ahí se corrigen una por una.
@@ -184,19 +184,19 @@ function Etapa({
   return (
     <li
       className="group relative flex flex-col overflow-hidden p-6 sm:p-7"
-      style={{ backgroundColor: "var(--bosque-950)" }}
+      style={{ backgroundColor: "#ffffff" }}
       onMouseEnter={rebobinar}
       onFocus={rebobinar}
     >
       {/* El número, grande y fantasma: marca el orden sin competir. */}
       <span
         aria-hidden
-        className="cifra pointer-events-none absolute -right-2 -top-3 text-[5.5rem] font-semibold leading-none text-[var(--crema)]/[0.06]"
+        className="cifra pointer-events-none absolute -right-2 -top-3 text-[5.5rem] font-semibold leading-none text-slate-900/[0.05]"
       >
         {String(indice + 1).padStart(2, "0")}
       </span>
 
-      <span className="rotulo block text-[var(--crema)]/40">
+      <span className="rotulo block text-slate-500">
         Etapa {String(indice + 1).padStart(2, "0")}
       </span>
 
@@ -206,8 +206,8 @@ function Etapa({
         {enVista && Dibujo && <div key={pase}>{Dibujo()}</div>}
       </div>
 
-      <h3 className="titulo mt-5 text-lg text-[var(--crema-clara)]">{titulo}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--crema)]/60">{porque}</p>
+      <h3 className="titulo mt-5 text-lg text-[#111217]">{titulo}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-slate-600">{porque}</p>
 
       {/* La pregunta que produce esta etapa, con el entorno escogido arriba.
           La llave lleva el texto: al cambiar de entorno el elemento se monta
@@ -215,7 +215,7 @@ function Etapa({
           notar que cambió. */}
       <p
         key={pregunta}
-        className="animar-asoma mt-5 flex-1 border-t border-[var(--crema)]/12 pt-4 text-sm leading-snug text-[#fbbf24]"
+        className="animar-asoma mt-5 flex-1 border-t border-slate-200 pt-4 text-sm leading-snug text-orange-700"
       >
         {pregunta}
       </p>
@@ -227,13 +227,13 @@ function Etapa({
  * Los cuatro dibujos.
  *
  * Todos en el mismo lienzo de 120×72, con el mismo trazo y la misma paleta:
- * la crema para lo que ya estaba, el terracota para lo que hace la etapa. La
+ * el gris para lo que ya estaba, el naranjo para lo que hace la etapa. La
  * gramática la ponen las clases `.trazo`, `.crece` y `.marca` de index.css.
  * ─────────────────────────────────────────────────────────────────────────── */
 
 const LIENZO = "h-full w-full max-w-[132px]";
-const CREMA = "var(--crema)";
-const ACENTO = "#f97316";
+const CREMA = "#94a3b8";
+const ACENTO = "#ea580c";
 
 /** Mirar de cerca: el marco se cierra sobre un trozo, y ahí aparece lo que no se veía. */
 function Mirar() {
