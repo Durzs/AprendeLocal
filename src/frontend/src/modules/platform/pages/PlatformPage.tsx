@@ -128,7 +128,7 @@ export default function PlatformPage() {
 
           {/* Entrada del docente */}
           <Link
-            to="/rutas"
+            to="/"
             className="mt-6 flex flex-col gap-3 rounded-2xl border border-emerald-600/30 bg-emerald-50/60 p-5 transition hover:border-emerald-600/60 hover:bg-emerald-50 sm:flex-row sm:items-center sm:justify-between"
           >
             <div>

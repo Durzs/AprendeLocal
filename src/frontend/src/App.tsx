@@ -18,14 +18,12 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
 import HomePage from "./modules/home/pages/HomePage";
-import MetodologiaPage from "./modules/home/pages/MetodologiaPage";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import RegisterPage from "./modules/auth/pages/RegisterPage";
 import AuthCallbackPage from "./modules/auth/pages/AuthCallbackPage";
 import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
 import PrepararPage from "./modules/sequences/pages/PrepararPage";
-import RutasPage from "./modules/sequences/pages/RutasPage";
 import CrearPage from "./modules/sequences/pages/CrearPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
@@ -45,10 +43,8 @@ const router = createBrowserRouter([
       { path: "recuperar", element: <ForgotPasswordPage /> },
 
       /* ── Módulo Pedagógico & Rutas Docentes ── */
-      { path: "rutas", element: <RutasPage /> },
       // Lo que salio de la portada para que dejara de ser un folleto de ocho
       // pantallas. No se borro: se mudo.
-      { path: "metodologia", element: <MetodologiaPage /> },
       { path: "preparar", element: <PrepararPage /> },
 
       /* ── Rutas protegidas ── */
@@ -72,8 +68,13 @@ const router = createBrowserRouter([
       /* ── Redirección de rutas antiguas / eliminadas al inicio ── */
       { path: "plataforma", element: <Navigate to="/" replace /> },
       { path: "plataforma-legacy", element: <Navigate to="/" replace /> },
-      { path: "cursos", element: <Navigate to="/rutas" replace /> },
-      { path: "cursos/*", element: <Navigate to="/rutas" replace /> },
+      { path: "cursos", element: <Navigate to="/" replace /> },
+      { path: "cursos/*", element: <Navigate to="/" replace /> },
+      /* Las dos subpaginas que Diego pidio sacar. Se redirigen en vez de
+         devolver un 404: su contenido volvio a la portada, y un enlace que
+         alguien haya guardado sigue llegando a alguna parte. */
+      { path: "rutas", element: <Navigate to="/" replace /> },
+      { path: "metodologia", element: <Navigate to="/" replace /> },
 
       /* ── Redirección 404 a la página principal ── */
       { path: "*", element: <Navigate to="/" replace /> },

@@ -44,20 +44,12 @@ body {
   --tinta-100: #e6e3f7;
   --tinta-50:  #f3f2fc; /* fondos */
 
-  /* ───────────────────────────────────────────────────────────────────────
-   * Un solo acento cálido, en nueve tonos.
+  /* El terracota del logotipo, en nueve tonos.
    *
-   * Había tres peleando por el mismo puesto: el terracota del logotipo
-   * (#c9612a), un naranjo puro de botón (#f97316) y toda la familia ámbar de
-   * Tailwind (#fbbf24, amber-300, amber-400). El terracota es apagado y tira
-   * a tierra; el naranjo puro es saturado y tira a señalética. Puestos en la
-   * misma pantalla —y lo estaban: la cabecera tenía el botón naranjo al lado
-   * de la insignia ámbar— no se leen como una familia, se leen como un
-   * descuido. Eso es lo que desentonaba.
-   *
-   * Estos nueve salen del matiz del logotipo, 20,75°, moviendo solo luz y
-   * saturación. El de marca sigue siendo el 600, idéntico al de antes.
-   * ─────────────────────────────────────────────────────────────────────── */
+   * Es el acento de la sección del territorio y de los dibujos de las
+   * etapas, que están sobre el verde. El naranjo de los botones y la
+   * familia ámbar son otra cosa y viven en sus componentes: aquí solo está
+   * el terracota, que es el que sale del logotipo. */
   --tierra-900: #3f2212;
   --tierra-800: #623218;
   --tierra-700: #8b431d; /* texto de acento sobre fondo claro, con contraste */
@@ -69,41 +61,9 @@ body {
   --tierra-100: #f6e5dc;
   --tierra-50:  #fcf4f1;
 
-  /* El verde de los dibujos isométricos.
-   *
-   * Eran esmeraldas de librería —#34d399, #10b981, #6ee7b7—, que son verdes de
-   * pantalla: al lado del índigo de la marca vibran, y ese vibrar es la mitad
-   * de lo que se veía desafinado en esa sección. Estos cuatro son el mismo
-   * verde del logotipo (#1e2a24, matiz 156°) subido de luz, que es lo que
-   * hace falta para dibujar con él sin cambiar de color. */
-  --monte-200: #a8ddc0;
-  --monte-300: #7fc9a4;
-  --monte-500: #3f9b72;
-  --monte-700: #2b6f52;
-  --monte-900: #1e4a38;
-
-  /* Y el agua, que en los dibujos era violeta: `--tinta-400` sobre el verde
-   * del terreno se leía como una grieta, no como un estero. Es el matiz que
-   * queda entre el verde del monte y el índigo de la marca. */
-  --agua-400: #6fb3c4;
-  --agua-600: #3d7f92;
-
-  /* El fondo oscuro de la sección del territorio, y las dos cremas.
-   *
-   * Era el verde del logotipo tal cual, #1e2a24, que es un verde frío: tira a
-   * azul verdoso. Puesto a sangre debajo del índigo de la marca —248° contra
-   * 156°, los dos oscuros y los dos presentes— la unión se lee como dos
-   * colores peleando, y no como dos partes del mismo sitio. Eso es lo que
-   * Diego vio desentonar.
-   *
-   * Este es el mismo verde girado catorce grados hacia el amarillo y bajado de
-   * azul: un verde musgo, todavía verde, pero de la misma familia cálida que
-   * el terracota que anota toda la sección. Verde de tierra contra índigo de
-   * cielo se lee como una relación; verde frío contra índigo, como un choque.
-   *
-   * `#1e2a24` no desaparece: es la tinta del logotipo y sigue siendo eso. Lo
-   * que cambia es el color del suelo, que es otro trabajo. */
-  --bosque-950: #212a1f;
+  /* El verde del logotipo, que es el fondo de la sección del territorio, y
+   * las dos cremas. */
+  --bosque-950: #1e2a24;
   --crema:      #e4ded2;
   --crema-clara: #f3efe7;
 }

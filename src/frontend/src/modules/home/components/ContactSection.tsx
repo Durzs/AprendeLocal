@@ -81,12 +81,12 @@ export default function ContactSection() {
     <section id="contacto" className="relative overflow-hidden bg-white py-20 text-[#111217] md:py-28">
       {/* Background glow accents */}
       <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-[var(--tinta-100)] blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-[var(--tierra-50)] blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-50 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
         {/* La franja de anotación que abre las otras cuatro secciones. */}
         <div className="mb-12 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-200 pb-4">
-          <span className="rotulo text-[var(--tierra-700)]">Contacto</span>
+          <span className="rotulo text-orange-700">Contacto</span>
           <span className="rotulo text-slate-400">{CORREO}</span>
         </div>
 
@@ -109,14 +109,14 @@ export default function ContactSection() {
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-[var(--tinta-50)] text-[var(--tinta-600)]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-200 bg-orange-50 text-orange-700">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="rotulo text-slate-500">Correo directo</div>
                   <a
                     href="mailto:contacto@aprendelocal.cl"
-                    className="font-semibold text-slate-900 transition hover:text-[var(--tierra-700)]"
+                    className="font-semibold text-slate-900 transition hover:text-orange-700"
                   >
                     contacto@aprendelocal.cl
                   </a>
@@ -124,7 +124,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-[var(--tinta-50)] text-[var(--tinta-600)]">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
@@ -141,7 +141,7 @@ export default function ContactSection() {
           <div className="rounded-[2.5rem] border border-slate-200 bg-[var(--tinta-50)] p-8 shadow-sm lg:col-span-6">
             {enviado ? (
               <div className="py-12 text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--tierra-100)] text-[var(--tierra-700)]">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                   <CheckCircle2 className="h-8 w-8" />
                 </div>
                 {estado === "guardado" ? (
@@ -169,7 +169,7 @@ export default function ContactSection() {
                     </p>
                     <a
                       href={`mailto:${CORREO}`}
-                      className="mt-3 inline-block font-semibold text-[var(--tierra-700)] underline underline-offset-4"
+                      className="mt-3 inline-block font-semibold text-orange-700 underline underline-offset-4"
                     >
                       {CORREO}
                     </a>
@@ -256,12 +256,12 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={estado === "enviando"}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--tinta-950)] hover:bg-[var(--tinta-800)] px-6 py-3.5 font-bold text-white shadow-lg shadow-[var(--tinta-950)]/30 transition hover:-translate-y-0.5 cursor-pointer disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] border border-blue-900/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-[#0a0047]/50 transition hover:-translate-y-0.5 cursor-pointer disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     {estado === "enviando" ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-[var(--tierra-300)]" />
+                      <Loader2 className="h-4 w-4 animate-spin text-amber-300" />
                     ) : (
-                      <Send className="h-4 w-4 text-[var(--tierra-300)]" />
+                      <Send className="h-4 w-4 text-amber-300" />
                     )}
                     <span>
                       {estado === "enviando"

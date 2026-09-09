@@ -82,7 +82,7 @@ export default function CrearPage() {
         laminas={laminas}
         indice={indice}
         onIndice={setIndice}
-        onSalir={() => navegar("/rutas")}
+        onSalir={() => navegar("/")}
       />
       {/* Lo escrito no se pierde al salir: se lee de vuelta al entrar. Se dice
           en voz baja, para que nadie tenga que averiguarlo probando. */}

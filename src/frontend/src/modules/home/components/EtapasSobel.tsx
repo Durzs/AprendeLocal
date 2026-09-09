@@ -105,7 +105,7 @@ export default function EtapasSobel() {
     <div ref={caja}>
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="max-w-xl">
-          <span className="rotulo block text-[var(--tierra-400)]">Cómo se recorre</span>
+          <span className="rotulo block text-[#f97316]">Cómo se recorre</span>
           <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/60">
             Las cuatro vienen de David Sobel y van en este orden. Escoge qué
             hay cerca de tu escuela: las preguntas se rehacen con eso.
@@ -125,7 +125,7 @@ export default function EtapasSobel() {
                 aria-pressed={puesto}
                 className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition ${
                   puesto
-                    ? "border-[var(--tierra-400)] bg-[var(--tierra-400)]/15 text-[var(--tierra-300)]"
+                    ? "border-[#f97316] bg-[#f97316]/15 text-[#fbbf24]"
                     : "border-[var(--crema)]/20 text-[var(--crema)]/65 hover:border-[var(--crema)]/45 hover:text-[var(--crema-clara)]"
                 }`}
               >
@@ -215,7 +215,7 @@ function Etapa({
           notar que cambió. */}
       <p
         key={pregunta}
-        className="animar-asoma mt-5 flex-1 border-t border-[var(--crema)]/12 pt-4 text-sm leading-snug text-[var(--tierra-300)]"
+        className="animar-asoma mt-5 flex-1 border-t border-[var(--crema)]/12 pt-4 text-sm leading-snug text-[#fbbf24]"
       >
         {pregunta}
       </p>
@@ -233,7 +233,7 @@ function Etapa({
 
 const LIENZO = "h-full w-full max-w-[132px]";
 const CREMA = "var(--crema)";
-const ACENTO = "var(--tierra-400)";
+const ACENTO = "#f97316";
 
 /** Mirar de cerca: el marco se cierra sobre un trozo, y ahí aparece lo que no se veía. */
 function Mirar() {
