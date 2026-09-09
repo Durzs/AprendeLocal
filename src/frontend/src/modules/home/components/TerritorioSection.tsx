@@ -20,39 +20,40 @@ import EtapasSobel from "./EtapasSobel";
  * numerados 01 a 04, y el sitio abre desarmando su propio nombre:
  * «su (underneath) + tera (earth)».
  *
- * De ahí se toman tres cosas: los rótulos diminutos como anotación, el número
- * grande y fantasma marcando cada etapa, y el recurso de la raíz compartida.
- * No se toma su paleta —AprendeLocal ya tiene la suya: el verde del logotipo
- * de fondo y el naranjo de acento— ni el contador de carga ni el marco
- * personal, que son de ese sitio y de nadie más.
+ * De ahí quedan dos cosas: los rótulos diminutos como anotación y el número
+ * grande y fantasma marcando cada etapa. No se toma su paleta ni el contador
+ * de carga ni el marco personal, que son de ese sitio y de nadie más.
  *
- * El recurso de la raíz aquí funciona mejor que allá, y no por mérito del
- * diseño: en mapuzugun `ko` es agua, y `witrunko`, `menoko` y `trayenko` son
- * tres maneras distintas de que haya agua en un lugar. Eso no es un juego
- * tipográfico, es la idea entera de la plataforma en cuatro líneas. Las
- * palabras salen del catálogo de rutas, no de aquí.
+ * LO QUE SE FUE, Y POR QUÉ
+ *
+ * Había un tercer recurso copiado de allá: la raíz compartida. `ko` es agua
+ * en mapuzugun, y `witrunko`, `menoko` y `trayenko` son tres maneras de que
+ * haya agua en un lugar. Se veía bien y decía algo cierto, pero Diego levantó
+ * dos cosas que pesan más. La primera es que no sabía si agregaba o restaba:
+ * es el trozo más decorativo de una sección que por lo demás promete cosas
+ * concretas. La segunda es la que decide: esto se va a usar fuera de La
+ * Araucanía, y una portada que abre con una etimología en mapuzugun le habla
+ * a una región y no a una escuela rural cualquiera. Las palabras siguen donde
+ * sirven, en el catálogo de rutas y en las fichas de las especies, que es
+ * donde el docente las va a leer con su curso.
  */
-
-/** El verde y la crema del logotipo. Esta es la única sección a sangre. */
-const TINTA = "var(--bosque-950)";
 
 /**
- * Las palabras del agua, con su raíz.
+ * El verde del logotipo, bajado a fondo.
  *
- * Salen del catálogo de rutas y no se inventa la etimología: lo único que se
- * afirma es que las tres contienen `ko`, que el propio catálogo lista aparte
- * como agua. Presentarlas juntas es agrupar lo que ya está, no proponer un
- * análisis morfológico que no me corresponde hacer.
+ * La sección era un bloque verde oscuro a sangre, con la crema encima. Venía
+ * de Sutéra y, cuando la portada volvió a la estética de Isidora —blanca,
+ * aireada, con tarjetas redondeadas y sombra suave—, quedó siendo lo único
+ * del sitio que hablaba otro idioma: un rectángulo negro verdoso entre ocho
+ * secciones claras.
+ *
+ * Sigue siendo la sección verde, que es como Diego la llama, pero el verde
+ * pasa de ser el fondo entero a ser el tinte del papel. Lo que estaba en
+ * crema sobre oscuro está ahora en tinta sobre claro, y las fichas son las
+ * mismas tarjetas blancas con borde y sombra suave que usa el resto de la
+ * portada. Lo que no cambia es nada de lo que dice.
  */
-const RAIZ = {
-  raiz: "ko",
-  significa: "agua",
-  familia: [
-    { palabra: "witrunko", es: "agua que corre", nota: "un estero" },
-    { palabra: "menoko", es: "ojo de agua", nota: "vertiente con dueño y con reglas" },
-    { palabra: "trayenko", es: "salto de agua", nota: "una cascada" },
-  ],
-};
+const VERDE_PAPEL = "#eef2ed";
 
 const PEDIDAS = [
   "Araucaria araucana",
@@ -95,7 +96,7 @@ function Rotulo({ children, tono = "crema" }: { children: React.ReactNode; tono?
   return (
     <span
       className={`rotulo block ${
-        tono === "naranjo" ? "text-[#f97316]" : "text-[var(--crema)]/40"
+        tono === "naranjo" ? "text-orange-700" : "text-slate-500"
       }`}
     >
       {children}
@@ -107,71 +108,28 @@ export default function TerritorioSection() {
   return (
     <section
       id="territorio"
-      className="grano relative overflow-hidden px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
-      style={{ backgroundColor: TINTA }}
+      className="relative overflow-hidden border-y border-slate-200/70 px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
+      style={{ backgroundColor: VERDE_PAPEL }}
     >
       <div className="relative z-10 mx-auto w-full max-w-7xl">
         {/* ── Franja de anotación ──────────────────────────────────────── */}
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[var(--crema)]/12 pb-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-300/70 pb-4">
           <Rotulo tono="naranjo">El territorio</Rotulo>
-          <Rotulo>La Araucanía · Temuco 38.7°S 72.6°O</Rotulo>
+          <Rotulo>Piloto en La Araucanía, Chile</Rotulo>
         </div>
 
         {/* ── La invitación ────────────────────────────────────────────── */}
         <div className="mt-10 max-w-4xl">
-          <h2 className="display text-[2.1rem] text-[var(--crema-clara)] sm:text-5xl md:text-6xl">
+          <h2 className="display text-[2.1rem] text-[#111217] sm:text-5xl md:text-6xl">
             El lugar que hay detrás de tu escuela alcanza para tres semanas de
             ciencia
           </h2>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-[var(--crema)]/70 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
             No hace falta llevar al curso a ninguna parte. El estero, el cerro
             o el camino que se ve por la ventana tiene lo que el programa pide:
             algo que medir, alguien a quien preguntarle y alguien que espera lo
             que averigüen.
           </p>
-        </div>
-
-        {/* ── La raíz ──────────────────────────────────────────────────── */}
-        <div className="mt-16 grid gap-x-12 gap-y-8 border-y border-[var(--crema)]/12 py-10 lg:grid-cols-[minmax(0,20rem)_1fr]">
-          <div>
-            <Rotulo>Una raíz</Rotulo>
-            {/* En monoespaciada, `ko` se leía como una variable de programa. Es
-                una palabra de una lengua: va en la misma tipografía que todo
-                lo demás, y destaca por tamaño, que es como destaca una
-                palabra. */}
-            <p className="mt-4 text-6xl font-semibold leading-none tracking-[-0.04em] text-[var(--crema-clara)] sm:text-7xl">
-              {RAIZ.raiz}
-            </p>
-            <p className="mt-3 text-lg text-[var(--crema)]/70">{RAIZ.significa}</p>
-          </div>
-
-          <div>
-            <Rotulo>Tres maneras de que haya agua en un lugar</Rotulo>
-            <ul className="mt-4 space-y-4">
-              {RAIZ.familia.map((f, i) => (
-                <li
-                  key={f.palabra}
-                  className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-[var(--crema)]/8 pb-3.5 last:border-0`}
-                >
-                  {/* La palabra y su traducción son un par: misma tipografía y
-                      mismo tamaño, distinto peso y distinto color. Antes la
-                      palabra iba en monoespaciada a 24 px y la traducción en
-                      sans a 16, o sea dos tipografías para las dos mitades de
-                      una misma línea. */}
-                  <span className="nombre text-[1.35rem] text-[var(--crema-clara)]">
-                    {f.palabra}
-                  </span>
-                  <span className="glosa text-[1.35rem] text-[var(--crema)]/70">{f.es}</span>
-                  <span className="rotulo ml-auto text-[var(--crema)]/35">{f.nota}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/55">
-              Una escuela que sabe si lo suyo es un witrunko o un menoko ya sabe
-              qué va a medir y a quién tiene que preguntarle. Por eso la ruta
-              empieza preguntando cómo se llama el lugar, y no qué unidad toca.
-            </p>
-          </div>
         </div>
 
         {/* ── La metodología, como las etapas del viaje ────────────────── */}
@@ -182,7 +140,7 @@ export default function TerritorioSection() {
               tiene estado propio y esta sección ya es larga. */}
           <EtapasSobel />
 
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
             Los menores conocen el lugar y los mayores hacen algo por él: en
             una sala con varios cursos a la vez, eso deja de ser un estorbo y
             pasa a ser el reparto del trabajo.{" "}
@@ -190,7 +148,7 @@ export default function TerritorioSection() {
                 a la portada, unas pantallas más arriba. */}
             <a
               href="#habilidades"
-              className="text-[#f97316] underline underline-offset-4 transition hover:text-[#fbbf24]"
+              className="text-orange-700 underline underline-offset-4 transition hover:text-orange-800"
             >
               En qué se apoya
             </a>
@@ -202,13 +160,13 @@ export default function TerritorioSection() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-2xl">
               <Rotulo tono="naranjo">Qué vive ahí</Rotulo>
-              <h3 className="titulo mt-3 text-2xl text-[var(--crema-clara)] sm:text-3xl">
+              <h3 className="titulo mt-3 text-2xl text-[#111217] sm:text-3xl">
                 Con el nombre que le da la gente de aquí
               </h3>
             </div>
             <Link
               to="/crear"
-              className="group inline-flex items-center gap-2 rounded-full border border-[var(--crema)]/25 px-5 py-2.5 text-sm font-medium text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema-clara)]"
+              className="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-[#111217]"
             >
               Ver lo de tu escuela
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -225,7 +183,7 @@ export default function TerritorioSection() {
             ))}
           </ul>
 
-          <p className="mt-3 text-xs leading-relaxed text-[var(--crema)]/45">
+          <p className="mt-3 text-xs leading-relaxed text-slate-500">
             Las fotografías vienen de iNaturalist. Los nombres en mapuzugun no
             los ha revisado un hablante todavía: antes de imprimirlos,
             pregúntale al educador tradicional de tu escuela.
@@ -249,8 +207,8 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
 
   return (
     <li className="w-[16rem] shrink-0 snap-start sm:w-[18rem]">
-      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.04]">
-        <div className="relative aspect-[4/3] overflow-hidden bg-[var(--crema)]/[0.06]">
+      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
           {n.fotoUrl && !sinFoto ? (
             <img
               src={n.fotoUrl}
@@ -262,7 +220,7 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
           ) : (
             <span
               aria-hidden
-              className="rotulo grid h-full w-full place-items-center text-[var(--crema)]/25"
+              className="rotulo grid h-full w-full place-items-center text-slate-400"
             >
               {n.grupo}
             </span>
@@ -270,12 +228,12 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
 
           {/* La numeración va sobre la foto, como la anotación de una lámina
               de herbario. */}
-          <span className="cifra absolute right-3 top-3 text-[10px] tracking-[0.18em] text-[var(--crema)]/70 mix-blend-difference">
+          <span className="cifra absolute right-3 top-3 text-[10px] tracking-[0.18em] text-white/80 mix-blend-difference">
             {String(i + 1).padStart(2, "0")}
           </span>
 
           {n.estado && (
-            <span className="rotulo absolute left-3 top-3 rounded-full bg-[var(--bosque-950)]/85 px-2.5 py-1.5 text-[#fbbf24] backdrop-blur">
+            <span className="rotulo absolute left-3 top-3 rounded-full border border-orange-200 bg-white/90 px-2.5 py-1.5 text-orange-800 backdrop-blur">
               {ESTADO[n.estado]}
             </span>
           )}
@@ -294,14 +252,14 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
             primero, y eso sí tiene una razón: la sección se llama «con el
             nombre que le da la gente de aquí». */}
         <div className="flex flex-1 flex-col p-5">
-          <p className="nombre text-[var(--crema-clara)]">
+          <p className="nombre text-[#111217]">
             {n.mapuzugun || n.comun}
           </p>
           {n.mapuzugun && (
-            <p className="glosa mt-1 text-[var(--crema)]/60">{n.comun}</p>
+            <p className="glosa mt-1 text-slate-600">{n.comun}</p>
           )}
-          <p className="mt-1.5 text-[11px] italic text-[var(--crema)]/35">{n.cientifico}</p>
-          <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--crema)]/70">{n.porQue}</p>
+          <p className="mt-1.5 text-[11px] italic text-slate-400">{n.cientifico}</p>
+          <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{n.porQue}</p>
         </div>
       </article>
     </li>

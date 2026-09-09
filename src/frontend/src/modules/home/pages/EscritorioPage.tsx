@@ -33,7 +33,10 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  *   · la ruta a medias, en el lila claro: es la mesa de trabajo, y el trabajo
  *     se hace sobre fondo claro;
  *   · lo que hay, en blanco, que es la parte de navegar;
- *   · las rutas escritas, en el verde del territorio, porque de eso tratan.
+ *   · las rutas escritas, en el verde del logotipo, porque de territorio
+ *     tratan. En la portada ese verde bajo a fondo claro; aqui se queda
+ *     oscuro, que es lo que le da al escritorio su ultimo bloque de
+ *     contraste antes del pie.
  */
 export default function EscritorioPage() {
   const { user } = useAuth();

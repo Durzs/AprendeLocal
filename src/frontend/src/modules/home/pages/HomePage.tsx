@@ -7,7 +7,6 @@ import HowItWorksSection from "../components/HowItWorksSection";
 import PillarsSection from "../components/PillarsSection";
 import ProjectsSection from "../components/ProjectsSection";
 import TerritorioSection from "../components/TerritorioSection";
-import MapExplorerSection from "../components/MapExplorerSection";
 import ContactSection from "../components/ContactSection";
 import CallToAction from "../components/CallToAction";
 import EscritorioPage from "./EscritorioPage";
@@ -55,6 +54,12 @@ export default function HomePage() {
    * subpáginas y devolver su contenido aquí, así que la portada vuelve a la
    * forma que tenía antes del recorte, con el territorio metido donde estaba
    * la rejilla de funciones.
+   *
+   * Menos «Explora tu territorio», que se fue por repetida: decía «descubre
+   * qué especies se han registrado ahí, con nombres en mapuzugun» dos
+   * pantallas debajo de la sección del territorio, que enseña exactamente eso
+   * con las fichas de las doce especies. El mapa en sí no se pierde: sigue
+   * dentro de la plataforma, que es donde se usa para trabajar.
    */
   if (loading) {
     return (
@@ -90,9 +95,6 @@ export default function HomePage() {
           tarjetas con enlaces, que era un índice del sitio disfrazado de
           sección: explicaba la aplicación y no decía nada del lugar. */}
       <TerritorioSection />
-
-      {/* El mapa */}
-      <MapExplorerSection />
 
       {/* La puerta para una escuela que quiere entrar */}
       <ContactSection />
