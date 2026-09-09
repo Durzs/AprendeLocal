@@ -20,22 +20,22 @@ export default function HowItWorksSection() {
       desc: "Dices qué hay a distancia de caminata de tu escuela y qué pasa ahí que en otra parte no pasaría igual. De eso sale el proyecto, no de un tema general.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="140,40 240,95 140,150 40,95" fill="var(--monte-300)" stroke="var(--monte-200)" strokeWidth="1.5" />
-          <polygon points="40,95 140,150 140,225 40,170" fill="var(--monte-500)" />
-          <polygon points="140,150 240,95 240,170 140,225" fill="var(--monte-700)" />
-          <polygon points="105,62 160,92 140,150 110,133" fill="var(--agua-400)" />
-          <polygon points="110,133 140,150 140,225 110,208" fill="var(--agua-600)" />
-          <rect x="72" y="65" width="8" height="20" fill="var(--tierra-900)" />
-          <polygon points="76,35 95,65 57,65" fill="var(--monte-500)" />
-          <polygon points="76,48 91,72 61,72" fill="var(--monte-700)" />
-          <rect x="187" y="90" width="8" height="20" fill="var(--tierra-900)" />
-          <polygon points="191,60 210,90 172,90" fill="var(--monte-500)" />
-          <polygon points="191,73 206,97 176,97" fill="var(--monte-700)" />
+          <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
+          <polygon points="40,95 140,150 140,225 40,170" fill="#10b981" />
+          <polygon points="140,150 240,95 240,170 140,225" fill="#059669" />
+          <polygon points="105,62 160,92 140,150 110,133" fill="#a5b4fc" />
+          <polygon points="110,133 140,150 140,225 110,208" fill="#6366f1" />
+          <rect x="72" y="65" width="8" height="20" fill="#78350f" />
+          <polygon points="76,35 95,65 57,65" fill="#10b981" />
+          <polygon points="76,48 91,72 61,72" fill="#059669" />
+          <rect x="187" y="90" width="8" height="20" fill="#78350f" />
+          <polygon points="191,60 210,90 172,90" fill="#10b981" />
+          <polygon points="191,73 206,97 176,97" fill="#059669" />
           <g transform="translate(150, 105)">
-            <rect x="0" y="0" width="22" height="22" fill="var(--tierra-500)" stroke="var(--tierra-700)" strokeWidth="2.5" rx="3" />
-            <line x1="11" y1="0" x2="11" y2="-20" stroke="var(--tierra-600)" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="11" cy="-23" r="5.5" fill="var(--tierra-600)" />
-            <circle cx="11" cy="-23" r="14" stroke="var(--tierra-600)" strokeWidth="2" fill="none" opacity="0.6" className="animate-ping" />
+            <rect x="0" y="0" width="22" height="22" fill="#f59e0b" stroke="#ea580c" strokeWidth="2.5" rx="3" />
+            <line x1="11" y1="0" x2="11" y2="-20" stroke="#f97316" strokeWidth="3.5" strokeLinecap="round" />
+            <circle cx="11" cy="-23" r="5.5" fill="#f97316" />
+            <circle cx="11" cy="-23" r="14" stroke="#f97316" strokeWidth="2" fill="none" opacity="0.6" className="animate-ping" />
           </g>
         </svg>
       )
@@ -60,8 +60,8 @@ export default function HowItWorksSection() {
           <line x1="104" y1="93" x2="126" y2="105" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
           <line x1="152" y1="98" x2="174" y2="86" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
           <line x1="160" y1="105" x2="180" y2="94" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-          <path d="M112,183 C150,203 175,215 214,231" stroke="var(--tierra-500)" strokeWidth="9" fill="none" strokeLinecap="round" />
-          <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="var(--tierra-900)" strokeWidth="2" strokeLinecap="round" />
+          <path d="M112,183 C150,203 175,215 214,231" stroke="#f59e0b" strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
           <circle cx="106" cy="180" r="9" fill="var(--tinta-400)" stroke="var(--tinta-600)" strokeWidth="2" />
         </svg>
       )
@@ -80,14 +80,14 @@ export default function HowItWorksSection() {
           <polygon points="140,20 220,65 140,115 60,65" fill="#ffffff" stroke="var(--tinta-600)" strokeWidth="2.5" />
           <line x1="95" y1="62" x2="185" y2="62" stroke="#cbd5e1" strokeWidth="2.5" />
           <line x1="90" y1="75" x2="190" y2="75" stroke="#cbd5e1" strokeWidth="2.5" />
-          <line x1="90" y1="88" x2="165" y2="88" stroke="var(--tierra-600)" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="90" y1="88" x2="165" y2="88" stroke="#f97316" strokeWidth="3.5" strokeLinecap="round" />
           <g transform="translate(190, 40)">
-            <circle cx="0" cy="0" r="16" fill="var(--monte-500)" stroke="#ffffff" strokeWidth="2.5" />
+            <circle cx="0" cy="0" r="16" fill="#10b981" stroke="#ffffff" strokeWidth="2.5" />
             <polyline points="-5,-1 -1,4 6,-5" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </g>
           <g transform="translate(50, 115) rotate(-28)">
-            <rect x="0" y="0" width="10" height="52" rx="3" fill="var(--tierra-600)" />
-            <polygon points="0,52 10,52 5,62" fill="var(--tierra-900)" />
+            <rect x="0" y="0" width="10" height="52" rx="3" fill="#f97316" />
+            <polygon points="0,52 10,52 5,62" fill="#78350f" />
           </g>
         </svg>
       )
@@ -95,12 +95,10 @@ export default function HowItWorksSection() {
     {
       id: 3,
       name: "Comunidad",
-      // El verde del territorio. La ultima etapa entrega el color a la
-      // seccion que sigue, que esta en ese mismo verde: en vez de un corte
-      // entre dos secciones oscuras distintas, hay un solo bloque. Eso vale
-      // mientras la etapa 04 este a la vista; el resto del tiempo el traspaso
-      // lo hace el degradado del pie, mas abajo.
-      bgColor: "var(--bosque-950)",
+      // El verde del logotipo. La ultima etapa entrega el color a la
+      // seccion del territorio, que sigue en ese mismo verde: en vez de un
+      // corte entre dos secciones oscuras distintas, hay un solo bloque.
+      bgColor: "#1e2a24",
       title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
       desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
       render3D: () => (
@@ -108,14 +106,14 @@ export default function HowItWorksSection() {
           <polygon points="140,55 235,110 140,165 45,110" fill="var(--tinta-600)" stroke="var(--tinta-400)" strokeWidth="1.5" />
           <polygon points="45,110 140,165 140,220 45,165" fill="var(--tinta-800)" />
           <polygon points="140,165 235,110 235,165 140,220" fill="var(--tinta-800)" />
-          <polygon points="140,20 185,45 140,70 95,45" fill="var(--tierra-400)" stroke="var(--tierra-500)" strokeWidth="2" />
-          <polygon points="95,45 140,70 140,115 95,90" fill="var(--tierra-500)" />
-          <polygon points="140,70 185,45 185,90 140,115" fill="var(--tierra-700)" />
+          <polygon points="140,20 185,45 140,70 95,45" fill="#fbbf24" stroke="#f59e0b" strokeWidth="2" />
+          <polygon points="95,45 140,70 140,115 95,90" fill="#f59e0b" />
+          <polygon points="140,70 185,45 185,90 140,115" fill="#ea580c" />
           <circle cx="140" cy="45" r="8" fill="var(--tinta-400)" />
-          <circle cx="78" cy="90" r="13" fill="var(--tierra-600)" stroke="#ffffff" strokeWidth="2" />
-          <circle cx="202" cy="90" r="13" fill="var(--monte-500)" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="78" cy="90" r="13" fill="#f97316" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="202" cy="90" r="13" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
           <g transform="translate(75, 170)">
-            <rect x="0" y="0" width="130" height="28" rx="8" fill="var(--tinta-950)" stroke="var(--tierra-600)" strokeWidth="2" />
+            <rect x="0" y="0" width="130" height="28" rx="8" fill="var(--tinta-950)" stroke="#f97316" strokeWidth="2" />
             {/* Decía «COMITÉ APR». Ese destinatario no lo pone la plataforma: lo
                 escribe el docente, porque es el único que sabe quién recibe el
                 trabajo en su comunidad. */}
@@ -178,25 +176,13 @@ export default function HowItWorksSection() {
       className="relative overflow-hidden transition-colors duration-700 px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-10 sm:pb-14 flex flex-col justify-between"
       style={{ backgroundColor: activeStage.bgColor }}
     >
-      {/* El traspaso al territorio.
-          La idea original era que la etapa 04 fuera del mismo verde que la
-          seccion de abajo, para que no hubiera corte. Funciona una vez de
-          cada cuatro: el ciclo pasa la mayor parte del tiempo en indigo o en
-          terracota, y entonces lo que se ve es un borde duro entre dos
-          colores oscuros sin relacion. Este degradado hace el traspaso pase
-          lo que pase, porque no depende de que etapa este a la vista. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-b from-transparent to-[var(--bosque-950)]"
-      />
-
       {/* Header Superior: Título & Timeline */}
       <div className="max-w-7xl mx-auto w-full relative z-20 mb-6 sm:mb-8">
         {/* La misma franja de anotación con la que abren la portada y el
             territorio. Es lo que hace que las cinco secciones se lean como un
             solo documento y no como cinco páginas pegadas. */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 pb-5">
-          <span className="rotulo text-[var(--tierra-300)]">Cómo funciona</span>
+          <span className="rotulo text-amber-300">Cómo funciona</span>
           <span className="rotulo text-white/40">
             Etapa {String(currentStep + 1).padStart(2, "0")} de{" "}
             {String(stages.length).padStart(2, "0")}
@@ -248,7 +234,7 @@ export default function HowItWorksSection() {
         {/* Barra de Progreso Superior */}
         <div className="h-1.5 w-full bg-white/10 rounded-full mt-3 overflow-hidden">
           <div 
-            className="h-full bg-[var(--tierra-500)] rounded-full transition-all duration-75"
+            className="h-full bg-orange-400 rounded-full transition-all duration-75"
             style={{ width: `${progress}%` }}
           />
         </div>

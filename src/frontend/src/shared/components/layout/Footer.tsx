@@ -6,7 +6,7 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-blue-950/80 bg-[var(--tinta-950)] px-4 py-12 text-slate-300">
+    <footer className="border-t border-blue-950/80 bg-[#0a0047] px-4 py-12 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           {/* Logo & Tagline */}
@@ -20,17 +20,17 @@ export default function Footer() {
           {/* Información de Contacto */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 text-sm">
             <div className="flex items-center gap-2.5">
-              <Mail className="h-4 w-4 text-[var(--tierra-400)]" />
+              <Mail className="h-4 w-4 text-[#f97316]" />
               <a
                 href="mailto:contacto@aprendelocal.cl"
-                className="text-white hover:text-[var(--tierra-300)] font-medium transition"
+                className="text-white hover:text-orange-400 font-medium transition"
               >
                 contacto@aprendelocal.cl
               </a>
             </div>
 
             <div className="flex items-center gap-2.5 text-slate-300">
-              <MapPin className="h-4 w-4 text-[var(--tinta-400)]" />
+              <MapPin className="h-4 w-4 text-blue-400" />
               <span>La Araucanía, Chile</span>
             </div>
           </div>

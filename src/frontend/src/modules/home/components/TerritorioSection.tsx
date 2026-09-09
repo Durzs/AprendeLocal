@@ -22,9 +22,9 @@ import EtapasSobel from "./EtapasSobel";
  *
  * De ahí se toman tres cosas: los rótulos diminutos como anotación, el número
  * grande y fantasma marcando cada etapa, y el recurso de la raíz compartida.
- * No se toma su paleta —AprendeLocal ya tiene la suya, verde y terracota— ni
- * el contador de carga ni el marco personal, que son de ese sitio y de nadie
- * más.
+ * No se toma su paleta —AprendeLocal ya tiene la suya: el verde del logotipo
+ * de fondo y el naranjo de acento— ni el contador de carga ni el marco
+ * personal, que son de ese sitio y de nadie más.
  *
  * El recurso de la raíz aquí funciona mejor que allá, y no por mérito del
  * diseño: en mapuzugun `ko` es agua, y `witrunko`, `menoko` y `trayenko` son
@@ -33,12 +33,7 @@ import EtapasSobel from "./EtapasSobel";
  * palabras salen del catálogo de rutas, no de aquí.
  */
 
-/**
- * El suelo de la sección. Esta es la única sección a sangre.
- *
- * Era el verde del logotipo tal cual. La explicación de por qué ahora es un
- * musgo un poco más cálido está donde vive el color, en index.css.
- */
+/** El verde y la crema del logotipo. Esta es la única sección a sangre. */
 const TINTA = "var(--bosque-950)";
 
 /**
@@ -97,13 +92,10 @@ const ESPECIES = [...MUESTRA, ...NATIVAS.filter((n) => !MUESTRA.includes(n))].sl
  * en todo el sitio. Antes cada sección elegía el suyo y salían seis.
  */
 function Rotulo({ children, tono = "crema" }: { children: React.ReactNode; tono?: "crema" | "naranjo" }) {
-  // Sobre este verde, el terracota de marca (#c9612a) da 3:1 de contraste, que
-  // a 10 px no se lee. El mismo matiz aclarado da 6:1 y sigue siendo el acento
-  // de la marca.
   return (
     <span
       className={`rotulo block ${
-        tono === "naranjo" ? "text-[var(--tierra-400)]" : "text-[var(--crema)]/40"
+        tono === "naranjo" ? "text-[#f97316]" : "text-[var(--crema)]/40"
       }`}
     >
       {children}
@@ -194,12 +186,14 @@ export default function TerritorioSection() {
             Los menores conocen el lugar y los mayores hacen algo por él: en
             una sala con varios cursos a la vez, eso deja de ser un estorbo y
             pasa a ser el reparto del trabajo.{" "}
-            <Link
-              to="/metodologia"
-              className="text-[var(--tierra-400)] underline underline-offset-4 transition hover:text-[var(--tierra-300)]"
+            {/* Llevaba a /metodologia, que ya no existe: sus pilares volvieron
+                a la portada, unas pantallas más arriba. */}
+            <a
+              href="#habilidades"
+              className="text-[#f97316] underline underline-offset-4 transition hover:text-[#fbbf24]"
             >
               En qué se apoya
-            </Link>
+            </a>
           </p>
         </div>
 
@@ -281,7 +275,7 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
           </span>
 
           {n.estado && (
-            <span className="rotulo absolute left-3 top-3 rounded-full bg-[var(--bosque-950)]/85 px-2.5 py-1.5 text-[var(--tierra-300)] backdrop-blur">
+            <span className="rotulo absolute left-3 top-3 rounded-full bg-[var(--bosque-950)]/85 px-2.5 py-1.5 text-[#fbbf24] backdrop-blur">
               {ESTADO[n.estado]}
             </span>
           )}

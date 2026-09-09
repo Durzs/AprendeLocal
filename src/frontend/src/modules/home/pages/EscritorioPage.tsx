@@ -89,7 +89,7 @@ export default function EscritorioPage() {
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-white/12 pb-4">
-            <span className="rotulo text-[var(--tierra-300)]">{escuela ?? "Tu escuela"}</span>
+            <span className="rotulo text-amber-300">{escuela ?? "Tu escuela"}</span>
             <span className="rotulo text-white/40">Tu escritorio</span>
           </div>
 
@@ -107,7 +107,7 @@ export default function EscritorioPage() {
       {/* ── La mesa de trabajo, en claro ───────────────────────────────── */}
       <section className="border-b border-slate-200/70 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <span className="rotulo block text-[var(--tierra-700)]">
+          <span className="rotulo block text-orange-700">
             {empezada ? "Donde la dejaste" : "Empezar"}
           </span>
 
@@ -175,10 +175,10 @@ export default function EscritorioPage() {
       {/* ── Lo que hay, en blanco ──────────────────────────────────────── */}
       <section className="border-b border-slate-200/70 bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <span className="rotulo block text-[var(--tierra-700)]">Lo que hay</span>
+          <span className="rotulo block text-orange-700">Lo que hay</span>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Tarjeta
-              a="/rutas"
+              a="/crear"
               titulo="Las cuatro rutas escritas"
               cuerpo="Agua, bosque, suelo y calor. Se ajustan a tu escuela y se imprimen."
             />
@@ -188,7 +188,7 @@ export default function EscritorioPage() {
               cuerpo="Lo que se ha registrado alrededor del lugar donde vas a salir."
             />
             <Tarjeta
-              a="/metodologia"
+              a="/#habilidades"
               titulo="En qué se apoya"
               cuerpo="La educación basada en el lugar, y la formación para llevarla a la sala."
             />
@@ -213,7 +213,7 @@ export default function EscritorioPage() {
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[var(--crema)]/12 pb-4">
-            <span className="rotulo text-[var(--tierra-400)]">Rutas escritas</span>
+            <span className="rotulo text-amber-300">Rutas escritas</span>
             <span className="rotulo text-[var(--crema)]/40">
               {RUTAS.length} listas para ajustar
             </span>
@@ -223,10 +223,10 @@ export default function EscritorioPage() {
             {RUTAS.map((r, i) => (
               <li key={r.id} className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}>
                 <Link
-                  to="/rutas"
+                  to="/crear"
                   className="flex h-full flex-col rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.04] p-5 transition hover:-translate-y-0.5 hover:border-[var(--crema)]/35"
                 >
-                  <span className="rotulo text-[var(--tierra-300)]">{r.titulo}</span>
+                  <span className="rotulo text-amber-300">{r.titulo}</span>
                   <span className="mt-3 text-[15px] leading-snug text-[var(--crema-clara)]">
                     {r.preguntaGuia}
                   </span>
@@ -265,7 +265,7 @@ function Ficha({ children, listo = false }: { children: React.ReactNode; listo?:
       className={`rounded-full border px-3 py-1 text-xs ${
         listo
           ? "border-[var(--tinta-200)] bg-white text-slate-700"
-          : "border-[var(--tierra-200)] bg-[var(--tierra-50)] text-[var(--tierra-900)]"
+          : "border-orange-200 bg-orange-50 text-orange-900"
       }`}
     >
       {children}
@@ -284,7 +284,7 @@ function Tarjeta({ a, titulo, cuerpo }: { a: string; titulo: string; cuerpo: str
           <h3 className="titulo text-slate-900">{titulo}</h3>
           <span
             aria-hidden
-            className="shrink-0 text-[var(--tierra-700)] transition-transform group-hover:translate-x-1"
+            className="shrink-0 text-orange-700 transition-transform group-hover:translate-x-1"
           >
             →
           </span>
