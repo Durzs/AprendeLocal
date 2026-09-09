@@ -29,7 +29,7 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  * que vio el sitio antes de tener cuenta reconoce dónde está por el fondo
  * antes de leer nada:
  *
- *   · el saludo, en el índigo de la marca, como la entrada;
+ *   · el saludo, con el color de la lámina en la que va su ruta;
  *   · la ruta a medias, en el lila claro: es la mesa de trabajo, y el trabajo
  *     se hace sobre fondo claro;
  *   · lo que hay, en blanco, que es la parte de navegar;
@@ -39,7 +39,81 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  * papel que usa la seccion del territorio en la portada. Era el unico
  * oscuro entre tres claros y se leia como algo pegado de otro sitio, que
  * es exactamente lo que pasaba en la portada.
+ *
+ * EL SALUDO CAMBIA DE COLOR CON EL TRABAJO
+ *
+ * El primero de los cuatro no tiene un color fijo: toma el de la lamina del
+ * cuaderno en la que va su ruta, con los mismos cuatro colores que la
+ * seccion de los dibujos usa en la portada y en el mismo orden. Abrir el
+ * sitio el lunes y encontrarlo terracota en vez de indigo dice, antes de
+ * leer una palabra, que el viernes se avanzo.
+ *
+ * Debajo van las cuatro laminas numeradas, para que el color no sea un
+ * acertijo: se ve cual esta encendida y cuantas quedan. Un color que cambia
+ * y no se explica es un adorno; con la barra al lado, es un estado.
  */
+
+/**
+ * Las cuatro láminas del cuaderno, con el color de cada una.
+ *
+ * Los colores no son nuevos: son los mismos cuatro que la sección de los
+ * dibujos usa en la portada, en el mismo orden. Un docente que vio el sitio
+ * antes de tener cuenta ya los asoció a las cuatro etapas, y aquí los vuelve
+ * a encontrar diciendo lo mismo.
+ *
+ * Lo que hace que esto no sea decoración es de dónde sale la lámina: de lo
+ * que el docente tiene efectivamente escrito, no de un contador. El color
+ * cambia cuando cambia su trabajo, y por eso significa algo.
+ */
+const LAMINAS = [
+  {
+    numero: 1,
+    nombre: "El programa",
+    fondo: "var(--tinta-950)",
+    acento: "text-amber-300",
+    dice: "Arma la clase de esta unidad con el lugar donde está tu escuela.",
+  },
+  {
+    numero: 2,
+    nombre: "El lugar",
+    fondo: "#c9612a",
+    // Sobre el terracota, el ámbar no se despega del fondo: van los dos al
+    // mismo matiz y a la misma luz. El blanco sí se lee.
+    acento: "text-white/85",
+    dice: "Ya tienes los objetivos. Falta contar qué hay al otro lado de la puerta.",
+  },
+  {
+    numero: 3,
+    nombre: "La pregunta",
+    fondo: "var(--tinta-800)",
+    acento: "text-amber-300",
+    dice: "Tienes el lugar. Ahora la pregunta que va a sostener las tres semanas.",
+  },
+  {
+    numero: 4,
+    nombre: "La ruta",
+    fondo: "#1e2a24",
+    acento: "text-amber-300",
+    dice: "La ruta está armada. Queda ponerle lo que solo tú sabes de tu escuela.",
+  },
+] as const;
+
+/**
+ * En qué lámina va, según lo que hay escrito.
+ *
+ * Se lee de atrás para adelante: la lámina es la última que alcanzó, no la
+ * primera que le falta. Un docente que ya tiene la ruta armada pero borró el
+ * lugar sigue estando en la cuatro, porque volver a mandarlo a la dos por un
+ * campo vacío sería decirle que perdió el trabajo.
+ */
+function laminaDe(e: Expedicion | null): number {
+  if (!e) return 0;
+  if (e.rutaIA) return 3;
+  if (e.preguntaGuia.trim()) return 2;
+  if (e.ubicacion.trim() || e.entorno) return 1;
+  return 0;
+}
+
 export default function EscritorioPage() {
   const { user } = useAuth();
   const [expedicion, setExpedicion] = useState<Expedicion | null>(null);
@@ -84,28 +158,61 @@ export default function EscritorioPage() {
         expedicion.rutaIA)
   );
   const faltan = expedicion?.rutaIA ? huecosPendientes(expedicion.rutaIA) : [];
+  const etapa = LAMINAS[laminaDe(expedicion)];
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* ── Saludo, en el índigo de la marca ───────────────────────────── */}
+      {/* ── Saludo, con el color de la lámina en la que va ─────────────── */}
       <header
-        className="grano relative overflow-hidden px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
-        style={{ backgroundColor: "var(--tinta-950)" }}
+        className="grano relative overflow-hidden px-4 py-14 transition-colors duration-700 sm:px-6 sm:py-16 lg:px-8"
+        style={{ backgroundColor: etapa.fondo }}
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-white/12 pb-4">
-            <span className="rotulo text-amber-300">{escuela ?? "Tu escuela"}</span>
-            <span className="rotulo text-white/40">Tu escritorio</span>
+            <span className={`rotulo ${etapa.acento}`}>{escuela ?? "Tu escuela"}</span>
+            <span className="rotulo text-white/70">
+              Lámina {etapa.numero} de {LAMINAS.length} · {etapa.nombre}
+            </span>
           </div>
 
           <h1 className="display mt-8 text-3xl text-white sm:text-4xl md:text-5xl">
             {nombre ? `Hola, ${nombre}` : "Hola"}
           </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base">
-            {empezada
-              ? "Tienes una ruta a medio armar. Sigue por donde la dejaste."
-              : "Arma la clase de esta unidad con el lugar donde está tu escuela."}
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
+            {etapa.dice}
           </p>
+
+          {/* Las cuatro láminas, para que el color no sea un misterio: se ve
+              cuál está encendida y cuántas quedan. Es la misma barra que la
+              sección de los dibujos usa en la portada. */}
+          <ol className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
+            {LAMINAS.map((l) => {
+              const puesta = l.numero === etapa.numero;
+              const pasada = l.numero < etapa.numero;
+              return (
+                <li key={l.numero} className="flex items-center gap-2">
+                  <span
+                    className={`cifra grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition ${
+                      puesta
+                        ? "bg-white text-slate-950 ring-4 ring-white/20"
+                        : pasada
+                          ? "bg-white/35 text-white"
+                          : "bg-white/12 text-white/70"
+                    }`}
+                  >
+                    {String(l.numero).padStart(2, "0")}
+                  </span>
+                  <span
+                    className={`hidden text-xs sm:inline ${
+                      puesta ? "font-semibold text-white" : "text-white/50"
+                    }`}
+                  >
+                    {l.nombre}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </header>
 
