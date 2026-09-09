@@ -33,10 +33,12 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  *   · la ruta a medias, en el lila claro: es la mesa de trabajo, y el trabajo
  *     se hace sobre fondo claro;
  *   · lo que hay, en blanco, que es la parte de navegar;
- *   · las rutas escritas, en el verde del logotipo, porque de territorio
- *     tratan. En la portada ese verde bajo a fondo claro; aqui se queda
- *     oscuro, que es lo que le da al escritorio su ultimo bloque de
- *     contraste antes del pie.
+ *   · las rutas escritas, en el verde del territorio, porque de eso tratan.
+ *
+ * Ese ultimo bloque era verde oscuro a sangre y ahora es el mismo verde
+ * papel que usa la seccion del territorio en la portada. Era el unico
+ * oscuro entre tres claros y se leia como algo pegado de otro sitio, que
+ * es exactamente lo que pasaba en la portada.
  */
 export default function EscritorioPage() {
   const { user } = useAuth();
@@ -209,15 +211,18 @@ export default function EscritorioPage() {
         </div>
       </section>
 
-      {/* ── Las rutas escritas, en el verde del territorio ─────────────── */}
+      {/* ── Las rutas escritas, en el verde del territorio ───────────────
+          El mismo verde papel que la sección del territorio en la portada,
+          por la misma razón: era un bloque oscuro entre tres claros, y se
+          leía como algo de otro sitio. */}
       <section
-        className="grano relative overflow-hidden px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
-        style={{ backgroundColor: "var(--bosque-950)" }}
+        className="relative overflow-hidden border-t border-slate-200/70 px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
+        style={{ backgroundColor: "var(--verde-papel)" }}
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-[var(--crema)]/12 pb-4">
-            <span className="rotulo text-amber-300">Rutas escritas</span>
-            <span className="rotulo text-[var(--crema)]/40">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-300/70 pb-4">
+            <span className="rotulo text-orange-700">Rutas escritas</span>
+            <span className="rotulo text-slate-500">
               {RUTAS.length} listas para ajustar
             </span>
           </div>
@@ -227,13 +232,13 @@ export default function EscritorioPage() {
               <li key={r.id} className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}>
                 <Link
                   to="/crear"
-                  className="flex h-full flex-col rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.04] p-5 transition hover:-translate-y-0.5 hover:border-[var(--crema)]/35"
+                  className="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
                 >
-                  <span className="rotulo text-amber-300">{r.titulo}</span>
-                  <span className="mt-3 text-[15px] leading-snug text-[var(--crema-clara)]">
+                  <span className="rotulo text-orange-700">{r.titulo}</span>
+                  <span className="mt-3 text-[15px] leading-snug text-slate-900">
                     {r.preguntaGuia}
                   </span>
-                  <span className="mt-2.5 text-xs text-[var(--crema)]/50">
+                  <span className="mt-2.5 text-xs text-slate-500">
                     {r.semanas} semanas · {r.cubre.map((c) => cursoCorto(c.nivel)).join(" ")}
                   </span>
                 </Link>
