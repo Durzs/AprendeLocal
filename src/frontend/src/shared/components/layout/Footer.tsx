@@ -22,10 +22,10 @@ export default function Footer() {
             <div className="flex items-center gap-2.5">
               <Mail className="h-4 w-4 text-[#f97316]" />
               <a
-                href="mailto:contacto@aprendelocal.cl"
+                href="mailto:aprendelocal@gmail.com"
                 className="text-white hover:text-orange-400 font-medium transition"
               >
-                contacto@aprendelocal.cl
+                aprendelocal@gmail.com
               </a>
             </div>
 

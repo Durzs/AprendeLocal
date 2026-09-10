@@ -6,7 +6,7 @@ import { Mail, MapPin, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { supabase } from "../../../shared/lib/supabaseClient";
 
 /** A donde llegan los mensajes que escribe la gente en este formulario. */
-const CORREO = "contacto@aprendelocal.cl";
+const CORREO = "aprendelocal@gmail.com";
 
 /**
  * El formulario de contacto.
@@ -115,10 +115,10 @@ export default function ContactSection() {
                 <div>
                   <div className="rotulo text-slate-500">Correo directo</div>
                   <a
-                    href="mailto:contacto@aprendelocal.cl"
+                    href="mailto:aprendelocal@gmail.com"
                     className="font-semibold text-slate-900 transition hover:text-orange-700"
                   >
-                    contacto@aprendelocal.cl
+                    aprendelocal@gmail.com
                   </a>
                 </div>
               </div>
