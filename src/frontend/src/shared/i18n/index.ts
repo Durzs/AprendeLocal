@@ -23,12 +23,50 @@ i18n
     defaultNS: "common",
     interpolation: { escapeValue: false },
 
-    // como detectar / salvar preferência
+    /*
+     * El idioma sale de lo que la persona eligió, y de nada más.
+     *
+     * Antes la lista era ["localStorage", "navigator"]. El navegador decidía
+     * cuando no había elección guardada, y ahí aparecía el peor defecto del
+     * sitio: un visitante con Chrome en inglés —lo normal en un computador
+     * institucional— recibía la portada a medio traducir. El titular en
+     * inglés, «¿Qué es AprendeLocal?» en español, los pilares otra vez en
+     * inglés y la sección del territorio entera en español. No es que
+     * faltaran unas cadenas: `TerritorioSection` y `EtapasSobel` no pasaron
+     * nunca por i18n y no tienen una sola llamada a `t()`.
+     *
+     * Quitando "navigator", quien llega sin haber elegido ve el sitio en
+     * español, que es el único idioma completo. El conmutador sigue estando
+     * para quien quiera cambiarlo, y esa sí es una decisión suya.
+     *
+     * Esto tapa el síntoma, no la causa. La causa es que hay tres idiomas
+     * declarados y uno solo mantenido, y se arregla de una de dos maneras:
+     * traduciendo lo que falta con una comprobación en el build que impida
+     * que vuelva a desincronizarse, o dejando solo español y quitando el
+     * conmutador. Las dos son decisión de Diego.
+     */
     detection: {
-      order: ["localStorage", "navigator"],
+      order: ["localStorage"],
       lookupLocalStorage: "app:lang",
       caches: ["localStorage"]
     }
   });
+
+/*
+ * El atributo `lang` del documento, al día.
+ *
+ * Estaba fijo en `es` dentro de index.html y no lo movía nadie. Un lector de
+ * pantalla leía el texto en inglés con pronunciación española, y los
+ * buscadores indexaban el idioma equivocado. Ahora sigue al idioma activo,
+ * también cuando se cambia con el conmutador.
+ */
+function sincronizarLang(idioma: string) {
+  if (typeof document !== "undefined" && idioma) {
+    document.documentElement.lang = idioma;
+  }
+}
+
+sincronizarLang(i18n.resolvedLanguage ?? "es");
+i18n.on("languageChanged", sincronizarLang);
 
 export default i18n;

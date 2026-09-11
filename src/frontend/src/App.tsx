@@ -27,6 +27,7 @@ import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import CrearPage from "./modules/sequences/pages/CrearPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
+import NoExistePage from "./modules/errors/NoExistePage";
 import EstadoConexion from "./shared/components/ui/EstadoConexion";
 import "./shared/i18n";
 
@@ -76,8 +77,10 @@ const router = createBrowserRouter([
       { path: "rutas", element: <Navigate to="/" replace /> },
       { path: "metodologia", element: <Navigate to="/" replace /> },
 
-      /* ── Redirección 404 a la página principal ── */
-      { path: "*", element: <Navigate to="/" replace /> },
+      /* Lo que no es ninguna de las anteriores no existe, y hay que decirlo.
+         Mandarlo al inicio en silencio deja a la persona en la portada sin
+         entender que paso, y le entrega a los buscadores un «soft 404». */
+      { path: "*", element: <NoExistePage /> },
     ],
   },
   {
