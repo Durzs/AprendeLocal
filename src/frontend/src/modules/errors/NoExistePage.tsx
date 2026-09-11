@@ -52,10 +52,10 @@ export default function NoExistePage() {
         <p className="mt-8 text-sm text-slate-500">
           Si llegaste aquí desde un enlace nuestro, cuéntanos a{" "}
           <a
-            href="mailto:contacto@aprendelocal.cl"
+            href="mailto:aprendelocal@gmail.com"
             className="underline underline-offset-4 hover:text-orange-700"
           >
-            contacto@aprendelocal.cl
+            aprendelocal@gmail.com
           </a>{" "}
           y lo arreglamos.
         </p>
