@@ -53,7 +53,7 @@ import EtapasSobel from "./EtapasSobel";
  * mismas tarjetas blancas con borde y sombra suave que usa el resto de la
  * portada. Lo que no cambia es nada de lo que dice.
  */
-const VERDE_PAPEL = "#eef2ed";
+const VERDE_PAPEL = "var(--verde-papel)";
 
 const PEDIDAS = [
   "Araucaria araucana",

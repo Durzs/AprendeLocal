@@ -61,9 +61,23 @@ body {
   --tierra-100: #f6e5dc;
   --tierra-50:  #fcf4f1;
 
-  /* El verde del logotipo, que es el fondo de la sección del territorio, y
-   * las dos cremas. */
-  --bosque-950: #1e2a24;
+  /* El verde del logotipo, y el mismo verde bajado a papel.
+   *
+   * El oscuro era el fondo de la sección del territorio, a sangre, con la
+   * crema encima. Ese tratamiento venía de Sutéra y quedó fuera de sitio
+   * cuando la portada volvió a la estética blanca y aireada: un rectángulo
+   * casi negro entre ocho secciones claras se lee como algo pegado de otro
+   * lado. El verde no se fue, bajó a ser el tinte del papel.
+   *
+   * El oscuro sigue vivo donde sí le toca: es el color de la etapa
+   * «Comunidad» en la sección de los dibujos, que ahí significa algo.
+   *
+   * `--verde-papel` lo usan la sección del territorio y el bloque de rutas
+   * escritas del escritorio, que son la misma cosa en los dos inicios. Vive
+   * aquí para que no haya dos verdes claros distintos por escribirlo dos
+   * veces a mano. */
+  --bosque-950:  #1e2a24;
+  --verde-papel: #eef2ed;
   --crema:      #e4ded2;
   --crema-clara: #f3efe7;
 }
