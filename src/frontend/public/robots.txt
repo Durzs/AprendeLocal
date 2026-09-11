@@ -1,4 +1,4 @@
-# aprendelocal.cl
+# aprendelocal.com
 User-agent: *
 Allow: /
 
@@ -12,4 +12,4 @@ Disallow: /perfil
 Disallow: /comunidades
 Disallow: /auth/
 
-Sitemap: https://aprendelocal.cl/sitemap.xml
+Sitemap: https://aprendelocal.com/sitemap.xml
