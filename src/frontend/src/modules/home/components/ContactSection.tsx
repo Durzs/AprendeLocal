@@ -191,11 +191,14 @@ export default function ContactSection() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="rotulo mb-2 block text-slate-500">
+                      <label htmlFor="contacto-nombre" className="rotulo mb-2 block text-slate-500">
                         {t("home.contact.name", "Nombre")}
                       </label>
                       <input
+                        id="contacto-nombre"
+                        name="nombre"
                         type="text"
+                        autoComplete="name"
                         required
                         value={formData.name}
                         onChange={(e) =>
@@ -206,11 +209,14 @@ export default function ContactSection() {
                       />
                     </div>
                     <div>
-                      <label className="rotulo mb-2 block text-slate-500">
+                      <label htmlFor="contacto-correo" className="rotulo mb-2 block text-slate-500">
                         {t("home.contact.email", "Correo electrónico")}
                       </label>
                       <input
+                        id="contacto-correo"
+                        name="correo"
                         type="email"
+                        autoComplete="email"
                         required
                         value={formData.email}
                         onChange={(e) =>
@@ -223,11 +229,14 @@ export default function ContactSection() {
                   </div>
 
                   <div>
-                    <label className="rotulo mb-2 block text-slate-500">
+                    <label htmlFor="contacto-rol" className="rotulo mb-2 block text-slate-500">
                       {t("home.contact.role", "Rol / Institución")}
                     </label>
                     <input
+                      id="contacto-rol"
+                      name="rol"
                       type="text"
+                      autoComplete="organization-title"
                       value={formData.role}
                       onChange={(e) =>
                         setFormData({ ...formData, role: e.target.value })
@@ -238,10 +247,12 @@ export default function ContactSection() {
                   </div>
 
                   <div>
-                    <label className="rotulo mb-2 block text-slate-500">
+                    <label htmlFor="contacto-mensaje" className="rotulo mb-2 block text-slate-500">
                       {t("home.contact.message", "Mensaje o Territorio de Interés")}
                     </label>
                     <textarea
+                      id="contacto-mensaje"
+                      name="mensaje"
                       rows={3}
                       required
                       value={formData.message}
@@ -269,6 +280,25 @@ export default function ContactSection() {
                         : t("home.contact.send", "Enviar Mensaje")}
                     </span>
                   </button>
+
+                  {/* Lo que pasa con lo que la persona acaba de escribir.
+                      Se estaban recogiendo nombre, correo, rol y mensaje sin
+                      decir en ninguna parte para qué ni quién los lee. No
+                      hace falta un documento legal: hace falta decirlo donde
+                      se piden. */}
+                  <p className="pt-1 text-xs leading-relaxed text-slate-500">
+                    {t(
+                      "home.contact.privacidad",
+                      "Tu nombre y tu correo se guardan solo para responderte este mensaje. No se comparten con nadie y no te vamos a inscribir en ninguna lista. Si quieres que los borremos, escribe a"
+                    )}{" "}
+                    <a
+                      href={`mailto:${CORREO}`}
+                      className="underline underline-offset-2 hover:text-orange-700"
+                    >
+                      {CORREO}
+                    </a>
+                    .
+                  </p>
                 </form>
               </>
             )}

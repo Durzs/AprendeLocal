@@ -1,0 +1,15 @@
+# aprendelocal.com
+User-agent: *
+Allow: /
+
+# Lo que hay detras de una sesion no tiene nada que indexar, y el cuaderno
+# de expedicion guarda su trabajo en el navegador de cada persona.
+Disallow: /entrar
+Disallow: /registro
+Disallow: /cadastrar
+Disallow: /recuperar
+Disallow: /perfil
+Disallow: /comunidades
+Disallow: /auth/
+
+Sitemap: https://aprendelocal.com/sitemap.xml

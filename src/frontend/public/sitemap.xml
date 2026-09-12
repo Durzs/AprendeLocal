@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  El sitio publico es una sola pagina mas el cuaderno de expedicion. Las
+  direcciones que estuvieron y ya no estan (/rutas, /metodologia) no van
+  aqui: redirigen al inicio y no deben indexarse por separado.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://aprendelocal.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://aprendelocal.com/crear</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

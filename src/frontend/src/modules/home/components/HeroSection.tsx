@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { Compass, ArrowDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import homeBg from "../../../assets/images/home-bg.png";
+// El PNG original pesaba 1,55 MB: mas que todo el JavaScript comprimido del
+// sitio, para una ilustracion de linea que se muestra al 40% de opacidad
+// detras del titular. En una escuela rural con datos moviles ese archivo era
+// el presupuesto entero de la visita, y cargaba antes de que se viera nada.
+// El mismo dibujo en webp a 2000 px pesa 64 KB, un 96% menos.
+import homeBg from "../../../assets/images/home-bg.webp";
 
 interface HeroSectionProps {
   onStart: () => void;
