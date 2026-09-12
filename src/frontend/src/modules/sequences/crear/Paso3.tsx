@@ -19,7 +19,6 @@ import { Hoja } from "./Campos";
 import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
-import { codigoNuevo } from "./expedicion";
 
 /**
  * Qué entorno atiende cada ruta.
@@ -245,7 +244,6 @@ export default function Paso3({
         <>
           <Cobertura ruta={elegida} e={e} />
           <Sesiones ruta={elegida} e={e} />
-          <Curso e={e} onCambio={onCambio} />
           <Evaluacion e={e} ruta={elegida} />
           <Alrededor e={e} ruta={elegida} />
         </>
@@ -312,76 +310,6 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
           sesión completa.
         </p>
       )}
-    </Hoja>
-  );
-}
-
-/**
- * El código con que entra el curso.
- *
- * Genera el código y lo deja copiable. Lo que todavía no hace es crear las
- * cuentas: la tabla de códigos por escuela existe en la base, pero enlazar una
- * expedición con un curso todavía no está escrito. Se dice aquí en vez de
- * mostrar una lista de estudiantes vacía que parezca que algo falló.
- */
-function Curso({ e, onCambio }: { e: Expedicion; onCambio: (e: Expedicion) => void }) {
-  const [copiado, setCopiado] = useState(false);
-
-  async function copiar() {
-    try {
-      await navigator.clipboard.writeText(e.codigoCurso);
-      setCopiado(true);
-      setTimeout(() => setCopiado(false), 2000);
-    } catch {
-      /* Sin permiso de portapapeles. El código está a la vista para copiarlo a mano. */
-    }
-  }
-
-  return (
-    <Hoja titulo="El curso" orden={7}>
-      <div className="flex flex-wrap items-end gap-5">
-        <div>
-          <p className="rotulo text-[var(--crema)]/55">
-            Código de la expedición
-          </p>
-          <p className="mt-1.5 font-mono text-3xl tracking-[0.14em] text-[var(--crema-clara)]">
-            {e.codigoCurso || "— — —"}
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              onCambio({ ...e, codigoCurso: codigoNuevo(e.docente || "ruta") })
-            }
-            className="rounded-full border border-[var(--crema)]/25 px-4 py-2 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)]"
-          >
-            {e.codigoCurso ? "Otro código" : "Generar código"}
-          </button>
-          {e.codigoCurso && (
-            <button
-              type="button"
-              onClick={copiar}
-              className="rounded-full bg-[var(--crema)]/12 px-4 py-2 text-sm text-[var(--crema)] transition hover:bg-[var(--crema)]/22"
-            >
-              {copiado ? "Copiado" : "Copiar"}
-            </button>
-          )}
-        </div>
-      </div>
-
-      <p className="mt-4 text-sm leading-relaxed text-[var(--crema)]/60">
-        Se dicta en voz alta y se escribe en el pizarrón: sin O ni I ni ceros ni
-        unos, que ahí se confunden.
-        {e.estudiantes ? ` Son ${e.estudiantes} estudiantes.` : ""}
-      </p>
-
-      <p className="mt-3 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
-        Todavía no crea las cuentas. El código queda guardado en este computador
-        y sirve para anotarlo, pero enlazar la expedición con las cuentas de los
-        estudiantes está por escribirse. Vale saberlo antes de dictárselo al
-        curso.
-      </p>
     </Hoja>
   );
 }

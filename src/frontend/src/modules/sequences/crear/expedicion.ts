@@ -74,8 +74,6 @@ export type Expedicion = {
    */
   rutaIA: RutaIA | null;
   rutaId: string | null;
-  /** Código con que los estudiantes entran a esta expedición. */
-  codigoCurso: string;
 };
 
 export const VACIA: Expedicion = {
@@ -98,7 +96,6 @@ export const VACIA: Expedicion = {
   preguntaGuia: "",
   rutaIA: null,
   rutaId: null,
-  codigoCurso: "",
 };
 
 /**
@@ -137,28 +134,6 @@ export function borrar(): void {
   }
 }
 
-/**
- * El código con que entra el curso.
- *
- * Se arma con las iniciales de la escuela o del docente más cuatro dígitos,
- * para que se pueda dictar en voz alta sin deletrear. Sin O ni I ni 0 ni 1,
- * que en el pizarrón se confunden.
- */
-export function codigoNuevo(semilla: string): string {
-  const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const numeros = "23456789";
-  const prefijo =
-    semilla
-      .toUpperCase()
-      .replace(/[^A-ZÑ]/g, "")
-      .slice(0, 3) || "RUT";
-  let cola = "";
-  for (let i = 0; i < 4; i++) {
-    const fuente = i < 1 ? letras : numeros;
-    cola += fuente[Math.floor(Math.random() * fuente.length)];
-  }
-  return `${prefijo}-${cola}`;
-}
 
 /** Cuánto lleva llenado el paso 1, para mostrarlo sin obligar a nada. */
 export function completitudPaso1(e: Expedicion): number {
