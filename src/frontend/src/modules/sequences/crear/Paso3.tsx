@@ -1,9 +1,9 @@
 /**
  * Paso tres: la ruta armada.
  *
- * Aquí se junta todo: las sesiones con su material, el código con que entra el
- * curso, la hoja de evaluación con los métodos que él marcó en el paso uno, y
- * lo que vive alrededor del lugar que escribió.
+ * Aquí se junta todo: las sesiones con su material, por dónde va la ruta en la
+ * sala, la hoja de evaluación con los métodos que él marcó en el paso uno, y lo
+ * que vive alrededor del lugar que escribió.
  *
  * Las rutas que aparecen no se inventan: son las del catálogo, ordenadas por
  * cuántos de los objetivos que él marcó cubre cada una. Manda el currículo, y
@@ -19,6 +19,9 @@ import { Hoja } from "./Campos";
 import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
+import Seguimiento from "./Seguimiento";
+import type { Avance } from "./avance";
+import type { EstadoNube } from "./nube";
 
 /**
  * Qué entorno atiende cada ruta.
@@ -83,9 +86,15 @@ const ETIQUETA_EVAL: Record<string, string> = {
 export default function Paso3({
   e,
   onCambio,
+  avance,
+  onAvance,
+  estadoNube,
 }: {
   e: Expedicion;
   onCambio: (e: Expedicion) => void;
+  avance: Avance;
+  onAvance: (a: Avance) => void;
+  estadoNube: EstadoNube;
 }) {
   const [viendoOtras, setViendoOtras] = useState(false);
 
@@ -250,6 +259,12 @@ export default function Paso3({
       )}
         </>
       )}
+
+      {/* El seguimiento va al final y fuera de las dos ramas: da igual si la
+          ruta la armó el modelo o si es una de las escritas, lo que el docente
+          necesita el martes siguiente es el mismo. Es además la única hoja de
+          esta lámina a la que se vuelve semana tras semana. */}
+      <Seguimiento e={e} avance={avance} onCambio={onAvance} estado={estadoNube} />
     </div>
   );
 }

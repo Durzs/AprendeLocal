@@ -11,26 +11,30 @@
  * ventana. Juntarlas era lo que hacía pesado el formulario viejo.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Diapositivas, { type Lamina } from "../crear/Diapositivas";
 import { PasoLugar, PasoPrograma } from "../crear/Paso1";
 import Paso2 from "../crear/Paso2";
 import Paso3 from "../crear/Paso3";
-import { completitudPaso1, guardar, leer, type Expedicion } from "../crear/expedicion";
+import { completitudPaso1 } from "../crear/expedicion";
+import { useExpedicion } from "../crear/useExpedicion";
 
 export default function CrearPage() {
   const navegar = useNavigate();
-  const [e, setE] = useState<Expedicion>(() => leer());
   const [indice, setIndice] = useState(0);
 
-  // Se guarda en cada cambio. En una escuela rural la luz se corta y la sesión
-  // se cierra sola; que veinte minutos de trabajo dependan de que eso no pase
-  // es pedir demasiado.
-  useEffect(() => {
-    guardar(e);
-  }, [e]);
+  /*
+   * Se guarda en cada cambio, en dos sitios.
+   *
+   * En el navegador, de inmediato: en una escuela rural la luz se corta y la
+   * sesión se cierra sola, y que veinte minutos de trabajo dependan de que eso
+   * no pase es pedir demasiado. Y en la cuenta, un momento después, para que
+   * lo que se armó el viernes en la sala de profesores esté el lunes en la
+   * casa. El hook lleva las dos y decide cuál gana al abrir.
+   */
+  const { expedicion: e, avance, estado, cambiar: setE, cambiarAvance } = useExpedicion();
 
   const completo = completitudPaso1(e);
   const hayLugar = Boolean(e.entorno || e.ubicacion.trim() || e.fenomeno.trim());
@@ -72,7 +76,15 @@ export default function CrearPage() {
       titulo: "Las sesiones, el curso y lo que vive ahí",
       bajada:
         "De los objetivos que marcaste y del lugar que describiste sale una ruta, con sus sesiones, su material, la evaluación que elegiste y lo que vive alrededor. Si no te convence, hay otras.",
-      contenido: <Paso3 e={e} onCambio={setE} />,
+      contenido: (
+        <Paso3
+          e={e}
+          onCambio={setE}
+          avance={avance}
+          onAvance={cambiarAvance}
+          estadoNube={estado}
+        />
+      ),
     },
   ];
 

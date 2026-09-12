@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { completitudPaso1, leer, type Expedicion } from "../../sequences/crear/expedicion";
+import { AVANCE_VACIO, resumen, semanasDe, estaHecha, type Avance } from "../../sequences/crear/avance";
 import { huecosPendientes } from "../../sequences/crear/generar";
 import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 
@@ -118,9 +119,19 @@ export default function EscritorioPage() {
   const { user } = useAuth();
   const [expedicion, setExpedicion] = useState<Expedicion | null>(null);
   const [escuela, setEscuela] = useState<string | null>(null);
+  const [avance, setAvance] = useState<Avance>(AVANCE_VACIO);
 
   useEffect(() => {
     setExpedicion(leer());
+    // El avance se guarda al lado de la expedición, con su propia llave: lo
+    // escribe quien vuelve de la sala un martes, no quien planifica un
+    // domingo. Ver §avance.ts.
+    try {
+      const crudo = localStorage.getItem("aprendelocal:expedicion:avance");
+      if (crudo) setAvance({ ...AVANCE_VACIO, ...JSON.parse(crudo) });
+    } catch {
+      /* Ventana privada. Se muestra sin avance, que es lo mismo que sin empezar. */
+    }
   }, []);
 
   // El nombre de la escuela es lo único que se pide a la base, y si falla no
@@ -149,7 +160,7 @@ export default function EscritorioPage() {
 
   // Una expedición cuenta como empezada cuando ya hay algo escrito, no por el
   // hecho de haber abierto la página una vez.
-  const avance = expedicion ? completitudPaso1(expedicion) : 0;
+  const porcentajePaso1 = expedicion ? completitudPaso1(expedicion) : 0;
   const empezada = Boolean(
     expedicion &&
       (expedicion.oa.length > 0 ||
@@ -159,6 +170,11 @@ export default function EscritorioPage() {
   );
   const faltan = expedicion?.rutaIA ? huecosPendientes(expedicion.rutaIA) : [];
   const etapa = LAMINAS[laminaDe(expedicion)];
+
+  // El seguimiento solo tiene algo que decir cuando la ruta ya tiene semanas.
+  const semanas = expedicion ? semanasDe(expedicion) : [];
+  const hechas = semanas.filter((s) => estaHecha(avance, s.semana)).length;
+  const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
@@ -241,6 +257,19 @@ export default function EscritorioPage() {
 
                 {/* Lo que falta, dicho con nombre y no con un porcentaje. Un
                     «68% completado» no le dice a nadie qué tiene que hacer. */}
+                {/* Por dónde va en la sala. Va antes que las fichas de lo que
+                    falta por escribir porque, a partir de la primera semana
+                    dada, esta es la pregunta: no qué me queda por planificar,
+                    sino qué toca el martes. */}
+                {enSala && (
+                  <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-700">
+                    <span className="rotulo rounded-full bg-white px-2.5 py-1.5 text-orange-700 shadow-sm">
+                      {hechas} de {semanas.length} semanas
+                    </span>
+                    {enSala}
+                  </p>
+                )}
+
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {expedicion.oa.length > 0 && (
                     <Ficha listo>
@@ -263,7 +292,7 @@ export default function EscritorioPage() {
               <div className="flex shrink-0 flex-col gap-3">
                 <Boton a="/crear">Seguir con esta</Boton>
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
-                  Va {avance}% del primer paso. Queda guardada en este
+                  Va {porcentajePaso1}% del primer paso. Queda guardada en este
                   computador, no en tu cuenta: en otro equipo no va a estar.
                 </p>
               </div>
