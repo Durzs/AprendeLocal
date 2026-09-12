@@ -111,6 +111,38 @@ function PorNivel({
 }
 
 /**
+ * La pregunta con la que se averigua quién entendió.
+ *
+ * No va al final de la clase sino en medio de ella, porque su único uso es
+ * decidir si se sigue o si se vuelve atrás. Las respuestas equivocadas se
+ * muestran igual de grandes que la correcta a propósito: lo que el docente
+ * necesita leer de un vistazo no es cuál era la buena —esa la sabe— sino qué
+ * está pensando el que contestó mal, que es lo que le dice qué repetir.
+ */
+function Comprobar({ c }: { c: NonNullable<Secuencia["instruccion_explicita"]>["comprobacion"] }) {
+  const { t } = useTranslation();
+  if (!c) return null;
+
+  return (
+    <div className="rounded-xl border border-slate-300 bg-white p-4">
+      <p className="rotulo text-slate-500">{t("preparar.checkTitle")}</p>
+      <p className="mt-1.5 font-medium text-slate-900">{c.pregunta}</p>
+      <ul className="mt-3 space-y-1.5">
+        {c.respuestas.map((r) => (
+          <li key={r.dice} className="text-slate-700">
+            <span className="font-medium text-slate-900">{r.dice}</span>{" "}
+            <span className="text-slate-500">{t("preparar.checkMeans")}</span> {r.significa}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 border-t border-slate-200 pt-3 text-slate-700">
+        <strong className="text-slate-900">{t("preparar.checkIfWrong")}</strong> {c.si_falla}
+      </p>
+    </div>
+  );
+}
+
+/**
  * Qué está haciendo la sala en este momento de la clase.
  *
  * La secuencia decía muy bien QUÉ se enseña y no decía nunca QUÉ PASA: si el
@@ -156,6 +188,14 @@ export default function VistaSecuencia({
     setEtapaActiva(numero);
   }
 
+  // La clase de vuelta solo existe en las rutas escritas: una secuencia
+  // generada antes de que este momento existiera no la trae, y entonces el
+  // riel salta de la salida al repaso como saltaba antes. Por eso los números
+  // no están fijos en el código: se reparten según lo que la secuencia tenga.
+  const vuelta = s.vuelta_del_terreno;
+  const nVuelta = vuelta ? 6 : 0;
+  const nRepaso = vuelta ? 7 : 6;
+
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
   const etapas: ResumenEtapa[] = [
@@ -169,7 +209,10 @@ export default function VistaSecuencia({
       unidad: "exercises", piezas: s.practica_autonoma?.ejercicios?.length },
     { numero: 5, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
       unidad: "measurements", piezas: s.salida_terreno?.protocolo?.length },
-    { numero: 6, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
+    ...(vuelta
+      ? [{ numero: nVuelta, momento: t("preparar.stages.class4"), titulo: t("preparar.stages.back") }]
+      : []),
+    { numero: nRepaso, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
       unidad: "questions", piezas: s.recuperacion_espaciada?.length },
   ];
 
@@ -264,6 +307,10 @@ export default function VistaSecuencia({
               {s.instruccion_explicita?.errores_frecuentes?.join("; ")}
             </p>
           )}
+          {/* Va al final de la etapa porque ese es su momento: se explicó, y
+              antes de pasar a los ejercicios hay que saber con quién se
+              cuenta. */}
+          <Comprobar c={s.instruccion_explicita?.comprobacion} />
         </EtapaSecuencia>
 
         <EtapaSecuencia
@@ -413,8 +460,40 @@ export default function VistaSecuencia({
           )}
         </EtapaSecuencia>
 
+        {/* La clase de vuelta. Sin ella la salida queda como un paseo con
+            planilla: los datos son del lugar, pero la idea con la que llegaron
+            sigue en pie. Aquí la desmiente su propia medición, y la desmiente
+            a casi todo el curso a la vez, que es lo que la hace soportable. */}
+        {vuelta && (
+          <EtapaSecuencia
+            activa={etapaActiva === nVuelta}
+            sentido={sentido}
+            titulo={t("preparar.stages.back")}
+            subtitulo={t("preparar.stages.backSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <QueHaceLaSala texto={vuelta.como_empieza} />
+            <p>
+              <strong>{t("preparar.backCompare")}</strong> {vuelta.que_comparan}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.backOdd")}</strong>{" "}
+              {vuelta.si_no_calza}
+            </p>
+            {vuelta.con_la_comunidad && (
+              <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+                <strong>{t("preparar.backCommunity")}</strong> {vuelta.con_la_comunidad}
+              </p>
+            )}
+            {(s.por_nivel ?? []).length > 0 && (
+              <p className="text-slate-500">{t("preparar.backLevels")}</p>
+            )}
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
-          activa={etapaActiva === 6}
+          activa={etapaActiva === nRepaso}
             sentido={sentido}
           titulo={t("preparar.stages.review")}
           subtitulo={t("preparar.stages.reviewSubtitle")}

@@ -271,6 +271,55 @@ export interface MomentoRecuperacion {
   respuesta_esperada: string;
 }
 
+/**
+ * La pregunta que se hace antes de seguir, y lo que revela cada respuesta.
+ *
+ * La secuencia avisaba de los errores frecuentes, que está bien, pero se los
+ * decía al docente y ahí terminaba: nada le permitía averiguar cuáles de sus
+ * estudiantes lo tenían. En una sala con cuatro cursos eso no es un detalle
+ * fino, es lo único que impide pasar veinte minutos sentado con 7º mientras 5º
+ * practica con una idea equivocada y la deja bien aprendida.
+ *
+ * Por eso la pregunta se elige de manera que las respuestas equivocadas sean
+ * distintas entre sí: si todos los que fallan fallan igual, no se sabe nada; si
+ * cada error apunta a una confusión distinta, la respuesta dice qué hay que
+ * volver a explicar. Responden todos a la vez —dedos, papelito, pizarra
+ * pequeña— porque preguntar «¿se entendió?» y mirar quién levanta la mano
+ * devuelve siempre el mismo puñado de manos.
+ */
+export interface Comprobacion {
+  pregunta: string;
+  /** Cada respuesta que suele aparecer, y qué está pensando quien la da. */
+  respuestas: { dice: string; significa: string }[];
+  /** Qué hacer si falla más de la cuarta parte del curso. */
+  si_falla: string;
+}
+
+/**
+ * La clase de vuelta del terreno.
+ *
+ * Faltaba, y era la que sostiene todo lo demás. Las rutas empiezan pidiendo a
+ * cada estudiante que se juegue una predicción en el cuaderno, salen a medir, y
+ * después pasaban directo a calcular. Sin el momento en que cada uno pone su
+ * predicción al lado de lo que midió, la salida queda como un paseo con
+ * planilla: los datos son del lugar, pero la idea con que llegaron sigue
+ * intacta, y la corrección la tendría que anunciar el profesor, que es
+ * exactamente lo que no funciona.
+ *
+ * Aquí el que desmiente es el dato propio, y desmiente a casi todo el curso a
+ * la vez, que es lo que lo vuelve soportable.
+ */
+export interface VueltaDelTerreno {
+  /** Lo primero que ocurre al entrar, antes de cualquier cálculo. */
+  como_empieza: string;
+  /** Qué se pone al lado de qué. */
+  que_comparan: string;
+  /** Cuando el dato no se parece a nada: casi siempre es la medición. */
+  si_no_calza: string;
+  /** Lo que sabe la comunidad, puesto junto a lo que midieron. */
+  con_la_comunidad?: string;
+}
+
 /** Lo que hace un curso concreto dentro de una secuencia compartida. */
 export interface NivelDiferenciado {
   nivel: string;
@@ -309,6 +358,8 @@ export interface Secuencia {
     notas_para_el_docente?: string[];
     conceptos_clave?: string[];
     errores_frecuentes?: string[];
+    /** Cómo saber quién entendió, antes de soltarlos a practicar. */
+    comprobacion?: Comprobacion;
   };
   ejemplo_resuelto?: {
     situacion?: string;
@@ -331,6 +382,8 @@ export interface Secuencia {
     protocolo?: CampoProtocolo[];
     seguridad?: string[];
   };
+  /** La clase siguiente a la salida: el dato propio contra lo que creían. */
+  vuelta_del_terreno?: VueltaDelTerreno;
   recuperacion_espaciada?: MomentoRecuperacion[];
   materiales?: string[];
   requiere_consulta?: boolean;

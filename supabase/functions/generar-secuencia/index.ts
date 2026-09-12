@@ -135,6 +135,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
     sinActividad: (x) => `Sin actividad propia para ${x}`,
     cursoSinEjercicios: (x) => `El curso ${x} no tiene ejercicios`,
     pocaRecuperacion: () => "Hay que volver a preguntar al menos en dos momentos distintos",
+    sinComprobacion: () =>
+      "No trae la pregunta con la que sabrías quién entendió antes de soltarlos a practicar",
+    sinVuelta: () =>
+      "No dice qué pasa en la clase después de la salida, cuando comparan lo que midieron con lo que creían",
     relleno: (x) =>
       `${x}: el generador no lo devolvió. Lo que aparece es un texto de relleno, no una clase: escríbelo tú o vuelve a generar.`,
   },
@@ -152,6 +156,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
     sinActividad: (x) => `No work of their own for ${x}`,
     cursoSinEjercicios: (x) => `Grade ${x} has no exercises`,
     pocaRecuperacion: () => "You need to ask again at two separate moments at least",
+    sinComprobacion: () =>
+      "There is no question to tell you who understood before you let them practise",
+    sinVuelta: () =>
+      "It does not say what happens in the lesson after the fieldwork, when they compare what they measured with what they believed",
     relleno: (x) =>
       `${x}: the generator did not return it. What you see is filler text, not a lesson: write it yourself or generate again.`,
   },
@@ -169,6 +177,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
     sinActividad: (x) => `Sem atividade própria para ${x}`,
     cursoSinEjercicios: (x) => `O ano ${x} não tem exercícios`,
     pocaRecuperacion: () => "É preciso perguntar de novo em pelo menos dois momentos distintos",
+    sinComprobacion: () =>
+      "Não traz a pergunta com que você saberia quem entendeu antes de soltá-los para praticar",
+    sinVuelta: () =>
+      "Não diz o que acontece na aula depois da saída, quando comparam o que mediram com o que achavam",
     relleno: (x) =>
       `${x}: o gerador não devolveu. O que aparece é texto de preenchimento, não uma aula: escreva você ou gere de novo.`,
   },
@@ -192,6 +204,7 @@ Reglas que no puedes romper:
 1. EL LUGAR ES DE DONDE SALEN LOS NÚMEROS. El estero, el suelo o el bosque son el material del ejemplo y de los ejercicios. No son una excursión con nombre bonito.
 2. EL EJEMPLO VA RESUELTO ENTERO. Paso a paso, con los números puestos y explicados, listo para copiar en la pizarra. Es lo más importante de todo: si el profesor tiene que inventarlo él, no le sirvió de nada.
 3. SALEN A TERRENO DESPUÉS DE PRACTICAR, nunca antes. Llegan sabiendo qué mirar.
+3b. LA CLASE EMPIEZA CON ELLOS JUGÁNDOSELA, NO COPIANDO. Antes de que el profesor explique nada, cada estudiante deja por escrito o dibujado qué cree que va a encontrar, en cinco minutos y sin borrar. Ese papel se guarda y se saca al volver del terreno. Nunca escribas que copian del pizarrón: copiar los tiene ocupados y no los tiene pensando, y además deja intacta la idea equivocada con la que llegaron, que es justo la que la salida tiene que desarmar.
 4. DI SIEMPRE QUÉ HACEN LOS ESTUDIANTES. En cada momento de la clase: si están sentados escuchando, si copian, si trabajan en parejas, si uno lee en voz alta. Y con qué: cuaderno, hoja, pizarra, huincha.
 5. MATERIALES QUE HAY DE VERDAD: cuaderno, lápiz, huincha, lupa, termómetro, botellas recicladas, tarros, cordel, agua del estero. Nada que haya que comprar.
 6. LO QUE MIDEN EN TERRENO SON COSAS CONCRETAS, con su unidad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, en el idioma de salida.
@@ -200,6 +213,10 @@ Reglas que no puedes romper:
 9. SALA MULTIGRADO. Con más de un objetivo son cursos distintos en la MISMA sala con UN profesor. No escribas varias clases en paralelo: escribe UNA. Lo que explicas y la salida son iguales para todos; lo que cambia por curso son los ejercicios y qué mide cada uno, y eso va en "por_nivel".
    Y lo más importante: el profesor solo puede estar en un puesto a la vez. En cada curso escribe "mientras_esperan": qué hace ese curso, callado y sin ti, mientras estás sentado con otro. Tiene que ser algo que puedan hacer solos y que dure. Si no lo dices, la clase se cae.
    En terreno, reparte el trabajo para que los cursos se necesiten: el mayor toma la medida que el menor necesita para su ejercicio.
+   "mientras_esperan" NO es tenerlos entretenidos: nada de pasar a limpio, copiar en bonito ni decorar con colores. Tiene que ser trabajo que deje algo, y que ellos mismos puedan comprobar sin ti: escribir de memoria con el cuaderno cerrado y recién después abrir para ver qué faltaba; repartir en columnas lo que trajeron; sacar un promedio que otro curso necesita.
+10. ANTES DE SOLTARLOS A PRACTICAR, EL PROFESOR TIENE QUE SABER QUIÉN ENTENDIÓ. Escribe "comprobacion": UNA pregunta que contesten TODOS a la vez —con los dedos, con un papelito, escribiendo una letra—, nunca «¿se entendió?» ni levantando la mano el que quiera. Elígela de manera que cada respuesta equivocada delate una confusión DISTINTA, y di en "significa" qué está pensando el que la da. En "si_falla", qué hacer si falla más de un cuarto del curso: no repetir lo mismo más fuerte, sino una cosa concreta y distinta.
+11. LA CLASE DE VUELTA DEL TERRENO ES OBLIGATORIA. Escribe "vuelta_del_terreno": lo primero que pasa al entrar es que cada uno saca el papel del primer día y lo pone al lado de lo que midió. Primero la comparación, después los cálculos. Y di qué hacer con el dato raro: casi nunca es que el lugar sea raro, casi siempre es cómo se midió.
+12. LO QUE SABE LA COMUNIDAD ENTRA COMO DATO, NO COMO SALUDO. Si alguien del pueblo contó algo del lugar, eso se pone al lado de lo que midieron y se mira si dicen lo mismo. Una persona mayor que se acuerda de hasta dónde llegaba el agua está aportando la única medición de hace cuarenta años que van a tener.
 
 LARGO. Sé breve, que esto se imprime:
 - lo que explicas: 3 o 4 frases
@@ -207,15 +224,19 @@ LARGO. Sé breve, que esto se imprime:
 - ejercicios contigo: 2 o 3, cortos
 - ejercicios solos: 2 o 3, cortos
 - qué miden en terreno: 2 a 4 cosas, con unidad
+- la pregunta de comprobar: 1, con 3 respuestas posibles
+- la vuelta del terreno: 3 o 4 frases
 - volver a preguntar: 2 preguntas cortas
 - por curso: 1 o 2 ejercicios contigo y 1 solo
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[]},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
 
 Qué va en los campos nuevos:
-- "que_hacen_los_estudiantes": qué hace el curso mientras tú explicas. Ejemplo: «Sentados, con el cuaderno abierto. Copian solo la tabla que dibujas en la pizarra, no las frases.»
+- "que_hacen_los_estudiantes": lo que hace el curso ANTES de que tú expliques, y que se guarda para el final. Ejemplo: «Antes de que expliques nada: cada uno dibuja de memoria el estero que cruza todos los días y marca con una cruz dónde cree que va más hondo. Cinco minutos, sin borrar. Ese dibujo lo llevan al terreno para ver en qué le achuntaron.»
 - "como_trabajan": cómo se organiza la sala en ese rato. Ejemplo: «En parejas, en el puesto. Tú vas pasando banco por banco.»
+- "comprobacion": la pregunta que contestan todos a la vez. En "dice" va la respuesta tal como la darían ellos; en "significa", qué está pensando quien la da, incluida la correcta. Pon primero la correcta y después las equivocadas, que son las que traen la información.
+- "vuelta_del_terreno": la clase siguiente a la salida. "como_empieza" es lo primero que ocurre al entrar, antes de cualquier cálculo. "que_comparan" es qué papel se pone al lado de qué dato. "si_no_calza" es qué hacer con la medición rara. "con_la_comunidad" solo si alguien del pueblo aportó algo que se pueda poner al lado de lo que midieron; si no, déjalo vacío.
 
 Con más de un objetivo, añade además la clave "por_nivel", con una entrada por curso:
 "por_nivel":[{"nivel":"","objetivo_codigo":"","practica_guiada":{"ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"mientras_esperan":"","rol_en_terreno":""}]`;
@@ -518,6 +539,20 @@ function validar(s: Record<string, any>, idioma: Idioma): string[] {
   const recuperacion = s.recuperacion_espaciada ?? [];
   if (recuperacion.length < 2) {
     problemas.push(avisa.pocaRecuperacion());
+  }
+
+  // Sin la pregunta de comprobar, el docente entra a la práctica sin saber
+  // quién entendió, y con cuatro cursos eso no se recupera después. Con una
+  // sola respuesta posible tampoco sirve: si todos los que fallan fallan
+  // igual, la pregunta no distingue nada.
+  const comprobacion = s.instruccion_explicita?.comprobacion;
+  if (!comprobacion?.pregunta || (comprobacion.respuestas?.length ?? 0) < 2) {
+    problemas.push(avisa.sinComprobacion());
+  }
+
+  // Sin la clase de vuelta, la salida queda en paseo con planilla.
+  if (!s.vuelta_del_terreno?.que_comparan) {
+    problemas.push(avisa.sinVuelta());
   }
 
   return problemas;

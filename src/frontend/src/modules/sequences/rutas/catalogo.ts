@@ -136,7 +136,7 @@ const AGUA: Secuencia = {
   instruccion_explicita: {
     duracion_min: 20,
     que_hacen_los_estudiantes:
-      "Todos sentados, cuaderno abierto. Copian solo el dibujo del cauce visto desde arriba y las tres letras: ancho, hondo, rápido. Las frases no las copian.",
+      "Antes de que expliques nada: cada uno dibuja de memoria el estero que cruza todos los días, visto desde arriba, y marca con una cruz dónde cree que va más hondo. Cinco minutos, sin borrar. Ese dibujo es el que van a llevar al terreno para ver en qué le achuntaron.",
     notas_para_el_docente: [
       "Dibuja el estero visto desde arriba y marca el ancho. Después de lado, y marca lo hondo que es.",
       "El agua que pasa depende de tres cosas: cuán ancho, cuán hondo y cuán rápido. Las tres juntas, no una.",
@@ -148,6 +148,29 @@ const AGUA: Secuencia = {
       "creer que más ancho es siempre más agua",
       "medir una sola vez y darlo por bueno",
     ],
+    comprobacion: {
+      pregunta:
+        "Dos esteros, los dos con el agua corriendo igual de rápido. Uno mide 4 metros de ancho y el agua llega al tobillo. El otro mide 1 metro de ancho y llega a la rodilla. ¿Cuál lleva más agua? Responden todos a la vez con los dedos: uno el ancho, dos el angosto, tres los dos iguales.",
+      respuestas: [
+        {
+          dice: "Dos dedos: el angosto",
+          significa:
+            "Está multiplicando ancho por hondo, que es lo que había que entender. 1 × 0,5 le gana a 4 × 0,1.",
+        },
+        {
+          dice: "Un dedo: el ancho",
+          significa:
+            "Se quedó con el ancho y soltó lo hondo. Es la respuesta más repetida del curso y no es motivo de alarma: es justamente la que veníamos a buscar.",
+        },
+        {
+          dice: "Tres dedos: los dos iguales",
+          significa:
+            "Sabe que hay dos medidas pero cree que una compensa a la otra siempre. Está a un paso: le falta hacer la multiplicación con los números delante.",
+        },
+      ],
+      si_falla:
+        "Si más de un cuarto del curso levanta un dedo, no pases a los ejercicios. Dibuja los dos cortes de agua en la pizarra, uno al lado del otro, cuadriculados, y que cuenten los cuadritos en voz alta. Se ve, y con verlo basta.",
+    },
   },
   ejemplo_resuelto: {
     situacion: "El estero de al lado de la escuela, en el vado donde cruzan.",
@@ -264,6 +287,16 @@ const AGUA: Secuencia = {
       "Si llovió los tres días antes, la salida se suspende",
     ],
   },
+  vuelta_del_terreno: {
+    como_empieza:
+      "Antes de que nadie saque una calculadora: cada uno saca el dibujo que hizo el primer día y le pasa por encima, con otro color, el estero como resultó ser. La cruz de dónde creían que iba más hondo queda dibujada al lado de donde estaba de verdad.",
+    que_comparan:
+      "La cruz contra el punto hondo, y el ancho que habían dibujado contra el que dio la huincha. Pregunta quién le achuntó a la cruz: suelen ser dos o tres de veinte, y que sean tan pocos es lo que hace que nadie quede en falta. Ahí recién sirve la cuenta, porque ahora es la cuenta de algo que les importa.",
+    si_no_calza:
+      "Si a un grupo le sale un caudal diez veces mayor o menor que al resto, el estero no cambió en veinte metros: fue el palito, que se quedó pegado en la orilla o pilló el chorro del medio. Se suelta tres veces y se toma el del medio, no el promedio.",
+    con_la_comunidad:
+      "Al lado de sus números va lo que contó la persona mayor a la que preguntaron: hasta dónde llegaba el estero cuando era niña, y en qué mes bajaba. Es el único dato de hace cuarenta años que van a tener, y es el que convierte una medición de un martes en algo que vale la pena llevarle al comité de agua.",
+  },
   recuperacion_espaciada: [
     {
       semanas_despues: 1,
@@ -310,7 +343,7 @@ const AGUA: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Pasan a limpio el dibujo del estero con las tres medidas anotadas y le ponen los nombres. Les toma toda la clase y no necesitan preguntarte nada.",
+        "Con el cuaderno cerrado dibujan el estero de memoria con las tres medidas puestas. Recién cuando terminan abren y comprueban: lo que se les había olvidado lo agregan con rojo. La corrección la hacen ellos y no necesitan preguntarte nada.",
       rol_en_terreno:
         "Marcan con estacas el tramo de 5 metros y sueltan el palito. Toman el tiempo tres veces.",
     },
@@ -337,7 +370,7 @@ const AGUA: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Ordenan por tamaño las hojas y bichos que recogieron y los pegan en el cuaderno con su nombre al lado. Trabajo de mesa, en silencio.",
+        "Reparten en tres columnas lo que recogieron: los que viven dentro del agua, los que vienen a beber, los que crecen en la orilla. Lo que no sepan dónde poner va a una cuarta columna, y esa es la única que te preguntan al final.",
       rol_en_terreno:
         "Levantan tres piedras del fondo y anotan qué encuentran debajo. Las devuelven a su sitio.",
     },
@@ -388,7 +421,7 @@ const REDES: Secuencia = {
   instruccion_explicita: {
     duracion_min: 20,
     que_hacen_los_estudiantes:
-      "Sentados. Copian solo el esquema de las flechas que haces en la pizarra. Las flechas apuntan hacia quien come, no al revés: díselo dos veces.",
+      "Antes de que expliques nada: cada uno escribe tres seres vivos del bosque de al lado y les pone flechas de quién se come a quién, como le parezca. Sin ayuda y sin borrar. Después les das la regla —la flecha apunta a quien come— y corrigen su propio dibujo, que es donde se entiende.",
     notas_para_el_docente: [
       "Todo empieza en las plantas, porque son las únicas que fabrican su comida con luz.",
       "Dibuja tres cajas en la pizarra: plantas, los que comen plantas, los que comen animales. Una flecha de cada una a la siguiente.",
@@ -400,6 +433,28 @@ const REDES: Secuencia = {
       "poner la flecha al revés",
       "creer que el zorro está arriba porque es más grande, y no porque come",
     ],
+    comprobacion: {
+      pregunta:
+        "En la pizarra, tres palabras: hierba, conejo, zorro. Una sola pregunta y la escriben todos a la vez en un papelito: entre el conejo y el zorro, ¿hacia dónde va la flecha? A, del conejo al zorro. B, del zorro al conejo. Y abajo, en tres palabras, por qué.",
+      respuestas: [
+        {
+          dice: "A, y escribe algo parecido a «porque la energía pasa para allá»",
+          significa: "Entendió lo que la flecha significa, no solo cómo se dibuja.",
+        },
+        {
+          dice: "B, del zorro al conejo",
+          significa:
+            "Está dibujando la flecha como quien apunta con el dedo a su presa. Hay que atajarlo aquí: si sale de esta clase con la flecha al revés, toda la red que arme después queda del revés.",
+        },
+        {
+          dice: "A, pero deja el «por qué» en blanco",
+          significa:
+            "Copió la forma del esquema sin la idea de dentro. Se sostiene hasta la primera red que arme solo, y ahí se cae.",
+        },
+      ],
+      si_falla:
+        "Si falla más de un cuarto, olvídate de la red y quédate en un solo par: la hierba y el conejo. Pregunta en voz alta quién se queda con lo que la hierba tenía guardado. La flecha sale sola de esa respuesta y ya no hay que memorizarla.",
+    },
   },
   ejemplo_resuelto: {
     situacion: "Un metro cuadrado del bosque de al lado de la escuela.",
@@ -505,6 +560,16 @@ const REDES: Secuencia = {
       "Nadie se sale del sector marcado",
     ],
   },
+  vuelta_del_terreno: {
+    como_empieza:
+      "Cada uno saca el papel del primer día, con sus tres seres vivos y sus flechas puestas a ojo, y lo deja al lado de la lista de lo que de verdad apareció bajo las piedras.",
+    que_comparan:
+      "Cuántos de los que habían escrito estaban ahí, y sobre todo qué apareció que nadie había puesto. La sorpresa suele ser la misma en todos los cursos: habían escrito animales grandes, y el bosque que hay es de bichos de un centímetro y hojas podridas. Esa lista de lo que nadie había nombrado es la que se lleva al mural.",
+    si_no_calza:
+      "Si un grupo no encontró casi nada, no borres su cuadrado: anótalo. Un metro cuadrado con cuatro bichos y otro con cuarenta, a diez pasos de distancia, es el mejor dato del día, y la pregunta de por qué se contesta mirando la sombra y el grosor de la hojarasca que ellos mismos midieron.",
+    con_la_comunidad:
+      "Si alguien de la comunidad les contó qué plantas de ese monte se usan y en qué época se recogen, esas plantas entran al mural con ese dato al lado. No como adorno: una planta que se recoge en marzo y no en agosto está diciendo algo del año del bosque que las flechas no muestran.",
+  },
   recuperacion_espaciada: [
     {
       semanas_despues: 1,
@@ -544,7 +609,7 @@ const REDES: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Pegan en el cuaderno las hojas que recogieron y escriben al lado de dónde salió cada una. Trabajo largo y callado.",
+        "Pegan las hojas que recogieron y al lado de cada una escriben de dónde salió y qué se la estaba comiendo, si se nota. Los mordiscos y los agujeros son el dato: el que encuentre una hoja entera, sin ni un mordisco, la marca con un círculo, porque son pocas y eso ya dice algo.",
       rol_en_terreno: "Marcan el metro cuadrado con el cordel y cuentan las plantas de dentro.",
     },
     {
@@ -569,7 +634,7 @@ const REDES: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Pasan a limpio la red completa del curso en una hoja grande para pegarla en la pared. Entre varios y sin ti.",
+        "Arman la red completa del curso en una hoja grande, entre varios y sin ti. Antes de pegarla revisan flecha por flecha que cada una salga de algo que se come y llegue a algo que come. La que no cumpla se borra, aunque la haya puesto un compañero.",
       rol_en_terreno: "Levantan las piedras y anotan los animales, con la lupa.",
     },
     {
@@ -641,7 +706,7 @@ const SUELO: Secuencia = {
   instruccion_explicita: {
     duracion_min: 20,
     que_hacen_los_estudiantes:
-      "Sentados. Dibujan en el cuaderno el corte de tierra con sus capas, mirando la pizarra. Solo el dibujo, con los nombres de las capas.",
+      "Antes de que expliques nada: cada uno dibuja qué cree que hay bajo sus pies si se cavara un metro, en capas, y le pone los nombres que se le ocurran. Casi todos dibujan una sola cosa parda. Guardan el dibujo: en el corte de camino van a ver cuántas capas había de verdad.",
     notas_para_el_docente: [
       "El suelo no es una sola cosa: son capas, y cada una tardó cientos de años en formarse.",
       "Dibuja el corte de lado: encima las hojas muertas, debajo la tierra oscura, más abajo la ceniza clara, y al fondo la roca.",
@@ -653,6 +718,28 @@ const SUELO: Secuencia = {
       "creer que el suelo es solo tierra suelta",
       "pensar que si llueve mucho el suelo siempre está húmedo",
     ],
+    comprobacion: {
+      pregunta:
+        "Dos tarros iguales, con tierra distinta. A los dos les echo medio litro. Por abajo del primero salen 100 mililitros y por abajo del segundo salen 400. ¿Cuál de las dos tierras le conviene a la papa? Responden todos a la vez con la mano: arriba el primero, abajo el segundo.",
+      respuestas: [
+        {
+          dice: "El primero",
+          significa: "Entendió que la tierra que sirve es la que se queda con el agua.",
+        },
+        {
+          dice: "El segundo, «porque tiene más agua»",
+          significa:
+            "Está leyendo «salió más agua» como «tenía más agua». Es exactamente la confusión que veníamos a buscar.",
+        },
+        {
+          dice: "El segundo, «porque así no se ahoga la papa»",
+          significa:
+            "No es un error de lectura: es otra idea, y tiene razón en ella. El exceso de agua pudre la raíz. Dale la razón en eso antes de corregirle lo otro, o dejará de responder.",
+        },
+      ],
+      si_falla:
+        "Si falla más de un cuarto, no lo expliques otra vez: haz el tarro delante de ellos y pon los dos vasos de lo que salió uno junto al otro, sin decir nada. El vaso más lleno es el de la tierra que no se quedó con nada.",
+    },
   },
   ejemplo_resuelto: {
     situacion: "El corte de tierra que dejó la máquina al abrir el camino junto a la escuela.",
@@ -759,6 +846,16 @@ const SUELO: Secuencia = {
       "No se excava en cortes más altos que una persona",
     ],
   },
+  vuelta_del_terreno: {
+    como_empieza:
+      "Cada uno saca el dibujo del primer día —el de qué creía que había bajo sus pies— y dibuja al lado el corte como era. Casi todos habían dibujado una sola cosa parda.",
+    que_comparan:
+      "Cuántas capas habían puesto y cuántas había. Y el orden: la que ellos dejaban arriba contra la que estaba arriba de verdad. Recién después salen los mililitros del tarro, que es lo que explica por qué el suelo se seca en enero aunque llueva todo el invierno.",
+    si_no_calza:
+      "Si dos grupos miden la misma capa con veinte centímetros de diferencia, mira dónde midió cada uno: en un corte de camino la capa oscura se adelgaza hacia arriba de la ladera. No es un error de nadie, es el dato de que la tierra se está yendo cuesta abajo, y esa es justamente la pregunta de 6º.",
+    con_la_comunidad:
+      "Al lado de sus mililitros va lo que dijeron las familias que siembran cerca: qué prende aquí y qué no prende nunca. Llevan décadas sabiendo el resultado del experimento del tarro sin haberlo hecho, y que los dos datos digan lo mismo es lo que hace que la ficha le sirva a alguien.",
+  },
   recuperacion_espaciada: [
     {
       semanas_despues: 1,
@@ -799,7 +896,7 @@ const SUELO: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Pintan en el cuaderno el corte con los colores reales de cada capa, usando lápices de color. Les toma la clase entera.",
+        "Dibujan el corte a escala —un centímetro del cuaderno por cada diez del terreno— y lo pintan con el color real de cada capa. La escala es el trabajo, no el color: si la ceniza no les queda casi tres veces más gruesa que la capa oscura, el dibujo está malo y se nota sin que nadie se lo diga.",
       rol_en_terreno: "Miden el grosor de cada capa con la huincha y anotan los colores.",
     },
     {
@@ -825,7 +922,7 @@ const SUELO: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Clasifican las piedras que trajeron por textura y las pegan en una hoja con su nombre. En la mesa del fondo, sin ti.",
+        "Separan lo que trajeron en dos montones: lo que se deshace entre los dedos y lo que queda hecho bola. Después cuentan cuántos de cada montón salieron de la capa de ceniza. Ese número es el que explica por qué el agua se escapa, y lo sacan ellos solos en la mesa del fondo.",
       rol_en_terreno:
         "Hacen el experimento del tarro con las dos muestras y le pasan los mililitros a 6º.",
     },
@@ -849,7 +946,7 @@ const CALOR: Secuencia = {
   instruccion_explicita: {
     duracion_min: 20,
     que_hacen_los_estudiantes:
-      "Sentados. Copian del pizarrón la tabla de horas vacía, la que van a llenar los días siguientes. Solo la tabla.",
+      "Antes de que expliques nada: cada uno dibuja la sala por dentro y marca con flechas por dónde cree que se escapa el calor. Sin ponerse de acuerdo. Después arman la tabla de horas que van a llenar toda la semana, y al final compararán las flechas con lo que midieron.",
     notas_para_el_docente: [
       "Temperatura es qué tan caliente está algo. Calor es la energía que se pasa de lo caliente a lo frío.",
       "El calor siempre va en la misma dirección: de lo caliente a lo frío. Nunca al revés.",
@@ -861,6 +958,28 @@ const CALOR: Secuencia = {
       "decir que «entra el frío»",
       "confundir que algo se sienta frío con que esté más frío",
     ],
+    comprobacion: {
+      pregunta:
+        "Es de noche, la sala está a 12 grados y afuera hay 4. ¿Qué está pasando en la ventana? Responden todos a la vez con los dedos: uno, entra frío; dos, sale calor; tres, las dos cosas.",
+      respuestas: [
+        {
+          dice: "Dos dedos: sale calor",
+          significa: "Es la respuesta, y la única. Lo que se mueve es el calor y va hacia afuera.",
+        },
+        {
+          dice: "Un dedo: entra frío",
+          significa:
+            "Es como se habla en la casa y además coincide con lo que se siente en la piel. Contra eso no gana una frase dicha una vez: gana la mano puesta en el vidrio.",
+        },
+        {
+          dice: "Tres dedos: las dos cosas",
+          significa:
+            "Está negociando entre lo que acaba de oír y lo que siempre ha dicho. Este es el que hay que atender: ya sabe la respuesta correcta, pero todavía no ha soltado la suya.",
+        },
+      ],
+      si_falla:
+        "Si falla más de un cuarto —y va a fallar— no lo repitas. Pon la mano de uno en el vidrio y pregúntale qué se enfría, si su mano o el vidrio. El calor va de su mano al vidrio, y eso se entiende con la mano puesta, no escuchándolo.",
+    },
   },
   ejemplo_resuelto: {
     situacion: "La sala de clases, un martes de julio.",
@@ -966,6 +1085,16 @@ const CALOR: Secuencia = {
       "Si se usa vela, la sostiene el profesor",
     ],
   },
+  vuelta_del_terreno: {
+    como_empieza:
+      "Cada uno saca el plano del primer día, con sus flechas de por dónde creía que se escapaba el calor, y le escribe encima los grados que midieron en cada punto.",
+    que_comparan:
+      "Las flechas contra las diferencias de temperatura. Casi todos habían puesto flechas en la puerta, porque ahí se siente la corriente; el hoyo grande casi siempre está en la ventana, que nadie marcó porque el vidrio no sopla. Ese desajuste es el que hace que la palabra «calor» les cambie de significado.",
+    si_no_calza:
+      "Si la ventana marcó lo mismo que el centro, mira a qué hora midieron: con el sol dando en el vidrio el termómetro está contando otra cosa. Se repite a primera hora, antes de que le llegue el sol.",
+    con_la_comunidad:
+      "Junto a esto va lo que les contaron de la ruka: por qué el fogón iba al centro y no contra la pared. Es la misma idea que van a poner en el informe para la dirección, resuelta mucho antes y sin termómetro.",
+  },
   recuperacion_espaciada: [
     {
       semanas_despues: 1,
@@ -1010,7 +1139,7 @@ const CALOR: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Copian la tabla del día en limpio y la decoran con los colores del frío y del calor. Trabajo tranquilo de toda la clase.",
+        "Con el cuaderno cerrado escriben las cuatro temperaturas del día en el orden en que las tomaron. Recién después abren y ven cuáles acertaron. Al final pintan de rojo la más alta y de azul la más baja: así ven la forma del día sin necesitar todavía un gráfico.",
       rol_en_terreno: "Leen el termómetro del centro de la sala y cantan el número en voz alta.",
     },
     {
@@ -1062,7 +1191,7 @@ const CALOR: Secuencia = {
         ],
       },
       mientras_esperan:
-        "Pasan a limpio la planilla de la semana completa y sacan los promedios con la calculadora. Es el dato que 8º necesita.",
+        "Ordenan la planilla de la semana completa y sacan los promedios con la calculadora. Si un número se sale de todos los demás no lo borran: lo encierran en un círculo y al final te dicen cuál era, y entre los dos se decide si entra al promedio o no.",
       rol_en_terreno: "Llevan el registro de la semana y anotan si el cielo está despejado o nublado.",
     },
     {
@@ -1115,7 +1244,7 @@ export const RUTAS: Ruta[] = [
         semana: 1,
         titulo: "Aprenden a medir antes de ir",
         queOcurre:
-          "Lo explicas tú, muestras el ejemplo ya resuelto con los números puestos, y practican en el cuaderno. Todavía no salen.",
+          "Primero cada uno se juega en el cuaderno cómo cree que es el estero. Recién ahí explicas tú, muestras el ejemplo con los números puestos, y practican. Todavía no salen.",
       },
       {
         semana: 2,
@@ -1127,7 +1256,7 @@ export const RUTAS: Ruta[] = [
         semana: 3,
         titulo: "Sacan la cuenta y la entregan",
         queOcurre:
-          "Calculan el caudal con sus propios datos, lo comparan con el consumo de la escuela y escriben el informe.",
+          "Empiezan poniendo el dibujo del primer día al lado de lo que midieron. Después calculan el caudal con sus datos, lo comparan con lo que gasta la escuela y escriben el informe.",
       },
     ],
     cubre: [
@@ -1184,7 +1313,7 @@ export const RUTAS: Ruta[] = [
         semana: 1,
         titulo: "Aprenden a leer una red",
         queOcurre:
-          "Lo explicas tú con el esquema de las flechas, muestras el ejemplo resuelto, y practican con listas ya hechas.",
+          "Cada uno pone sus flechas a ojo antes de que digas nada. Después explicas la regla, muestras el ejemplo resuelto, y lo primero que corrigen es su propio papel.",
       },
       {
         semana: 2,
@@ -1196,7 +1325,7 @@ export const RUTAS: Ruta[] = [
         semana: 3,
         titulo: "Arman el mural y lo explican",
         queOcurre:
-          "Montan la red con lo suyo y ensayan cómo contársela a sus familias.",
+          "Comparan lo que habían imaginado con lo que apareció de verdad, montan la red con lo suyo y ensayan cómo contársela a sus familias.",
       },
     ],
     cubre: [
@@ -1259,7 +1388,7 @@ export const RUTAS: Ruta[] = [
         semana: 1,
         titulo: "Aprenden a leer un corte",
         queOcurre:
-          "Lo explicas tú con el dibujo de las capas, muestras el ejemplo con las medidas ya tomadas, y practican los cálculos.",
+          "Primero dibujan qué creen que hay bajo sus pies. Después explicas las capas, muestras el ejemplo con las medidas ya tomadas, y practican los cálculos.",
       },
       {
         semana: 2,
@@ -1271,7 +1400,7 @@ export const RUTAS: Ruta[] = [
         semana: 3,
         titulo: "Escriben la ficha del suelo",
         queOcurre:
-          "Con sus mililitros sacan cuánta agua retiene esta tierra y qué significa para sembrar.",
+          "Ponen su dibujo del primer día al lado del corte real y, con sus mililitros, sacan cuánta agua retiene esta tierra y qué significa para sembrar.",
       },
     ],
     cubre: [
@@ -1318,7 +1447,7 @@ export const RUTAS: Ruta[] = [
         semana: 1,
         titulo: "Aprenden a medir temperatura",
         queOcurre:
-          "Lo explicas tú, muestras la curva del día ya resuelta, y practican leyendo el termómetro.",
+          "Primero marcan con flechas por dónde creen que se les escapa el calor. Después explicas tú, muestras la curva del día ya resuelta, y practican leyendo el termómetro.",
       },
       {
         semana: 2,
@@ -1330,7 +1459,7 @@ export const RUTAS: Ruta[] = [
         semana: 3,
         titulo: "Buscan por dónde se escapa",
         queOcurre:
-          "Con el papelito recorren puertas y ventanas y marcan cada rendija en el plano.",
+          "Ponen sus flechas del primer día al lado de los grados que midieron. Con el papelito recorren puertas y ventanas y marcan cada rendija en el plano.",
       },
       {
         semana: 4,

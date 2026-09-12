@@ -655,7 +655,10 @@
       "field": "Salen a medir",
       "review": "Vuelves a preguntar",
       "fieldSubtitle": "Ya practicaron: llegan sabiendo qué mirar",
-      "reviewSubtitle": "Con lo que ellos mismos midieron en terreno"
+      "reviewSubtitle": "Con lo que ellos mismos midieron en terreno",
+      "class4": "Clase 4",
+      "back": "Vuelven con sus datos",
+      "backSubtitle": "Lo que midieron contra lo que creían el primer día"
     },
     "units": {
       "points_one": "{{count}} punto",
@@ -707,7 +710,14 @@
     "meanwhile": "Mientras tanto:",
     "reviewedRoute": "Esta ruta la escribieron personas, no un modelo.",
     "waitNormal": "Escribiendo la clase. Suele tardar medio minuto.",
-    "waitLong": "Está tardando más de lo normal. Sigue trabajando, no la cierres."
+    "waitLong": "Está tardando más de lo normal. Sigue trabajando, no la cierres.",
+    "checkTitle": "Antes de soltarlos, pregunta esto",
+    "checkMeans": "quiere decir que",
+    "checkIfWrong": "Si falla el curso:",
+    "backCompare": "Qué ponen al lado de qué:",
+    "backOdd": "Si un dato no calza:",
+    "backCommunity": "Lo que sabe la comunidad:",
+    "backLevels": "Cada curso retoma aquí sus propios ejercicios, ahora con los números que trajo."
   },
   "rutas": {
     "eyebrow": "Rutas",

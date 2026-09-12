@@ -318,6 +318,8 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
         </div>
       ) : null}
 
+      <DosMomentos ruta={ruta} />
+
       {e.semanas && e.semanas !== ruta.semanas && (
         <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
           Dijiste {e.semanas} semanas y la ruta está escrita para {ruta.semanas}.
@@ -326,6 +328,77 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
         </p>
       )}
     </Hoja>
+  );
+}
+
+/**
+ * Los dos ratos de los que depende que la ruta funcione.
+ *
+ * Todo lo demás de la lista de sesiones se puede leer por encima: son títulos
+ * de semanas y se entienden solos. Estos dos no, y son justamente los que se
+ * saltan cuando la clase va apretada, que es siempre.
+ *
+ * El primero es la pregunta que se hace en medio de la primera clase y que
+ * contestan todos a la vez. Sirve para una sola cosa: decidir si se sigue. En
+ * una sala con cuatro cursos, seguir sin saberlo significa dejar a un curso
+ * practicando veinte minutos con una idea equivocada, y una idea equivocada
+ * practicada veinte minutos ya no se quita en la clase siguiente.
+ *
+ * El segundo es lo primero que pasa al volver del terreno: cada uno saca el
+ * papel del primer día y lo pone al lado de lo que midió. Sin eso la salida
+ * queda en paseo con planilla —los datos son del lugar, pero la idea con la
+ * que llegaron sigue entera—, y la corrección tendría que anunciarla el
+ * profesor, que es precisamente lo que no sirve.
+ */
+function DosMomentos({ ruta }: { ruta: Ruta }) {
+  const comprobacion = ruta.secuencia.instruccion_explicita?.comprobacion;
+  const vuelta = ruta.secuencia.vuelta_del_terreno;
+  if (!comprobacion && !vuelta) return null;
+
+  return (
+    <div className="mt-5 space-y-3 border-t border-[var(--crema)]/12 pt-4">
+      <p className="rotulo text-[var(--crema)]/55">No te saltes estos dos ratos</p>
+
+      {comprobacion && (
+        <div className="rounded-xl border border-[var(--crema)]/12 p-4">
+          <p className="rotulo text-[var(--tierra-600)]">
+            En medio de la clase 1, antes de los ejercicios
+          </p>
+          <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
+            {comprobacion.pregunta}
+          </p>
+          <ul className="mt-3 space-y-1.5">
+            {comprobacion.respuestas.map((r) => (
+              <li key={r.dice} className="text-sm leading-relaxed text-[var(--crema)]/65">
+                <span className="text-[var(--crema-clara)]">{r.dice}:</span> {r.significa}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/55">
+            {comprobacion.si_falla}
+          </p>
+        </div>
+      )}
+
+      {vuelta && (
+        <div className="rounded-xl border border-[var(--crema)]/12 p-4">
+          <p className="rotulo text-[var(--tierra-600)]">
+            Al volver del terreno, antes de cualquier cálculo
+          </p>
+          <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
+            {vuelta.como_empieza}
+          </p>
+          <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65">
+            {vuelta.que_comparan}
+          </p>
+          {vuelta.con_la_comunidad && (
+            <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65">
+              {vuelta.con_la_comunidad}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 

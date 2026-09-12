@@ -655,7 +655,10 @@
       "field": "They go out and measure",
       "review": "You ask again",
       "fieldSubtitle": "They have already practised: they arrive knowing what to look for",
-      "reviewSubtitle": "Using what they measured themselves in the field"
+      "reviewSubtitle": "Using what they measured themselves in the field",
+      "class4": "Lesson 4",
+      "back": "They come back with their data",
+      "backSubtitle": "What they measured against what they believed on day one"
     },
     "units": {
       "points_one": "{{count}} point",
@@ -707,7 +710,14 @@
     "meanwhile": "Meanwhile:",
     "reviewedRoute": "This route was written by people, not by a model.",
     "waitNormal": "Writing the lesson. It usually takes about half a minute.",
-    "waitLong": "This is taking longer than usual. It is still working, do not close it."
+    "waitLong": "This is taking longer than usual. It is still working, do not close it.",
+    "checkTitle": "Before letting them go, ask this",
+    "checkMeans": "means",
+    "checkIfWrong": "If the class gets it wrong:",
+    "backCompare": "What goes next to what:",
+    "backOdd": "If a figure does not fit:",
+    "backCommunity": "What the community knows:",
+    "backLevels": "Each grade picks up its own exercises here, now with the figures they brought back."
   },
   "rutas": {
     "eyebrow": "Routes",
