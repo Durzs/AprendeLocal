@@ -20,6 +20,7 @@ import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
 import Seguimiento from "./Seguimiento";
+import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import type { Avance } from "./avance";
 import type { EstadoNube } from "./nube";
 
@@ -143,12 +144,25 @@ export default function Paso3({
     <div className="space-y-4">
       {/* La ruta armada para esta escuela manda. Las cuatro escritas quedan
           detrás, para cuando no hay señal o el docente prefiere una probada. */}
+      {/* El método va arriba de todo y fuera de las dos ramas. Antes esta
+          lámina empezaba designando una de cuatro rutas escritas, y por eso
+          solo le servía a quien tuviera un estero, un bosque, un corte de
+          camino o una sala fría. Lo que guía es esto; las rutas escritas
+          quedan abajo como ejemplos de alguien que ya lo hizo. */}
+      <VistaMetodo />
+
+      <ElegirFormato
+        formato={e.formato}
+        destinatario={e.destinatario}
+        onCambio={(cambio) => onCambio({ ...e, ...cambio })}
+      />
+
       <RutaGenerada e={e} onCambio={onCambio} />
 
       {e.rutaIA ? null : (
         <>
       {/* ── La ruta designada ────────────────────────────────────────── */}
-      <Hoja titulo={cambiada ? "La ruta que elegiste" : "La ruta que te toca"} orden={4}>
+      <Hoja titulo={cambiada ? "El ejemplo que elegiste" : "Un ejemplo que se parece al tuyo"} orden={4}>
         {sinOA ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
             No marcaste objetivos de aprendizaje en la primera lámina, así que

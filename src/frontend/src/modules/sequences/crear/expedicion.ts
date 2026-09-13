@@ -74,6 +74,20 @@ export type Expedicion = {
    */
   rutaIA: RutaIA | null;
   rutaId: string | null;
+
+  /* ── Paso 3, lo que decide el curso ──────────────────────────────────── */
+  /**
+   * Qué van a construir, y para quién exactamente.
+   *
+   * Antes el producto venía puesto por la ruta escrita —«un informe de una
+   * plana»— y esa es la decisión que más le importa a un curso: con el formato
+   * decidido de antemano no hay proyecto, hay tarea larga. Se guarda vacío y
+   * se llena después de volver del terreno, porque hasta que no sepan qué
+   * encontraron no pueden saber qué hacer con ello.
+   */
+  formato: string | null;
+  /** A quién le sirve. Con nombre: «la comunidad» no es un destinatario. */
+  destinatario: string;
 };
 
 export const VACIA: Expedicion = {
@@ -96,6 +110,8 @@ export const VACIA: Expedicion = {
   preguntaGuia: "",
   rutaIA: null,
   rutaId: null,
+  formato: null,
+  destinatario: "",
 };
 
 /**
