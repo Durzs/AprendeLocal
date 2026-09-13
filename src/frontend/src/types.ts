@@ -248,6 +248,37 @@ export interface PasoResuelto {
   resultado: string;
 }
 
+/**
+ * Qué hacen afuera, que no es siempre medir.
+ *
+ * Este tipo no existía, y su ausencia se notaba: el protocolo solo sabía de
+ * `numero` y de `texto`, la tabla de terreno tenía una columna titulada «cómo
+ * se mide», y las cuatro rutas escritas salieron en consecuencia —diez de
+ * dieciséis tareas eran un número con unidad y las otras seis eran «anota».
+ * Con ese vocabulario no se puede escribir una salida que no sea una toma de
+ * datos, por buena voluntad que le ponga quien la escriba.
+ *
+ * Medir está bien y no se va: un número zanja discusiones que las palabras no
+ * zanjan, y hay objetivos del programa que lo piden. Lo que estaba mal era que
+ * fuera lo único.
+ *
+ * `dejar_hecho` es el que más falta hacía. En las cuatro rutas el lugar
+ * quedaba exactamente igual después de la visita: el curso iba, anotaba y se
+ * volvía. Un sitio que no cambió en nada no da para volver, y la diferencia
+ * entre visitar un lugar y tener uno es justamente esa.
+ */
+export type Registro =
+  | "medir"       // un número con su unidad
+  | "contar"      // cuántos hay
+  | "describir"   // en palabras: color, olor, textura, qué se oye
+  | "dibujar"     // el dibujo es el dato, no la ilustración de otro dato
+  | "mapear"      // dónde está cada cosa respecto de las demás
+  | "recoger"     // una muestra que se lleva y vuelve
+  | "preguntar"   // a quien está ahí y sabe
+  | "seguir"      // ir detrás de algo hasta donde llega
+  | "comparar"    // con otra época, otra estación u otro sitio
+  | "dejar_hecho"; // el lugar queda distinto de como estaba
+
 export interface CampoProtocolo {
   /**
    * Identificador estable del dato. Se queda siempre en español, en cualquier
@@ -263,6 +294,12 @@ export interface CampoProtocolo {
   instruccion: string;
   unidad?: string;
   tipo?: string;
+  /**
+   * Qué clase de trabajo es este. Ausente en las secuencias generadas antes
+   * de que existiera: entonces se deduce de si pide unidad o no, que es
+   * exactamente la pobreza que este campo viene a arreglar.
+   */
+  registro?: Registro;
 }
 
 export interface MomentoRecuperacion {

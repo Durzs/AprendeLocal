@@ -284,6 +284,7 @@ const AGUA: Secuencia = {
         instruccion: "Con la huincha, de orilla a orilla, en tres puntos separados diez pasos. Anota los tres.",
         unidad: "m",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "profundidad_media_m",
@@ -291,6 +292,7 @@ const AGUA: Secuencia = {
         instruccion: "Con la vara, en cinco puntos a lo ancho. Anota los cinco.",
         unidad: "m",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "tiempo_palito_s",
@@ -298,12 +300,47 @@ const AGUA: Secuencia = {
         instruccion: "Suelta un palito y toma el tiempo que tarda en recorrer 5 metros. Tres veces.",
         unidad: "s",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "estado_del_agua",
-        etiqueta: "Cómo se ve el agua",
-        instruccion: "Escribe si está clara o turbia, si hay basura, si huele.",
+        etiqueta: "Cómo se ve, huele y suena",
+        instruccion:
+          "Sin anotar ningún número: cierra los ojos medio minuto y escribe qué se oye. Después mete la mano y escribe qué temperatura tiene comparada con la tuya, si el fondo es blando o con piedras, y a qué huele.",
         tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "mapa_del_tramo",
+        etiqueta: "El mapa del tramo",
+        instruccion:
+          "Dibuja el tramo visto desde arriba, con las dos orillas, dónde se ensancha y dónde se angosta, los árboles grandes, por dónde se cruza y dónde llega la basura. Sin escala: lo que importa es qué está al lado de qué.",
+        tipo: "texto",
+        registro: "mapear",
+      },
+      {
+        campo: "hasta_donde_llega",
+        etiqueta: "Hasta dónde llega",
+        instruccion:
+          "Un grupo camina estero abajo veinte minutos, sin medir nada, hasta ver a dónde va a parar el agua: si se junta con otro, si entra a un predio, si alguien la saca. Vuelve y lo cuenta.",
+        tipo: "texto",
+        registro: "seguir",
+      },
+      {
+        campo: "hasta_donde_llegaba",
+        etiqueta: "Hasta dónde llegaba antes",
+        instruccion:
+          "Con la persona mayor que los acompaña, buscan en la orilla la marca de hasta dónde subía el agua antes. Si se acuerda, se clava un palo ahí y se mide cuánto hay de diferencia con hoy.",
+        tipo: "texto",
+        registro: "comparar",
+      },
+      {
+        campo: "lo_que_queda_hecho",
+        etiqueta: "Qué dejan hecho",
+        instruccion:
+          "Antes de irse, el curso deja el tramo mejor de como lo encontró: sacan la basura que haya y la traen de vuelta, y dejan clavada una estaca marcada con la fecha y el nivel del agua de hoy. El curso del año que viene mide desde ahí.",
+        tipo: "texto",
+        registro: "dejar_hecho",
       },
     ],
     seguridad: [
@@ -626,12 +663,14 @@ const REDES: Secuencia = {
         etiqueta: "Plantas que hay",
         instruccion: "Anota todas las plantas distintas dentro del cuadrado. Si no sabes el nombre, dibújala.",
         tipo: "texto",
+        registro: "contar",
       },
       {
         campo: "animales_encontrados",
         etiqueta: "Animales que aparecen",
         instruccion: "Levanta tres piedras y remueve la hojarasca. Anota qué sale y devuélvelo a su sitio.",
         tipo: "texto",
+        registro: "contar",
       },
       {
         campo: "cuantos_de_cada_uno",
@@ -639,6 +678,7 @@ const REDES: Secuencia = {
         instruccion: "Cuenta cuántos hay de los tres más repetidos.",
         unidad: "unidades",
         tipo: "numero",
+        registro: "contar",
       },
       {
         campo: "hojarasca_cm",
@@ -646,6 +686,39 @@ const REDES: Secuencia = {
         instruccion: "Mide con la regla cuántos centímetros de hojas muertas hay sobre el suelo.",
         unidad: "cm",
         tipo: "numero",
+        registro: "medir",
+      },
+      {
+        campo: "lo_que_se_oye",
+        etiqueta: "Qué se oye, quietos",
+        instruccion:
+          "Tres minutos sentados, callados y sin moverse, que es lo más difícil del día. Cada uno anota cuántos sonidos distintos alcanza a separar y de dónde viene cada uno. Después se comparan las listas: nunca coinciden.",
+        tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "dibujo_del_cuadrado",
+        etiqueta: "El cuadrado dibujado",
+        instruccion:
+          "Dibujen el metro cuadrado visto desde arriba, con cada cosa donde está: el helecho en su esquina, la piedra grande, por dónde entra el sol. El dibujo es el dato, no el adorno del dato.",
+        tipo: "texto",
+        registro: "dibujar",
+      },
+      {
+        campo: "rastros",
+        etiqueta: "Rastros de quien no está",
+        instruccion:
+          "Los animales grandes no se van a dejar ver. Busquen lo que dejaron: hojas mordidas, plumas, fecas, un tronco picoteado, pelos en un alambre. Cada rastro es un ser vivo que existe y que no aparece en la lista.",
+        tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "lo_que_queda_hecho",
+        etiqueta: "Qué dejan hecho",
+        instruccion:
+          "El cuadrado queda marcado con cuatro estacas y una tablita con la fecha y el nombre del curso. No se desarma: es la parcela de la escuela y se vuelve en primavera a ver qué cambió.",
+        tipo: "texto",
+        registro: "dejar_hecho",
       },
     ],
     seguridad: [
@@ -970,12 +1043,14 @@ const SUELO: Secuencia = {
         instruccion: "Mide de arriba abajo cada capa que se distinga por el color. Anótalas en orden.",
         unidad: "cm",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "color_de_capas",
         etiqueta: "Color de cada capa",
         instruccion: "Escribe el color de cada una: negra, café, gris clara, amarilla.",
         tipo: "texto",
+        registro: "describir",
       },
       {
         campo: "agua_escurrida_ml",
@@ -983,12 +1058,46 @@ const SUELO: Secuencia = {
         instruccion: "Echa medio litro en el tarro y mide cuánta agua sale por abajo.",
         unidad: "ml",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "senales_de_erosion",
         etiqueta: "Señales de erosión",
         instruccion: "Anota si hay cárcavas, raíces al aire o tierra arrastrada al pie del corte.",
         tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "como_se_siente",
+        etiqueta: "Cómo se siente cada capa",
+        instruccion:
+          "Sin regla y sin tarro: un puñado de cada capa en la mano. Escribe si raspa o es suave, si se hace bola o se deshace, si mancha los dedos, si está fría, a qué huele. La ceniza huele distinto de la tierra oscura y no hay instrumento que lo diga mejor que la nariz.",
+        tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "muestras",
+        etiqueta: "Muestras que se llevan",
+        instruccion:
+          "Una bolsa por capa, cerrada y rotulada con de qué capa salió y a qué altura del corte. Estas bolsas son las que se abren en la sala, así que si se mezclan se perdió el día.",
+        tipo: "texto",
+        registro: "recoger",
+      },
+      {
+        campo: "que_prende_aqui",
+        etiqueta: "Lo que dice quien siembra",
+        instruccion:
+          "Si hay alguien sembrando cerca, se le hacen las tres preguntas que traen preparadas y se anota tal cual lo que diga, sin arreglarlo. Sobre todo lo que responda a qué no prende nunca.",
+        tipo: "texto",
+        registro: "preguntar",
+      },
+      {
+        campo: "lo_que_queda_hecho",
+        etiqueta: "Qué dejan hecho",
+        instruccion:
+          "En la parte del corte que se está cayendo plantan lo que consigan con raíz: pasto, chilcas, lo que crezca solo aquí. Se marca con una estaca y se vuelve en un año a ver si agarró. Puede que no agarre, y saberlo también es el resultado.",
+        tipo: "texto",
+        registro: "dejar_hecho",
       },
     ],
     seguridad: [
@@ -1265,6 +1374,7 @@ const CALOR: Secuencia = {
         instruccion: "Al centro de la sala, a la altura de la mesa. Cuatro veces al día, siempre a la misma hora.",
         unidad: "°C",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "temperatura_ventana_c",
@@ -1272,6 +1382,7 @@ const CALOR: Secuencia = {
         instruccion: "A un palmo del vidrio, sin que le dé el sol directo. A la misma hora que la del centro.",
         unidad: "°C",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "temperatura_exterior_c",
@@ -1279,12 +1390,47 @@ const CALOR: Secuencia = {
         instruccion: "A la sombra, fuera de la sala. A la misma hora.",
         unidad: "°C",
         tipo: "numero",
+        registro: "medir",
       },
       {
         campo: "por_donde_entra_aire",
         etiqueta: "Por dónde entra el aire",
         instruccion: "Pasa el papelito por los bordes de puertas y ventanas y anota dónde se mueve.",
         tipo: "texto",
+        registro: "describir",
+      },
+      {
+        campo: "plano_de_la_sala",
+        etiqueta: "El plano de la sala",
+        instruccion:
+          "Dibujen la sala vista desde arriba con todo lo que importa: ventanas, puerta, estufa, dónde se sienta cada uno. Sobre ese plano van después los grados y las rendijas, así que hay que hacerlo grande.",
+        tipo: "texto",
+        registro: "mapear",
+      },
+      {
+        campo: "donde_nadie_se_sienta",
+        etiqueta: "Dónde nadie quiere sentarse",
+        instruccion:
+          "Antes de mirar un termómetro: pregunten curso por curso cuál es el peor puesto en invierno y por qué. Anoten los nombres de los puestos. Esa respuesta la sabe todo el mundo y no la sabe ningún instrumento.",
+        tipo: "texto",
+        registro: "preguntar",
+      },
+      {
+        campo: "la_sala_de_al_lado",
+        etiqueta: "La sala de al lado",
+        instruccion:
+          "Midan también una sala distinta, o una casa, a la misma hora. Un número solo no dice si está bien o mal: dice algo recién cuando hay otro al lado.",
+        unidad: "°C",
+        tipo: "numero",
+        registro: "comparar",
+      },
+      {
+        campo: "lo_que_queda_hecho",
+        etiqueta: "Qué dejan hecho",
+        instruccion:
+          "Las rendijas que se puedan tapar con lo que hay —cartón, fieltro, un burlete viejo— se tapan ese mismo día, y se anota cuáles. La semana siguiente se vuelve a medir en los mismos puntos: ahí se ve si sirvió, y eso es la mitad del informe.",
+        tipo: "texto",
+        registro: "dejar_hecho",
       },
     ],
     seguridad: [

@@ -627,8 +627,8 @@
     "result": "Result:",
     "bring": "Bring:",
     "whoDoesWhat": "Who does what",
-    "colWhat": "What they record",
-    "colHow": "How it is measured",
+    "colWhat": "What they bring back",
+    "colHow": "What they do out there",
     "colUnit": "Unit",
     "safety": "Safety:",
     "weeksLater_one": "{{count}} week later",
@@ -750,7 +750,20 @@
       "amplio": "The whole catchment"
     },
     "justifyTitle": "To sign off at the head teacher's office",
-    "justifyPrint": "Print this sheet"
+    "justifyPrint": "Print this sheet",
+    "colKind": "Kind",
+    "kinds": {
+      "medir": "Measure",
+      "contar": "Count",
+      "describir": "Describe",
+      "dibujar": "Draw",
+      "mapear": "Map",
+      "recoger": "Collect",
+      "preguntar": "Ask",
+      "seguir": "Follow",
+      "comparar": "Compare",
+      "dejar_hecho": "Leave done"
+    }
   },
   "rutas": {
     "eyebrow": "Routes",

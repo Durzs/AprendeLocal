@@ -627,8 +627,8 @@
     "result": "Resultado:",
     "bring": "Levar:",
     "whoDoesWhat": "Quem faz o quê",
-    "colWhat": "O que anotam",
-    "colHow": "Como se mede",
+    "colWhat": "O que trazem",
+    "colHow": "O que fazem lá fora",
     "colUnit": "Unidade",
     "safety": "Segurança:",
     "weeksLater_one": "{{count}} semana depois",
@@ -750,7 +750,20 @@
       "amplio": "A bacia inteira"
     },
     "justifyTitle": "Para visar na direção",
-    "justifyPrint": "Imprimir esta folha"
+    "justifyPrint": "Imprimir esta folha",
+    "colKind": "De que tipo",
+    "kinds": {
+      "medir": "Medir",
+      "contar": "Contar",
+      "describir": "Descrever",
+      "dibujar": "Desenhar",
+      "mapear": "Mapear",
+      "recoger": "Recolher",
+      "preguntar": "Perguntar",
+      "seguir": "Seguir",
+      "comparar": "Comparar",
+      "dejar_hecho": "Deixar feito"
+    }
   },
   "rutas": {
     "eyebrow": "Rotas",

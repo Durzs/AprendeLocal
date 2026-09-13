@@ -145,6 +145,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "Nadie del lugar entra con preguntas preparadas por los estudiantes: la visita se va a convertir en una charla",
     sinTransferencia: () =>
       "No hay una tarea final sobre otro lugar, así que no habrá manera de saber si entendieron la idea o se aprendieron este caso",
+    salidaDeUnaSolaManera: () =>
+      "En la salida hacen casi siempre lo mismo. Afuera también se puede mirar, dibujar, mapear, seguir algo o preguntarle a alguien que sepa",
+    salidaSinDejarNada: () =>
+      "La salida no deja nada hecho: el lugar queda igual que antes de llegar, y así no da para volver",
     sinEleccion: () =>
       "En la salida no queda nada en manos de ellos: van a llenar casillas que decidió otro",
     sinSegundaVersion: () =>
@@ -176,6 +180,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "Nobody from the area takes part with questions the students prepared: the visit will turn into a talk",
     sinTransferencia: () =>
       "There is no closing task about a different place, so there is no way to tell whether they grasped the idea or just memorised this case",
+    salidaDeUnaSolaManera: () =>
+      "The fieldwork does almost the same thing throughout. Out there you can also look, draw, map, follow something or ask somebody who knows",
+    salidaSinDejarNada: () =>
+      "The fieldwork leaves nothing behind: the place is exactly as they found it, and there is no reason to go back",
     sinEleccion: () =>
       "Nothing in the fieldwork is left to them: they will be filling in boxes somebody else decided",
     sinSegundaVersion: () =>
@@ -207,6 +215,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "Ninguém do lugar entra com perguntas preparadas pelos estudantes: a visita vai virar uma palestra",
     sinTransferencia: () =>
       "Não há uma tarefa final sobre outro lugar, então não dá para saber se entenderam a ideia ou decoraram este caso",
+    salidaDeUnaSolaManera: () =>
+      "Na saída fazem quase sempre a mesma coisa. Lá fora também se pode olhar, desenhar, mapear, seguir algo ou perguntar a quem sabe",
+    salidaSinDejarNada: () =>
+      "A saída não deixa nada feito: o lugar fica igual a como estava, e assim não dá vontade de voltar",
     sinEleccion: () =>
       "Na saída não sobra nada nas mãos deles: vão preencher casinhas que outra pessoa decidiu",
     sinSegundaVersion: () =>
@@ -240,7 +252,10 @@ Reglas que no puedes romper:
 3b. LA CLASE EMPIEZA CON ELLOS JUGÁNDOSELA, NO COPIANDO. Antes de que el profesor explique nada, cada estudiante deja por escrito o dibujado qué cree que va a encontrar, en cinco minutos y sin borrar. Ese papel se guarda y se saca al volver del terreno. Nunca escribas que copian del pizarrón: copiar los tiene ocupados y no los tiene pensando, y además deja intacta la idea equivocada con la que llegaron, que es justo la que la salida tiene que desarmar.
 4. DI SIEMPRE QUÉ HACEN LOS ESTUDIANTES. En cada momento de la clase: si están sentados escuchando, si copian, si trabajan en parejas, si uno lee en voz alta. Y con qué: cuaderno, hoja, pizarra, huincha.
 5. MATERIALES QUE HAY DE VERDAD: cuaderno, lápiz, huincha, lupa, termómetro, botellas recicladas, tarros, cordel, agua del estero. Nada que haya que comprar.
-6. LO QUE MIDEN EN TERRENO SON COSAS CONCRETAS, con su unidad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, en el idioma de salida.
+6. AFUERA SE HACEN MÁS COSAS QUE MEDIR, y esta es la regla que más cuesta cumplir. Cada tarea de la salida declara su "registro", y tienes DIEZ a mano: medir (un número con unidad), contar, describir (color, olor, textura, qué se oye), dibujar (el dibujo ES el dato), mapear (qué está al lado de qué), recoger (una muestra que vuelve), preguntar (a quien está ahí y sabe), seguir (ir detrás de algo hasta donde llega), comparar (con otra época, otra estación, otro sitio) y dejar_hecho.
+   Usa AL MENOS CUATRO registros distintos en cada salida. Si todo lo que escribes lleva unidad, lo que hiciste fue una planilla al aire libre: un curso puede pasar noventa minutos en un estero sin anotar un solo número y volver sabiendo más que otro que anotó doce.
+   Y UNA TAREA TIENE QUE SER "dejar_hecho": el lugar queda distinto de como estaba. Sacar la basura y traérsela, clavar una estaca con la fecha para que el curso del año que viene mida desde ahí, tapar las rendijas que se puedan tapar con lo que hay, plantar algo con raíz donde se está cayendo la tierra. Un sitio que no cambió en nada no da para volver, y la diferencia entre visitar un lugar y tener uno es esa.
+   Lo que sí lleve unidad, que la lleve de verdad. En cada campo, "campo" es el identificador y va SIEMPRE en español con guiones bajos (ancho_cauce_m); "etiqueta" es el nombre que el curso lee en la hoja, en el idioma de salida.
 7. AL VOLVER A PREGUNTAR, USA LO QUE ELLOS MISMOS MIDIERON, con marcadores {dato_del_estudiante}.
 8. CULTURA MAPUCHE: solo si viene al caso, como conocimiento y nunca de adorno. Si la incluyes, marca requiere_consulta.
 9. SALA MULTIGRADO. Con más de un objetivo son cursos distintos en la MISMA sala con UN profesor. No escribas varias clases en paralelo: escribe UNA. Lo que explicas y la salida son iguales para todos; lo que cambia por curso son los ejercicios y qué mide cada uno, y eso va en "por_nivel".
@@ -260,7 +275,7 @@ LARGO. Sé breve, que esto se imprime:
 - pasos del ejemplo: 3 a 5, con el número puesto
 - ejercicios contigo: 2 o 3, cortos
 - ejercicios solos: 2 o 3, cortos
-- qué miden en terreno: 2 a 4 cosas, con unidad
+- qué hacen en terreno: 4 a 6 tareas, de al menos cuatro registros distintos, y una de ellas dejar_hecho
 - la pregunta que los divide: 2 o 3 frases
 - la pregunta de comprobar: 1, con 3 respuestas posibles
 - lo que eligen ellos: 3 frases
@@ -272,7 +287,7 @@ LARGO. Sé breve, que esto se imprime:
 - por curso: 1 o 2 ejercicios contigo y 1 solo
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":5,"sintesis_docente":"","desacuerdo":{"sobre_que":"","como_se_ve":"","quien_lo_zanja":""},"instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[],"lo_que_eligen":{"que_eligen":"","en_que_cambia":"","como_lo_defienden":""}},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"borrador_y_critica":{"primera_version":"","como_se_critica":"","que_mejora":""},"red_comunitaria":{"actores":[{"quien":"","por_que":"","que_le_preguntan":[],"quien_pregunta":""}],"permisos":[],"devolucion":""},"transferencia":{"escenario_nuevo":"","que_se_les_pide":"","que_muestra_que_lo_entendieron":"","que_no_cuenta":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":5,"sintesis_docente":"","desacuerdo":{"sobre_que":"","como_se_ve":"","quien_lo_zanja":""},"instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero","registro":"medir"}],"seguridad":[],"lo_que_eligen":{"que_eligen":"","en_que_cambia":"","como_lo_defienden":""}},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"borrador_y_critica":{"primera_version":"","como_se_critica":"","que_mejora":""},"red_comunitaria":{"actores":[{"quien":"","por_que":"","que_le_preguntan":[],"quien_pregunta":""}],"permisos":[],"devolucion":""},"transferencia":{"escenario_nuevo":"","que_se_les_pide":"","que_muestra_que_lo_entendieron":"","que_no_cuenta":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
 
 Qué va en los campos nuevos:
 - "que_hacen_los_estudiantes": lo que hace el curso ANTES de que tú expliques, y que se guarda para el final. Ejemplo: «Antes de que expliques nada: cada uno dibuja de memoria el estero que cruza todos los días y marca con una cruz dónde cree que va más hondo. Cinco minutos, sin borrar. Ese dibujo lo llevan al terreno para ver en qué le achuntaron.»
@@ -620,6 +635,20 @@ function validar(s: Record<string, any>, idioma: Idioma): string[] {
   // Un curso puede contestar todo el repaso y saberse solo su caso.
   if (!s.transferencia?.escenario_nuevo) {
     problemas.push(avisa.sinTransferencia());
+  }
+
+  // Afuera se hacen más cosas que medir, y el modelo tira a la planilla si no
+  // se le revisa: el campo `registro` existe justamente para poder contarlo.
+  const maneras = new Set(
+    (s.salida_terreno?.protocolo ?? [])
+      .map((c: any) => c?.registro)
+      .filter(Boolean),
+  );
+  if (maneras.size > 0 && maneras.size < 4) {
+    problemas.push(avisa.salidaDeUnaSolaManera());
+  }
+  if (maneras.size > 0 && !maneras.has("dejar_hecho")) {
+    problemas.push(avisa.salidaSinDejarNada());
   }
 
   return problemas;

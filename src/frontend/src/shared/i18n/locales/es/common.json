@@ -627,8 +627,8 @@
     "result": "Resultado:",
     "bring": "Llevar:",
     "whoDoesWhat": "Quién hace qué",
-    "colWhat": "Qué anotan",
-    "colHow": "Cómo se mide",
+    "colWhat": "Qué traen",
+    "colHow": "Qué hacen afuera",
     "colUnit": "Unidad",
     "safety": "Seguridad:",
     "weeksLater_one": "{{count}} semana después",
@@ -750,7 +750,20 @@
       "amplio": "La cuenca entera"
     },
     "justifyTitle": "Para visar en la dirección",
-    "justifyPrint": "Imprimir esta hoja"
+    "justifyPrint": "Imprimir esta hoja",
+    "colKind": "De qué tipo",
+    "kinds": {
+      "medir": "Medir",
+      "contar": "Contar",
+      "describir": "Describir",
+      "dibujar": "Dibujar",
+      "mapear": "Mapear",
+      "recoger": "Recoger",
+      "preguntar": "Preguntar",
+      "seguir": "Seguir",
+      "comparar": "Comparar",
+      "dejar_hecho": "Dejar hecho"
+    }
   },
   "rutas": {
     "eyebrow": "Rutas",

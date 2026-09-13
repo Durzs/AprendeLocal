@@ -204,6 +204,10 @@ export default function VistaSecuencia({
   const nAutonoma = ++n;
   const red = s.red_comunitaria;
   const transferencia = s.transferencia;
+  // Si ninguna tarea pide unidad, encabezar esa columna con «Unidad» y
+  // llenarla de rayas es decirle al docente que la salida le quedó coja. No
+  // le quedó coja: es que no toda salida es una toma de datos.
+  const hayUnidades = (s.salida_terreno?.protocolo ?? []).some((c) => c.unidad);
 
   const nRed = red ? ++n : 0;
   const nTerreno = ++n;
@@ -526,7 +530,13 @@ export default function VistaSecuencia({
                 <tr className="border-b border-slate-200 rotulo text-slate-500">
                   <th className="py-2 pr-3">{t("preparar.colWhat")}</th>
                   <th className="py-2 pr-3">{t("preparar.colHow")}</th>
-                  <th className="py-2">{t("preparar.colUnit")}</th>
+                  {/* La columna se llamaba «Unidad» y antes de eso la del medio
+                      se llamaba «Cómo se mide». Entre las dos daban por hecho
+                      que salir es tomar datos, y las rutas salieron así. Ahora
+                      la unidad solo aparece cuando de verdad hay algo que
+                      medir, y la columna dice de qué clase de trabajo se
+                      trata. */}
+                  <th className="py-2">{hayUnidades ? t("preparar.colUnit") : t("preparar.colKind")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -541,7 +551,23 @@ export default function VistaSecuencia({
                       {c.etiqueta?.trim() || nombreLegible(c.campo, c.unidad)}
                     </td>
                     <td className="py-2 pr-3">{c.instruccion}</td>
-                    <td className="py-2 font-mono text-xs">{c.unidad ?? "—"}</td>
+                    <td className="py-2">
+                      {c.unidad ? (
+                        <span className="font-mono text-xs">{c.unidad}</span>
+                      ) : c.registro ? (
+                        <span
+                          className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] ${
+                            c.registro === "dejar_hecho"
+                              ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                              : "border-slate-200 bg-slate-50 text-slate-600"
+                          }`}
+                        >
+                          {t(`preparar.kinds.${c.registro}`)}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-xs">—</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
