@@ -202,10 +202,15 @@ export default function VistaSecuencia({
   const nEjemplo = ++n;
   const nGuiada = ++n;
   const nAutonoma = ++n;
+  const red = s.red_comunitaria;
+  const transferencia = s.transferencia;
+
+  const nRed = red ? ++n : 0;
   const nTerreno = ++n;
   const nVuelta = vuelta ? ++n : 0;
   const nCritica = critica ? ++n : 0;
   const nRepaso = ++n;
+  const nTransfer = transferencia ? ++n : 0;
 
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
@@ -221,6 +226,9 @@ export default function VistaSecuencia({
       unidad: "exercises", piezas: s.practica_guiada?.ejercicios?.length },
     { numero: nAutonoma, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
       unidad: "exercises", piezas: s.practica_autonoma?.ejercicios?.length },
+    ...(red
+      ? [{ numero: nRed, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.network") }]
+      : []),
     { numero: nTerreno, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
       unidad: "measurements", piezas: s.salida_terreno?.protocolo?.length },
     ...(vuelta
@@ -231,6 +239,9 @@ export default function VistaSecuencia({
       : []),
     { numero: nRepaso, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
       unidad: "questions", piezas: s.recuperacion_espaciada?.length },
+    ...(transferencia
+      ? [{ numero: nTransfer, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.transfer") }]
+      : []),
   ];
 
   return (
@@ -429,6 +440,49 @@ export default function VistaSecuencia({
           {s.por_nivel && <PorNivel bloques={s.por_nivel} campo="practica_autonoma" />}
         </EtapaSecuencia>
 
+        {/* Va antes de la salida y no después: las preguntas se preparan en
+            la sala, y una visita sin preguntas preparadas termina en una
+            charla de veinte minutos donde el invitado habla y el curso
+            escucha. Quien investiga tiene que ser el estudiante. */}
+        {red && (
+          <EtapaSecuencia
+            activa={etapaActiva === nRed}
+            sentido={sentido}
+            titulo={t("preparar.stages.network")}
+            subtitulo={t("preparar.stages.networkSubtitle")}
+            actor="estudiantes"
+          >
+            {red.actores.map((a) => (
+              <div key={a.quien} className="rounded-xl border border-slate-200 p-3.5">
+                <p className="font-medium text-slate-900">{a.quien}</p>
+                <p className="mt-1.5 text-slate-600">
+                  <strong className="text-slate-800">{t("preparar.netWhy")}</strong> {a.por_que}
+                </p>
+                <p className="mt-2.5 text-slate-800">
+                  <strong>{t("preparar.netAsk")}</strong>
+                </p>
+                <ul className="mt-1 list-disc space-y-1 pl-5 text-slate-700">
+                  {a.que_le_preguntan.map((q) => (
+                    <li key={q}>{q}</li>
+                  ))}
+                </ul>
+                <p className="mt-2.5 text-slate-600">
+                  <strong className="text-slate-800">{t("preparar.netWho")}</strong>{" "}
+                  {a.quien_pregunta}
+                </p>
+              </div>
+            ))}
+            {red.permisos.length > 0 && (
+              <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
+                <strong>{t("preparar.netPermits")}</strong> {red.permisos.join(" · ")}
+              </p>
+            )}
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.netBack")}</strong> {red.devolucion}
+            </p>
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
           activa={etapaActiva === nTerreno}
             sentido={sentido}
@@ -598,6 +652,35 @@ export default function VistaSecuencia({
             ))}
           </ul>
         </EtapaSecuencia>
+
+        {/* La última y la que de verdad prueba algo. Un curso puede contestar
+            todas las preguntas de repaso y seguir sin entender nada: se sabe
+            su caso de memoria. Lo que separa saber el caso de entender la idea
+            es poder usarla donde no se estuvo. */}
+        {transferencia && (
+          <EtapaSecuencia
+            activa={etapaActiva === nTransfer}
+            sentido={sentido}
+            titulo={t("preparar.stages.transfer")}
+            subtitulo={t("preparar.stages.transferSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-800">
+              {transferencia.escenario_nuevo}
+            </p>
+            <p className="font-medium text-slate-900">
+              <strong>{t("preparar.transferAsk")}</strong> {transferencia.que_se_les_pide}
+            </p>
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.transferOk")}</strong>{" "}
+              {transferencia.que_muestra_que_lo_entendieron}
+            </p>
+            <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
+              <strong>{t("preparar.transferNo")}</strong> {transferencia.que_no_cuenta}
+            </p>
+          </EtapaSecuencia>
+        )}
 
             {/* Avance secuencial, para quien prefiere recorrerla en orden */}
             <div className="flex items-center justify-between gap-3 print:hidden">

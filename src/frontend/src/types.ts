@@ -296,6 +296,88 @@ export interface Comprobacion {
 }
 
 /**
+ * Hasta dónde llega el curso en cada tramo de la ruta.
+ *
+ * Las rutas empezaban en el estero, en el bosque o en el corte de camino, o
+ * sea saltándose el sitio donde el curso está parado. Y ese salto se paga: un
+ * niño que no ha mirado nunca el patio de su escuela con atención no tiene con
+ * qué comparar cuando llega a la cuenca.
+ *
+ * Los tres tramos van de dentro hacia afuera y cada uno necesita al anterior:
+ *
+ *   inmediato  · la sala y el patio. Observar, inventariar, arriesgar una
+ *                idea. No hace falta permiso, ni transporte, ni un día bueno.
+ *   intermedio · el vecindario y la comunidad. Aquí está la salida y aquí
+ *                está la gente del lugar, que es la parte que no se puede
+ *                hacer desde el patio.
+ *   amplio     · la cuenca, la biorregión, y de qué es caso particular esto.
+ *                Se llega pensando, no caminando.
+ */
+export type Alcance = "inmediato" | "intermedio" | "amplio";
+
+/**
+ * Una persona del lugar que sabe algo que la escuela no sabe.
+ *
+ * La versión anterior era una pregunta suelta dirigida a «una persona mayor de
+ * la comunidad», y eso en la práctica termina en una charla improvisada donde
+ * el invitado habla veinte minutos y el curso escucha. Que el estudiante
+ * investigue y no reciba exige tres cosas que hay que dejar escritas: a quién
+ * exactamente, qué sabe esa persona que nadie más sabe, y qué le van a
+ * preguntar ellos.
+ *
+ * Las preguntas las hacen los estudiantes, no el profesor. Por eso van
+ * redactadas como se dicen, y por eso se dice qué curso pregunta: en una sala
+ * multigrado, «que pregunten» sin más significa que preguntan los mismos tres
+ * de siempre.
+ */
+export interface ActorLocal {
+  quien: string;
+  /** Qué sabe de este lugar que no está en ningún libro ni en internet. */
+  por_que: string;
+  /** Las preguntas que hacen ellos, tal como se dicen. */
+  que_le_preguntan: string[];
+  /** Qué curso pregunta, y cómo se prepara antes. */
+  quien_pregunta: string;
+}
+
+/**
+ * Cómo se organiza la participación de la gente del lugar.
+ *
+ * Aparte de los actores va lo aburrido y necesario: a quién se le pide
+ * permiso, y qué pasa con lo que la comunidad entrega. Eso no es burocracia,
+ * es la diferencia entre trabajar con una comunidad y extraerle material.
+ */
+export interface RedComunitaria {
+  actores: ActorLocal[];
+  /** Qué hay que pedir antes, y a quién. Incluye lo que se firma. */
+  permisos: string[];
+  /** Qué pasa después con lo que contaron: dónde queda y quién lo tiene. */
+  devolucion: string;
+}
+
+/**
+ * La prueba de si de verdad lo entendieron: el mismo concepto, otro sitio.
+ *
+ * Las preguntas de las semanas siguientes usan el número que midió su propio
+ * grupo, y eso está bien para que no se olvide. Pero un curso puede contestar
+ * todas esas y seguir sin entender nada: sabe su caso de memoria.
+ *
+ * Lo que separa saber el caso de entender la idea es poder usarla donde no se
+ * estuvo. Por eso el escenario es otro lugar, elegido a propósito para que no
+ * se parezca al suyo, y por eso se dice qué NO cuenta como respuesta: repetir
+ * lo de su escuela con otras palabras.
+ */
+export interface Transferencia {
+  /** Un lugar donde no estuvieron, descrito en cuatro líneas. */
+  escenario_nuevo: string;
+  que_se_les_pide: string;
+  /** Qué tiene que aparecer en la respuesta para darla por buena. */
+  que_muestra_que_lo_entendieron: string;
+  /** La respuesta que parece buena y no lo es. */
+  que_no_cuenta: string;
+}
+
+/**
  * El rato en que la sala se parte en dos y no puede resolverlo hablando.
  *
  * Es lo que faltaba para que salir a medir signifique algo. Tal como estaban
@@ -456,6 +538,10 @@ export interface Secuencia {
   vuelta_del_terreno?: VueltaDelTerreno;
   /** Antes de entregar: una versión, las críticas del curso, y otra versión. */
   borrador_y_critica?: BorradorYCritica;
+  /** Quién del lugar participa, qué le preguntan ellos, y qué se le devuelve. */
+  red_comunitaria?: RedComunitaria;
+  /** El mismo concepto en un lugar donde no estuvieron. */
+  transferencia?: Transferencia;
   recuperacion_espaciada?: MomentoRecuperacion[];
   materiales?: string[];
   requiere_consulta?: boolean;

@@ -141,6 +141,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "No dice qué pasa en la clase después de la salida, cuando comparan lo que midieron con lo que creían",
     sinDesacuerdo: () =>
       "No trae la pregunta que divide al curso y que da el motivo de salir. Sin ella la salida es confirmar lo que ya dijiste",
+    sinRedComunitaria: () =>
+      "Nadie del lugar entra con preguntas preparadas por los estudiantes: la visita se va a convertir en una charla",
+    sinTransferencia: () =>
+      "No hay una tarea final sobre otro lugar, así que no habrá manera de saber si entendieron la idea o se aprendieron este caso",
     sinEleccion: () =>
       "En la salida no queda nada en manos de ellos: van a llenar casillas que decidió otro",
     sinSegundaVersion: () =>
@@ -168,6 +172,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "It does not say what happens in the lesson after the fieldwork, when they compare what they measured with what they believed",
     sinDesacuerdo: () =>
       "There is no question that splits the class and gives them a reason to go out. Without it, the fieldwork only confirms what you already told them",
+    sinRedComunitaria: () =>
+      "Nobody from the area takes part with questions the students prepared: the visit will turn into a talk",
+    sinTransferencia: () =>
+      "There is no closing task about a different place, so there is no way to tell whether they grasped the idea or just memorised this case",
     sinEleccion: () =>
       "Nothing in the fieldwork is left to them: they will be filling in boxes somebody else decided",
     sinSegundaVersion: () =>
@@ -195,6 +203,10 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "Não diz o que acontece na aula depois da saída, quando comparam o que mediram com o que achavam",
     sinDesacuerdo: () =>
       "Não traz a pergunta que divide a turma e dá o motivo de sair. Sem ela a saída só confirma o que você já disse",
+    sinRedComunitaria: () =>
+      "Ninguém do lugar entra com perguntas preparadas pelos estudantes: a visita vai virar uma palestra",
+    sinTransferencia: () =>
+      "Não há uma tarefa final sobre outro lugar, então não dá para saber se entenderam a ideia ou decoraram este caso",
     sinEleccion: () =>
       "Na saída não sobra nada nas mãos deles: vão preencher casinhas que outra pessoa decidiu",
     sinSegundaVersion: () =>
@@ -224,6 +236,7 @@ Reglas que no puedes romper:
 1. EL LUGAR ES DE DONDE SALEN LOS NÚMEROS. El estero, el suelo o el bosque son el material del ejemplo y de los ejercicios. No son una excursión con nombre bonito.
 2. EL EJEMPLO VA RESUELTO ENTERO. Paso a paso, con los números puestos y explicados, listo para copiar en la pizarra. Es lo más importante de todo: si el profesor tiene que inventarlo él, no le sirvió de nada.
 3. SALEN A TERRENO DESPUÉS DE PRACTICAR, nunca antes. Llegan sabiendo qué mirar.
+3c. DE DENTRO HACIA AFUERA, EN TRES ANILLOS. La primera semana NO sale del recinto: el patio, el baño, la propia sala. Ahí se observa, se cuenta y se arriesga una idea, y sale barato porque no hace falta permiso, ni transporte, ni que el día esté bueno. La segunda es el vecindario: la salida y la gente del lugar. La tercera no se camina, se piensa: de qué es caso particular esto, qué pasa cuenca arriba y cuenca abajo. Saltarse el primer anillo es lo que convierte el terreno en una excursión, porque quien no ha mirado nunca su patio con atención no tiene con qué comparar cuando llega al río.
 3b. LA CLASE EMPIEZA CON ELLOS JUGÁNDOSELA, NO COPIANDO. Antes de que el profesor explique nada, cada estudiante deja por escrito o dibujado qué cree que va a encontrar, en cinco minutos y sin borrar. Ese papel se guarda y se saca al volver del terreno. Nunca escribas que copian del pizarrón: copiar los tiene ocupados y no los tiene pensando, y además deja intacta la idea equivocada con la que llegaron, que es justo la que la salida tiene que desarmar.
 4. DI SIEMPRE QUÉ HACEN LOS ESTUDIANTES. En cada momento de la clase: si están sentados escuchando, si copian, si trabajan en parejas, si uno lee en voz alta. Y con qué: cuaderno, hoja, pizarra, huincha.
 5. MATERIALES QUE HAY DE VERDAD: cuaderno, lápiz, huincha, lupa, termómetro, botellas recicladas, tarros, cordel, agua del estero. Nada que haya que comprar.
@@ -239,6 +252,8 @@ Reglas que no puedes romper:
 12. ALGO TIENE QUE QUEDAR EN SUS MANOS. Escribe "lo_que_eligen": qué decide el curso y no el profesor —dónde medir, qué cuenta como qué, cuándo—, qué cambia en el resultado según lo que elijan, y cómo lo defienden delante del resto. La prueba es la del medio: si da lo mismo lo que elijan, no están eligiendo, están obedeciendo con más pasos, y hay que buscar otra cosa. Que a dos grupos les dé distinto no es un problema que haya que evitar: es la conversación.
 13. EL TRABAJO SE ENTREGA EN SEGUNDA VERSIÓN, NUNCA EN PRIMERA. Escribe "borrador_y_critica": una primera versión hecha rápido y fea a propósito, una ronda de crítica con REGLAS (poco, concreto, y nada que no se pueda arreglar; nunca «está bonito»), y en qué se nota mirándolas que la segunda es mejor. Quien critica puede ser el otro grupo, el otro curso, o la persona que va a usar el trabajo. La distancia entre las dos versiones es la mitad de lo que aprenden.
 14. LO QUE SABE LA COMUNIDAD ENTRA COMO DATO, NO COMO SALUDO. Si alguien del pueblo contó algo del lugar, eso se pone al lado de lo que midieron y se mira si dicen lo mismo. Una persona mayor que se acuerda de hasta dónde llegaba el agua está aportando la única medición de hace cuarenta años que van a tener.
+15. EL QUE INVESTIGA ES EL ESTUDIANTE, NO EL INVITADO QUE HABLA. Escribe "red_comunitaria": a QUIÉN exactamente —el del comité de agua, la que atiende la posta, el que saca leña, quien siembra al lado—, qué sabe esa persona que no está en ningún libro, y LAS PREGUNTAS QUE LE HACEN ELLOS, redactadas como las diría alguien de doce años. Di qué curso pregunta y cómo se prepara, porque «que pregunten» sin más significa que preguntan los mismos tres de siempre. Agrega qué hay que pedir antes (permisos, avisos, lo que se firma) y qué se le devuelve después a quien contestó: trabajar con una comunidad y sacarle material se diferencian justo en eso.
+16. AL FINAL, EL MISMO PROBLEMA EN UN LUGAR DONDE NO ESTUVIERON. Escribe "transferencia": un sitio distinto de verdad —otra zona, otro clima, otro paisaje—, qué se les pide ahí, qué tiene que aparecer en la respuesta para darla por buena, y cuál es la respuesta que parece buena y no lo es, que casi siempre es repetir su propio caso con otras palabras. Un curso puede contestar todas las preguntas de repaso y seguir sin entender nada: se sabe su caso de memoria. Esto es lo único que los separa.
 
 LARGO. Sé breve, que esto se imprime:
 - lo que explicas: 3 o 4 frases
@@ -250,12 +265,14 @@ LARGO. Sé breve, que esto se imprime:
 - la pregunta de comprobar: 1, con 3 respuestas posibles
 - lo que eligen ellos: 3 frases
 - la segunda versión: 3 frases
+- quién del lugar entra: 1 o 2 personas, con 3 preguntas cada una
+- el mismo problema en otro sitio: 4 frases
 - la vuelta del terreno: 3 o 4 frases
 - volver a preguntar: 2 preguntas cortas
 - por curso: 1 o 2 ejercicios contigo y 1 solo
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","desacuerdo":{"sobre_que":"","como_se_ve":"","quien_lo_zanja":""},"instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[],"lo_que_eligen":{"que_eligen":"","en_que_cambia":"","como_lo_defienden":""}},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"borrador_y_critica":{"primera_version":"","como_se_critica":"","que_mejora":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":5,"sintesis_docente":"","desacuerdo":{"sobre_que":"","como_se_ve":"","quien_lo_zanja":""},"instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[],"lo_que_eligen":{"que_eligen":"","en_que_cambia":"","como_lo_defienden":""}},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"borrador_y_critica":{"primera_version":"","como_se_critica":"","que_mejora":""},"red_comunitaria":{"actores":[{"quien":"","por_que":"","que_le_preguntan":[],"quien_pregunta":""}],"permisos":[],"devolucion":""},"transferencia":{"escenario_nuevo":"","que_se_les_pide":"","que_muestra_que_lo_entendieron":"","que_no_cuenta":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
 
 Qué va en los campos nuevos:
 - "que_hacen_los_estudiantes": lo que hace el curso ANTES de que tú expliques, y que se guarda para el final. Ejemplo: «Antes de que expliques nada: cada uno dibuja de memoria el estero que cruza todos los días y marca con una cruz dónde cree que va más hondo. Cinco minutos, sin borrar. Ese dibujo lo llevan al terreno para ver en qué le achuntaron.»
@@ -591,6 +608,18 @@ function validar(s: Record<string, any>, idioma: Idioma): string[] {
   }
   if (!s.borrador_y_critica?.como_se_critica) {
     problemas.push(avisa.sinSegundaVersion());
+  }
+
+  // Sin preguntas preparadas por ellos, la visita se vuelve una charla en la
+  // que el invitado habla veinte minutos y el curso escucha.
+  const actores = s.red_comunitaria?.actores ?? [];
+  if (!actores.some((a: any) => (a?.que_le_preguntan?.length ?? 0) > 0)) {
+    problemas.push(avisa.sinRedComunitaria());
+  }
+
+  // Un curso puede contestar todo el repaso y saberse solo su caso.
+  if (!s.transferencia?.escenario_nuevo) {
+    problemas.push(avisa.sinTransferencia());
   }
 
   return problemas;

@@ -75,6 +75,20 @@ function calce(ruta: Ruta, e: Expedicion): Calce {
   };
 }
 
+/**
+ * Hasta dónde sale el curso en cada semana.
+ *
+ * Se dice porque cambia lo que el docente tiene que gestionar antes: una
+ * semana en el patio no necesita permiso, ni transporte, ni que el día esté
+ * bueno; una en el vecindario necesita las tres cosas y avisar a alguien. Y
+ * la última no se camina: se llega pensando.
+ */
+const ANILLO: Record<string, string> = {
+  inmediato: "La sala y el patio",
+  intermedio: "El vecindario",
+  amplio: "La cuenca entera",
+};
+
 const ETIQUETA_EVAL: Record<string, string> = {
   cuaderno: "Cuaderno de campo",
   producto: "El producto final",
@@ -254,6 +268,7 @@ export default function Paso3({
           <Cobertura ruta={elegida} e={e} />
           <Sesiones ruta={elegida} e={e} />
           <Evaluacion e={e} ruta={elegida} />
+          <Justificacion e={e} ruta={elegida} />
           <Alrededor e={e} ruta={elegida} />
         </>
       )}
@@ -287,7 +302,11 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
+              {/* Hasta dónde llega esa semana. Va antes del título porque es
+                  lo primero que el docente necesita para saber si esa semana
+                  requiere permisos y transporte o se resuelve en el patio. */}
+              <p className="rotulo text-[var(--crema)]/45">{ANILLO[f.alcance]}</p>
+              <p className="mt-1 text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
               {f.queOcurre && (
                 <p className="mt-1 text-sm leading-relaxed text-[var(--crema)]/65">{f.queOcurre}</p>
               )}
@@ -418,6 +437,119 @@ function LosRatosQueImportan({ ruta }: { ruta: Ruta }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * La hoja que se lleva a la dirección para que la visen.
+ *
+ * Es el trámite que hoy hace que un proyecto no se haga. Un docente puede
+ * tener la unidad entera pensada y quedarse ahí, porque justificar por
+ * escrito qué objetivos del programa cubre y por qué el curso va a salir del
+ * recinto es otra tarde de trabajo, y esa tarde no existe.
+ *
+ * Todo lo que va aquí ya está escrito en otras partes de la expedición: los
+ * objetivos que marcó, la pregunta que eligió, las semanas de la ruta y a
+ * quién se le entrega. Esto solo lo ordena en el formato en que se pide y lo
+ * deja listo para imprimir. No se inventa nada, y por eso no lleva ninguna
+ * advertencia de revisar: si algo está mal, está mal desde la primera lámina.
+ */
+function Justificacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
+  const oas = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
+  const sale = ruta.fases.some((f) => f.alcance === "intermedio");
+
+  return (
+    <Hoja titulo="Para visar en la dirección" orden={8}>
+      <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
+        Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
+        nuevo que llenar: se imprime y se firma.
+      </p>
+
+      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-sm leading-relaxed text-[var(--crema)]/80">
+        <p>
+          <span className="text-[var(--crema-clara)]">Unidad:</span> {ruta.titulo}.{" "}
+          {ruta.semanas} semanas, {ruta.secuencia.sesiones ?? ruta.semanas} sesiones
+          {e.cursos.length > 0 ? `, cursos ${e.cursos.join(", ")}` : ""}
+          {e.estudiantes ? `, ${e.estudiantes} estudiantes` : ""}.
+        </p>
+
+        <p>
+          <span className="text-[var(--crema-clara)]">Pregunta que la sostiene:</span>{" "}
+          {e.preguntaGuia || ruta.preguntaGuia}
+        </p>
+
+        {oas.length > 0 && (
+          <div>
+            <p className="text-[var(--crema-clara)]">Objetivos de aprendizaje que cubre</p>
+            <ul className="mt-1.5 space-y-1">
+              {oas.map(({ cod, oa }) => (
+                <li key={cod} className="flex gap-2.5">
+                  <span className="shrink-0 font-mono text-[11px] text-[var(--tierra-600)]">
+                    {cod}
+                  </span>
+                  <span>{oa?.texto}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div>
+          <p className="text-[var(--crema-clara)]">Cómo se trabajan, semana a semana</p>
+          <ul className="mt-1.5 space-y-1">
+            {ruta.fases.map((f) => (
+              <li key={f.semana}>
+                Semana {f.semana} · {ANILLO[f.alcance].toLowerCase()} · {f.titulo}.
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p>
+          <span className="text-[var(--crema-clara)]">Qué entrega el curso:</span>{" "}
+          {ruta.producto.que} Se entrega a: {ruta.producto.paraQuien}
+        </p>
+
+        {sale && (
+          <div>
+            <p className="text-[var(--crema-clara)]">Salida del recinto</p>
+            <p className="mt-1.5">
+              Una sesión, en {ruta.lugar.toLowerCase()} Resguardos:{" "}
+              {(ruta.secuencia.salida_terreno?.seguridad ?? []).join("; ")}.
+            </p>
+            {(ruta.secuencia.red_comunitaria?.permisos ?? []).length > 0 && (
+              <p className="mt-1.5">
+                Gestiones previas:{" "}
+                {ruta.secuencia.red_comunitaria?.permisos.join("; ")}.
+              </p>
+            )}
+          </div>
+        )}
+
+        {e.evaluacion.length > 0 && (
+          <p>
+            <span className="text-[var(--crema-clara)]">Cómo se evalúa:</span>{" "}
+            {e.evaluacion.map((v) => ETIQUETA_EVAL[v] ?? v).join(", ")}.
+            {ruta.secuencia.transferencia
+              ? " Además se aplica una tarea final sobre un lugar distinto del trabajado, para comprobar que el aprendizaje no quedó atado a este caso."
+              : ""}
+          </p>
+        )}
+
+        <p className="border-t border-[var(--crema)]/12 pt-4 text-[var(--crema)]/55">
+          Docente: {e.docente || "________________"} · Firma de dirección:
+          ________________ · Fecha: ____ / ____ / ______
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => window.print()}
+        className="mt-4 min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
+      >
+        Imprimir esta hoja
+      </button>
+    </Hoja>
   );
 }
 

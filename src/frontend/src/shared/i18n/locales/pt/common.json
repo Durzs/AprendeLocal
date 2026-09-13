@@ -663,7 +663,11 @@
       "split": "A turma se divide",
       "splitSubtitle": "Antes de você explicar qualquer coisa",
       "draft": "Criticam e refazem",
-      "draftSubtitle": "A segunda versão é a que se entrega"
+      "draftSubtitle": "A segunda versão é a que se entrega",
+      "network": "Quem do lugar entra",
+      "networkSubtitle": "E o que eles perguntam, não você",
+      "transfer": "O mesmo problema em outro lugar",
+      "transferSubtitle": "A prova de que não decoraram o caso"
     },
     "units": {
       "points_one": "{{count}} ponto",
@@ -730,7 +734,23 @@
     "chooseDefend": "Como defendem a escolha:",
     "draftFirst": "A primeira versão:",
     "draftHow": "Como se criticam:",
-    "draftBetter": "Como se nota que a segunda é melhor:"
+    "draftBetter": "Como se nota que a segunda é melhor:",
+    "netWhy": "O que sabe que ninguém mais sabe:",
+    "netAsk": "Perguntam a essa pessoa:",
+    "netWho": "Quem pergunta:",
+    "netPermits": "É preciso combinar antes:",
+    "netBack": "O que se devolve:",
+    "transferAsk": "Pede-se a eles:",
+    "transferOk": "Vale se aparecer:",
+    "transferNo": "Não conta:",
+    "ringsTitle": "Até onde chegam",
+    "rings": {
+      "inmediato": "A sala e o pátio",
+      "intermedio": "A vizinhança",
+      "amplio": "A bacia inteira"
+    },
+    "justifyTitle": "Para visar na direção",
+    "justifyPrint": "Imprimir esta folha"
   },
   "rutas": {
     "eyebrow": "Rotas",

@@ -663,7 +663,11 @@
       "split": "The room splits",
       "splitSubtitle": "Before you explain anything",
       "draft": "They critique it and redo it",
-      "draftSubtitle": "The second version is the one handed over"
+      "draftSubtitle": "The second version is the one handed over",
+      "network": "Who from the area takes part",
+      "networkSubtitle": "And what they ask, not you",
+      "transfer": "The same problem somewhere else",
+      "transferSubtitle": "Proof they did not just memorise the case"
     },
     "units": {
       "points_one": "{{count}} point",
@@ -730,7 +734,23 @@
     "chooseDefend": "How they defend it:",
     "draftFirst": "The first version:",
     "draftHow": "How they critique each other:",
-    "draftBetter": "How you can tell the second is better:"
+    "draftBetter": "How you can tell the second is better:",
+    "netWhy": "What they know that nobody else does:",
+    "netAsk": "They ask:",
+    "netWho": "Who does the asking:",
+    "netPermits": "To arrange beforehand:",
+    "netBack": "What goes back to them:",
+    "transferAsk": "They are asked:",
+    "transferOk": "It counts if this shows up:",
+    "transferNo": "It does not count:",
+    "ringsTitle": "How far they go",
+    "rings": {
+      "inmediato": "The room and the yard",
+      "intermedio": "The neighbourhood",
+      "amplio": "The whole catchment"
+    },
+    "justifyTitle": "To sign off at the head teacher's office",
+    "justifyPrint": "Print this sheet"
   },
   "rutas": {
     "eyebrow": "Routes",
