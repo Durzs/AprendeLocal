@@ -296,6 +296,72 @@ export interface Comprobacion {
 }
 
 /**
+ * El rato en que la sala se parte en dos y no puede resolverlo hablando.
+ *
+ * Es lo que faltaba para que salir a medir signifique algo. Tal como estaban
+ * escritas, las rutas hacían que el curso ejecutara un protocolo que había
+ * escrito otro, para confirmar una relación que el profesor ya había
+ * enunciado. Medir así no construye nada: comprueba. Y el estudiante lo sabe,
+ * por eso mide sin interés.
+ *
+ * La diferencia la hace tener antes una pregunta de verdad abierta que divida
+ * al curso, con los dos bandos a la vista y sin manera de ganar discutiendo.
+ * Entonces el número deja de ser una tarea y pasa a ser lo único que puede
+ * zanjar la discusión: se sale a buscarlo porque hace falta, no porque toca
+ * salida.
+ *
+ * Y la discusión es entre ellos. Hasta aquí todo el tráfico iba del estudiante
+ * a la realidad o del estudiante al profesor; nada iba de un estudiante a
+ * otro, que es donde de verdad se construye.
+ */
+export interface Desacuerdo {
+  /** La pregunta que parte al curso. No tiene respuesta en el libro. */
+  sobre_que: string;
+  /** Cómo se hace visible en la sala: dónde se para cada uno, qué se anota. */
+  como_se_ve: string;
+  /** Por qué no se puede zanjar conversando, y qué haría falta. */
+  quien_lo_zanja: string;
+}
+
+/**
+ * Lo que eligen ellos, y que el profesor no elige por ellos.
+ *
+ * Una salida con el sitio marcado, los puntos elegidos y las casillas
+ * impresas es una tarea de llenar formularios al aire libre. Para que sea
+ * trabajo de verdad tiene que haber algo en sus manos cuya elección cambie el
+ * resultado, y que después tengan que defender delante del resto.
+ *
+ * La prueba de si una elección es real es `en_que_cambia`: si da lo mismo lo
+ * que elijan, no están eligiendo, están obedeciendo con más pasos.
+ */
+export interface LoQueEligen {
+  que_eligen: string;
+  /** Qué cambia en el resultado según lo que elijan. Si no cambia nada, no es elección. */
+  en_que_cambia: string;
+  /** Cómo lo defienden delante del curso. */
+  como_lo_defienden: string;
+}
+
+/**
+ * Primera versión, críticas con reglas, segunda versión.
+ *
+ * Era la ausencia más grande. El trabajo salía en un solo borrador y se
+ * entregaba, y un trabajo que no se rehace no se aprende a hacer: la
+ * diferencia entre la primera versión y la segunda es la mitad de lo que el
+ * curso se lleva.
+ *
+ * La crítica lleva reglas porque sin ellas se convierte en «está bonito» o en
+ * una pelea. Se pide poco y concreto, y lo que no se puede arreglar no se
+ * dice.
+ */
+export interface BorradorYCritica {
+  primera_version: string;
+  como_se_critica: string;
+  /** En qué se nota, mirándolas, que la segunda es mejor que la primera. */
+  que_mejora: string;
+}
+
+/**
  * La clase de vuelta del terreno.
  *
  * Faltaba, y era la que sostiene todo lo demás. Las rutas empiezan pidiendo a
@@ -351,6 +417,8 @@ export interface Secuencia {
   objetivo_descripcion?: string;
   sesiones?: number;
   sintesis_docente?: string;
+  /** Lo primero de la clase 1: la pregunta que divide al curso. */
+  desacuerdo?: Desacuerdo;
   instruccion_explicita?: {
     duracion_min?: number;
     /** Qué hace el curso mientras el docente explica: sentados, copiando… */
@@ -381,9 +449,13 @@ export interface Secuencia {
     preparacion?: string[];
     protocolo?: CampoProtocolo[];
     seguridad?: string[];
+    /** Lo que queda en sus manos. Sin esto la salida es llenar casillas al aire libre. */
+    lo_que_eligen?: LoQueEligen;
   };
   /** La clase siguiente a la salida: el dato propio contra lo que creían. */
   vuelta_del_terreno?: VueltaDelTerreno;
+  /** Antes de entregar: una versión, las críticas del curso, y otra versión. */
+  borrador_y_critica?: BorradorYCritica;
   recuperacion_espaciada?: MomentoRecuperacion[];
   materiales?: string[];
   requiere_consulta?: boolean;

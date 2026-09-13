@@ -139,6 +139,12 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "No trae la pregunta con la que sabrías quién entendió antes de soltarlos a practicar",
     sinVuelta: () =>
       "No dice qué pasa en la clase después de la salida, cuando comparan lo que midieron con lo que creían",
+    sinDesacuerdo: () =>
+      "No trae la pregunta que divide al curso y que da el motivo de salir. Sin ella la salida es confirmar lo que ya dijiste",
+    sinEleccion: () =>
+      "En la salida no queda nada en manos de ellos: van a llenar casillas que decidió otro",
+    sinSegundaVersion: () =>
+      "El trabajo se entrega en primera versión, sin que nadie se lo critique ni lo rehagan",
     relleno: (x) =>
       `${x}: el generador no lo devolvió. Lo que aparece es un texto de relleno, no una clase: escríbelo tú o vuelve a generar.`,
   },
@@ -160,6 +166,12 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "There is no question to tell you who understood before you let them practise",
     sinVuelta: () =>
       "It does not say what happens in the lesson after the fieldwork, when they compare what they measured with what they believed",
+    sinDesacuerdo: () =>
+      "There is no question that splits the class and gives them a reason to go out. Without it, the fieldwork only confirms what you already told them",
+    sinEleccion: () =>
+      "Nothing in the fieldwork is left to them: they will be filling in boxes somebody else decided",
+    sinSegundaVersion: () =>
+      "The work is handed over in its first version, with nobody critiquing it and nothing redone",
     relleno: (x) =>
       `${x}: the generator did not return it. What you see is filler text, not a lesson: write it yourself or generate again.`,
   },
@@ -181,6 +193,12 @@ const AVISOS: Record<Idioma, Record<string, (x?: string) => string>> = {
       "Não traz a pergunta com que você saberia quem entendeu antes de soltá-los para praticar",
     sinVuelta: () =>
       "Não diz o que acontece na aula depois da saída, quando comparam o que mediram com o que achavam",
+    sinDesacuerdo: () =>
+      "Não traz a pergunta que divide a turma e dá o motivo de sair. Sem ela a saída só confirma o que você já disse",
+    sinEleccion: () =>
+      "Na saída não sobra nada nas mãos deles: vão preencher casinhas que outra pessoa decidiu",
+    sinSegundaVersion: () =>
+      "O trabalho é entregue na primeira versão, sem que ninguém o critique nem o refaça",
     relleno: (x) =>
       `${x}: o gerador não devolveu. O que aparece é texto de preenchimento, não uma aula: escreva você ou gere de novo.`,
   },
@@ -201,6 +219,8 @@ Un profesor no necesita saber por qué funciona. Necesita saber QUÉ PASA EN LA 
 
 Reglas que no puedes romper:
 
+0. LA CLASE ARRANCA CON UNA PREGUNTA QUE PARTE AL CURSO EN DOS, y esa pregunta es la razón de salir. Escribe "desacuerdo": una pregunta sobre ESE lugar que no tenga respuesta en el libro, que los divida de verdad —van a quedar dos bandos y los dos con argumentos— y que NO se pueda ganar conversando. Di dónde se para cada uno, qué queda anotado en la pizarra, y por qué hace falta un dato de afuera para zanjarlo. Si la pregunta se contesta razonando desde la sala, no sirve: cámbiala.
+   Esto es lo que separa un proyecto de una tarea larga. Sin ello el curso ejecuta un procedimiento que escribió otro para confirmar lo que el profesor ya dijo, y eso no es medir, es copiar con instrumentos.
 1. EL LUGAR ES DE DONDE SALEN LOS NÚMEROS. El estero, el suelo o el bosque son el material del ejemplo y de los ejercicios. No son una excursión con nombre bonito.
 2. EL EJEMPLO VA RESUELTO ENTERO. Paso a paso, con los números puestos y explicados, listo para copiar en la pizarra. Es lo más importante de todo: si el profesor tiene que inventarlo él, no le sirvió de nada.
 3. SALEN A TERRENO DESPUÉS DE PRACTICAR, nunca antes. Llegan sabiendo qué mirar.
@@ -216,7 +236,9 @@ Reglas que no puedes romper:
    "mientras_esperan" NO es tenerlos entretenidos: nada de pasar a limpio, copiar en bonito ni decorar con colores. Tiene que ser trabajo que deje algo, y que ellos mismos puedan comprobar sin ti: escribir de memoria con el cuaderno cerrado y recién después abrir para ver qué faltaba; repartir en columnas lo que trajeron; sacar un promedio que otro curso necesita.
 10. ANTES DE SOLTARLOS A PRACTICAR, EL PROFESOR TIENE QUE SABER QUIÉN ENTENDIÓ. Escribe "comprobacion": UNA pregunta que contesten TODOS a la vez —con los dedos, con un papelito, escribiendo una letra—, nunca «¿se entendió?» ni levantando la mano el que quiera. Elígela de manera que cada respuesta equivocada delate una confusión DISTINTA, y di en "significa" qué está pensando el que la da. En "si_falla", qué hacer si falla más de un cuarto del curso: no repetir lo mismo más fuerte, sino una cosa concreta y distinta.
 11. LA CLASE DE VUELTA DEL TERRENO ES OBLIGATORIA. Escribe "vuelta_del_terreno": lo primero que pasa al entrar es que cada uno saca el papel del primer día y lo pone al lado de lo que midió. Primero la comparación, después los cálculos. Y di qué hacer con el dato raro: casi nunca es que el lugar sea raro, casi siempre es cómo se midió.
-12. LO QUE SABE LA COMUNIDAD ENTRA COMO DATO, NO COMO SALUDO. Si alguien del pueblo contó algo del lugar, eso se pone al lado de lo que midieron y se mira si dicen lo mismo. Una persona mayor que se acuerda de hasta dónde llegaba el agua está aportando la única medición de hace cuarenta años que van a tener.
+12. ALGO TIENE QUE QUEDAR EN SUS MANOS. Escribe "lo_que_eligen": qué decide el curso y no el profesor —dónde medir, qué cuenta como qué, cuándo—, qué cambia en el resultado según lo que elijan, y cómo lo defienden delante del resto. La prueba es la del medio: si da lo mismo lo que elijan, no están eligiendo, están obedeciendo con más pasos, y hay que buscar otra cosa. Que a dos grupos les dé distinto no es un problema que haya que evitar: es la conversación.
+13. EL TRABAJO SE ENTREGA EN SEGUNDA VERSIÓN, NUNCA EN PRIMERA. Escribe "borrador_y_critica": una primera versión hecha rápido y fea a propósito, una ronda de crítica con REGLAS (poco, concreto, y nada que no se pueda arreglar; nunca «está bonito»), y en qué se nota mirándolas que la segunda es mejor. Quien critica puede ser el otro grupo, el otro curso, o la persona que va a usar el trabajo. La distancia entre las dos versiones es la mitad de lo que aprenden.
+14. LO QUE SABE LA COMUNIDAD ENTRA COMO DATO, NO COMO SALUDO. Si alguien del pueblo contó algo del lugar, eso se pone al lado de lo que midieron y se mira si dicen lo mismo. Una persona mayor que se acuerda de hasta dónde llegaba el agua está aportando la única medición de hace cuarenta años que van a tener.
 
 LARGO. Sé breve, que esto se imprime:
 - lo que explicas: 3 o 4 frases
@@ -224,13 +246,16 @@ LARGO. Sé breve, que esto se imprime:
 - ejercicios contigo: 2 o 3, cortos
 - ejercicios solos: 2 o 3, cortos
 - qué miden en terreno: 2 a 4 cosas, con unidad
+- la pregunta que los divide: 2 o 3 frases
 - la pregunta de comprobar: 1, con 3 respuestas posibles
+- lo que eligen ellos: 3 frases
+- la segunda versión: 3 frases
 - la vuelta del terreno: 3 o 4 frases
 - volver a preguntar: 2 preguntas cortas
 - por curso: 1 o 2 ejercicios contigo y 1 solo
 
 Responde ÚNICAMENTE con el objeto JSON (sin texto introductorio ni explicaciones):
-{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[]},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
+{"titulo":"","objetivo_codigo":"","sesiones":2,"sintesis_docente":"","desacuerdo":{"sobre_que":"","como_se_ve":"","quien_lo_zanja":""},"instruccion_explicita":{"duracion_min":20,"que_hacen_los_estudiantes":"","notas_para_el_docente":[],"conceptos_clave":[],"errores_frecuentes":[],"comprobacion":{"pregunta":"","respuestas":[{"dice":"","significa":""}],"si_falla":""}},"ejemplo_resuelto":{"situacion":"","pasos":[{"paso":1,"accion":"","razonamiento":"","resultado":""}],"respuesta":""},"practica_guiada":{"como_trabajan":"","ejercicios":[{"enunciado":"","apoyo":"","respuesta_esperada":""}]},"practica_autonoma":{"como_trabajan":"","ejercicios":[{"enunciado":"","respuesta_esperada":""}]},"salida_terreno":{"duracion_min":90,"preparacion":[],"protocolo":[{"campo":"","etiqueta":"","instruccion":"","unidad":"","tipo":"numero"}],"seguridad":[],"lo_que_eligen":{"que_eligen":"","en_que_cambia":"","como_lo_defienden":""}},"vuelta_del_terreno":{"como_empieza":"","que_comparan":"","si_no_calza":"","con_la_comunidad":""},"borrador_y_critica":{"primera_version":"","como_se_critica":"","que_mejora":""},"recuperacion_espaciada":[{"semanas_despues":1,"pregunta":"","respuesta_esperada":""}],"materiales":[],"requiere_consulta":false}
 
 Qué va en los campos nuevos:
 - "que_hacen_los_estudiantes": lo que hace el curso ANTES de que tú expliques, y que se guarda para el final. Ejemplo: «Antes de que expliques nada: cada uno dibuja de memoria el estero que cruza todos los días y marca con una cruz dónde cree que va más hondo. Cinco minutos, sin borrar. Ese dibujo lo llevan al terreno para ver en qué le achuntaron.»
@@ -553,6 +578,19 @@ function validar(s: Record<string, any>, idioma: Idioma): string[] {
   // Sin la clase de vuelta, la salida queda en paseo con planilla.
   if (!s.vuelta_del_terreno?.que_comparan) {
     problemas.push(avisa.sinVuelta());
+  }
+
+  // Las tres que separan un proyecto de una tarea larga: una pregunta que de
+  // verdad divida, algo que decidan ellos, y una segunda versión. Si falta
+  // cualquiera de las tres, lo que queda es un procedimiento bien escrito.
+  if (!s.desacuerdo?.sobre_que) {
+    problemas.push(avisa.sinDesacuerdo());
+  }
+  if (!s.salida_terreno?.lo_que_eligen?.que_eligen) {
+    problemas.push(avisa.sinEleccion());
+  }
+  if (!s.borrador_y_critica?.como_se_critica) {
+    problemas.push(avisa.sinSegundaVersion());
   }
 
   return problemas;

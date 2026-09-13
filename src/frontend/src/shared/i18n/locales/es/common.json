@@ -658,7 +658,12 @@
       "reviewSubtitle": "Con lo que ellos mismos midieron en terreno",
       "class4": "Clase 4",
       "back": "Vuelven con sus datos",
-      "backSubtitle": "Lo que midieron contra lo que creían el primer día"
+      "backSubtitle": "Lo que midieron contra lo que creían el primer día",
+      "class5": "Clase 5",
+      "split": "La sala se divide",
+      "splitSubtitle": "Antes de que expliques nada",
+      "draft": "Se critican y lo rehacen",
+      "draftSubtitle": "La segunda versión es la que se entrega"
     },
     "units": {
       "points_one": "{{count}} punto",
@@ -717,7 +722,15 @@
     "backCompare": "Qué ponen al lado de qué:",
     "backOdd": "Si un dato no calza:",
     "backCommunity": "Lo que sabe la comunidad:",
-    "backLevels": "Cada curso retoma aquí sus propios ejercicios, ahora con los números que trajo."
+    "backLevels": "Cada curso retoma aquí sus propios ejercicios, ahora con los números que trajo.",
+    "splitHow": "Cómo se ve en la sala:",
+    "splitWho": "Por qué no se zanja hablando:",
+    "chooseTitle": "Lo que eligen ellos, no tú",
+    "chooseWhy": "En qué cambia según lo que elijan:",
+    "chooseDefend": "Cómo lo defienden:",
+    "draftFirst": "La primera versión:",
+    "draftHow": "Cómo se critican:",
+    "draftBetter": "En qué se nota la segunda:"
   },
   "rutas": {
     "eyebrow": "Rutas",

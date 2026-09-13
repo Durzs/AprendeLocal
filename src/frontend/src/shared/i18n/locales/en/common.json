@@ -658,7 +658,12 @@
       "reviewSubtitle": "Using what they measured themselves in the field",
       "class4": "Lesson 4",
       "back": "They come back with their data",
-      "backSubtitle": "What they measured against what they believed on day one"
+      "backSubtitle": "What they measured against what they believed on day one",
+      "class5": "Lesson 5",
+      "split": "The room splits",
+      "splitSubtitle": "Before you explain anything",
+      "draft": "They critique it and redo it",
+      "draftSubtitle": "The second version is the one handed over"
     },
     "units": {
       "points_one": "{{count}} point",
@@ -717,7 +722,15 @@
     "backCompare": "What goes next to what:",
     "backOdd": "If a figure does not fit:",
     "backCommunity": "What the community knows:",
-    "backLevels": "Each grade picks up its own exercises here, now with the figures they brought back."
+    "backLevels": "Each grade picks up its own exercises here, now with the figures they brought back.",
+    "splitHow": "How it shows in the room:",
+    "splitWho": "Why talking will not settle it:",
+    "chooseTitle": "What they choose, not you",
+    "chooseWhy": "What changes depending on their choice:",
+    "chooseDefend": "How they defend it:",
+    "draftFirst": "The first version:",
+    "draftHow": "How they critique each other:",
+    "draftBetter": "How you can tell the second is better:"
   },
   "rutas": {
     "eyebrow": "Routes",

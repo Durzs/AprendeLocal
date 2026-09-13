@@ -188,29 +188,46 @@ export default function VistaSecuencia({
     setEtapaActiva(numero);
   }
 
-  // La clase de vuelta solo existe en las rutas escritas: una secuencia
-  // generada antes de que este momento existiera no la trae, y entonces el
-  // riel salta de la salida al repaso como saltaba antes. Por eso los números
-  // no están fijos en el código: se reparten según lo que la secuencia tenga.
+  // Los tres momentos nuevos —el desacuerdo, la vuelta y la crítica— solo los
+  // traen las rutas escritas: una secuencia generada antes de que existieran
+  // no los tiene, y entonces el riel se lee como se leía antes. Por eso los
+  // números no están fijos en el código, se reparten según lo que haya.
+  const desacuerdo = s.desacuerdo;
   const vuelta = s.vuelta_del_terreno;
-  const nVuelta = vuelta ? 6 : 0;
-  const nRepaso = vuelta ? 7 : 6;
+  const critica = s.borrador_y_critica;
+
+  let n = 0;
+  const nDesacuerdo = desacuerdo ? ++n : 0;
+  const nExplicar = ++n;
+  const nEjemplo = ++n;
+  const nGuiada = ++n;
+  const nAutonoma = ++n;
+  const nTerreno = ++n;
+  const nVuelta = vuelta ? ++n : 0;
+  const nCritica = critica ? ++n : 0;
+  const nRepaso = ++n;
 
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
   const etapas: ResumenEtapa[] = [
-    { numero: 1, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.explain"),
+    ...(desacuerdo
+      ? [{ numero: nDesacuerdo, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.split") }]
+      : []),
+    { numero: nExplicar, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.explain"),
       unidad: "points", piezas: s.instruccion_explicita?.notas_para_el_docente?.length },
-    { numero: 2, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.example"),
+    { numero: nEjemplo, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.example"),
       unidad: "steps", piezas: s.ejemplo_resuelto?.pasos?.length },
-    { numero: 3, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.guided"),
+    { numero: nGuiada, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.guided"),
       unidad: "exercises", piezas: s.practica_guiada?.ejercicios?.length },
-    { numero: 4, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
+    { numero: nAutonoma, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
       unidad: "exercises", piezas: s.practica_autonoma?.ejercicios?.length },
-    { numero: 5, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
+    { numero: nTerreno, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
       unidad: "measurements", piezas: s.salida_terreno?.protocolo?.length },
     ...(vuelta
       ? [{ numero: nVuelta, momento: t("preparar.stages.class4"), titulo: t("preparar.stages.back") }]
+      : []),
+    ...(critica
+      ? [{ numero: nCritica, momento: t("preparar.stages.class5"), titulo: t("preparar.stages.draft") }]
       : []),
     { numero: nRepaso, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
       unidad: "questions", piezas: s.recuperacion_espaciada?.length },
@@ -282,8 +299,32 @@ export default function VistaSecuencia({
           <RielEtapas etapas={etapas} activa={etapaActiva} onCambiar={irA} />
 
           <div className="min-w-0 space-y-4 print:space-y-0">
+        {/* Lo primero de todo, y lo que cambia el sentido de lo que viene
+            después: si la sala no se ha dividido por una pregunta que nadie
+            puede ganar discutiendo, salir a medir es ejecutar el protocolo de
+            otro para confirmar lo que el profesor ya dijo. */}
+        {desacuerdo && (
+          <EtapaSecuencia
+            activa={etapaActiva === nDesacuerdo}
+            sentido={sentido}
+            titulo={t("preparar.stages.split")}
+            subtitulo={t("preparar.stages.splitSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p className="font-medium text-slate-900">{desacuerdo.sobre_que}</p>
+            <p>
+              <strong>{t("preparar.splitHow")}</strong> {desacuerdo.como_se_ve}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.splitWho")}</strong>{" "}
+              {desacuerdo.quien_lo_zanja}
+            </p>
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
-          activa={etapaActiva === 1}
+          activa={etapaActiva === nExplicar}
             sentido={sentido}
           titulo={t("preparar.stages.explain")}
           subtitulo={
@@ -314,7 +355,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 2}
+          activa={etapaActiva === nEjemplo}
             sentido={sentido}
           titulo={t("preparar.stages.example")}
           subtitulo={s.ejemplo_resuelto?.situacion}
@@ -344,7 +385,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 3}
+          activa={etapaActiva === nGuiada}
             sentido={sentido}
           titulo={t("preparar.stages.guided")}
           actor="docente"
@@ -374,7 +415,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 4}
+          activa={etapaActiva === nAutonoma}
             sentido={sentido}
           titulo={t("preparar.stages.independent")}
           actor="estudiantes"
@@ -389,7 +430,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 5}
+          activa={etapaActiva === nTerreno}
             sentido={sentido}
           titulo={t("preparar.stages.field")}
           subtitulo={t("preparar.stages.fieldSubtitle")}
@@ -452,6 +493,27 @@ export default function VistaSecuencia({
               </tbody>
             </table>
           </div>
+          {/* Sin esto la salida es llenar casillas al aire libre. La tabla de
+              arriba dice qué se anota; esto dice qué queda de verdad en sus
+              manos, y por eso va después: primero lo que está resuelto, y al
+              final lo único que no. */}
+          {s.salida_terreno?.lo_que_eligen && (
+            <div className="rounded-xl border border-slate-300 bg-white p-4">
+              <p className="rotulo text-slate-500">{t("preparar.chooseTitle")}</p>
+              <p className="mt-1.5 font-medium text-slate-900">
+                {s.salida_terreno.lo_que_eligen.que_eligen}
+              </p>
+              <p className="mt-2.5 text-slate-700">
+                <strong className="text-slate-900">{t("preparar.chooseWhy")}</strong>{" "}
+                {s.salida_terreno.lo_que_eligen.en_que_cambia}
+              </p>
+              <p className="mt-2.5 text-slate-700">
+                <strong className="text-slate-900">{t("preparar.chooseDefend")}</strong>{" "}
+                {s.salida_terreno.lo_que_eligen.como_lo_defienden}
+              </p>
+            </div>
+          )}
+
           {(s.salida_terreno?.seguridad ?? []).length > 0 && (
             <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
               <strong>{t("preparar.safety")}</strong>{" "}
@@ -489,6 +551,32 @@ export default function VistaSecuencia({
             {(s.por_nivel ?? []).length > 0 && (
               <p className="text-slate-500">{t("preparar.backLevels")}</p>
             )}
+          </EtapaSecuencia>
+        )}
+
+        {/* Un trabajo que no se rehace no se aprende a hacer. Esta etapa
+            faltaba entera: el producto salía en un solo borrador y se
+            entregaba, cuando la distancia entre la primera versión y la
+            segunda es la mitad de lo que el curso se lleva. */}
+        {critica && (
+          <EtapaSecuencia
+            activa={etapaActiva === nCritica}
+            sentido={sentido}
+            titulo={t("preparar.stages.draft")}
+            subtitulo={t("preparar.stages.draftSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p>
+              <strong>{t("preparar.draftFirst")}</strong> {critica.primera_version}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.draftHow")}</strong>{" "}
+              {critica.como_se_critica}
+            </p>
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.draftBetter")}</strong> {critica.que_mejora}
+            </p>
           </EtapaSecuencia>
         )}
 

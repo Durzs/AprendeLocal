@@ -318,7 +318,7 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
         </div>
       ) : null}
 
-      <DosMomentos ruta={ruta} />
+      <LosRatosQueImportan ruta={ruta} />
 
       {e.semanas && e.semanas !== ruta.semanas && (
         <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
@@ -332,72 +332,91 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
 }
 
 /**
- * Los dos ratos de los que depende que la ruta funcione.
+ * Los ratos de los que depende que la ruta sea un proyecto y no una tarea.
  *
- * Todo lo demás de la lista de sesiones se puede leer por encima: son títulos
- * de semanas y se entienden solos. Estos dos no, y son justamente los que se
- * saltan cuando la clase va apretada, que es siempre.
+ * La lista de semanas de arriba se lee por encima: son títulos y se entienden
+ * solos. Estos no, y son exactamente los que se caen cuando la clase va
+ * apretada, que es siempre. Van juntos porque son la misma idea vista en
+ * cuatro momentos: que haya algo de verdad sin decidir, que ellos decidan una
+ * parte, que el dato propio zanje la discusión, y que el trabajo se rehaga.
  *
- * El primero es la pregunta que se hace en medio de la primera clase y que
- * contestan todos a la vez. Sirve para una sola cosa: decidir si se sigue. En
- * una sala con cuatro cursos, seguir sin saberlo significa dejar a un curso
- * practicando veinte minutos con una idea equivocada, y una idea equivocada
- * practicada veinte minutos ya no se quita en la clase siguiente.
- *
- * El segundo es lo primero que pasa al volver del terreno: cada uno saca el
- * papel del primer día y lo pone al lado de lo que midió. Sin eso la salida
- * queda en paseo con planilla —los datos son del lugar, pero la idea con la
- * que llegaron sigue entera—, y la corrección tendría que anunciarla el
- * profesor, que es precisamente lo que no sirve.
+ * Sin el primero, salir a medir es ejecutar el protocolo de otro para
+ * confirmar lo que el profesor ya dijo. Sin el último, el trabajo sale en un
+ * solo borrador y nadie aprende a hacerlo: la distancia entre la primera
+ * versión y la segunda es la mitad de lo que el curso se lleva.
  */
-function DosMomentos({ ruta }: { ruta: Ruta }) {
-  const comprobacion = ruta.secuencia.instruccion_explicita?.comprobacion;
-  const vuelta = ruta.secuencia.vuelta_del_terreno;
-  if (!comprobacion && !vuelta) return null;
+function LosRatosQueImportan({ ruta }: { ruta: Ruta }) {
+  const s = ruta.secuencia;
+  const comprobacion = s.instruccion_explicita?.comprobacion;
+  const eligen = s.salida_terreno?.lo_que_eligen;
+
+  const ratos: { cuando: string; titular: string; cuerpo: string[] }[] = [];
+
+  if (s.desacuerdo) {
+    ratos.push({
+      cuando: "Lo primero de la clase 1, antes de que expliques nada",
+      titular: s.desacuerdo.sobre_que,
+      cuerpo: [s.desacuerdo.como_se_ve, s.desacuerdo.quien_lo_zanja],
+    });
+  }
+  if (comprobacion) {
+    ratos.push({
+      cuando: "En medio de la clase 1, antes de los ejercicios",
+      titular: comprobacion.pregunta,
+      cuerpo: [
+        ...comprobacion.respuestas.map((r) => `${r.dice}: ${r.significa}`),
+        comprobacion.si_falla,
+      ],
+    });
+  }
+  if (eligen) {
+    ratos.push({
+      cuando: "En la salida, lo que eligen ellos y no tú",
+      titular: eligen.que_eligen,
+      cuerpo: [eligen.en_que_cambia, eligen.como_lo_defienden],
+    });
+  }
+  if (s.vuelta_del_terreno) {
+    ratos.push({
+      cuando: "Al volver del terreno, antes de cualquier cálculo",
+      titular: s.vuelta_del_terreno.como_empieza,
+      cuerpo: [
+        s.vuelta_del_terreno.que_comparan,
+        ...(s.vuelta_del_terreno.con_la_comunidad
+          ? [s.vuelta_del_terreno.con_la_comunidad]
+          : []),
+      ],
+    });
+  }
+  if (s.borrador_y_critica) {
+    ratos.push({
+      cuando: "Antes de entregar: una versión, las críticas, y otra versión",
+      titular: s.borrador_y_critica.primera_version,
+      cuerpo: [s.borrador_y_critica.como_se_critica, s.borrador_y_critica.que_mejora],
+    });
+  }
+
+  if (!ratos.length) return null;
 
   return (
     <div className="mt-5 space-y-3 border-t border-[var(--crema)]/12 pt-4">
-      <p className="rotulo text-[var(--crema)]/55">No te saltes estos dos ratos</p>
-
-      {comprobacion && (
-        <div className="rounded-xl border border-[var(--crema)]/12 p-4">
-          <p className="rotulo text-[var(--tierra-600)]">
-            En medio de la clase 1, antes de los ejercicios
-          </p>
+      <p className="rotulo text-[var(--crema)]/55">No te saltes estos ratos</p>
+      {ratos.map((r) => (
+        <div key={r.cuando} className="rounded-xl border border-[var(--crema)]/12 p-4">
+          <p className="rotulo text-[var(--tierra-600)]">{r.cuando}</p>
           <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
-            {comprobacion.pregunta}
+            {r.titular}
           </p>
-          <ul className="mt-3 space-y-1.5">
-            {comprobacion.respuestas.map((r) => (
-              <li key={r.dice} className="text-sm leading-relaxed text-[var(--crema)]/65">
-                <span className="text-[var(--crema-clara)]">{r.dice}:</span> {r.significa}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/55">
-            {comprobacion.si_falla}
-          </p>
-        </div>
-      )}
-
-      {vuelta && (
-        <div className="rounded-xl border border-[var(--crema)]/12 p-4">
-          <p className="rotulo text-[var(--tierra-600)]">
-            Al volver del terreno, antes de cualquier cálculo
-          </p>
-          <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
-            {vuelta.como_empieza}
-          </p>
-          <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65">
-            {vuelta.que_comparan}
-          </p>
-          {vuelta.con_la_comunidad && (
-            <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65">
-              {vuelta.con_la_comunidad}
+          {r.cuerpo.map((linea) => (
+            <p
+              key={linea}
+              className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65"
+            >
+              {linea}
             </p>
-          )}
+          ))}
         </div>
-      )}
+      ))}
     </div>
   );
 }
