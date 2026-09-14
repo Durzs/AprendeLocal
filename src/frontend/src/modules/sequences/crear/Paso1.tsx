@@ -10,10 +10,10 @@
  */
 
 import { RUTAS } from "../rutas/catalogo";
-import { Campo, Fichas, Hoja, Parrafo, Texto } from "./Campos";
+import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
 import SelectorOA from "./SelectorOA";
-import type { Entorno, Evaluacion, Expedicion } from "./expedicion";
+import type { Entorno, Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
 
@@ -28,13 +28,6 @@ const SEMANAS = [2, 3, 4, 6];
  */
 const CON_RUTA = new Set(RUTAS.flatMap((r) => r.cubre.flatMap((c) => c.codigos)));
 
-const EVALUACIONES: { valor: Evaluacion; titulo: string }[] = [
-  { valor: "cuaderno", titulo: "Cuaderno de campo" },
-  { valor: "producto", titulo: "El producto final" },
-  { valor: "presentacion", titulo: "Presentación al curso" },
-  { valor: "rubrica", titulo: "Rúbrica por criterios" },
-  { valor: "observacion", titulo: "Observación en terreno" },
-];
 
 const ENTORNOS: { valor: Entorno; titulo: string }[] = [
   { valor: "rio", titulo: "Río o estero" },
@@ -111,26 +104,6 @@ export function PasoPrograma({ e, onCambio }: Props) {
             conRuta={CON_RUTA}
           />
 
-          <Campo
-            etiqueta="Algo más que quieras que aprendan"
-            ayuda="Con tus palabras, lo que el programa no dice. Opcional."
-            ancho="entera"
-          >
-            <Parrafo
-              value={e.objetivos}
-              onChange={(ev) => set("objetivos", ev.target.value)}
-              placeholder="Que aprendan a preguntarle a un adulto de la comunidad sin vergüenza."
-              rows={2}
-            />
-          </Campo>
-
-          <Fichas
-            etiqueta="Cómo vas a evaluar"
-            ayuda="Marca todas las que uses. Después salen en la hoja de evaluación."
-            opciones={EVALUACIONES}
-            elegidas={e.evaluacion}
-            onElegir={(v) => set("evaluacion", v)}
-          />
         </div>
       </Hoja>
     </div>

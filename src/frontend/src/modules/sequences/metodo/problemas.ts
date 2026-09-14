@@ -15,17 +15,19 @@
  * noticia da lo que ningún cuadro de texto da, que es un punto de partida
  * común para veinte personas que todavía no saben nada del asunto.
  *
- * LO QUE NO HAY AQUÍ, Y POR QUÉ
+ * DE DÓNDE SALEN LAS NOTICIAS
  *
- * No hay titulares escritos. Un titular con su medio y su fecha es un registro,
- * y un registro inventado sigue pareciendo verdadero después de que alguien lo
- * cite: si esta lista trajera notas de prensa redactadas por una máquina,
- * terminarían en la pizarra de una escuela como si fueran ciertas.
+ * Cada problemática viene con `respaldo`: notas y estudios REALES, con su
+ * medio, su fecha y su enlace, comprobados uno por uno antes de escribirlos
+ * aquí. Ninguno está redactado por una máquina y ninguno se puede agregar sin
+ * haberlo abierto: un titular con su medio y su fecha es un registro, y un
+ * registro inventado sigue pareciendo verdadero después de que alguien lo cite,
+ * hasta terminar en la pizarra de una sala como si fuera cierto.
  *
- * Lo que sí trae cada problemática es `comoSeBuscan`: con qué palabras
- * buscarla, en qué clase de medio aparece y qué nota sirve de verdad. Las
- * noticias las pega el docente, o las carga la plataforma desde una fuente
- * real. Hasta que eso pase, la pantalla lo dice en vez de disimularlo.
+ * Ese respaldo es nacional y sirve para plantear el asunto, no para cerrarlo.
+ * La nota que de verdad mueve a un curso es la de su propia comuna, y esa no la
+ * tenemos: por eso cada problemática trae además `comoSeBuscan`, con qué
+ * palabras buscarla y qué nota sirve, y la pantalla deja pegar las de su zona.
  *
  * LOS ÁNGULOS
  *
@@ -68,10 +70,16 @@ export const ASIGNATURAS: { id: Asignatura; nombre: string }[] = [
 export type Noticia = {
   titular: string;
   medio: string;
-  /** Cuándo se publicó. Con mes basta, y el mes importa. */
-  fecha: string;
+  /**
+   * Cuándo se publicó, si se pudo comprobar.
+   *
+   * Va opcional a propósito: es preferible una fuente sin fecha a una fecha
+   * puesta a ojo. Media clase del momento 01 consiste en preguntar de cuándo
+   * es esto, y una fecha inventada arruina justamente esa conversación.
+   */
+  fecha?: string;
   url?: string;
-  /** Qué aporta esta nota que las otras no. */
+  /** Qué trae esta fuente, con sus cifras tal como las da. */
   queAporta?: string;
 };
 
@@ -92,6 +100,13 @@ export type Problema = {
   queEs: string;
   /** Dónde se da. No todas las escuelas lo tienen delante. */
   dondeAparece: string;
+  /**
+   * Las fuentes reales que sostienen que esto es un problema y no un tema.
+   *
+   * Se abren y se leen: son el material del que el curso saca quiénes están
+   * metidos, qué lo causó, dónde ocurre y desde cuándo.
+   */
+  respaldo: Noticia[];
   /** Cómo encontrar las notas de prensa de ESTA zona. */
   comoSeBuscan: {
     terminos: string[];
@@ -109,6 +124,26 @@ export const PROBLEMAS: Problema[] = [
       "El agua que pasa cerca de la escuela cambió: cambió de color, de olor, de lo que vive dentro, o de lo que se puede hacer con ella. Puede venir de arriba, de un desagüe, de la agricultura o de la basura.",
     dondeAparece:
       "Escuelas con un río, un estero o un canal a distancia de caminata, que es la mayoría del país rural.",
+    respaldo: [
+      {
+        titular:
+          "Multan a sanitaria por contaminación de río en La Araucanía: empresa suma infracciones en cuatro regiones",
+        medio: "El Desconcierto",
+        fecha: "8 de septiembre de 2026",
+        url: "https://eldesconcierto.cl/medio-ambiente/multan-sanitaria-contaminacion-rio-la-araucania-empresa-suma-infracciones-cuatro-regiones-n5462066",
+        queAporta:
+          "La Superintendencia del Medio Ambiente multó con 669 millones de pesos a Aguas de San Isidro por verter aguas servidas al río Huichahue y a canales de regadío. La planta trata las aguas de 1.055 casas. Los vecinos habían reportado olores, problemas de salud y plagas.",
+      },
+      {
+        titular:
+          "Presentan denuncia en Contraloría por deterioro de humedales ubicados en río Cautín debido a basurales",
+        medio: "BioBioChile",
+        fecha: "14 de octubre de 2024",
+        url: "https://www.biobiochile.cl/noticias/nacional/region-de-la-araucania/2024/10/14/presentan-denuncia-en-contraloria-por-deterioro-de-humedales-ubicados-en-rio-cautin-debido-a-basurales.shtml",
+        queAporta:
+          "La Corporación por el Rescate del Río Cautín y dirigentes vecinales denuncian basurales y descargas de aguas servidas en los humedales de Antumalen, Amanecer y Labranza. Sirve para ver quién denuncia y ante quién, que es la otra mitad del asunto.",
+      },
+    ],
     comoSeBuscan: {
       terminos: [
         "contaminación río + nombre de la comuna",
@@ -173,6 +208,32 @@ export const PROBLEMAS: Problema[] = [
       "Pozos que bajan, vertientes que se secan antes que otros años, camiones aljibe que llegan dos veces por semana. No es solo que llueva menos: es cómo se reparte lo que hay.",
     dondeAparece:
       "Zonas con decreto de escasez hídrica, secano costero, valles con riego por turnos, y cualquier escuela que dependa de un pozo.",
+    respaldo: [
+      {
+        titular: "Sequía histórica: 53% de comunas están bajo decreto de escasez hídrica",
+        medio: "La Tercera",
+        url: "https://www.latercera.com/nacional/noticia/sequia-historica-53-de-comunas-estan-bajo-decreto-de-escasez-hidrica/R5MKC2IXNRBATAIYWJXW75BW3Y/",
+        queAporta:
+          "Más de la mitad de las comunas del país declaradas en escasez. Sirve para que el curso averigüe si la suya está en esa lista, que es lo primero que hay que saber.",
+      },
+      {
+        titular: "Camiones aljibe como sustentadores de un sistema que debe repensarse",
+        medio: "Centro de Ciencia del Clima y la Resiliencia (CR2)",
+        fecha: "julio de 2025",
+        url: "https://www.cr2.cl/wp-content/uploads/2025/07/Policy-brief-25-Camiones-aljibe.pdf",
+        queAporta:
+          "Sostiene que el camión aljibe se normalizó como respuesta a algo que se sigue tratando como pasajero, y que eso reproduce la desigualdad en el acceso al agua. Es el documento que convierte la sequía en una pregunta sobre reparto y no solo sobre lluvia.",
+      },
+      {
+        titular:
+          "Comunidades de Chiloé comienzan a recibir agua en camiones aljibes por escasez hídrica",
+        medio: "BioBioChile",
+        fecha: "5 de enero de 2026",
+        url: "https://www.biobiochile.cl/noticias/nacional/region-de-los-lagos/2026/01/05/comunidades-de-chiloe-comienzan-a-recibir-agua-en-camiones-aljibes-por-escasez-hidrica.shtml",
+        queAporta:
+          "Pasa en Chiloé, que es de los sitios más lluviosos del país. Sirve para desarmar la idea de que esto es cosa del norte.",
+      },
+    ],
     comoSeBuscan: {
       terminos: [
         "decreto escasez hídrica + comuna",
@@ -227,6 +288,17 @@ export const PROBLEMAS: Problema[] = [
       "Sitios donde la basura se acumula porque el camión no llega, porque no hay dónde dejarla, o porque siempre se ha dejado ahí. Suelen estar en las salidas del pueblo y al lado de los cauces.",
     dondeAparece:
       "Casi cualquier localidad. Es la problemática más fácil de encontrar y la más fácil de tratar mal, porque se presta para la campaña de afiches sin averiguar nada.",
+    respaldo: [
+      {
+        titular:
+          "Presentan denuncia en Contraloría por deterioro de humedales ubicados en río Cautín debido a basurales",
+        medio: "BioBioChile",
+        fecha: "14 de octubre de 2024",
+        url: "https://www.biobiochile.cl/noticias/nacional/region-de-la-araucania/2024/10/14/presentan-denuncia-en-contraloria-por-deterioro-de-humedales-ubicados-en-rio-cautin-debido-a-basurales.shtml",
+        queAporta:
+          "Basurales en los humedales de Antumalen, Amanecer y Labranza, con denuncias también desde Vilcún, Lautaro y Nueva Imperial. Muestra el microbasural como lo que casi siempre es: un problema que termina en el agua.",
+      },
+    ],
     comoSeBuscan: {
       terminos: [
         "microbasural + comuna",
@@ -281,6 +353,25 @@ export const PROBLEMAS: Problema[] = [
       "En invierno el aire del pueblo se pone denso y las casas siguen frías. Las dos cosas son el mismo problema: se quema mucho porque la casa no retiene el calor.",
     dondeAparece:
       "Todo el centro y sur del país. Hay comunas con planes de descontaminación y otras sin ninguna medición.",
+    respaldo: [
+      {
+        titular:
+          "Contaminación del aire por la quema de leña y pellets: un «ecocidio» escondido en Chile",
+        medio: "CIPER Chile",
+        fecha: "22 de diciembre de 2024",
+        url: "https://www.ciperchile.cl/2024/12/22/contaminacion-del-aire-por-la-quema-de-lena-y-pellets-un-ecocidio-escondido-en-chile/",
+        queAporta:
+          "Que la leña húmeda explica más del 80% del material particulado fino en la zona centro-sur, y que se le atribuyen unas 3.500 muertes prematuras al año. Es la cifra que cambia la conversación de incomodidad a salud.",
+      },
+      {
+        titular:
+          "Chillán y Chillán Viejo registran la primera preemergencia de calidad del aire del periodo 2026",
+        medio: "Ministerio del Medio Ambiente",
+        url: "https://mma.gob.cl/chillan-y-chillan-viejo-registran-la-primera-preemergencia-de-calidad-del-aire-del-periodo-gec-2026/",
+        queAporta:
+          "Un episodio concreto con fecha. Las estaciones de monitoreo publican datos por hora, así que el curso puede comparar su propia semana con el registro oficial.",
+      },
+    ],
     comoSeBuscan: {
       terminos: [
         "plan de descontaminación + comuna",
@@ -335,6 +426,15 @@ export const PROBLEMAS: Problema[] = [
       "Cárcavas que crecen, raíces al aire, tierra arrastrada al pie de los cortes. Se pierde en un invierno lo que tardó siglos en formarse, y se nota primero en lo que deja de prender.",
     dondeAparece:
       "Laderas, secano, terrenos después de un incendio o de una tala, y cualquier corte de camino reciente.",
+    respaldo: [
+      {
+        titular: "El 49% del suelo nacional presenta algún grado de erosión",
+        medio: "CIREN",
+        url: "https://www.ciren.cl/noticias/el-49-del-suelo-nacional-presenta-algun-grado-de-erosion/",
+        queAporta:
+          "Casi la mitad del territorio con algún grado de erosión, y entre Coquimbo y Los Lagos un 56% de los suelos degradados. CIREN publica además el inventario por comuna, así que se puede mirar la propia.",
+      },
+    ],
     comoSeBuscan: {
       terminos: [
         "erosión suelo + región",
@@ -383,12 +483,90 @@ export const PROBLEMAS: Problema[] = [
     ],
   },
   {
+    id: "bosque_que_retrocede",
+    nombre: "El bosque nativo que retrocede",
+    queEs:
+      "Un bosque que ya no llega donde llegaba: tala, incendios, ganado que entra, o un clima que dejó de servirle. En algunas especies el retroceso ya está medido y proyectado, y eso permite trabajar con una fecha en la mano.",
+    dondeAparece:
+      "Desde el Maule al sur, y muy claramente en la cordillera de Nahuelbuta y en la araucanía andina. También en cualquier renoval cerca de una escuela.",
+    respaldo: [
+      {
+        titular:
+          "Estudio de la Universidad de Chile alerta que la amenaza a los bosques de araucaria ya se manifiesta y podría agravarse hacia 2060",
+        medio: "Universidad de Chile",
+        fecha: "2 de septiembre de 2026",
+        url: "https://uchile.cl/noticias/244327/estudio-uchile-alerta-riesgo-critico-para-bosques-de-araucaria-hacia-2060",
+        queAporta:
+          "Los cuatro ecosistemas de araucaria del país podrían quedar en categoría crítica hacia 2060. Han perdido más del 74% de su extensión histórica, y los andinos más del 46% por deforestación. El de Nahuelbuta, en la costa, podría perder por completo sus condiciones viables. El estudio lo dirigió Alberto Alaniz, de la Universidad de Chile, con el laboratorio BIOMA de la Universidad de Santiago.",
+      },
+    ],
+    comoSeBuscan: {
+      terminos: [
+        "bosque nativo tala + nombre de la comuna",
+        "incendio forestal + sector",
+        "araucaria daño + provincia",
+        "plan de manejo forestal CONAF + localidad",
+      ],
+      donde:
+        "Prensa regional después de cada temporada de incendios, y los estudios de universidades, que se publican con enlace abierto y casi nunca llegan a la escuela que tiene ese bosque al lado.",
+      queNotaSirve:
+        "La que dé una superficie, un porcentaje o un año. Con una cifra proyectada el curso puede preguntarse qué pasa con la suya, que es una pregunta con fecha.",
+    },
+    angulos: [
+      {
+        asignatura: "biologia",
+        enfoque: "Qué se está perdiendo aquí, y qué se está regenerando.",
+        queInvestigan:
+          "Qué hay en el pedazo de bosque de al lado: los árboles grandes, lo que está creciendo abajo, y si hay renovales de las especies que importan o solo de las que invaden.",
+        queSaleDeAqui:
+          "Saber si ese bosque se está reponiendo solo o no. Un bosque sin árboles jóvenes está muerto aunque los grandes sigan de pie, y eso se ve contando.",
+      },
+      {
+        asignatura: "historia",
+        enfoque: "Hasta dónde llegaba el bosque, y quién se acuerda.",
+        queInvestigan:
+          "Dónde había monte hace cuarenta años, en qué década se cortó y para qué. Fotos familiares, escrituras, y lo que cuenten los mayores.",
+        queSaleDeAqui:
+          "El mapa de lo que había, que casi nunca existe en ninguna parte y que cambia la discusión de si esto siempre fue así.",
+      },
+      {
+        asignatura: "matematica",
+        enfoque: "Cuánto queda y a qué ritmo se va.",
+        queInvestigan:
+          "Superficie del pedazo que tienen, cuántos árboles por área, y comparación entre imágenes satelitales de distintos años, que son públicas.",
+        queSaleDeAqui:
+          "Una cifra local puesta al lado de la nacional. Que el estudio diga 74% y aquí dé otra cosa es exactamente lo interesante.",
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque: "Hacer algo que ayude a que vuelva.",
+        queInvestigan:
+          "Recolección de semillas, un vivero pequeño en la escuela, cercado de un pedazo para que no entre el ganado. Se planta y se vuelve a mirar.",
+        queSaleDeAqui:
+          "Árboles vivos, o el dato de por qué no prendieron. Las dos cosas sirven.",
+      },
+      {
+        asignatura: "artes",
+        enfoque: "Registrar lo que todavía está.",
+        queInvestigan:
+          "Dibujo o fotografía de los árboles grandes que quedan, uno por uno, con su ubicación.",
+        queSaleDeAqui:
+          "Un catastro que en diez años va a valer mucho más que ahora.",
+      },
+    ],
+  },
+  {
     id: "memoria_oficios",
     nombre: "Lo que se está dejando de saber",
     queEs:
       "Oficios, cultivos, palabras, recetas y maneras de hacer que sabe la generación mayor del pueblo y que no está pasando a la siguiente. No es nostalgia: es conocimiento que funciona y que se va a perder este año o el próximo.",
     dondeAparece:
       "En todas partes, y es la problemática que mejor funciona donde no hay un conflicto ambiental evidente.",
+    // Esta es la única sin respaldo nacional, y no es un descuido: lo que se
+    // está dejando de saber en un pueblo no sale en ningún estudio, se sabe
+    // preguntando ahí. Decirlo vale más que llenar el hueco con una nota
+    // genérica sobre patrimonio.
+    respaldo: [],
     comoSeBuscan: {
       terminos: [
         "patrimonio cultural inmaterial + comuna",
