@@ -735,6 +735,287 @@ export const PROBLEMAS: Problema[] = [
       },
     ],
   },
+  {
+    id: "lengua_que_se_calla",
+    nombre: "La lengua que ya casi no se habla",
+    queEs:
+      "En el sector hay personas mayores que hablan una lengua que los jóvenes ya no hablan. No se perdió sola: dejó de pasar de una generación a la siguiente, y con ella se van los nombres de los cerros, de las plantas y de las cosas que solo tienen nombre en esa lengua.",
+    dondeAparece:
+      "Escuelas con población mapuche, aymara, quechua o rapanui cerca, y también donde lo que se está perdiendo es una manera de hablar el castellano que solo existe en ese valle.",
+    respaldo: [
+      {
+        titular: "Estudio confirma que la continuidad de la lengua mapuche está en riesgo",
+        medio: "Diario Concepción",
+        fecha: "2 de enero de 2025",
+        url: "https://www.diarioconcepcion.cl/ciencia-y-sociedad/2025/01/02/estudio-confirma-que-la-continuidad-de-la-lengua-mapuche-esta-en-riesgo.html",
+        queAporta:
+          "El Instituto de Estudios Indígenas e Interculturales de la Universidad de La Frontera entrevistó a 440 personas de entre 15 y 81 años en Biobío, La Araucanía, Los Ríos y Los Lagos, por encargo del Ministerio de Desarrollo Social y Familia. Solo el 14 por ciento habla mapudungun con fluidez, con una edad promedio de 64 años, y el 85 por ciento de ellos vive en zonas rurales. El 79 por ciento lo aprendió en su casa y apenas el 4 por ciento en el sistema escolar.",
+      },
+    ],
+    comoSeBuscan: {
+      terminos: [
+        "revitalización lengua + nombre de la comuna",
+        "educadora tradicional + comuna",
+        "programa intercultural bilingüe + comuna",
+        "toponimia mapuche + nombre del sector",
+      ],
+      donde:
+        "Diarios y radios regionales, los sitios de las municipalidades con programas interculturales, y los archivos de la CONADI y de las universidades del sur.",
+      queNotaSirve:
+        "Prioriza noticias que nombren a una persona del sector que todavía hable la lengua y a la que se pueda entrevistar. Un reportaje general sobre pérdida de lenguas no sirve: el curso necesita a alguien concreto que abra la puerta.",
+    },
+    angulos: [
+      {
+        asignatura: "lenguaje",
+        enfoque: "Grabar cómo se habla aquí, antes de que no quede quién.",
+        queInvestigan:
+          "Qué palabras usa la gente mayor del sector que los jóvenes ya no usan, para qué sirven y de dónde vienen. Se graba en audio, con permiso, y se transcribe.",
+        queSaleDeAqui:
+          "Un archivo sonoro que antes no existía, con la voz de personas del lugar. Es lo único de este proyecto que no se puede rehacer después: cuando la persona ya no está, no hay manera de volver a grabarla.",
+        conceptosClave: ["registro oral", "transcripción", "préstamo lingüístico", "variedad y norma", "fuente primaria"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA24_LE_7", "OA25_LE_5", "OA30_LE_6", "OA26_LE_8", "OA22_LE_7"],
+      },
+      {
+        asignatura: "historia",
+        enfoque: "Qué pasó para que se dejara de hablar.",
+        queInvestigan:
+          "En qué década la gente del sector dejó de hablarla con sus hijos y por qué. Se pregunta a tres generaciones de la misma familia, que suelen contestar cosas distintas.",
+        queSaleDeAqui:
+          "Una línea de tiempo del sector con el momento del corte. Sirve para ver que no fue una pérdida natural sino una decisión tomada bajo presión, y eso cambia entera la conversación.",
+        conceptosClave: ["memoria oral", "generación", "diversidad cultural", "derechos lingüísticos", "línea de tiempo"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA19_HI_7", "OA20_HI_7", "OA17_HI_6", "OA19_HI_6", "OA13_HI_5"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque: "Cuántos quedan, de qué edad y dónde.",
+        queInvestigan:
+          "Una encuesta corta en el sector: quién la entiende, quién la habla, quién la habla en su casa. Se cruza con la edad y se compara con las cifras del estudio nacional.",
+        queSaleDeAqui:
+          "El dato de su propio sector, que casi nunca existe. Permite decir si aquí está mejor o peor que el promedio del país, y esa comparación es lo que hace que alguien escuche.",
+        conceptosClave: ["muestra y población", "frecuencia relativa", "porcentaje", "distribución por edad", "gráfico de barras"],
+        tecnicas: ["encuesta", "bitacora"],
+        oaQueAbre: ["OA15_MA_7", "OA16_MA_7", "OA22_MA_6", "OA23_MA_5", "OA26_MA_5"],
+      },
+      {
+        asignatura: "artes",
+        enfoque: "Poner la palabra donde se pueda ver.",
+        queInvestigan:
+          "Cómo se ve una palabra que casi no se dice. Se prueba en distintos soportes y tamaños, en los sitios por donde la gente pasa todos los días.",
+        queSaleDeAqui:
+          "Algo instalado en el pueblo que obliga a leer en esa lengua a quien pasa. Una palabra pintada en grande en el paradero hace más por ella que un informe bien escrito.",
+        conceptosClave: ["arte en el espacio público", "tipografía", "escala", "soporte", "montaje"],
+        tecnicas: ["foto_punto_fijo", "mapa_a_mano", "medicion_dimensiones"],
+        oaQueAbre: ["OA01_AR_6", "OA03_AR_6", "OA06_AR_7", "OA06_AR_8", "OA01_AR_8"],
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque: "Hacer que se pueda escuchar desde cualquier parte.",
+        queInvestigan:
+          "Cómo se guarda y se publica un archivo de audio para que dure y para que lo encuentre alguien que no sabe que existe. Incluye pedir permiso y decidir qué no se publica.",
+        queSaleDeAqui:
+          "Un archivo que sobrevive al curso. La parte difícil no es grabar: es decidir quién puede usar esas voces después y dejarlo escrito.",
+        conceptosClave: ["formato de archivo", "respaldo", "metadatos", "consentimiento", "licencia de uso"],
+        tecnicas: ["bitacora", "entrevista"],
+        oaQueAbre: ["OA05_TE_5", "OA07_TE_5", "OA07_TE_6", "OA04_TE_7", "OA04_TE_8"],
+      },
+      {
+        asignatura: "biologia",
+        enfoque: "Los seres vivos que solo tienen nombre en esa lengua.",
+        queInvestigan:
+          "Qué plantas y animales del sector nombra la gente mayor en su lengua, para qué se usaban, y cuáles de esos ya no se encuentran cerca.",
+        queSaleDeAqui:
+          "Una lista con dos columnas: el nombre en la lengua y el nombre científico, cuando lo hay. Las que no tienen nombre científico al lado son las más interesantes.",
+        conceptosClave: ["especie nativa", "clasificación", "uso tradicional", "hábitat", "biodiversidad local"],
+        tecnicas: ["entrevista", "cuadrante", "foto_punto_fijo"],
+        oaQueAbre: ["OA02_CN_6", "OA03_CN_6", "OA01_CN_6"],
+      },
+    ],
+  },
+  {
+    id: "sin_conexion",
+    nombre: "La conexión que no llega",
+    queEs:
+      "En el sector no hay señal, o la hay a ratos y en un solo punto. Eso decide quién puede estudiar en la casa, quién puede pedir hora al consultorio y quién tiene que viajar para hacer un trámite que otros hacen desde el teléfono.",
+    dondeAparece:
+      "Buena parte del país rural, y de manera desigual dentro de la misma comuna: hay sectores con fibra y sectores a diez kilómetros donde hay que subir un cerro para mandar un mensaje.",
+    respaldo: [
+      {
+        titular:
+          "Gobierno lanza Plan Brecha Digital Cero con foco en zonas sin conectividad, robo de cables y trabajo con municipios",
+        medio: "Subsecretaría de Telecomunicaciones",
+        fecha: "17 de mayo de 2022",
+        url: "https://www.subtel.gob.cl/gobierno-lanza-plan-brecha-digital-cero-con-foco-en-zonas-sin-conectividad-robo-de-cables-y-trabajo-con-municipios/",
+        queAporta:
+          "El plan del Estado para cerrar la brecha, con sus cifras: 10.086 colegios por conectar, 9.560 kilómetros de Fibra Óptica Nacional en 202 comunas y 366 localidades con internet de alta velocidad. Sirve para ver qué se prometió, cuándo, y con cuánta plata, que es contra lo que el curso puede contrastar lo que pasa en su sector.",
+      },
+      {
+        titular: "Conectividad rural: ¿Vamos a seguir mirando para otro lado?",
+        medio: "El Desconcierto",
+        fecha: "24 de septiembre de 2025",
+        url: "https://eldesconcierto.cl/2025/09/24/conectividad-rural-vamos-a-seguir-mirando-para-otro-lado",
+        queAporta:
+          "Es una columna de opinión, no una nota, y conviene decirlo en la sala. Aporta las cifras de la Subsecretaría de Telecomunicaciones que cita: la conexión fija llega al 70 por ciento en zonas urbanas y apenas supera el 30 por ciento en el mundo rural. Sirve además para trabajar la diferencia entre una noticia y una columna.",
+      },
+    ],
+    comoSeBuscan: {
+      terminos: [
+        "sin señal + nombre de la localidad",
+        "antena celular + comuna",
+        "fibra óptica + comuna",
+        "conectividad escuela rural + región",
+      ],
+      donde:
+        "Diarios y radios regionales, actas del concejo municipal, y los informes de la Subsecretaría de Telecomunicaciones, que publica por comuna.",
+      queNotaSirve:
+        "Prioriza noticias que nombren una localidad concreta y una fecha comprometida. Una nota sobre la brecha digital en general no sirve: lo que mueve a alguien es que su sector aparezca con nombre en una lista de promesas.",
+    },
+    angulos: [
+      {
+        asignatura: "tecnologia",
+        enfoque: "Hacer el mapa de señal que no existe.",
+        queInvestigan:
+          "Dónde hay señal, de qué compañía y con cuánta fuerza, medido en varios puntos del sector a la misma hora. Se anota lo que marca el teléfono, que es un instrumento que ya tienen.",
+        queSaleDeAqui:
+          "Un mapa del sector con la señal marcada punto por punto. No existe en ninguna parte: las coberturas que publican las compañías son modelos, no mediciones, y en un valle con cerros no se parecen.",
+        conceptosClave: ["cobertura", "intensidad de señal", "punto de medición", "mapa temático", "fuente primaria"],
+        tecnicas: ["mapa_a_mano", "bitacora", "foto_punto_fijo"],
+        oaQueAbre: ["OA01_TE_7", "OA02_TE_7", "OA04_TE_7", "OA05_TE_5", "OA01_TE_8"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque: "Cuánta gente queda fuera, en números.",
+        queInvestigan:
+          "Una encuesta en el sector: quién tiene internet en la casa, quién solo con el teléfono, cuánto gasta al mes y qué dejó de hacer por no tener.",
+        queSaleDeAqui:
+          "El porcentaje del sector que está fuera, comparado con el 30 por ciento rural que da la cifra nacional. Si aquí es peor, eso es la noticia.",
+        conceptosClave: ["muestra y población", "porcentaje", "frecuencia absoluta y relativa", "comparación con un referente", "gráfico circular"],
+        tecnicas: ["encuesta", "bitacora"],
+        oaQueAbre: ["OA15_MA_7", "OA16_MA_7", "OA04_MA_6", "OA05_MA_8", "OA26_MA_5"],
+      },
+      {
+        asignatura: "historia",
+        enfoque: "Quién tiene que resolverlo, y cómo se le pide.",
+        queInvestigan:
+          "Qué organismo decide dónde va una antena, qué se prometió para este sector y en qué año, y por qué conducto se reclama. Se revisan actas del concejo municipal.",
+        queSaleDeAqui:
+          "El nombre y el cargo de quien puede firmar algo, y el camino exacto para llegarle. Es lo que convierte un reclamo en una gestión.",
+        conceptosClave: ["aislamiento y conexión", "servicio público", "atribución", "participación ciudadana", "acta"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA21_HI_8", "OA15_HI_6", "OA23_HI_6", "OA22_HI_7", "OA19_HI_5"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque: "Escribirle a quien decide, de manera que conteste.",
+        queInvestigan:
+          "Cómo está escrita una carta que consigue respuesta: qué pide, en cuántas líneas, con qué dato adelante y a quién va dirigida por su nombre.",
+        queSaleDeAqui:
+          "Una carta enviada de verdad, con copia. La diferencia entre un texto de clase y este es que este tiene destinatario y fecha de envío.",
+        conceptosClave: ["propósito comunicativo", "destinatario", "registro formal", "argumento y evidencia", "revisión entre pares"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA14_LE_7", "OA15_LE_8", "OA13_LE_7", "OA07_LE_6", "OA15_LE_5"],
+      },
+      {
+        asignatura: "artes",
+        enfoque: "Mostrar la espera.",
+        queInvestigan:
+          "Cómo se ve tener que subir un cerro para mandar un mensaje. Se fotografía a la misma hora, en los mismos puntos, a lo largo de varias semanas.",
+        queSaleDeAqui:
+          "Una serie de imágenes del mismo sitio que cuenta algo que una cifra no cuenta. Es el material con el que la gente de fuera entiende de qué se está hablando.",
+        conceptosClave: ["serie fotográfica", "punto fijo", "encuadre", "luz", "montaje de una exposición"],
+        tecnicas: ["foto_punto_fijo", "bitacora"],
+        oaQueAbre: ["OA03_AR_7", "OA01_AR_8", "OA06_AR_7", "OA05_AR_6", "OA04_AR_8"],
+      },
+    ],
+  },
+  {
+    id: "pueblo_que_se_vacia",
+    nombre: "El pueblo que se está quedando sin gente",
+    queEs:
+      "Cada año hay menos niños en la escuela, más casas cerradas y menos gente joven en el sector. Los que se van no se van por gusto: se van por agua, por trabajo, por salud o para seguir estudiando.",
+    dondeAparece:
+      "Comunas del interior de casi todo el país, y se nota antes que en ninguna otra parte en la matrícula de la escuela.",
+    respaldo: [
+      {
+        titular: "Zonas rurales de la región en alerta por éxodo juvenil hacia las ciudades",
+        medio: "Diario El Día",
+        fecha: "10 de mayo de 2026",
+        url: "https://www.diarioeldia.cl/noticias/2026/05/10/137178-zonas-rurales-de-la-region-en-alerta-por-exodo-juvenil-hacia-las-ciudades",
+        queAporta:
+          "Con datos del Censo 2024 en la región de Coquimbo: la población rural bajó del 18,8 al 17,7 por ciento mientras la urbana subió de 615.116 a 723.819 habitantes. Río Hurtado pasó de 4.700 a 4.300 habitantes. Las causas que dan los dirigentes y alcaldes entrevistados son la sequía, la falta de empleo y el acceso a salud y educación.",
+      },
+    ],
+    comoSeBuscan: {
+      terminos: [
+        "censo 2024 + nombre de la comuna",
+        "cierre de escuela rural + comuna",
+        "matrícula escolar + comuna",
+        "migración campo ciudad + región",
+      ],
+      donde:
+        "Los resultados del Censo 2024 del Instituto Nacional de Estadísticas, que publica por comuna, y los diarios y radios regionales.",
+      queNotaSirve:
+        "Prioriza noticias que den una cifra de habitantes con dos años para comparar. Una nota sobre el envejecimiento del campo en general no sirve: hace falta el número de su comuna para que el curso pueda calcular.",
+    },
+    angulos: [
+      {
+        asignatura: "historia",
+        enfoque: "Cuánta gente había y cuánta queda.",
+        queInvestigan:
+          "Los datos del censo de la comuna en dos momentos, y qué pasó en medio. Se contrasta con lo que cuenta la gente del sector sobre quiénes se fueron y adónde.",
+        queSaleDeAqui:
+          "El movimiento de la población del sector con sus causas nombradas. Un dato del censo dice cuántos; solo la gente del lugar dice por qué.",
+        conceptosClave: ["censo", "migración campo-ciudad", "índice demográfico", "envejecimiento", "aislamiento"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA21_HI_8", "OA13_HI_6", "OA11_HI_5", "OA22_HI_8", "OA12_HI_6"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque: "La matrícula de esta escuela, año por año.",
+        queInvestigan:
+          "Cuántos estudiantes tuvo la escuela cada año de la última década. Está en los libros de la dirección y casi nunca se ha mirado junto.",
+        queSaleDeAqui:
+          "Una serie de diez años con su tendencia. Permite decir en qué año cierra un curso si sigue así, que es una frase que se entiende sola.",
+        conceptosClave: ["serie de tiempo", "tasa de cambio", "proyección", "promedio", "gráfico de línea"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA26_MA_5", "OA23_MA_5", "OA09_MA_6", "OA07_MA_8", "OA08_MA_8"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque: "Las historias de los que se fueron y los que se quedaron.",
+        queInvestigan:
+          "Por qué se fue quien se fue y por qué se quedó quien se quedó. Se entrevista a personas de las dos clases, incluidas las que ya no viven aquí.",
+        queSaleDeAqui:
+          "Un conjunto de relatos en primera persona. Son lo único que puede acompañar a la cifra sin repetirla, y es lo que la gente de fuera recuerda.",
+        conceptosClave: ["relato en primera persona", "entrevista", "crónica", "voz narrativa", "edición"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA24_LE_7", "OA12_LE_7", "OA13_LE_5", "OA30_LE_6", "OA14_LE_8"],
+      },
+      {
+        asignatura: "artes",
+        enfoque: "Las casas que quedaron cerradas.",
+        queInvestigan:
+          "Cuántas casas del sector están cerradas y cómo se ven. Se recorre, se fotografía y se marca en un plano hecho a mano.",
+        queSaleDeAqui:
+          "Un plano del sector con las casas vacías marcadas, y las imágenes al lado. Puestos juntos, dicen algo que ninguno de los dos dice solo.",
+        conceptosClave: ["registro fotográfico", "plano", "instalación", "espacio público", "montaje"],
+        tecnicas: ["foto_punto_fijo", "mapa_a_mano", "bitacora"],
+        oaQueAbre: ["OA01_AR_6", "OA03_AR_8", "OA01_AR_8", "OA06_AR_8", "OA05_AR_6"],
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque: "Algo que le sirva a quien se queda.",
+        queInvestigan:
+          "Qué le falta a la gente que sigue viviendo aquí y que se podría construir o arreglar con lo que hay en el pueblo.",
+        queSaleDeAqui:
+          "Una cosa hecha y entregada, con su costo anotado. Es el ángulo que se niega a que el proyecto termine en un diagnóstico triste.",
+        conceptosClave: ["necesidad y oportunidad", "materiales disponibles", "costo", "prototipo", "evaluación de la solución"],
+        tecnicas: ["entrevista", "medicion_dimensiones", "bitacora"],
+        oaQueAbre: ["OA01_TE_7", "OA02_TE_8", "OA03_TE_8", "OA02_TE_6", "OA06_TE_7"],
+      },
+    ],
+  },
 ];
 
 export function problemaPorId(id: string): Problema | undefined {
