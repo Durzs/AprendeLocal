@@ -246,7 +246,7 @@ export const PROBLEMAS: Problema[] = [
           "Una lista de lo que falta. Es el dato que más convence y el único que no se consigue con instrumentos: hay que saber qué buscar y preguntarle a quien lleva años mirando.",
         conceptosClave: ["ecosistema", "bioindicador", "cadena alimentaria", "especie nativa e introducida"],
         tecnicas: ["cuadrante", "bitacora", "foto_punto_fijo"],
-        oaQueAbre: ["OA01_CN_6", "OA02_CN_6", "OA03_CN_6"],
+        oaQueAbre: ["OA01_CN_6", "OA02_CN_6", "OA03_CN_6", "OA14_CN_5"],
       },
       {
         asignatura: "quimica",
@@ -293,6 +293,42 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["hecho y opinión", "fuente", "propósito del texto", "destinatario"],
         tecnicas: ["entrevista", "encuesta"],
         oaQueAbre: ["OA07_LE_6", "OA15_LE_5", "OA14_LE_7", "OA15_LE_8"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Lectura y evaluación de las fuentes sobre el caso.",
+        queInvestigan:
+          "Qué dicen las noticias y los informes sobre este cauce: quién los firma, de cuándo son, qué cifra da cada uno y en qué se contradicen.",
+        queSaleDeAqui:
+          "Una ficha por fuente con lo que aporta y lo que calla. Es el material con el que el curso decide qué puede afirmar y qué no.",
+        conceptosClave: ["fuente primaria y secundaria", "sesgo", "cita", "síntesis", "vocabulario técnico"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA01_LE_5", "OA01_LE_6", "OA01_LE_7", "OA01_LE_8", "OA02_LE_5", "OA02_LE_6", "OA06_LE_5", "OA06_LE_6", "OA07_LE_5", "OA07_LE_6", "OA08_LE_5", "OA08_LE_6", "OA09_LE_5", "OA09_LE_6", "OA10_LE_5", "OA10_LE_6", "OA10_LE_7", "OA11_LE_5", "OA11_LE_6", "OA11_LE_7", "OA11_LE_8", "OA12_LE_5", "OA12_LE_6", "OA12_LE_8", "OA24_LE_7", "OA25_LE_7", "OA25_LE_8", "OA26_LE_8"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Plano del cauce y cálculo de superficies.",
+        queInvestigan:
+          "El trazado del cauce en un plano a escala, con los puntos de muestreo ubicados, y la superficie de la ribera afectada.",
+        queSaleDeAqui:
+          "Un plano propio a escala con los puntos marcados. Sirve para mostrar dónde entra el problema, que es distinto de decir que el río está sucio.",
+        conceptosClave: ["escala", "plano cartesiano", "área", "ángulo", "congruencia"],
+        tecnicas: ["mapa_a_mano", "medicion_dimensiones"],
+        oaQueAbre: ["OA10_MA_7", "OA11_MA_7", "OA11_MA_8", "OA12_MA_6", "OA12_MA_7", "OA12_MA_8", "OA13_MA_6", "OA13_MA_7", "OA13_MA_8", "OA14_MA_6", "OA14_MA_7", "OA14_MA_8", "OA15_MA_6", "OA16_MA_5", "OA16_MA_6", "OA17_MA_5", "OA17_MA_6", "OA18_MA_5", "OA22_MA_5"],
+      },
+      {
+        asignatura: "artes",
+        enfoque:
+          "Registro visual del cauce y su deterioro.",
+        queInvestigan:
+          "Cómo se ve el cauce en los tres puntos, a la misma hora y con el mismo encuadre, repetido a lo largo de las semanas.",
+        queSaleDeAqui:
+          "Una serie que muestra la diferencia entre tramos sin necesidad de explicarla. Es lo que hace que alguien de fuera entienda de qué se habla.",
+        conceptosClave: ["encuadre", "serie", "punto fijo", "luz", "montaje"],
+        tecnicas: ["foto_punto_fijo", "bitacora"],
+        oaQueAbre: ["OA01_AR_5", "OA01_AR_6", "OA01_AR_7", "OA01_AR_8", "OA02_AR_5", "OA02_AR_6", "OA02_AR_7", "OA02_AR_8", "OA03_AR_5", "OA03_AR_6", "OA03_AR_7", "OA03_AR_8", "OA04_AR_5", "OA04_AR_6", "OA04_AR_7", "OA04_AR_8", "OA05_AR_5", "OA05_AR_6", "OA05_AR_7", "OA05_AR_8"],
       },
     ],
   },
@@ -352,7 +388,7 @@ export const PROBLEMAS: Problema[] = [
           "La diferencia entre lo que se cree que se gasta y lo que se gasta. Nunca coinciden, y esa brecha es el proyecto.",
         conceptosClave: ["volumen y litro", "consumo por persona", "proporción", "estimación"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
-        oaQueAbre: ["OA12_CN_5", "OA19_MA_6", "OA03_MA_6", "OA08_MA_7"],
+        oaQueAbre: ["OA12_CN_5", "OA19_MA_6", "OA03_MA_6", "OA08_MA_7", "OA02_MA_5", "OA03_MA_5", "OA04_MA_5"],
       },
       {
         asignatura: "biologia",
@@ -386,6 +422,54 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["prototipo", "variable a controlar", "eficiencia", "prueba y error"],
         tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
         oaQueAbre: ["OA03_TE_5", "OA02_TE_7", "OA02_TE_8", "OA06_TE_8"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Redacción y edición del documento que se entrega.",
+        queInvestigan:
+          "Cómo se planifica, se escribe, se corrige y se edita un texto que va a leer alguien de fuera de la escuela.",
+        queSaleDeAqui:
+          "Un texto en su segunda versión, corregido por los compañeros antes de salir. La diferencia con una tarea es que este tiene destinatario y fecha de envío.",
+        conceptosClave: ["propósito y destinatario", "planificación del texto", "revisión entre pares", "ortografía", "vocabulario preciso"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA13_LE_7", "OA14_LE_8", "OA15_LE_5", "OA15_LE_6", "OA15_LE_7", "OA16_LE_8", "OA17_LE_5", "OA17_LE_6", "OA18_LE_5", "OA18_LE_6", "OA19_LE_5", "OA19_LE_6", "OA19_LE_7", "OA20_LE_8", "OA22_LE_5", "OA22_LE_6"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Proporciones y porcentajes del consumo.",
+        queInvestigan:
+          "Cuánto se consume por persona y por día, qué proporción del total se va en cada uso, y cuánto representaría el ahorro que se propone.",
+        queSaleDeAqui:
+          "Las cifras en proporción y no en bruto. Un porcentaje se discute en una reunión de vecinos; una lista de litros, no.",
+        conceptosClave: ["razón", "porcentaje", "fracción y decimal", "proporcionalidad", "variación porcentual"],
+        tecnicas: ["encuesta", "bitacora"],
+        oaQueAbre: ["OA02_MA_7", "OA03_MA_6", "OA04_MA_6", "OA04_MA_7", "OA05_MA_6", "OA05_MA_8", "OA06_MA_6", "OA07_MA_5", "OA07_MA_6", "OA08_MA_5", "OA08_MA_6", "OA08_MA_7", "OA09_MA_5", "OA10_MA_5", "OA11_MA_5", "OA12_MA_5", "OA13_MA_5"],
+      },
+      {
+        asignatura: "historia",
+        enfoque:
+          "Organización comunitaria y toma de decisiones sobre el agua.",
+        queInvestigan:
+          "Cómo se organiza hoy el comité de agua del sector, quién decide, cómo se elige, y en qué se parece o no a otras formas de decidir en común.",
+        queSaleDeAqui:
+          "El mapa de quién decide qué, con nombres. Es lo que permite que el curso sepa a quién dirigirse y por qué conducto.",
+        conceptosClave: ["organización comunitaria", "participación ciudadana", "derechos y deberes", "representación", "bien común"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA13_HI_5", "OA14_HI_5", "OA15_HI_5", "OA15_HI_6", "OA16_HI_5", "OA16_HI_6", "OA17_HI_5", "OA17_HI_6", "OA17_HI_7", "OA17_HI_8", "OA18_HI_5", "OA18_HI_6", "OA18_HI_7", "OA18_HI_8", "OA19_HI_5", "OA19_HI_6", "OA19_HI_7", "OA19_HI_8", "OA20_HI_5", "OA20_HI_6", "OA20_HI_7", "OA21_HI_5", "OA21_HI_6", "OA22_HI_5", "OA22_HI_6", "OA23_HI_6", "OA24_HI_6", "OA25_HI_6", "OA26_HI_6"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Probabilidad de un año seco según el registro histórico.",
+        queInvestigan:
+          "Cuántos de los últimos veinte años fueron secos según los registros de la estación más cercana, y con qué frecuencia se repiten. Se cuenta, no se estima a ojo.",
+        queSaleDeAqui:
+          "Una frecuencia con la que se puede decir cada cuánto pasa esto. Deja de ser un mal año y pasa a ser algo previsible, que es lo que permite planificar.",
+        conceptosClave: ["frecuencia relativa", "probabilidad", "evento", "muestra aleatoria", "diagrama de tallo y hojas"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA15_MA_8", "OA17_MA_8", "OA18_MA_7", "OA19_MA_7", "OA23_MA_6", "OA24_MA_5", "OA24_MA_6", "OA25_MA_5", "OA27_MA_5"],
       },
     ],
   },
@@ -430,7 +514,7 @@ export const PROBLEMAS: Problema[] = [
           "Saber si el microbasural es doméstico o es de camioneta, que lleva a soluciones opuestas.",
         conceptosClave: ["muestra y población", "porcentaje", "clasificación", "volumen estimado"],
         tecnicas: ["cuadrante", "pauta_observacion"],
-        oaQueAbre: ["OA04_MA_6", "OA15_MA_7", "OA16_MA_7"],
+        oaQueAbre: ["OA04_MA_6", "OA15_MA_7", "OA16_MA_7", "OA01_MA_6"],
       },
       {
         asignatura: "biologia",
@@ -464,6 +548,30 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["encuadre", "serie fotográfica", "punto de vista", "catálogo visual"],
         tecnicas: ["foto_punto_fijo", "mapa_a_mano"],
         oaQueAbre: ["OA01_AR_6", "OA01_AR_8", "OA03_AR_8"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Análisis de mensajes y campañas sobre residuos.",
+        queInvestigan:
+          "Qué campañas sobre basura existen, a quién le hablan y con qué recursos, y por qué las que hay no han funcionado aquí.",
+        queSaleDeAqui:
+          "Un análisis de lo que ya se intentó. Evita que el curso repita una campaña que el pueblo ya ignoró una vez.",
+        conceptosClave: ["mensaje publicitario", "destinatario", "recurso persuasivo", "argumento", "contraargumento"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA08_LE_7", "OA09_LE_7", "OA09_LE_8", "OA10_LE_8", "OA14_LE_7", "OA15_LE_8", "OA20_LE_7", "OA21_LE_7", "OA21_LE_8", "OA22_LE_7", "OA22_LE_8", "OA23_LE_7", "OA23_LE_8", "OA24_LE_5", "OA24_LE_6", "OA24_LE_8", "OA25_LE_6", "OA26_LE_5", "OA27_LE_5", "OA27_LE_6", "OA28_LE_5", "OA28_LE_6", "OA29_LE_5", "OA29_LE_6", "OA30_LE_5", "OA30_LE_6", "OA31_LE_6"],
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque:
+          "Diseño de una solución de manejo de residuos.",
+        queInvestigan:
+          "Qué hace falta en ese punto para que la basura deje de acumularse: un contenedor, una señal, un horario, un acuerdo, o las cuatro cosas.",
+        queSaleDeAqui:
+          "Algo construido e instalado, con su costo anotado y su evaluación después de dos semanas.",
+        conceptosClave: ["necesidad y oportunidad", "materiales", "costo", "prototipo", "criterios de evaluación"],
+        tecnicas: ["medicion_dimensiones", "bitacora"],
+        oaQueAbre: ["OA01_TE_5", "OA01_TE_6", "OA01_TE_7", "OA01_TE_8", "OA02_TE_5", "OA02_TE_6", "OA02_TE_7", "OA02_TE_8", "OA03_TE_5", "OA03_TE_6", "OA03_TE_7", "OA03_TE_8", "OA04_TE_5", "OA04_TE_6", "OA05_TE_7", "OA05_TE_8", "OA06_TE_7", "OA06_TE_8"],
       },
     ],
   },
@@ -538,7 +646,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cifra en pesos, que es la que hace que alguien actúe.",
         conceptosClave: ["promedio", "costo unitario", "proyección", "comparación de series"],
         tecnicas: ["encuesta", "medicion_dimensiones"],
-        oaQueAbre: ["OA12_CN_7", "OA23_MA_5", "OA05_MA_8", "OA08_MA_8"],
+        oaQueAbre: ["OA12_CN_7", "OA23_MA_5", "OA05_MA_8", "OA08_MA_8", "OA03_MA_8"],
       },
       {
         asignatura: "historia",
@@ -550,6 +658,30 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["arquitectura tradicional", "adaptación al clima", "saber técnico local"],
         tecnicas: ["entrevista", "mapa_a_mano"],
         oaQueAbre: ["OA11_HI_5", "OA12_HI_6", "OA21_HI_7"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Exposición de los resultados ante la comunidad.",
+        queInvestigan:
+          "Cómo se explica una medición a gente que no estuvo: qué se dice primero, qué término hay que explicar y qué pregunta difícil va a venir.",
+        queSaleDeAqui:
+          "Una exposición ensayada donde habla más de uno. Se nota en que contestan la pregunta incómoda sin mirar al profesor.",
+        conceptosClave: ["exposición oral", "audiencia", "progresión temática", "diálogo", "escucha activa"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA20_LE_7", "OA21_LE_7", "OA21_LE_8", "OA22_LE_7", "OA22_LE_8", "OA23_LE_7", "OA23_LE_8", "OA24_LE_5", "OA24_LE_6", "OA24_LE_8", "OA26_LE_5", "OA27_LE_5", "OA27_LE_6", "OA28_LE_5", "OA28_LE_6", "OA29_LE_5", "OA29_LE_6", "OA30_LE_5", "OA30_LE_6", "OA31_LE_6"],
+      },
+      {
+        asignatura: "fisica",
+        enfoque:
+          "Calor, temperatura y transferencia de energía en la vivienda.",
+        queInvestigan:
+          "Cuánto calor se pierde y por dónde, midiendo temperatura dentro y fuera a la misma hora, y qué cambia al tapar una filtración.",
+        queSaleDeAqui:
+          "Una medición antes y después de una intervención barata. Es la prueba de que se puede gastar menos leña sin pasar frío.",
+        conceptosClave: ["calor y temperatura", "conducción", "aislación", "energía térmica", "transferencia"],
+        tecnicas: ["bitacora", "medicion_dimensiones"],
+        oaQueAbre: ["OA07_CN_7", "OA08_CN_5", "OA08_CN_7", "OA08_CN_8", "OA09_CN_5", "OA09_CN_8", "OA10_CN_5", "OA10_CN_8", "OA11_CN_5", "OA11_CN_8", "OA14_CN_6", "OA15_CN_6"],
       },
     ],
   },
@@ -603,7 +735,7 @@ export const PROBLEMAS: Problema[] = [
           "Por qué esta tierra se seca aunque llueva, que es la pregunta que todos los que siembran se hacen.",
         conceptosClave: ["textura del suelo", "retención de agua", "porosidad", "materia orgánica"],
         tecnicas: ["muestra_suelo", "medicion_dimensiones"],
-        oaQueAbre: ["OA16_CN_6", "OA17_CN_6"],
+        oaQueAbre: ["OA16_CN_6", "OA17_CN_6", "OA11_CN_7"],
       },
       {
         asignatura: "matematica",
@@ -626,6 +758,30 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["barrera viva", "infiltración", "diseño de una solución", "seguimiento"],
         tecnicas: ["foto_punto_fijo", "medicion_dimensiones"],
         oaQueAbre: ["OA02_TE_5", "OA02_TE_7", "OA03_TE_8", "OA05_TE_7"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Geometría del terreno: pendiente, área y volumen.",
+        queInvestigan:
+          "La pendiente de la ladera, la superficie afectada y el volumen de tierra que se fue, medido entre dos visitas.",
+        queSaleDeAqui:
+          "Un número con unidad que se puede comparar con la próxima temporada. Sin eso, la erosión es una impresión.",
+        conceptosClave: ["pendiente", "área", "volumen", "escala", "teorema de Pitágoras"],
+        tecnicas: ["medicion_dimensiones", "mapa_a_mano"],
+        oaQueAbre: ["OA01_MA_5", "OA01_MA_7", "OA01_MA_8", "OA02_MA_6", "OA02_MA_8", "OA03_MA_7", "OA04_MA_8", "OA05_MA_5", "OA05_MA_7", "OA06_MA_5", "OA10_MA_7", "OA11_MA_7", "OA11_MA_8", "OA12_MA_6", "OA12_MA_7", "OA12_MA_8", "OA13_MA_6", "OA13_MA_7", "OA13_MA_8", "OA14_MA_6", "OA14_MA_7", "OA14_MA_8", "OA15_MA_6", "OA16_MA_5", "OA16_MA_6", "OA17_MA_5", "OA17_MA_6", "OA18_MA_5", "OA18_MA_6", "OA19_MA_5", "OA19_MA_6", "OA20_MA_5", "OA20_MA_6", "OA21_MA_5", "OA21_MA_6", "OA22_MA_5"],
+      },
+      {
+        asignatura: "historia",
+        enfoque:
+          "Geografía física del sector y usos del suelo.",
+        queInvestigan:
+          "Qué relieve, clima y vegetación tiene el sector, qué usos ha tenido el suelo y cómo esos usos explican lo que se ve hoy.",
+        queSaleDeAqui:
+          "La explicación de por qué pasa aquí y no dos cerros más allá. Es lo que distingue un diagnóstico de una queja.",
+        conceptosClave: ["relieve", "clima", "uso de suelo", "recurso renovable", "desarrollo sostenible"],
+        tecnicas: ["mapa_a_mano", "entrevista"],
+        oaQueAbre: ["OA09_HI_5", "OA10_HI_5", "OA10_HI_6", "OA11_HI_5", "OA11_HI_6", "OA12_HI_5", "OA12_HI_6", "OA13_HI_6", "OA14_HI_6", "OA20_HI_8", "OA21_HI_7", "OA21_HI_8", "OA22_HI_7", "OA22_HI_8", "OA23_HI_7"],
       },
     ],
   },
@@ -716,6 +872,18 @@ export const PROBLEMAS: Problema[] = [
         tecnicas: ["foto_punto_fijo", "bitacora"],
         oaQueAbre: ["OA01_AR_5", "OA03_AR_7", "OA01_AR_8"],
       },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Lectura de literatura y relatos sobre este territorio.",
+        queInvestigan:
+          "Qué se ha escrito sobre este paisaje: relatos, poemas, crónicas y mitos, y qué dicen que hoy ya no se ve.",
+        queSaleDeAqui:
+          "Un repertorio de textos del propio territorio. Cambia la conversación: el bosque deja de ser un recurso y pasa a ser un lugar con historia contada.",
+        conceptosClave: ["narración", "poema", "relato mitológico", "interpretación", "contexto de producción"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA02_LE_7", "OA02_LE_8", "OA03_LE_5", "OA03_LE_6", "OA03_LE_7", "OA03_LE_8", "OA04_LE_5", "OA04_LE_6", "OA04_LE_7", "OA04_LE_8", "OA05_LE_5", "OA05_LE_6", "OA05_LE_7", "OA05_LE_8", "OA06_LE_7", "OA06_LE_8", "OA07_LE_7", "OA07_LE_8", "OA08_LE_8", "OA12_LE_7", "OA13_LE_5", "OA13_LE_6", "OA13_LE_8", "OA14_LE_5", "OA14_LE_6", "OA16_LE_5", "OA16_LE_6", "OA16_LE_7", "OA17_LE_7", "OA17_LE_8", "OA18_LE_7", "OA18_LE_8", "OA19_LE_8", "OA20_LE_5", "OA20_LE_6", "OA21_LE_5", "OA21_LE_6", "OA23_LE_5", "OA23_LE_6", "OA26_LE_6"],
+      },
     ],
   },
   {
@@ -787,6 +955,30 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["uso tradicional de especies", "fenología", "clasificación"],
         tecnicas: ["entrevista", "cuadrante"],
         oaQueAbre: ["OA01_CN_5"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Exposición y diálogo con los portadores del oficio.",
+        queInvestigan:
+          "Cómo se conduce una conversación con alguien que sabe mucho más que uno: qué se pregunta, cuándo se calla y cómo se repregunta.",
+        queSaleDeAqui:
+          "Una entrevista que la persona entrevistada querría volver a dar. Es la condición para que abra la puerta una segunda vez.",
+        conceptosClave: ["entrevista", "escucha activa", "turnos de habla", "registro formal e informal", "exposición"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA20_LE_7", "OA21_LE_7", "OA21_LE_8", "OA22_LE_7", "OA22_LE_8", "OA23_LE_7", "OA23_LE_8", "OA24_LE_5", "OA24_LE_6", "OA24_LE_8", "OA26_LE_5", "OA27_LE_5", "OA27_LE_6", "OA28_LE_5", "OA28_LE_6", "OA29_LE_5", "OA29_LE_6", "OA30_LE_5", "OA30_LE_6", "OA31_LE_6"],
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque:
+          "Registro digital y resguardo del material.",
+        queInvestigan:
+          "Cómo se graba, se nombra, se guarda y se publica lo recogido para que se encuentre dentro de diez años.",
+        queSaleDeAqui:
+          "Un archivo ordenado con sus permisos escritos. La parte difícil no es grabar: es decidir quién puede usar eso después.",
+        conceptosClave: ["formato", "metadatos", "respaldo", "privacidad", "licencia de uso"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA04_TE_7", "OA04_TE_8", "OA05_TE_5", "OA05_TE_6", "OA06_TE_5", "OA06_TE_6", "OA07_TE_5", "OA07_TE_6"],
       },
     ],
   },
@@ -887,6 +1079,18 @@ export const PROBLEMAS: Problema[] = [
         tecnicas: ["entrevista", "cuadrante", "foto_punto_fijo"],
         oaQueAbre: ["OA02_CN_6", "OA03_CN_6", "OA01_CN_6"],
       },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Lectura de relatos y poesía en la lengua del lugar.",
+        queInvestigan:
+          "Qué relatos, cantos y poemas existen en esa lengua, qué cuentan y qué se pierde al traducirlos.",
+        queSaleDeAqui:
+          "Una selección leída y comentada. Es la manera de que la lengua deje de ser un objeto de estudio y vuelva a ser algo que se lee.",
+        conceptosClave: ["relato mitológico", "poema", "traducción", "interpretación", "herencia cultural"],
+        tecnicas: ["bitacora", "entrevista"],
+        oaQueAbre: ["OA02_LE_7", "OA02_LE_8", "OA03_LE_5", "OA03_LE_6", "OA03_LE_7", "OA03_LE_8", "OA04_LE_5", "OA04_LE_6", "OA04_LE_7", "OA04_LE_8", "OA05_LE_5", "OA05_LE_6", "OA05_LE_7", "OA05_LE_8", "OA06_LE_7", "OA06_LE_8", "OA07_LE_7", "OA07_LE_8", "OA08_LE_8", "OA23_LE_5", "OA23_LE_6", "OA26_LE_6"],
+      },
     ],
   },
   {
@@ -984,6 +1188,30 @@ export const PROBLEMAS: Problema[] = [
         tecnicas: ["foto_punto_fijo", "bitacora"],
         oaQueAbre: ["OA03_AR_7", "OA01_AR_8", "OA06_AR_7", "OA05_AR_6", "OA04_AR_8"],
       },
+      {
+        asignatura: "historia",
+        enfoque:
+          "Derechos, deberes y acceso a servicios.",
+        queInvestigan:
+          "Qué se considera un servicio al que todos tienen derecho, quién debe garantizarlo, y cómo se reclama cuando no llega.",
+        queSaleDeAqui:
+          "El argumento de por qué esto no es mala suerte sino un derecho no cumplido. Cambia el tono de la carta que se escribe después.",
+        conceptosClave: ["derecho y deber", "Estado", "servicio público", "participación", "bien común"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA13_HI_5", "OA14_HI_5", "OA15_HI_5", "OA15_HI_6", "OA16_HI_5", "OA16_HI_6", "OA17_HI_5", "OA17_HI_6", "OA17_HI_7", "OA17_HI_8", "OA18_HI_5", "OA18_HI_6", "OA18_HI_7", "OA18_HI_8", "OA19_HI_5", "OA19_HI_6", "OA19_HI_7", "OA19_HI_8", "OA20_HI_5", "OA20_HI_6", "OA20_HI_7", "OA21_HI_5", "OA21_HI_6", "OA22_HI_5", "OA22_HI_6", "OA23_HI_6", "OA24_HI_6", "OA25_HI_6", "OA26_HI_6"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Modelo del avance de la cobertura en el tiempo.",
+        queInvestigan:
+          "Cuánto ha avanzado la cobertura por año según las cifras oficiales, y en qué año llegaría aquí si sigue a ese ritmo.",
+        queSaleDeAqui:
+          "Una fecha estimada con su supuesto a la vista. Es la frase que hace que alguien conteste una carta.",
+        conceptosClave: ["patrón", "tabla de valores", "ecuación lineal", "función", "proyección"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA06_MA_7", "OA06_MA_8", "OA07_MA_7", "OA07_MA_8", "OA08_MA_8", "OA09_MA_6", "OA09_MA_7", "OA09_MA_8", "OA10_MA_6", "OA10_MA_8", "OA11_MA_6", "OA14_MA_5", "OA15_MA_5"],
+      },
     ],
   },
   {
@@ -1071,6 +1299,136 @@ export const PROBLEMAS: Problema[] = [
         conceptosClave: ["necesidad y oportunidad", "materiales disponibles", "costo", "prototipo", "evaluación de la solución"],
         tecnicas: ["entrevista", "medicion_dimensiones", "bitacora"],
         oaQueAbre: ["OA01_TE_7", "OA02_TE_8", "OA03_TE_8", "OA02_TE_6", "OA06_TE_7"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Escritura creativa a partir de los relatos recogidos.",
+        queInvestigan:
+          "Cómo se convierte una entrevista en un texto que alguien quiera leer: qué se deja, qué se ordena y con qué voz se cuenta.",
+        queSaleDeAqui:
+          "Un conjunto de textos que no son ni informe ni ficción. Es lo que acompaña a la cifra sin repetirla.",
+        conceptosClave: ["crónica", "voz narrativa", "estructura", "edición", "recursos del lenguaje"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA12_LE_7", "OA13_LE_5", "OA13_LE_6", "OA13_LE_7", "OA13_LE_8", "OA14_LE_5", "OA14_LE_6", "OA14_LE_8", "OA15_LE_5", "OA15_LE_6", "OA15_LE_7", "OA16_LE_5", "OA16_LE_6", "OA16_LE_7", "OA16_LE_8", "OA17_LE_5", "OA17_LE_6", "OA17_LE_7", "OA17_LE_8", "OA18_LE_5", "OA18_LE_6", "OA18_LE_7", "OA18_LE_8", "OA19_LE_5", "OA19_LE_6", "OA19_LE_7", "OA19_LE_8", "OA20_LE_5", "OA20_LE_6", "OA20_LE_8", "OA21_LE_5", "OA21_LE_6", "OA22_LE_5", "OA22_LE_6"],
+      },
+      {
+        asignatura: "historia",
+        enfoque:
+          "Formas de decidir en común, antes y ahora.",
+        queInvestigan:
+          "Cómo se han organizado las comunidades para decidir sobre lo que les pasa, desde las formas que estudia el programa hasta la junta de vecinos del sector.",
+        queSaleDeAqui:
+          "La comparación entre lo que se estudia y lo que existe en el pueblo. Es lo que hace que la unidad de ciudadanía deje de ser un tema de libro.",
+        conceptosClave: ["ciudadanía", "democracia", "representación", "derechos humanos", "organización"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA13_HI_5", "OA14_HI_5", "OA15_HI_5", "OA15_HI_6", "OA16_HI_5", "OA16_HI_6", "OA17_HI_5", "OA17_HI_6", "OA17_HI_7", "OA17_HI_8", "OA18_HI_5", "OA18_HI_6", "OA18_HI_7", "OA18_HI_8", "OA19_HI_5", "OA19_HI_6", "OA19_HI_7", "OA19_HI_8", "OA20_HI_5", "OA20_HI_6", "OA20_HI_7", "OA21_HI_5", "OA21_HI_6", "OA22_HI_5", "OA22_HI_6", "OA23_HI_6", "OA24_HI_6", "OA25_HI_6", "OA26_HI_6"],
+      },
+    ],
+  },
+  {
+    id: "alimentacion_escolar",
+    familia: "gente",
+    nombre: "Alimentación escolar y producción local de alimentos",
+    queEs:
+      "Lo que el curso come todos los días en la escuela, de dónde viene, cuánto se bota y qué se podría producir a menos de un kilómetro. En el campo se da la paradoja de que se produce comida alrededor y lo que llega al plato viene de lejos.",
+    dondeAparece:
+      "Todas las escuelas con Programa de Alimentación Escolar, que en el sector rural son casi todas, y con terreno disponible aunque sea un pedazo de patio.",
+    respaldo: [
+      {
+        titular:
+          "Mapa Nutricional Junaeb registra leve alza en malnutrición por exceso y disminución de grupos con déficit alimentario",
+        medio: "Ministerio de Educación",
+        fecha: "3 de abril de 2025",
+        url: "https://www.mineduc.cl/mapa-nutricional-junaeb-registra-leve-alza-en-malnutricion-por-exceso-y-disminucion-de-grupos-con-deficit-alimentario/",
+        queAporta:
+          "La malnutrición por exceso llegó al 50,9 por ciento de los estudiantes evaluados, con más de 700 mil respuestas del 73,9 por ciento de los establecimientos con financiamiento público. La cifra rural es más alta que la urbana: 55,9 contra 50,4 por ciento. Ese diferencial es el dato del que parte este proyecto, porque contradice lo que se supone del campo.",
+      },
+    ],
+    comoSeBuscan: {
+      terminos: [
+        "Mapa Nutricional Junaeb + nombre de la región",
+        "programa alimentación escolar + comuna",
+        "huerto escolar + comuna",
+        "agricultura familiar campesina + comuna",
+      ],
+      donde:
+        "Los informes de Junaeb, que publica por región y por comuna, los diarios y radios regionales, y el municipio si tiene programa de huertos.",
+      queNotaSirve:
+        "Prioriza noticias o informes que den la cifra de su región o comuna. El dato nacional sirve para plantear el asunto, pero lo que mueve a un curso es ver su propia comuna en la tabla.",
+    },
+    angulos: [
+      {
+        asignatura: "biologia",
+        enfoque:
+          "Qué hace el cuerpo con lo que se come en la escuela.",
+        queInvestigan:
+          "Qué trae cada alimento de la minuta, por dónde pasa en el cuerpo y para qué sirve. Se sigue una ración real, la del martes, y no un ejemplo del libro.",
+        queSaleDeAqui:
+          "La minuta de la escuela explicada por dentro. Deja de ser lo que toca ese día y pasa a ser algo sobre lo que se puede opinar con argumento.",
+        conceptosClave: ["nutriente", "sistema digestivo", "absorción", "porción", "gasto energético"],
+        tecnicas: ["bitacora", "pauta_observacion"],
+        oaQueAbre: ["OA01_CN_5", "OA01_CN_6", "OA01_CN_7", "OA01_CN_8", "OA02_CN_5", "OA02_CN_6", "OA02_CN_7", "OA02_CN_8", "OA03_CN_5", "OA03_CN_6", "OA03_CN_7", "OA03_CN_8", "OA04_CN_5", "OA04_CN_7", "OA04_CN_8", "OA05_CN_5", "OA05_CN_7", "OA05_CN_8", "OA06_CN_5", "OA06_CN_7", "OA06_CN_8", "OA07_CN_5", "OA07_CN_8"],
+      },
+      {
+        asignatura: "matematica",
+        enfoque:
+          "Cuánto se sirve, cuánto se come y cuánto se bota.",
+        queInvestigan:
+          "El peso de lo que se sirve y el de lo que vuelve al carro, durante una semana, separado por preparación.",
+        queSaleDeAqui:
+          "El porcentaje de merma por plato. Es el dato que hace que la conversación con quien decide la minuta deje de ser una opinión sobre el gusto.",
+        conceptosClave: ["masa", "porcentaje", "promedio", "frecuencia", "gráfico de barras"],
+        tecnicas: ["medicion_dimensiones", "bitacora"],
+        oaQueAbre: ["OA01_MA_5", "OA01_MA_7", "OA01_MA_8", "OA02_MA_6", "OA02_MA_7", "OA02_MA_8", "OA03_MA_6", "OA03_MA_7", "OA04_MA_6", "OA04_MA_7", "OA04_MA_8", "OA05_MA_5", "OA05_MA_6", "OA05_MA_7", "OA05_MA_8", "OA06_MA_5", "OA06_MA_6", "OA07_MA_5", "OA07_MA_6", "OA08_MA_5", "OA08_MA_6", "OA08_MA_7", "OA09_MA_5", "OA10_MA_5", "OA11_MA_5", "OA12_MA_5", "OA13_MA_5", "OA15_MA_7", "OA15_MA_8", "OA16_MA_7", "OA16_MA_8", "OA17_MA_7", "OA17_MA_8", "OA18_MA_6", "OA18_MA_7", "OA19_MA_5", "OA19_MA_6", "OA19_MA_7", "OA20_MA_5", "OA20_MA_6", "OA21_MA_5", "OA21_MA_6", "OA22_MA_6", "OA23_MA_5", "OA23_MA_6", "OA24_MA_5", "OA24_MA_6", "OA25_MA_5", "OA26_MA_5", "OA27_MA_5"],
+      },
+      {
+        asignatura: "tecnologia",
+        enfoque:
+          "Diseño y construcción de un huerto en el terreno que hay.",
+        queInvestigan:
+          "Qué cabe en el espacio disponible, con qué materiales del lugar, con qué riego y en qué calendario de siembra según el clima del sector.",
+        queSaleDeAqui:
+          "Un huerto construido, con su plano, su presupuesto y su calendario. Es de los pocos productos de proyecto que sigue existiendo el año siguiente.",
+        conceptosClave: ["necesidad", "planificación", "materiales", "costo", "evaluación de la solución"],
+        tecnicas: ["medicion_dimensiones", "mapa_a_mano", "bitacora"],
+        oaQueAbre: ["OA01_TE_5", "OA01_TE_6", "OA01_TE_7", "OA01_TE_8", "OA02_TE_5", "OA02_TE_6", "OA02_TE_7", "OA02_TE_8", "OA03_TE_5", "OA03_TE_6", "OA03_TE_7", "OA03_TE_8", "OA04_TE_5", "OA04_TE_6", "OA04_TE_7", "OA04_TE_8", "OA05_TE_5", "OA05_TE_6", "OA06_TE_5", "OA06_TE_6", "OA07_TE_5", "OA07_TE_6"],
+      },
+      {
+        asignatura: "historia",
+        enfoque:
+          "De dónde viene lo que se come y qué se producía aquí antes.",
+        queInvestigan:
+          "Qué se cultivaba en el sector hace treinta años, qué se cultiva hoy, y de qué distancia viene lo que llega a la escuela.",
+        queSaleDeAqui:
+          "El contraste entre lo que el sector produce y lo que el sector come. Suele ser el hallazgo que más sorprende a los adultos.",
+        conceptosClave: ["recurso natural", "actividad económica", "región", "desarrollo sustentable", "memoria oral"],
+        tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: ["OA09_HI_5", "OA10_HI_5", "OA10_HI_6", "OA11_HI_5", "OA11_HI_6", "OA12_HI_5", "OA12_HI_6", "OA13_HI_6", "OA14_HI_6", "OA20_HI_8", "OA21_HI_7", "OA21_HI_8", "OA22_HI_7", "OA22_HI_8", "OA23_HI_7"],
+      },
+      {
+        asignatura: "lenguaje",
+        enfoque:
+          "Lectura de etiquetas, minutas y publicidad de alimentos.",
+        queInvestigan:
+          "Qué dice y qué omite una etiqueta, cómo está escrita la minuta oficial, y con qué recursos convence la publicidad de lo que se vende en el kiosco.",
+        queSaleDeAqui:
+          "La capacidad de leer un envase y saber qué está diciendo. Es de las cosas de este proyecto que más se usa fuera de la escuela.",
+        conceptosClave: ["texto discontinuo", "mensaje publicitario", "sesgo", "vocabulario técnico", "síntesis"],
+        tecnicas: ["bitacora"],
+        oaQueAbre: ["OA01_LE_5", "OA01_LE_6", "OA01_LE_7", "OA01_LE_8", "OA02_LE_5", "OA02_LE_6", "OA06_LE_5", "OA06_LE_6", "OA07_LE_5", "OA07_LE_6", "OA08_LE_5", "OA08_LE_6", "OA08_LE_7", "OA09_LE_7", "OA09_LE_8", "OA10_LE_7", "OA10_LE_8", "OA11_LE_7", "OA11_LE_8", "OA12_LE_5", "OA12_LE_6", "OA12_LE_8", "OA14_LE_7", "OA15_LE_8", "OA25_LE_6"],
+      },
+      {
+        asignatura: "artes",
+        enfoque:
+          "Registro visual de la minuta y del huerto.",
+        queInvestigan:
+          "Cómo se ve lo que se sirve, fotografiado igual todos los días, y cómo se ve el terreno del huerto antes y después.",
+        queSaleDeAqui:
+          "Una serie que muestra el cambio sin necesidad de explicarlo, y que sirve para la entrega a las familias.",
+        conceptosClave: ["serie fotográfica", "encuadre", "punto fijo", "montaje", "público"],
+        tecnicas: ["foto_punto_fijo", "bitacora"],
+        oaQueAbre: ["OA01_AR_5", "OA01_AR_6", "OA01_AR_7", "OA01_AR_8", "OA02_AR_5", "OA02_AR_6", "OA02_AR_7", "OA02_AR_8", "OA03_AR_5", "OA03_AR_6", "OA03_AR_7", "OA03_AR_8", "OA04_AR_5", "OA04_AR_6", "OA04_AR_7", "OA04_AR_8", "OA05_AR_5", "OA05_AR_6", "OA05_AR_7", "OA05_AR_8", "OA06_AR_7", "OA06_AR_8"],
       },
     ],
   },
