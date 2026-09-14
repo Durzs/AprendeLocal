@@ -72,6 +72,18 @@ export type Expedicion = {
   noticias: { titular: string; url: string }[];
   /** Desde qué asignaturas se entra. Abre ángulos distintos del mismo problema. */
   asignaturas: string[];
+
+  /* ── Paso 2, lo que se enseña antes de salir ─────────────────────────── */
+  /** Los términos del programa que va a pasar. Se proponen y él los corrige. */
+  conceptos: string[];
+  /**
+   * Las técnicas de terreno que se ensayan en la sala antes de salir.
+   *
+   * Es la parte que más se salta, porque se supone que un curso ya sabe usar
+   * un cuaderno o leer una tira de pH. No lo sabe, y aprenderlo en la orilla
+   * de un río con viento es una hora perdida y un dato inservible.
+   */
+  tecnicas: string[];
   entorno: Entorno | null;
   ubicacion: string;
   /**
@@ -124,6 +136,8 @@ export const VACIA: Expedicion = {
   problemaPropio: "",
   noticias: [],
   asignaturas: [],
+  conceptos: [],
+  tecnicas: [],
   entorno: null,
   ubicacion: "",
   fenomeno: "",

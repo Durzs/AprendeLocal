@@ -35,13 +35,13 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
 
   return (
     <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
-      <p className="mb-1 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/70">
+      <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Diez momentos que sirven igual para medir la contaminación de un río y
         armar una campaña, que para catalogar el desierto florido y montarlo en
         la plaza. No dicen qué actividad hacer: dicen qué tiene que estar
         pasando, y quién decide.
       </p>
-      <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/50">
+      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
         {DE_LOS_ESTUDIANTES} de los {MOMENTOS.length} los deciden los
         estudiantes, y uno de ellos es qué van a construir.
       </p>
@@ -92,10 +92,10 @@ function MomentoPlegado({
           {String(n).padStart(2, "0")}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] leading-snug text-[var(--crema-clara)]">
+          <span className="block text-[17px] leading-snug text-[var(--crema-clara)]">
             {m.nombre}
           </span>
-          <span className="mt-1 block text-xs text-[var(--crema)]/45">
+          <span className="mt-1 block text-xs text-[var(--crema)]/70">
             {ANILLO[m.alcance]} ·{" "}
             <span className={deEllos ? "text-[var(--tierra-300)]" : ""}>
               {ETIQUETA_DECIDE[m.decide]}
@@ -108,8 +108,8 @@ function MomentoPlegado({
       </button>
 
       {abierto && (
-        <div className="space-y-4 border-t border-[var(--crema)]/12 px-4 py-4 text-sm leading-relaxed">
-          <p className="text-[var(--crema)]/80">{m.proposito}</p>
+        <div className="space-y-4 border-t border-[var(--crema)]/12 px-4 py-4 text-[15px] leading-relaxed">
+          <p className="text-[var(--crema)]/88">{m.proposito}</p>
 
           <div>
             <p className="rotulo text-[var(--tierra-600)]">Preguntas que abren</p>
@@ -123,10 +123,10 @@ function MomentoPlegado({
           </div>
 
           <div>
-            <p className="rotulo text-[var(--crema)]/50">Puedes seguir cuando</p>
+            <p className="rotulo text-[var(--crema)]/72">Puedes seguir cuando</p>
             <ul className="mt-2 space-y-1.5">
               {m.estaListoCuando.map((c) => (
-                <li key={c} className="flex gap-2.5 text-[var(--crema)]/70">
+                <li key={c} className="flex gap-2.5 text-[var(--crema)]/82">
                   <span aria-hidden className="text-[var(--crema)]/30">
                     ·
                   </span>
@@ -149,8 +149,8 @@ function MomentoPlegado({
                 key={e.proyecto}
                 className="rounded-lg border border-[var(--crema)]/12 px-3.5 py-3"
               >
-                <p className="rotulo text-[var(--crema)]/45">{e.proyecto}</p>
-                <p className="mt-1.5 text-[var(--crema)]/70">{e.asiSeVe}</p>
+                <p className="rotulo text-[var(--crema)]/70">{e.proyecto}</p>
+                <p className="mt-1.5 text-[var(--crema)]/82">{e.asiSeVe}</p>
               </div>
             ))}
           </div>
@@ -188,14 +188,14 @@ export function ElegirFormato({
 
   return (
     <Hoja titulo="Qué van a construir ellos" orden={orden}>
-      <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/70">
+      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Esto lo decide el curso, después de volver del terreno y no antes: hasta
         que no sepan qué encontraron, no pueden saber qué hacer con ello. Lo que
         marques aquí es para que no se te pierda.
       </p>
 
       <label className="block">
-        <span className="rotulo text-[var(--crema)]/55">
+        <span className="rotulo text-[var(--crema)]/75">
           A quién le sirve, con nombre
         </span>
         <input
@@ -205,19 +205,19 @@ export function ElegirFormato({
           placeholder="El comité de agua, no «la comunidad»"
           className="mt-2 min-h-11 w-full rounded-xl border border-[var(--crema)]/18 bg-transparent px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
         />
-        <span className="mt-2 block text-xs leading-relaxed text-[var(--crema)]/45">
+        <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/70">
           Si no se puede nombrar a una persona o a un grupo concreto, todavía no
           hay destinatario, y sin destinatario el trabajo termina en la nota.
         </span>
       </label>
 
       <div className="mt-6">
-        <p className="rotulo text-[var(--crema)]/55">
+        <p className="rotulo text-[var(--crema)]/75">
           Cómo se elige, en la sala
         </p>
         <ul className="mt-2.5 space-y-1.5">
           {COMO_SE_ELIGE.map((q) => (
-            <li key={q} className="text-sm leading-relaxed text-[var(--crema-clara)]">
+            <li key={q} className="text-[15px] leading-relaxed text-[var(--crema-clara)]">
               «{q}»
             </li>
           ))}
@@ -225,7 +225,7 @@ export function ElegirFormato({
       </div>
 
       <div className="mt-6">
-        <p className="rotulo text-[var(--crema)]/55">
+        <p className="rotulo text-[var(--crema)]/75">
           Si no se les ocurre nada, para mirar
         </p>
         <ul className="mt-2.5 flex flex-wrap gap-2">
@@ -240,7 +240,7 @@ export function ElegirFormato({
                   className={`min-h-11 rounded-full border px-4 text-sm transition ${
                     activo
                       ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
-                      : "border-[var(--crema)]/18 text-[var(--crema)]/75 hover:border-[var(--crema)]/35"
+                      : "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
                   }`}
                 >
                   {f.nombre}
@@ -249,7 +249,7 @@ export function ElegirFormato({
             );
           })}
         </ul>
-        <p className="mt-3 text-xs leading-relaxed text-[var(--crema)]/45">
+        <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
           Si inventan uno que no está, mejor: esta lista no está para cerrar.
         </p>
       </div>
@@ -261,16 +261,16 @@ export function ElegirFormato({
 
 function FichaFormato({ f }: { f: Formato }) {
   return (
-    <div className="mt-5 space-y-3 rounded-xl border border-[var(--crema)]/14 p-4 text-sm leading-relaxed">
+    <div className="mt-5 space-y-3 rounded-xl border border-[var(--crema)]/14 p-4 text-[15px] leading-relaxed">
       <p className="text-[var(--crema-clara)]">{f.queEs}</p>
-      <p className="text-[var(--crema)]/70">
+      <p className="text-[var(--crema)]/82">
         <span className="text-[var(--crema-clara)]">Llega a:</span> {f.llegaA}
       </p>
       <div>
-        <p className="rotulo text-[var(--crema)]/50">Necesita</p>
+        <p className="rotulo text-[var(--crema)]/72">Necesita</p>
         <ul className="mt-2 space-y-1.5">
           {f.exige.map((x) => (
-            <li key={x} className="flex gap-2.5 text-[var(--crema)]/70">
+            <li key={x} className="flex gap-2.5 text-[var(--crema)]/82">
               <span aria-hidden className="text-[var(--crema)]/30">
                 ·
               </span>
@@ -282,7 +282,7 @@ function FichaFormato({ f }: { f: Formato }) {
       <p className="rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-2.5 text-[var(--tierra-300)]">
         <span className="font-medium">Se cae cuando:</span> {f.seCaeCuando}
       </p>
-      <p className="text-[var(--crema)]/60">
+      <p className="text-[var(--crema)]/78">
         <span className="text-[var(--crema-clara)]">Bueno para:</span>{" "}
         {f.buenoPara}
       </p>

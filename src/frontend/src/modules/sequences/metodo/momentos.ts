@@ -139,31 +139,36 @@ export const MOMENTOS: Momento[] = [
     id: "saber_hacer",
     nombre: "Lo que hay que saber hacer antes de salir",
     proposito:
-      "Que lleguen al lugar sabiendo usar lo que van a usar. Esto lo decides tú y no se negocia: mandar a un curso a averiguar algo sin haberle enseñado cómo no es dejarlos crear, es dejarlos solos.",
+      "Que lleguen al lugar sabiendo dos cosas: los conceptos del programa con los que van a entender lo que vean, y la técnica con la que van a levantar el dato, ya practicada en la sala sobre algo que no importe. Esto lo decides tú y no se negocia: mandar a un curso a averiguar algo sin haberle enseñado cómo no es dejarlos crear, es dejarlos solos.",
     alcance: "inmediato",
     decide: "docente",
     preguntasQueAbren: [
-      "¿Qué tienen que saber hacer allá que todavía no sepan?",
+      "¿Qué palabras del programa hacen falta para entender esta problemática, y cuáles no vienen al caso?",
+      "¿Con qué van a levantar el dato, y dónde lo pueden practicar sin que importe?",
       "¿Cuál es el error que van a cometer si no se los digo antes?",
-      "¿Cómo sabré, antes de salir, quién entendió y quién no?",
+      "¿Qué hay que pedir, avisar o firmar antes de que salgamos?",
+      "¿Cómo sabré, antes de subir a la micro, quién entendió y quién no?",
     ],
     estaListoCuando: [
-      "Lo hiciste tú delante, entero y con los números o los pasos puestos",
-      "Lo practicaron primero contigo y después solos",
+      "Pueden explicar los conceptos con sus palabras, a alguien que no estuvo",
+      "Conectan un dato de la noticia con algo que están viendo en clase, sin que se lo pidas",
+      "Ensayaron la técnica al menos una vez, con el material de verdad",
+      "Saben en qué orden se hace y qué se anota primero, sin mirar la hoja",
+      "Alguien del curso puede decir qué haría si una persona no quiere ser entrevistada",
       "Hiciste una pregunta que contestaron todos a la vez y sabes quién falló",
     ],
     seCaeCuando:
-      "Lo saltas porque «van a aprender haciéndolo». Aprenden a hacerlo mal, y en terreno no hay tiempo de corregir a quince personas a la vez.",
+      "Se enseñan los conceptos y se salta el ensayo de la técnica, porque se supone que ya saben usar un cuaderno. No lo saben, como no lo sabía nadie la primera vez, y quince personas aprendiendo a leer una tira de pH en la orilla con viento son una hora perdida y un dato inservible.",
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",
         asiSeVe:
-          "Usar las tiras de pH y leer la escala de color; qué significa turbio y qué significa contaminado, que no son lo mismo; cómo se toma una muestra sin contaminarla con las manos.",
+          "Conceptos: pH, turbidez, bioindicador. Y se ensaya midiendo el agua de la llave, la de un charco y la de un vaso con tierra revuelta: tres aguas distintas dan tres lecturas y ahí se aprende a leer la escala sin apuro.",
       },
       {
         proyecto: "El desierto que florece",
         asiSeVe:
-          "Cómo se describe una flor para que otro la reconozca: cuántos pétalos, cómo salen las hojas, de qué color por debajo. Y cómo se fotografía con algo al lado que dé el tamaño.",
+          "Conceptos: fenología, especie nativa, clasificación. Y se ensaya describiendo una planta del patio para que otro grupo la encuentre solo con esa descripción. Cuando no la encuentran, se entiende qué faltaba.",
       },
     ],
   },

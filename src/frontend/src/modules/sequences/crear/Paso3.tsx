@@ -90,13 +90,6 @@ const ANILLO: Record<string, string> = {
   amplio: "La cuenca entera",
 };
 
-const ETIQUETA_EVAL: Record<string, string> = {
-  cuaderno: "Cuaderno de campo",
-  producto: "El producto final",
-  presentacion: "Presentación al curso",
-  rubrica: "Rúbrica por criterios",
-  observacion: "Observación en terreno",
-};
 
 export default function Paso3({
   e,
@@ -164,13 +157,13 @@ export default function Paso3({
       {/* ── La ruta designada ────────────────────────────────────────── */}
       <Hoja titulo={cambiada ? "El ejemplo que elegiste" : "Un ejemplo que se parece al tuyo"} orden={4}>
         {sinOA ? (
-          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
+          <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--tierra-300)]">
             No marcaste objetivos de aprendizaje en la primera lámina, así que
             esta sale solo por tu lugar. Vuelve y márcalos: es lo que hace que
             la ruta tenga que ver con lo que vas a pasar.
           </p>
         ) : ningunaCubre ? (
-          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
+          <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--tierra-300)]">
             Ninguna de las rutas escritas cubre los objetivos que marcaste. Esta
             es la que más se acerca por tu lugar y tus cursos, y habrá que
             ajustarla. Conviene saberlo antes: son cuatro rutas escritas, no un
@@ -197,7 +190,7 @@ export default function Paso3({
 
             {/* Por qué salió esta. Sin el porqué, una designación es una orden;
                 con él, el docente puede darle la contra con argumento. */}
-            <p className="mt-3.5 text-sm leading-relaxed text-[var(--crema)]/70">
+            <p className="mt-3.5 text-[15px] leading-relaxed text-[var(--crema)]/82">
               {designada.c.cubiertos.length > 0 ? (
                 <>
                   Sale por los objetivos que marcaste
@@ -216,7 +209,7 @@ export default function Paso3({
                 {designada.c.cubiertos.map((cod) => (
                   <span
                     key={cod}
-                    className="rounded bg-[var(--crema)]/14 px-1.5 py-0.5 font-mono text-[10px] text-[var(--crema)]/85"
+                    className="rounded bg-[var(--crema)]/14 px-1.5 py-0.5 font-mono text-[10px] text-[var(--crema)]/88"
                   >
                     {cod.replace(/_CN_/, " · ")}
                   </span>
@@ -232,7 +225,7 @@ export default function Paso3({
           type="button"
           onClick={() => setViendoOtras((v) => !v)}
           aria-expanded={viendoOtras}
-          className="mt-3.5 rotulo text-[var(--crema)]/55 underline underline-offset-4 transition hover:text-[var(--crema)]"
+          className="mt-3.5 rotulo text-[var(--crema)]/75 underline underline-offset-4 transition hover:text-[var(--crema)]"
         >
           {viendoOtras ? "Cerrar las otras" : `Ver las otras ${otras.length}`}
         </button>
@@ -250,14 +243,14 @@ export default function Paso3({
                   className="flex h-full w-full flex-col rounded-xl border border-[var(--crema)]/14 p-4 text-left transition hover:border-[var(--crema)]/40"
                 >
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="rotulo text-[var(--crema)]/60">
+                    <span className="rotulo text-[var(--crema)]/78">
                       {ruta.titulo}
                     </span>
-                    <span className="shrink-0 font-mono text-[10px] text-[var(--crema)]/45">
+                    <span className="shrink-0 font-mono text-[10px] text-[var(--crema)]/70">
                       {c.cubiertos.length > 0 ? `${c.cubiertos.length} OA` : "—"}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm leading-snug text-[var(--crema)]/85">
+                  <p className="mt-2 text-sm leading-snug text-[var(--crema)]/88">
                     {ruta.preguntaGuia}
                   </p>
                 </button>
@@ -281,7 +274,6 @@ export default function Paso3({
         <>
           <Cobertura ruta={elegida} e={e} />
           <Sesiones ruta={elegida} e={e} />
-          <Evaluacion e={e} ruta={elegida} />
           <Justificacion e={e} ruta={elegida} />
           <Alrededor e={e} ruta={elegida} />
         </>
@@ -319,10 +311,10 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
               {/* Hasta dónde llega esa semana. Va antes del título porque es
                   lo primero que el docente necesita para saber si esa semana
                   requiere permisos y transporte o se resuelve en el patio. */}
-              <p className="rotulo text-[var(--crema)]/45">{ANILLO[f.alcance]}</p>
+              <p className="rotulo text-[var(--crema)]/70">{ANILLO[f.alcance]}</p>
               <p className="mt-1 text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
               {f.queOcurre && (
-                <p className="mt-1 text-sm leading-relaxed text-[var(--crema)]/65">{f.queOcurre}</p>
+                <p className="mt-1 text-[15px] leading-relaxed text-[var(--crema)]/80">{f.queOcurre}</p>
               )}
             </div>
           </li>
@@ -331,20 +323,20 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
 
       {materiales.length ? (
         <div className="mt-5 border-t border-[var(--crema)]/12 pt-4">
-          <p className="rotulo text-[var(--crema)]/55">
+          <p className="rotulo text-[var(--crema)]/75">
             Material disponible
           </p>
           <ul className="mt-2.5 flex flex-wrap gap-2">
             {materiales.map((m) => (
               <li
                 key={m}
-                className="rounded-full border border-[var(--crema)]/18 px-3 py-1 text-xs text-[var(--crema)]/75"
+                className="rounded-full border border-[var(--crema)]/18 px-3 py-1 text-xs text-[var(--crema)]/85"
               >
                 {m}
               </li>
             ))}
           </ul>
-          <p className="mt-2.5 text-xs text-[var(--crema)]/45">
+          <p className="mt-2.5 text-xs text-[var(--crema)]/70">
             Nada de esto hay que comprarlo. Si algo falta, la hoja de terreno se
             imprime igual y se anota a mano.
           </p>
@@ -354,7 +346,7 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
       <LosRatosQueImportan ruta={ruta} />
 
       {e.semanas && e.semanas !== ruta.semanas && (
-        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
+        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-sm leading-relaxed text-[var(--tierra-300)]">
           Dijiste {e.semanas} semanas y la ruta está escrita para {ruta.semanas}.
           Se puede estirar o apretar, pero la salida a terreno necesita su
           sesión completa.
@@ -433,17 +425,17 @@ function LosRatosQueImportan({ ruta }: { ruta: Ruta }) {
 
   return (
     <div className="mt-5 space-y-3 border-t border-[var(--crema)]/12 pt-4">
-      <p className="rotulo text-[var(--crema)]/55">No te saltes estos ratos</p>
+      <p className="rotulo text-[var(--crema)]/75">No te saltes estos ratos</p>
       {ratos.map((r) => (
         <div key={r.cuando} className="rounded-xl border border-[var(--crema)]/12 p-4">
           <p className="rotulo text-[var(--tierra-600)]">{r.cuando}</p>
-          <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
+          <p className="mt-1.5 text-base leading-relaxed text-[var(--crema-clara)]">
             {r.titular}
           </p>
           {r.cuerpo.map((linea) => (
             <p
               key={linea}
-              className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65"
+              className="mt-2.5 text-[15px] leading-relaxed text-[var(--crema)]/80"
             >
               {linea}
             </p>
@@ -474,12 +466,12 @@ function Justificacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
 
   return (
     <Hoja titulo="Para visar en la dirección" orden={8}>
-      <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
+      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
         Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
         nuevo que llenar: se imprime y se firma.
       </p>
 
-      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-sm leading-relaxed text-[var(--crema)]/80">
+      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/88">
         <p>
           <span className="text-[var(--crema-clara)]">Unidad:</span> {ruta.titulo}.{" "}
           {ruta.semanas} semanas, {ruta.secuencia.sesiones ?? ruta.semanas} sesiones
@@ -540,17 +532,16 @@ function Justificacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
           </div>
         )}
 
-        {e.evaluacion.length > 0 && (
-          <p>
-            <span className="text-[var(--crema-clara)]">Cómo se evalúa:</span>{" "}
-            {e.evaluacion.map((v) => ETIQUETA_EVAL[v] ?? v).join(", ")}.
-            {ruta.secuencia.transferencia
-              ? " Además se aplica una tarea final sobre un lugar distinto del trabajado, para comprobar que el aprendizaje no quedó atado a este caso."
-              : ""}
-          </p>
-        )}
+        <p>
+          <span className="text-[var(--crema-clara)]">Cómo se evalúa:</span> lo
+          que el curso construya y entregue a su destinatario, en su segunda
+          versión, más las preguntas de las semanas siguientes.
+          {ruta.secuencia.transferencia
+            ? " Se cierra con una tarea sobre un lugar distinto del trabajado, para comprobar que el aprendizaje no quedó atado a este caso."
+            : ""}
+        </p>
 
-        <p className="border-t border-[var(--crema)]/12 pt-4 text-[var(--crema)]/55">
+        <p className="border-t border-[var(--crema)]/12 pt-4 text-[var(--crema)]/75">
           Docente: {e.docente || "________________"} · Firma de dirección:
           ________________ · Fecha: ____ / ____ / ______
         </p>
@@ -567,79 +558,6 @@ function Justificacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
   );
 }
 
-/** La hoja de evaluación, armada con lo que él marcó en el paso uno. */
-function Evaluacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
-  if (!e.evaluacion.length) {
-    return (
-      <Hoja titulo="Evaluación" orden={8}>
-        <p className="text-sm leading-relaxed text-[var(--crema)]/60">
-          No marcaste ningún método en el primer paso. Vuelve a la primera lámina
-          y elige al menos uno: sin eso, la ruta llega al final sin manera de
-          mostrar lo que aprendieron.
-        </p>
-      </Hoja>
-    );
-  }
-
-  return (
-    <Hoja titulo="Evaluación" orden={8}>
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
-        Lo que marcaste en el primer paso, puesto contra lo que la ruta produce.
-      </p>
-      <ul className="space-y-2.5">
-        {e.evaluacion.map((v) => (
-          <li
-            key={v}
-            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border border-[var(--crema)]/12 p-3.5"
-          >
-            <span className="rotulo text-[var(--tierra-600)]">
-              {ETIQUETA_EVAL[v] ?? v}
-            </span>
-            <span className="min-w-0 flex-1 text-sm leading-relaxed text-[var(--crema)]/75">
-              {v === "producto"
-                ? `Se evalúa lo que entregan: ${ruta.producto.que}`
-                : v === "cuaderno"
-                  ? "Se evalúa lo anotado en terreno, con la hoja de campo de cada curso."
-                  : v === "presentacion"
-                    ? `Se evalúa cómo se lo cuentan a ${ruta.producto.paraQuien}.`
-                    : v === "rubrica"
-                      ? "Los criterios salen de los objetivos que escribiste."
-                      : "Se evalúa mirando trabajar, durante la salida."}
-            </span>
-          </li>
-        ))}
-      </ul>
-      {(e.oa.length > 0 || e.objetivos.trim()) && (
-        <div className="mt-4 border-t border-[var(--crema)]/12 pt-4">
-          <p className="rotulo text-[var(--crema)]/55">
-            Contra estos objetivos
-          </p>
-          <ul className="mt-2.5 space-y-1.5">
-            {e.oa.map((cod) => {
-              const oa = buscarOA(cod);
-              return (
-                <li key={cod} className="flex gap-2.5 text-sm leading-relaxed">
-                  <span className="shrink-0 font-mono text-[11px] text-[var(--tierra-600)]">
-                    {cod.replace(/_CN_/, " · ")}
-                  </span>
-                  <span className="text-[var(--crema)]/75">{oa?.texto ?? ""}</span>
-                </li>
-              );
-            })}
-          </ul>
-          {e.objetivos.trim() && (
-            <p className="mt-3 whitespace-pre-line border-t border-[var(--crema)]/8 pt-3 text-sm leading-relaxed text-[var(--crema)]/75">
-              <span className="rotulo text-[var(--crema)]/45">
-                Y lo tuyo:{" "}
-              </span>
-              {e.objetivos}
-            </p>
-          )}
-        </div>
-      )}
-    </Hoja>
-  );
-}
 
 /** Qué vive alrededor del lugar, con iNaturalist. */
 function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
@@ -673,7 +591,7 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
 
   return (
     <Hoja titulo="Qué vive ahí">
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
+      <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
         Lo que la ciencia ciudadana ha registrado alrededor de{" "}
         {e.ubicacion.trim() || "tu escuela"}, para saber qué se puede encontrar
         el día de la salida. Los datos vienen de iNaturalist.
@@ -683,17 +601,17 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
         type="button"
         onClick={buscar}
         disabled={estado === "pidiendo"}
-        className="rounded-full border border-[var(--crema)]/25 px-5 py-2 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:opacity-50"
+        className="rounded-full border border-[var(--crema)]/25 px-5 py-2 text-sm text-[var(--crema)]/88 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:opacity-50"
       >
         {estado === "pidiendo" ? "Preguntando…" : "Usar mi ubicación"}
       </button>
 
       {estado === "error" && (
-        <p className="mt-3.5 text-sm leading-relaxed text-[var(--tierra-300)]">{motivo}</p>
+        <p className="mt-3.5 text-[15px] leading-relaxed text-[var(--tierra-300)]">{motivo}</p>
       )}
 
       {estado === "listo" && especies.length === 0 && (
-        <p className="mt-3.5 text-sm leading-relaxed text-[var(--crema)]/60">
+        <p className="mt-3.5 text-[15px] leading-relaxed text-[var(--crema)]/78">
           No hay registros a cinco kilómetros. Pasa en zonas rurales, y es una
           buena noticia para el curso: lo que anoten va a ser el primer registro
           del lugar.
@@ -711,7 +629,7 @@ function Alrededor({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
                 {sp.comun || sp.cientifico}
               </p>
               {sp.comun && (
-                <p className="mt-0.5 font-mono text-[11px] italic text-[var(--crema)]/45">
+                <p className="mt-0.5 font-mono text-[11px] italic text-[var(--crema)]/70">
                   {sp.cientifico}
                 </p>
               )}
@@ -737,7 +655,7 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
 
   return (
     <Hoja titulo="Qué cubre y qué no" orden={5}>
-      <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
+      <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
         De los {e.oa.length} objetivos que marcaste, esta ruta trabaja{" "}
         {c.cubiertos.length}.
       </p>
@@ -764,10 +682,10 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
                 {dentro ? "✓" : "○"}
               </span>
               <span className="min-w-0">
-                <span className="font-mono text-[11px] font-semibold text-[var(--crema)]/70">
+                <span className="font-mono text-[11px] font-semibold text-[var(--crema)]/82">
                   {cod.replace(/_CN_/, " · ")}
                 </span>
-                <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/75">
+                <span className="mt-1 block text-[15px] leading-relaxed text-[var(--crema)]/85">
                   {oa?.texto ?? cod}
                 </span>
               </span>
@@ -777,7 +695,7 @@ function Cobertura({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
       </ul>
 
       {c.fuera.length > 0 && (
-        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
+        <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-sm leading-relaxed text-[var(--tierra-300)]">
           Los {c.fuera.length} sin marca no los toca esta ruta. Habrá que
           pasarlos por otro lado, o estirar la ruta para que entren.
         </p>
