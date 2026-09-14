@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { MOMENTOS, DE_LOS_ESTUDIANTES, type Decide, type Momento } from "./momentos";
+import { ETAPAS, DE_LOS_ESTUDIANTES, type Decide, type Etapa } from "./etapas";
 import { COMO_SE_ELIGE, FORMATOS, type Formato } from "./formatos";
 import { Hoja } from "../crear/Campos";
 
@@ -13,9 +13,9 @@ import { Hoja } from "../crear/Campos";
  * estudiantes terminan armando una campaña en redes no tenía dónde entrar.
  *
  * Esto sí le sirve, porque no dice qué hacer sino qué tiene que estar pasando.
- * Los momentos se abren de a uno: la lista cerrada se lee en veinte segundos
- * antes de la clase, y el momento abierto trae las preguntas que se hacen en
- * la sala.
+ * Las etapas se abren de a una: la lista cerrada se lee de un vistazo antes de
+ * la clase, y la etapa abierta trae los aprendizajes con que se evalúa y las
+ * preguntas que se hacen en la sala.
  */
 
 const ETIQUETA_DECIDE: Record<Decide, string> = {
@@ -31,28 +31,28 @@ const ANILLO: Record<string, string> = {
 };
 
 export function VistaMetodo({ orden = 5 }: { orden?: number }) {
-  const [abierto, ponerAbierto] = useState<string | null>(MOMENTOS[0]?.id ?? null);
+  const [abierto, ponerAbierto] = useState<string | null>(ETAPAS[0]?.id ?? null);
 
   return (
     <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Diez momentos que sirven igual para medir la contaminación de un río y
+        Cinco etapas que sirven igual para medir la contaminación de un río y
         armar una campaña, que para catalogar el desierto florido y montarlo en
         la plaza. No dicen qué actividad hacer: dicen qué tiene que estar
-        pasando, y quién decide.
+        pasando, qué se lleva el curso, y quién decide.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-        {DE_LOS_ESTUDIANTES} de los {MOMENTOS.length} los deciden los
-        estudiantes, y uno de ellos es qué van a construir.
+        {DE_LOS_ESTUDIANTES} de las {ETAPAS.length} las deciden los estudiantes.
+        La segunda la decides tú entera, y esa no se vota.
       </p>
 
       <ol className="space-y-2">
-        {MOMENTOS.map((m, i) => (
-          <MomentoPlegado
+        {ETAPAS.map((m, i) => (
+          <EtapaPlegada
             key={m.id}
             m={m}
             n={i + 1}
-            abierto={abierto === m.id}
+            abierta={abierto === m.id}
             onAbrir={() => ponerAbierto(abierto === m.id ? null : m.id)}
           />
         ))}
@@ -61,15 +61,15 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   );
 }
 
-function MomentoPlegado({
+function EtapaPlegada({
   m,
   n,
-  abierto,
+  abierta: abierto,
   onAbrir,
 }: {
-  m: Momento;
+  m: Etapa;
   n: number;
-  abierto: boolean;
+  abierta: boolean;
   onAbrir: () => void;
 }) {
   const deEllos = m.decide === "estudiantes";
@@ -109,7 +109,23 @@ function MomentoPlegado({
 
       {abierto && (
         <div className="space-y-4 border-t border-[var(--crema)]/12 px-4 py-4 text-[15px] leading-relaxed">
-          <p className="text-[var(--crema)]/88">{m.proposito}</p>
+          <p className="text-[var(--crema)]/88">{m.queOcurre}</p>
+
+          {/* Los aprendizajes van primero porque son lo que se evalúa y lo que
+              se pide para el papeleo. Cada uno trae cómo se ve que ocurrió,
+              que es lo que permite mirarlo en la sala en vez de suponerlo. */}
+          <div>
+            <p className="rotulo text-[var(--crema)]/72">Qué se lleva el curso</p>
+            <ul className="mt-2 space-y-2.5">
+              {m.aprendizajes.map((a) => (
+                <li key={a.nombre}>
+                  <p className="text-[var(--crema-clara)]">{a.nombre}</p>
+                  <p className="text-[var(--crema)]/85">{a.queEs}</p>
+                  <p className="text-[var(--crema)]/70">Se nota en que {a.seNotaEn}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div>
             <p className="rotulo text-[var(--tierra-600)]">Preguntas que abren</p>
