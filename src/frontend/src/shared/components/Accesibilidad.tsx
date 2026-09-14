@@ -23,16 +23,36 @@ import { useEffect, useState } from "react";
 
 const LLAVE = "aprendelocal:accesible";
 
-type Ajustes = { contraste: boolean; grande: boolean };
+type Ajustes = { contraste: boolean; grande: boolean; claro: boolean };
 
-const APAGADO: Ajustes = { contraste: false, grande: false };
+/**
+ * Cómo arranca la primera vez.
+ *
+ * El fondo claro no arranca apagado sin más: arranca según lo que diga el
+ * sistema del docente. Dos entrevistas criticaron el fondo oscuro, una como
+ * accesibilidad y otra de frente, y quien tiene su computador en claro está
+ * diciendo ya cuál prefiere. Preguntárselo otra vez con un interruptor
+ * escondido sería no haber escuchado ninguna de las dos veces.
+ *
+ * Quien lo cambie a mano manda por encima de esto, y su elección se guarda.
+ */
+function porDefecto(): Ajustes {
+  let claro = false;
+  try {
+    claro = window.matchMedia("(prefers-color-scheme: light)").matches;
+  } catch {
+    /* Navegador viejo. Se queda en oscuro, que es el diseño base. */
+  }
+  return { contraste: false, grande: false, claro };
+}
 
 function leer(): Ajustes {
+  const base = porDefecto();
   try {
     const crudo = localStorage.getItem(LLAVE);
-    return crudo ? { ...APAGADO, ...JSON.parse(crudo) } : APAGADO;
+    return crudo ? { ...base, ...JSON.parse(crudo) } : base;
   } catch {
-    return APAGADO;
+    return base;
   }
 }
 
@@ -44,6 +64,7 @@ export default function Accesibilidad() {
     const raiz = document.documentElement;
     raiz.classList.toggle("mas-contraste", ajustes.contraste);
     raiz.classList.toggle("letra-grande", ajustes.grande);
+    raiz.classList.toggle("fondo-claro", ajustes.claro);
     try {
       localStorage.setItem(LLAVE, JSON.stringify(ajustes));
     } catch {
@@ -57,11 +78,16 @@ export default function Accesibilidad() {
         <div
           role="group"
           aria-label="Ajustes de lectura"
-          className="mb-2 w-64 rounded-2xl border border-[var(--crema)]/25 bg-[#1a211c] p-4 shadow-xl"
+          className="mb-2 w-64 rounded-2xl border border-[var(--crema)]/25 bg-[var(--fondo-alto)] p-4 shadow-xl"
         >
           <p className="text-[15px] font-medium text-[var(--crema-clara)]">
             Ajustes de lectura
           </p>
+          <Interruptor
+            etiqueta="Fondo claro"
+            puesto={ajustes.claro}
+            onCambio={(v) => ponerAjustes({ ...ajustes, claro: v })}
+          />
           <Interruptor
             etiqueta="Más contraste"
             puesto={ajustes.contraste}
@@ -83,7 +109,7 @@ export default function Accesibilidad() {
         onClick={() => ponerAbierto(!abierto)}
         aria-expanded={abierto}
         aria-label="Ajustes de lectura: contraste y tamaño de letra"
-        className="flex min-h-11 items-center gap-2 rounded-full border border-[var(--crema)]/30 bg-[#1a211c] px-4 text-sm font-medium text-[var(--crema-clara)] shadow-lg transition hover:bg-[var(--crema)]/10"
+        className="flex min-h-11 items-center gap-2 rounded-full border border-[var(--crema)]/30 bg-[var(--fondo-alto)] px-4 text-sm font-medium text-[var(--crema-clara)] shadow-lg transition hover:bg-[var(--crema)]/10"
       >
         <span aria-hidden className="text-base">
           Aa

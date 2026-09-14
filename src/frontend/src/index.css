@@ -77,6 +77,13 @@ body {
    * aquí para que no haya dos verdes claros distintos por escribirlo dos
    * veces a mano. */
   --bosque-950:  #1e2a24;
+
+  /* El suelo del cuaderno. Es una variable y no un color escrito a mano
+     porque de esto cuelga el modo claro entero. */
+  --fondo: #1e2a24;
+  /* Un escalón por encima del suelo, para lo que flota: paneles, el control
+     de lectura, cualquier cosa con sombra. */
+  --fondo-alto: #1a211c;
   --verde-papel: #eef2ed;
   --crema:      #e4ded2;
   --crema-clara: #f3efe7;
@@ -529,6 +536,47 @@ body {
 .mas-contraste .lienzo,
 .mas-contraste [class*="border-[var(--crema)]\\/"] {
   border-color: color-mix(in srgb, var(--crema) 45%, transparent) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Fondo claro.
+ *
+ * Lo pidieron dos docentes en dos entrevistas distintas. Una lo planteó como
+ * accesibilidad: texto gris pequeño sobre fondo oscuro le cuesta a quien tiene
+ * problemas de vista, y pensaba en un profesor mayor. El otro fue más directo
+ * y criticó la decisión de fondo oscuro con letras claras, sin más.
+ *
+ * Funciona invirtiendo los tres tokens de los que cuelga todo: el suelo, el
+ * color del texto y el acento. Como la interfaz entera está escrita con
+ * `var(--crema)` y una opacidad encima, los tonos apagados siguen siendo tonos
+ * apagados del color nuevo y las jerarquías se mantienen. El naranjo baja a
+ * --tierra-700, que es el tono que tiene contraste suficiente sobre claro.
+ *
+ * El acento sobre botones no cambia: texto oscuro sobre naranjo funciona en
+ * los dos modos, así que los `text-[#1e2a24]` de los botones se quedan.
+ * ───────────────────────────────────────────────────────────────────────── */
+.fondo-claro {
+  --fondo: #f7f5f0;
+  --fondo-alto: #ffffff;
+  --crema: #2b3a32;
+  --crema-clara: #16211c;
+  --tierra-600: #a8501f;
+  --tierra-300: #8b431d;
+}
+
+/* En claro, un borde al 12 % de un color oscuro casi no se ve. Se sube el
+   suelo de todos los bordes de una vez, en lugar de tocar cada componente. */
+.fondo-claro [class*="border-[var(--crema)]\/"] {
+  border-color: color-mix(in srgb, var(--crema) 22%, transparent);
+}
+
+/* Y en claro el mismo interruptor de más contraste tiene que ir al otro lado:
+   texto más oscuro, no más blanco. */
+.fondo-claro.mas-contraste {
+  --crema: #14201a;
+  --crema-clara: #000000;
+  --tierra-600: #8b431d;
+  --tierra-300: #6d3417;
 }
 
 .letra-grande {

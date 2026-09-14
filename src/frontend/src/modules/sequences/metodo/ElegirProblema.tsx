@@ -661,17 +661,104 @@ function Noticias({
           Las noticias de cada comuna todavía no están cargadas en la
           plataforma, así que esas las agrega el docente.
         </p>
-        <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/82">
-          <span className="text-[var(--crema-clara)]">Cómo buscarlas:</span>{" "}
-          {problema.comoSeBuscan.terminos.join(" · ")}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-          {problema.comoSeBuscan.donde}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-          {problema.comoSeBuscan.queNotaSirve}
-        </p>
+        <ConsejosDeBusqueda como={problema.comoSeBuscan} />
       </div>
+    </div>
+  );
+}
+
+/**
+ * Cómo encontrar las noticias de la propia comuna.
+ *
+ * ESTO ERA UN PÁRRAFO Y SE LEÍA COMO UNA ORDEN
+ *
+ * Estaba suelto debajo del campo, con los términos de búsqueda separados por
+ * puntos: «contaminación río + comuna · denuncia riles + río · mortandad de
+ * peces + región». En una entrevista de validación alguien lo leyó, copió la
+ * fórmula entera con la palabra «comuna» dentro, y la pegó en el buscador de
+ * arriba, que no es un buscador de internet sino el campo del titular.
+ *
+ * Fueron tres errores a la vez, y los tres estaban en el diseño. Los ejemplos
+ * no se leían como ejemplos sino como un procedimiento obligatorio. Los puntos
+ * separadores parecían parte de lo que hay que escribir. Y un bloque de texto
+ * pegado a un campo de entrada invita a escribir ahí lo que dice el bloque.
+ *
+ * Ahora es un botón que abre los consejos, con el mismo formato de aviso que
+ * ya se usaba para «se cae cuando». Eso también salió de ahí: que ese formato
+ * rojizo funciona para marcar algo que aporta pero que no es un paso, y que
+ * convenía repetirlo. Cada término va en su propia línea y en tipografía de
+ * código, para que se vea que es algo que se teclea y no una frase que se lee.
+ */
+function ConsejosDeBusqueda({
+  como,
+}: {
+  como: { terminos: string[]; donde: string; queNotaSirve: string };
+}) {
+  const [abierto, ponerAbierto] = useState(false);
+
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => ponerAbierto(!abierto)}
+        aria-expanded={abierto}
+        className="min-h-11 rounded-full border border-[var(--tierra-300)]/40 px-4 text-sm text-[var(--tierra-300)] transition hover:bg-[var(--tierra-300)]/[0.08]"
+      >
+        {abierto ? "Cerrar los consejos" : "Consejos para buscar noticias"}
+      </button>
+
+      {abierto && (
+        <div className="mt-3 rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3.5 text-[var(--tierra-300)]">
+          <p className="text-[15px] leading-relaxed">
+            Esto se busca en Google, no aquí arriba. Estos son ejemplos: cambia
+            «comuna» por el nombre de la tuya.
+          </p>
+
+          <ul className="mt-3 space-y-1.5">
+            {como.terminos.map((t) => (
+              <li
+                key={t}
+                className="rounded-lg bg-[var(--tierra-300)]/[0.1] px-3 py-2 font-mono text-[13px] leading-relaxed"
+              >
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-3.5 text-[15px] leading-relaxed">
+            <span className="font-medium">Dónde buscar:</span> {como.donde}
+          </p>
+          <p className="mt-1.5 text-[15px] leading-relaxed">
+            <span className="font-medium">Qué noticia sirve:</span>{" "}
+            {como.queNotaSirve}
+          </p>
+
+          {/* Los operadores los pidió ella y son lo que de verdad cambia una
+              búsqueda. Van al final porque son para quien ya buscó una vez y
+              se ahogó en resultados. */}
+          <div className="mt-3.5 border-t border-[var(--tierra-300)]/25 pt-3">
+            <p className="text-[15px] font-medium">
+              Tres cosas que acotan mucho la búsqueda
+            </p>
+            <ul className="mt-2 space-y-2 text-[15px] leading-relaxed">
+              <li>
+                <span className="font-mono text-[13px]">"entre comillas"</span>{" "}
+                busca esa frase exacta y no las palabras sueltas.
+              </li>
+              <li>
+                <span className="font-mono text-[13px]">site:bcn.cl</span>{" "}
+                busca solo dentro de ese sitio. Sirve para municipios, diarios
+                regionales y servicios públicos.
+              </li>
+              <li>
+                <span className="font-mono text-[13px]">-futbol</span> con guion
+                delante saca del resultado las noticias que traen esa palabra.
+                Útil cuando tu comuna se llama igual que otra cosa.
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

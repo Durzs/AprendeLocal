@@ -1,18 +1,28 @@
 /**
- * El método: cinco etapas que sirven para cualquier proyecto.
+ * El método: seis etapas que sirven para cualquier proyecto.
  *
  * QUÉ CAMBIÓ Y POR QUÉ
  *
  * Antes esto eran diez momentos. Estaban bien vistos y eran demasiados: un
  * docente que abre esto el domingo por la noche no puede sostener diez cosas
  * en la cabeza, y en la práctica varios de los diez ocurrían en la misma clase.
- * Cinco etapas se leen de una vez y cada una corresponde a algo que pasa en un
- * bloque real del calendario.
+ * Se plegaron a cinco, que se leen de una vez y corresponden cada una a algo
+ * que pasa en un bloque real del calendario.
  *
- * Los diez no se perdieron: se plegaron. Mirar el sitio y que aparezca la
- * pregunta que divide son la primera etapa; salir, preguntarle a quien sabe y
- * volver a comparar son la tercera; decidir qué se construye y rehacerlo son la
- * cuarta; entregarlo y mirar atrás son la quinta.
+ * Después entró una sexta, y no por simetría. En una entrevista de validación
+ * quedó señalado que entre recolectar los datos y ponerse a crear propuestas
+ * falta un paso: procesar las conclusiones. Sin él, el curso vuelve del
+ * terreno y propone soluciones apoyadas en lo que ya pensaba antes de salir,
+ * con lo que todo el trabajo de terreno queda de adorno. Esa es la etapa
+ * «Ordenar lo que se trajo», y es donde el dato se convierte en un hallazgo
+ * que se puede defender.
+ *
+ * EL CIERRE DE CADA ETAPA
+ *
+ * Todas terminan con tres preguntas que cada estudiante contesta en su
+ * cuaderno. También salió de esa entrevista: la metacognición tiene que ser
+ * formal y constante, en cada fase, y no una actividad del final. Individual y
+ * no en grupo, porque en grupo contesta el que siempre contesta.
  *
  * CÓMO ESTÁ ESCRITA CADA UNA
  *
@@ -63,6 +73,26 @@ export type Etapa = {
   estaListoCuando: string[];
   /** La manera típica en que esta etapa se cae. Siempre es la misma. */
   seCaeCuando: string;
+  /**
+   * El cierre de la etapa, por escrito y de a uno.
+   *
+   * Lo pidió un docente en una entrevista de validación y su punto era que la
+   * metacognición no puede ser una actividad del final: tiene que ser formal y
+   * constante, en cada fase, con bitácora o cuestionario individual.
+   *
+   * Individual y no en grupo, y esa es la parte que importa. En grupo contesta
+   * el que siempre contesta, y justamente el estudiante que se está quedando
+   * atrás es el que no levanta la mano. Tres preguntas escritas al cierre de
+   * cada etapa son también el sistema de alerta temprana que en otra entrevista
+   * se echó de menos: quien no entiende qué está haciendo se detecta aquí, en
+   * la semana dos, y no al final cuando ya no hay nada que corregir.
+   */
+  cierre: {
+    /** Las preguntas que cada estudiante contesta en su cuaderno. */
+    preguntas: string[];
+    /** Qué mira el docente en esas respuestas, y qué le dice cada cosa. */
+    queMirar: string;
+  };
   ejemplos: Instancia[];
 };
 
@@ -110,6 +140,15 @@ export const ETAPAS: Etapa[] = [
     ],
     seCaeCuando:
       "Se empieza por el tema en vez de por el caso. En cuanto dices «hoy vamos a ver contaminación» el curso deja de leer y empieza a adivinar qué respuesta quieres.",
+    cierre: {
+      preguntas: [
+        "¿Qué de esto pasa cerca de donde yo vivo? Escribe un lugar concreto.",
+        "¿Qué es lo que todavía no entiendo de este problema?",
+        "¿Qué me gustaría averiguar que hoy no sé?",
+      ],
+      queMirar:
+        "La primera dice si el problema aterrizó o quedó en abstracto: quien escribe «el medio ambiente» todavía no lo conectó. La segunda es la más útil de las tres, porque el que no pregunta nada suele ser el que no entendió nada.",
+    },
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",
@@ -175,6 +214,15 @@ export const ETAPAS: Etapa[] = [
     ],
     seCaeCuando:
       "Se enseñan los conceptos y se salta el ensayo de la técnica, porque se supone que ya saben usar un cuaderno. No lo saben, y quince personas aprendiendo a leer una tira de pH en la orilla con viento son una hora perdida y un dato inservible.",
+    cierre: {
+      preguntas: [
+        "Explica con tus palabras uno de los conceptos que pasamos, sin mirar el cuaderno.",
+        "¿Qué parte de la técnica no me queda clara?",
+        "¿Para qué sirve lo que vamos a ir a hacer?",
+      ],
+      queMirar:
+        "Si la tercera se contesta con «porque la profe dijo», el proyecto todavía no es de ellos. La segunda evita que alguien llegue al terreno sin saber qué hacer, que es cuando la salida se pierde para esa persona.",
+    },
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",
@@ -234,6 +282,15 @@ export const ETAPAS: Etapa[] = [
     ],
     seCaeCuando:
       "Se llega con la planilla de casillas puestas y el sitio marcado, y al volver se pasa directo a calcular. Entonces los datos son del lugar pero la idea con la que llegaron sigue entera, y la salida fue un paseo con planilla.",
+    cierre: {
+      preguntas: [
+        "¿Qué vi que no esperaba ver?",
+        "¿Qué me costó hacer y por qué?",
+        "¿Qué parte del trabajo hice yo?",
+      ],
+      queMirar:
+        "La tercera es incómoda a propósito y es la que detecta al que quedó fuera del grupo. Contestada en el cuaderno y no en voz alta, se contesta de verdad.",
+    },
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",
@@ -244,6 +301,80 @@ export const ETAPAS: Etapa[] = [
         proyecto: "El desierto que florece",
         asiSeVe:
           "Dos laderas, una al sol y otra a la sombra. Cuentan, fotografían, recogen una muestra por especie y marcan las parcelas para volver. Once especies donde esperaban cuatro, y dos de las que describieron los abuelos no aparecieron.",
+      },
+    ],
+  },
+  {
+    id: "analisis",
+    nombre: "Ordenar lo que se trajo",
+    queOcurre:
+      "El curso vuelve del terreno con registros sueltos y todavía no tiene un hallazgo: tiene material. Aquí se ordena, se cruza con lo que ya sabían, y se decide qué es lo que de verdad encontraron. Es la etapa donde el dato se convierte en algo que se puede decir en voz alta y defender.",
+    alcance: "inmediato",
+    decide: "estudiantes",
+    aprendizajes: [
+      {
+        nombre: "Tratamiento de datos",
+        queEs:
+          "Ordenar lo recogido de manera que se pueda comparar: la misma unidad, la misma escala, los puntos en el mismo orden. Es trabajo de matemática y casi siempre se lo salta.",
+        seNotaEn:
+          "la tabla o el gráfico permite comparar dos cosas, y pueden decir por qué pusieron eso en el eje y no otra cosa.",
+      },
+      {
+        nombre: "Distinción entre dato y conclusión",
+        queEs:
+          "Saber dónde termina lo que midieron y dónde empieza lo que interpretan. Las dos cosas valen; confundirlas es lo que hace que una conclusión no se pueda defender.",
+        seNotaEn:
+          "pueden separar en dos columnas qué vieron y qué creen que significa, y notan cuando un compañero pasa de una a otra sin avisar.",
+      },
+      {
+        nombre: "Contraste con lo que suponían",
+        queEs:
+          "Volver a lo que escribieron antes de salir y ver qué se sostuvo y qué no. Lo que no calza es lo más valioso y es lo primero que se tiende a borrar.",
+        seNotaEn:
+          "pueden nombrar una cosa concreta en la que se equivocaron, sin que suene a que estuvo mal hacer el proyecto.",
+      },
+      {
+        nombre: "Formulación del hallazgo",
+        queEs:
+          "Dejar escrita en una frase la cosa que el curso puede afirmar, con su dato detrás. Esa frase es lo que después sostiene la propuesta.",
+        seNotaEn:
+          "la frase cabe en un renglón, nombra un lugar y trae un número o una observación que la respalda.",
+      },
+    ],
+    preguntasQueAbren: [
+      "¿Qué encontramos que no esperábamos?",
+      "De todo esto, ¿qué es lo que podemos afirmar y qué es lo que estamos suponiendo?",
+      "Si alguien no nos cree, ¿qué le mostramos?",
+      "¿Qué nos falta para poder decirlo? ¿Se puede conseguir?",
+      "¿Hay un dato que no calza con los demás? ¿Lo medimos mal o es que ahí pasa algo?",
+    ],
+    estaListoCuando: [
+      "Existe una frase escrita que dice qué encontraron, y cabe en un renglón",
+      "Esa frase tiene detrás un dato que se puede mostrar",
+      "Se revisó lo que habían supuesto antes de salir y se dijo en qué se equivocaron",
+      "Lo que no calza quedó anotado como pregunta abierta y no borrado",
+    ],
+    seCaeCuando:
+      "Se vuelve del terreno y se pasa directo a proponer soluciones. Entonces la propuesta no se apoya en lo que encontraron sino en lo que ya pensaban antes de salir, y todo el trabajo de terreno queda de adorno. Es el salto más común y el más caro.",
+    cierre: {
+      preguntas: [
+        "¿En qué me equivocaba antes de salir?",
+        "¿Qué dato me convenció y por qué ese y no otro?",
+        "¿Qué le diría a alguien que no nos cree?",
+      ],
+      queMirar:
+        "La primera es el corazón de la etapa: quien no puede nombrar nada en lo que se equivocó, probablemente no miró sus propios datos. La tercera ensaya la defensa del hallazgo antes de que haga falta.",
+    },
+    ejemplos: [
+      {
+        proyecto: "Un río que se ve sucio",
+        asiSeVe:
+          "Ponen los tres puntos en una tabla y descubren que el más turbio no es el más contaminado. La frase que queda escrita es que el problema entra después del pueblo y no antes, que es lo contrario de lo que creía media sala.",
+      },
+      {
+        proyecto: "El desierto que florece",
+        asiSeVe:
+          "Cruzan las dos laderas y las once especies con lo que contaron los abuelos. La frase que queda es que hay más variedad de la que esperaban pero faltan dos de las que se nombraban antes, y eso abre la pregunta de desde cuándo.",
       },
     ],
   },
@@ -292,6 +423,15 @@ export const ETAPAS: Etapa[] = [
     ],
     seCaeCuando:
       "El producto viene decidido de antes. Con el formato puesto por el docente esto se convierte en una tarea larga, y lo que se les ocurra a los estudiantes no tiene por dónde entrar.",
+    cierre: {
+      preguntas: [
+        "¿A quién le sirve esto que estamos haciendo? Nómbralo.",
+        "¿Qué parte de nuestra propuesta creo que no va a funcionar?",
+        "¿Qué necesito aprender para hacer bien mi parte?",
+      ],
+      queMirar:
+        "La segunda vale más que cualquier entusiasmo: un curso que puede nombrar la parte débil de su propia propuesta la va a arreglar. La tercera dice qué falta enseñar todavía, y a tiempo.",
+    },
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",
@@ -350,6 +490,15 @@ export const ETAPAS: Etapa[] = [
     ],
     seCaeCuando:
       "Se entrega a la profesora y se cierra sin mirar atrás. Sin nadie de afuera, todo lo anterior fue un simulacro; y sin el rato de reflexión, el curso hizo el trabajo y no se enteró de lo que le pasó haciéndolo.",
+    cierre: {
+      preguntas: [
+        "¿Qué cambió en cómo miro este lugar?",
+        "¿Qué haría distinto si empezáramos de nuevo?",
+        "¿Qué parte del problema sigue ahí después de todo esto?",
+      ],
+      queMirar:
+        "La tercera se pregunta a propósito y no es derrotista: un proyecto que dice haber resuelto un problema territorial está mintiendo, y reconocer lo que queda en pie es parte del aprendizaje cívico.",
+    },
     ejemplos: [
       {
         proyecto: "Un río que se ve sucio",

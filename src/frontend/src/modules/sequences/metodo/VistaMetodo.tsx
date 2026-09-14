@@ -23,8 +23,8 @@ import { Hoja } from "../crear/Campos";
  * De quién es cada etapa.
  *
  * Decía «lo deciden ellos» y en una entrevista se leyó como que los
- * estudiantes votaban cuáles de las cinco etapas hacer. No es eso: las cinco
- * se hacen siempre, y lo que cambia es quién las arma. «Se construye con el
+ * estudiantes votaban cuáles de las etapas hacer. No es eso: todas se hacen
+ * siempre, y lo que cambia es quién las arma. «Se construye con el
  * curso» dice lo que pasa; «lo deciden ellos» daba a entender que podían
  * decidir no hacerla.
  */
@@ -46,19 +46,19 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   return (
     <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Son cinco etapas y sirven para proyectos muy distintos. Un curso puede
+        Son seis etapas y sirven para proyectos muy distintos. Un curso puede
         medir la contaminación de un río y terminar armando una campaña. Otro
         puede catalogar el desierto florido y terminar montando una exposición
-        en la plaza. Las dos cosas pasan por estas mismas cinco etapas.
+        en la plaza. Las dos cosas pasan por estas mismas seis etapas.
       </p>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Las etapas no dicen qué actividad hacer. Dicen qué tiene que estar
         pasando, qué se lleva el curso de ahí, y quién lo decide.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-        Las cinco etapas se hacen siempre, en este orden. Lo que cambia es
-        quién las arma: la primera se arma entre todos, la segunda la preparas
-        tú, y de la tercera a la quinta se construyen con el curso.
+        Las seis se hacen siempre, en este orden. Lo que cambia es quién las
+        arma: la primera se arma entre todos, la segunda la preparas tú, y de
+        la tercera a la sexta se construyen con el curso.
       </p>
 
       <ol className="space-y-2">
@@ -173,6 +173,28 @@ function EtapaPlegada({
           <p className="rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-2.5 text-[var(--tierra-300)]">
             <span className="font-medium">Se cae cuando:</span> {m.seCaeCuando}
           </p>
+
+          {/* El cierre va después de «se cae cuando» y antes de los ejemplos:
+              es lo último que pasa en la etapa. Se pidió en una entrevista que
+              la metacognición fuera formal y constante, en cada fase, y de a
+              uno: en grupo contesta el que siempre contesta, y el que se está
+              quedando atrás es justamente el que no levanta la mano. */}
+          <div className="rounded-lg border border-[var(--crema)]/14 px-3.5 py-3">
+            <p className="rotulo text-[var(--crema)]/72">
+              Para cerrar: cada uno en su cuaderno
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {m.cierre.preguntas.map((q) => (
+                <li key={q} className="text-[var(--crema-clara)]">
+                  {q}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2.5 text-[var(--crema)]/78">
+              <span className="text-[var(--crema-clara)]">Qué mirar:</span>{" "}
+              {m.cierre.queMirar}
+            </p>
+          </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             {m.ejemplos.map((e) => (
