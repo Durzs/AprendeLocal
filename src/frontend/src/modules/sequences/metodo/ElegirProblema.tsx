@@ -14,7 +14,12 @@ import {
   type Problema,
 } from "./problemas";
 import SelectorOA from "../crear/SelectorOA";
-import { buscarOA, type NivelOA } from "../crear/oa";
+import {
+  NOMBRE_ASIGNATURA_OA,
+  buscarOA,
+  type AsignaturaOA,
+  type NivelOA,
+} from "../crear/oa";
 
 /** «7º» es lo que marca el docente; `7mo_basico` es como se llama en el catálogo. */
 const NIVEL_DE_CURSO: Record<string, NivelOA> = {
@@ -794,6 +799,28 @@ function ColumnaObjetivos({
    */
   const porMarcar = codigos.filter((c) => !e.oa.includes(c));
 
+  /**
+   * Los sugeridos repartidos por asignatura, en el orden del catálogo.
+   *
+   * Una actividad puede abrir objetivos de tres asignaturas a la vez: la de
+   * matemática que mide el consumo abre los de datos, pero también los de
+   * ciencias sobre el agua. En una lista plana no se distingue cuál es de
+   * cuál, y el desplegable los separa.
+   */
+  const porAsignatura = (() => {
+    const grupos = new Map<AsignaturaOA, string[]>();
+    for (const cod of porMarcar) {
+      const oa = buscarOA(cod);
+      if (!oa) continue;
+      const lista = grupos.get(oa.asignatura) ?? [];
+      lista.push(cod);
+      grupos.set(oa.asignatura, lista);
+    }
+    return [...grupos.entries()].sort((a, b) =>
+      NOMBRE_ASIGNATURA_OA[a[0]].localeCompare(NOMBRE_ASIGNATURA_OA[b[0]])
+    );
+  })();
+
   return (
     <Columna
       n={3}
@@ -834,14 +861,21 @@ function ColumnaObjetivos({
                 <option value="">
                   Elegir uno de los {porMarcar.length}…
                 </option>
-                {porMarcar.map((cod) => {
-                  const oa = buscarOA(cod);
-                  return (
-                    <option key={cod} value={cod}>
-                      {cod} · {recortar(oa?.texto ?? "", 90)}
-                    </option>
-                  );
-                })}
+                {/* Agrupados por asignatura. Una actividad puede abrir
+                    objetivos de tres asignaturas a la vez, y en una lista
+                    plana no se distingue cuál es de cuál. */}
+                {porAsignatura.map(([asig, cods]) => (
+                  <optgroup key={asig} label={NOMBRE_ASIGNATURA_OA[asig]}>
+                    {cods.map((cod) => {
+                      const oa = buscarOA(cod);
+                      return (
+                        <option key={cod} value={cod}>
+                          {cod} · {recortar(oa?.texto ?? "", 85)}
+                        </option>
+                      );
+                    })}
+                  </optgroup>
+                ))}
               </select>
             </label>
           ) : (
