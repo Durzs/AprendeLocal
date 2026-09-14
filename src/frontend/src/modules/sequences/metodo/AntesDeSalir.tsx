@@ -70,7 +70,7 @@ export function AntesDeSalir({
       </p>
 
       {/* ── Conceptos, por asignatura ──────────────────────────────────── */}
-      <p className="rotulo text-[var(--crema)]/75">Conceptos que abre este problema</p>
+      <p className="rotulo text-[var(--crema)]/75">Contenidos de esta problemática</p>
       <div className="mt-3 space-y-3.5">
         {angulos.map((a) => (
           <div key={a.asignatura}>

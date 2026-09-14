@@ -37,6 +37,21 @@ export type Pregunta = {
   elegida: boolean;
 };
 
+/** Una actividad escrita por el docente, con sus objetivos. */
+export type ActividadPropia = {
+  /** Para poder editarla y borrarla sin depender de su posición. */
+  id: string;
+  asignatura: string;
+  /** Qué se persigue, en una frase. Es lo que se lee en la columna. */
+  enfoque: string;
+  /** Qué averiguan concretamente. */
+  queInvestigan: string;
+  /** Los términos del programa que hacen falta. */
+  conceptos: string[];
+  /** Los objetivos que esta actividad abre, elegidos del catálogo. */
+  oa: string[];
+};
+
 export type Expedicion = {
   /* ── Paso 1, lo que pide el programa ─────────────────────────────────── */
   docente: string;
@@ -80,8 +95,29 @@ export type Expedicion = {
    * escribió, o propone la suya. Lo demás sale de ahí.
    */
   problemaId: string | null;
-  /** Cuando ninguna de las del catálogo es la suya. */
+  /**
+   * Cuando ninguna de las del catálogo es la suya.
+   *
+   * Va con nombre aparte de la descripción porque el nombre es lo que después
+   * encabeza la hoja que firma la dirección, los dos permisos de la salida y
+   * la ruta. Antes era un solo cuadro de texto y ahí terminaba encabezando el
+   * papeleo un párrafo entero.
+   */
+  problemaPropioNombre: string;
   problemaPropio: string;
+  /**
+   * Las actividades que escribe el docente, por asignatura.
+   *
+   * Existen por lo mismo que la problemática propia: el catálogo no puede
+   * tener todos los casos, y quien tiene uno que no está no debería quedarse
+   * con las dos columnas de al lado vacías. Cada una lleva sus objetivos, que
+   * se eligen de los mismos 353, así que una actividad escrita a mano llega a
+   * la hoja de dirección igual de completa que una del catálogo.
+   *
+   * También sirven para ajustar una del catálogo: se copia a esta lista con
+   * sus datos puestos y desde ahí se edita, sin tocar el catálogo.
+   */
+  actividadesPropias: ActividadPropia[];
   /** Las notas de prensa de su zona, pegadas por él. */
   noticias: { titular: string; url: string }[];
   /** Desde qué asignaturas se entra. Abre ángulos distintos del mismo problema. */
@@ -158,7 +194,9 @@ export const VACIA: Expedicion = {
   objetivos: "",
   evaluacion: [],
   problemaId: null,
+  problemaPropioNombre: "",
   problemaPropio: "",
+  actividadesPropias: [],
   noticias: [],
   asignaturas: [],
   conceptos: [],
@@ -222,7 +260,7 @@ export function completitudPaso1(e: Expedicion): number {
     e.sesiones ? "x" : "",
     e.oa.length ? "x" : "",
     e.evaluacion.length ? "x" : "",
-    e.problemaId || e.problemaPropio,
+    e.problemaId || e.problemaPropioNombre || e.problemaPropio,
     e.asignaturas.length ? "x" : "",
     e.entorno ?? "",
     e.ubicacion,

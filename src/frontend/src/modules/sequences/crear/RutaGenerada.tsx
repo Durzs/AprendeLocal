@@ -179,7 +179,7 @@ export default function RutaGenerada({
       </Hoja>
 
       {/* ── Los cuatro huecos ───────────────────────────────────────────── */}
-      <Hoja titulo="Lo que pones tú" orden={4}>
+      <Hoja titulo="Lo que completa el docente" orden={4}>
         <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
           Van vacías a propósito: rellenarlas por ti sería inventarlas.
         </p>
@@ -244,7 +244,7 @@ export default function RutaGenerada({
 
       {/* ── Cada curso ──────────────────────────────────────────────────── */}
       {ruta.por_curso.length > 0 && (
-        <Hoja titulo="Qué hace cada curso" orden={6}>
+        <Hoja titulo="El papel de cada curso" orden={6}>
           <ul className="space-y-2.5">
             {ruta.por_curso.map((c, i) => (
               <li key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">

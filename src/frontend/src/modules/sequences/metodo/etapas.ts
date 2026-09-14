@@ -14,7 +14,7 @@
  * falta un paso: procesar las conclusiones. Sin él, el curso vuelve del
  * terreno y propone soluciones apoyadas en lo que ya pensaba antes de salir,
  * con lo que todo el trabajo de terreno queda de adorno. Esa es la etapa
- * «Ordenar lo que se trajo», y es donde el dato se convierte en un hallazgo
+ * «Análisis de los datos recogidos», y es donde el dato se convierte en un hallazgo
  * que se puede defender.
  *
  * EL CIERRE DE CADA ETAPA
@@ -307,7 +307,7 @@ export const ETAPAS: Etapa[] = [
   },
   {
     id: "analisis",
-    nombre: "Ordenar lo que se trajo",
+    nombre: "Análisis de los datos recogidos",
     queOcurre:
       "El curso vuelve del terreno con registros sueltos y todavía no tiene un hallazgo: tiene material. Aquí se ordena, se cruza con lo que ya sabían, y se decide qué es lo que de verdad encontraron. Es la etapa donde el dato se convierte en algo que se puede decir en voz alta y defender.",
     alcance: "inmediato",

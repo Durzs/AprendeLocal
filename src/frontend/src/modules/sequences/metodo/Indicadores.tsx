@@ -111,7 +111,7 @@ export function Indicadores({
 
   if (marcados.length === 0) {
     return (
-      <Hoja titulo="Con qué vas a mirar cada objetivo" orden={orden}>
+      <Hoja titulo="Indicadores de evaluación" orden={orden}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
           Esto aparece cuando marques objetivos de aprendizaje. Para cada uno
           vas a poder dejar escrito qué se mira en la sala para saber si
@@ -124,7 +124,7 @@ export function Indicadores({
   const candidatos = candidatosDe(e);
 
   return (
-    <Hoja titulo="Con qué vas a mirar cada objetivo" orden={orden}>
+    <Hoja titulo="Indicadores de evaluación" orden={orden}>
       <p className="mb-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Un objetivo del programa no se puede mirar directamente: hay que decir
         qué se ve en la sala cuando ocurrió. Eso es lo que va aquí, y es lo que
