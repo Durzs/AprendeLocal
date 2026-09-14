@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import { Campo, Hoja, Parrafo, Texto } from "../crear/Campos";
-import type { Expedicion } from "../crear/expedicion";
+import { Hoja, Parrafo, Texto } from "../crear/Campos";
+import type { ActividadPropia, Expedicion } from "../crear/expedicion";
 import {
   ASIGNATURAS,
+  FAMILIAS_PROBLEMA,
   PROBLEMAS,
   QUE_SACAN_DE_LA_NOTICIA,
   angulosDe,
@@ -73,6 +74,15 @@ export function ElegirProblema({
   const angulos = elegido ? angulosDe(elegido, e.asignaturas) : [];
   const activa = angulos.find((a) => a.asignatura === enfocada) ?? null;
 
+  // La actividad enfocada puede ser una escrita por el docente. Las del
+  // catálogo se identifican por su asignatura y las propias por su id, así que
+  // se busca en las dos listas con el mismo dato.
+  const propiaActiva =
+    e.actividadesPropias.find((a) => a.id === enfocada) ?? null;
+  const propiasVisibles = e.actividadesPropias.filter(
+    (a) => !e.asignaturas.length || e.asignaturas.includes(a.asignatura)
+  );
+
   // Si hay una actividad enfocada manda ella; si no, se muestran los objetivos
   // de todas las actividades visibles, sin repetir.
   //
@@ -87,14 +97,23 @@ export function ElegirProblema({
   // todos, que es mejor que una columna vacía sin explicación.
   const niveles = new Set(e.cursos.map((c) => NIVEL_DE_CURSO[c]).filter(Boolean));
   const codigos = [
-    ...new Set((activa ? [activa] : angulos).flatMap((a) => a.oaQueAbre)),
+    ...new Set(
+      propiaActiva
+        ? propiaActiva.oa
+        : activa
+          ? activa.oaQueAbre
+          : [
+              ...angulos.flatMap((a) => a.oaQueAbre),
+              ...propiasVisibles.flatMap((a) => a.oa),
+            ]
+    ),
   ].filter((cod) => {
     const oa = buscarOA(cod);
     return oa && (niveles.size === 0 || niveles.has(oa.nivel));
   });
 
   return (
-    <Hoja titulo="De qué va a tratar" orden={orden}>
+    <Hoja titulo="La problemática y su anclaje curricular" orden={orden}>
       <p className="mb-5 max-w-3xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Un proyecto empieza por algo que está pasando, no por un tema. Las tres
         columnas se leen de izquierda a derecha: el problema, lo que se puede
@@ -115,6 +134,7 @@ export function ElegirProblema({
         <ColumnaActividades
           e={e}
           set={set}
+          onCambio={onCambio}
           elegido={elegido}
           angulos={angulos}
           enfocada={enfocada}
@@ -124,9 +144,12 @@ export function ElegirProblema({
         <ColumnaObjetivos
           e={e}
           set={set}
-          hayProblema={Boolean(elegido)}
+          hayProblema={Boolean(
+            elegido || e.problemaPropioNombre.trim() || e.problemaPropio.trim()
+          )}
           codigos={codigos}
           actividad={activa}
+          nombrePropia={propiaActiva ? nombreAsignatura(propiaActiva.asignatura) : null}
           verTodos={verTodos}
           ponerVerTodos={ponerVerTodos}
         />
@@ -135,19 +158,6 @@ export function ElegirProblema({
       {elegido && !proponiendo && (
         <Noticias e={e} onCambio={onCambio} problema={elegido} />
       )}
-
-      <Campo
-        etiqueta="Cómo se ve eso aquí"
-        ayuda="En una frase, lo que se nota en tu sitio y que en otra escuela no se notaría igual. Es lo único que no podemos saber nosotros."
-        ancho="entera"
-      >
-        <Parrafo
-          value={e.fenomeno}
-          onChange={(ev) => set("fenomeno", ev.target.value)}
-          placeholder="El estero baja tanto en verano que la bomba de la escuela se queda sin agua."
-          rows={2}
-        />
-      </Campo>
 
       {(elegido || e.problemaPropio.trim()) && <QueSacanDeAhi />}
     </Hoja>
@@ -194,36 +204,84 @@ function ColumnaProblema({
   set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
   elegido: Problema | null;
 }) {
+  const [familiaAbierta, ponerFamiliaAbierta] = useState<string | null>(null);
+
   return (
     <Columna
       n={1}
       titulo="La problemática local"
       bajada="Algo que está ocurriendo y de lo que ya se escribió."
     >
+      {/* Agrupadas en cuatro familias. Diez botones seguidos son diez cosas
+          que hay que leer enteras para elegir una, y a la décima ya nadie está
+          leyendo. Cuatro se abarcan de una mirada, y la familia se abre sola
+          cuando ya hay una problemática elegida dentro. */}
       <ul className="space-y-2">
-        {PROBLEMAS.map((p) => {
-          const activo = p.id === e.problemaId && !proponiendo;
+        {FAMILIAS_PROBLEMA.map((f) => {
+          const suyas = PROBLEMAS.filter((p) => p.familia === f.id);
+          const tieneLaElegida = suyas.some(
+            (p) => p.id === e.problemaId && !proponiendo
+          );
+          const abierta = familiaAbierta === f.id || tieneLaElegida;
           return (
-            <li key={p.id}>
+            <li key={f.id} className="overflow-hidden rounded-lg border border-[var(--crema)]/12">
               <button
                 type="button"
-                onClick={() => {
-                  ponerProponiendo(false);
-                  onCambio({
-                    ...e,
-                    problemaId: activo ? null : p.id,
-                    problemaPropio: "",
-                  });
-                }}
-                aria-pressed={activo}
-                className={`min-h-11 w-full rounded-lg border px-3.5 py-2.5 text-left text-[15px] leading-snug transition ${
-                  activo
-                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12] text-[var(--tierra-300)]"
-                    : "border-[var(--crema)]/12 text-[var(--crema-clara)] hover:border-[var(--crema)]/30"
-                }`}
+                onClick={() => ponerFamiliaAbierta(abierta ? null : f.id)}
+                aria-expanded={abierta}
+                className="flex min-h-11 w-full items-baseline gap-2.5 px-3.5 py-2.5 text-left transition hover:bg-[var(--crema)]/[0.04]"
               >
-                {p.nombre}
+                <span className="min-w-0 flex-1">
+                  <span
+                    className={`block text-[15px] leading-snug ${
+                      tieneLaElegida
+                        ? "text-[var(--tierra-300)]"
+                        : "text-[var(--crema-clara)]"
+                    }`}
+                  >
+                    {f.nombre}
+                  </span>
+                  {!abierta && (
+                    <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/70">
+                      {f.deQueVa}
+                    </span>
+                  )}
+                </span>
+                <span aria-hidden className="shrink-0 text-[var(--crema)]/40">
+                  {abierta ? "\u2212" : "+"}
+                </span>
               </button>
+
+              {abierta && (
+                <ul className="border-t border-[var(--crema)]/10 p-2">
+                  {suyas.map((p) => {
+                    const activo = p.id === e.problemaId && !proponiendo;
+                    return (
+                      <li key={p.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            ponerProponiendo(false);
+                            onCambio({
+                              ...e,
+                              problemaId: activo ? null : p.id,
+                              problemaPropio: "",
+                            });
+                          }}
+                          aria-pressed={activo}
+                          className={`min-h-11 w-full rounded-lg border px-3 py-2 text-left text-[15px] leading-snug transition ${
+                            activo
+                              ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12] text-[var(--tierra-300)]"
+                              : "border-transparent text-[var(--crema-clara)] hover:border-[var(--crema)]/25"
+                          }`}
+                        >
+                          {p.nombre}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </li>
           );
         })}
@@ -247,16 +305,34 @@ function ColumnaProblema({
 
       {proponiendo && (
         <div className="mt-3">
-          <Parrafo
-            value={e.problemaPropio}
-            onChange={(ev) => set("problemaPropio", ev.target.value)}
-            placeholder="La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas."
-            rows={3}
-          />
-          <p className="mt-2 text-sm leading-relaxed text-[var(--crema)]/72">
-            Al proponer una problemática propia, las dos columnas de al lado
-            quedan en tus manos: no hay actividades ni objetivos escritos para
-            algo que todavía no está en la lista.
+          {/* El nombre va aparte de la descripción porque es lo que después
+              encabeza la hoja que firma la dirección, los dos permisos y la
+              ruta. Con un solo cuadro de texto acababa encabezando el papeleo
+              un párrafo entero. */}
+          <label className="block">
+            <span className="text-sm text-[var(--crema)]/75">
+              Cómo se llama, en pocas palabras
+            </span>
+            <Texto
+              value={e.problemaPropioNombre}
+              onChange={(ev) => set("problemaPropioNombre", ev.target.value)}
+              placeholder="Polvo de la planta de áridos"
+            />
+          </label>
+
+          <label className="mt-3 block">
+            <span className="text-sm text-[var(--crema)]/75">Qué está pasando</span>
+            <Parrafo
+              value={e.problemaPropio}
+              onChange={(ev) => set("problemaPropio", ev.target.value)}
+              placeholder="La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas."
+              rows={3}
+            />
+          </label>
+
+          <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/72">
+            Las actividades y los objetivos los escribes tú en las columnas de
+            al lado, con el mismo catálogo de objetivos que usan las demás.
           </p>
         </div>
       )}
@@ -288,6 +364,7 @@ function ColumnaProblema({
 function ColumnaActividades({
   e,
   set,
+  onCambio,
   elegido,
   angulos,
   enfocada,
@@ -295,12 +372,50 @@ function ColumnaActividades({
 }: {
   e: Expedicion;
   set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
+  onCambio: (e: Expedicion) => void;
   elegido: Problema | null;
   angulos: Angulo[];
   enfocada: string | null;
   ponerEnfocada: (v: string | null) => void;
 }) {
-  if (!elegido) {
+  const hayProblema = Boolean(elegido || e.problemaPropio.trim() || e.problemaPropioNombre.trim());
+  const [editando, ponerEditando] = useState<string | null>(null);
+
+  function guardar(a: ActividadPropia) {
+    const existe = e.actividadesPropias.some((x) => x.id === a.id);
+    onCambio({
+      ...e,
+      actividadesPropias: existe
+        ? e.actividadesPropias.map((x) => (x.id === a.id ? a : x))
+        : [...e.actividadesPropias, a],
+    });
+  }
+
+  function borrar(id: string) {
+    onCambio({
+      ...e,
+      actividadesPropias: e.actividadesPropias.filter((x) => x.id !== id),
+    });
+    if (enfocada === id) ponerEnfocada(null);
+    if (editando === id) ponerEditando(null);
+  }
+
+  /** Copia una actividad del catálogo a las propias, para poder ajustarla. */
+  function ajustar(a: Angulo) {
+    const id = `propia-${Date.now()}`;
+    guardar({
+      id,
+      asignatura: a.asignatura,
+      enfoque: a.enfoque,
+      queInvestigan: a.queInvestigan,
+      conceptos: [...a.conceptosClave],
+      oa: [...a.oaQueAbre],
+    });
+    ponerEditando(id);
+    ponerEnfocada(id);
+  }
+
+  if (!hayProblema) {
     return (
       <Columna
         n={2}
@@ -309,7 +424,7 @@ function ColumnaActividades({
       >
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
           Elige una problemática en la columna de la izquierda y aquí aparecen
-          las actividades que abre en cada asignatura.
+          las actividades sugeridas para cada asignatura.
         </p>
       </Columna>
     );
@@ -319,7 +434,7 @@ function ColumnaActividades({
     <Columna
       n={2}
       titulo="Actividades por asignatura"
-      bajada="Elige una actividad y a la derecha quedan solo los objetivos que abre."
+      bajada="Elige una actividad y a la derecha quedan sus objetivos de aprendizaje."
     >
       {/* El filtro de asignaturas va aquí, pegado a lo que filtra, y no suelto
           arriba como estaba: así se entiende que lo que hace es recortar esta
@@ -327,7 +442,8 @@ function ColumnaActividades({
       <ul className="mb-3.5 flex flex-wrap gap-1.5">
         {ASIGNATURAS.map((a) => {
           const marcada = e.asignaturas.includes(a.id);
-          const hayAngulo = elegido.angulos.some((x) => x.asignatura === a.id);
+          const hayAngulo =
+            elegido?.angulos.some((x) => x.asignatura === a.id) ?? false;
           return (
             <li key={a.id}>
               <button
@@ -356,56 +472,300 @@ function ColumnaActividades({
         })}
       </ul>
 
+      {/* Primero las propias: si el docente escribió una, es la que le importa. */}
+      {e.actividadesPropias.length > 0 && (
+        <ul className="mb-3 space-y-2.5">
+          {e.actividadesPropias
+            .filter(
+              (a) => !e.asignaturas.length || e.asignaturas.includes(a.asignatura)
+            )
+            .map((a) =>
+              editando === a.id ? (
+                <li key={a.id}>
+                  <FormularioActividad
+                    inicial={a}
+                    cursos={e.cursos}
+                    onGuardar={(v) => {
+                      guardar(v);
+                      ponerEditando(null);
+                    }}
+                    onCancelar={() => ponerEditando(null)}
+                    onBorrar={() => borrar(a.id)}
+                  />
+                </li>
+              ) : (
+                <li key={a.id}>
+                  <div
+                    className={`rounded-lg border px-3.5 py-3 transition ${
+                      enfocada === a.id
+                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                        : "border-[var(--crema)]/12"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => ponerEnfocada(enfocada === a.id ? null : a.id)}
+                      aria-pressed={enfocada === a.id}
+                      className="w-full text-left"
+                    >
+                      <span className="rotulo block text-[var(--crema)]/72">
+                        {nombreAsignatura(a.asignatura)} · tuya
+                      </span>
+                      <span
+                        className={`mt-1.5 block text-[15px] leading-snug ${
+                          enfocada === a.id
+                            ? "text-[var(--tierra-300)]"
+                            : "text-[var(--crema-clara)]"
+                        }`}
+                      >
+                        {a.enfoque || "Sin título todavía"}
+                      </span>
+                      {a.queInvestigan && (
+                        <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/78">
+                          {a.queInvestigan}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => ponerEditando(a.id)}
+                      className="mt-2 min-h-11 text-sm text-[var(--crema)]/75 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
+                    >
+                      Editar
+                    </button>
+                  </div>
+                </li>
+              )
+            )}
+        </ul>
+      )}
+
+      {/* Las del catálogo. Cada una se puede copiar a las propias para
+          ajustarla, que es la manera de editarlas sin tocar el catálogo ni
+          perder lo que proponía. */}
       <ul className="space-y-2.5">
         {angulos.map((a) => {
           const activa = enfocada === a.asignatura;
           return (
             <li key={a.asignatura}>
-              <button
-                type="button"
-                onClick={() => ponerEnfocada(activa ? null : a.asignatura)}
-                aria-pressed={activa}
-                className={`w-full rounded-lg border px-3.5 py-3 text-left transition ${
+              <div
+                className={`rounded-lg border transition ${
                   activa
                     ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
                     : "border-[var(--crema)]/12 hover:border-[var(--crema)]/30"
                 }`}
               >
-                <span className="rotulo block text-[var(--crema)]/72">
-                  {nombreAsignatura(a.asignatura)}
-                </span>
-                <span
-                  className={`mt-1.5 block text-[15px] leading-snug ${
-                    activa ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
-                  }`}
+                <button
+                  type="button"
+                  onClick={() => ponerEnfocada(activa ? null : a.asignatura)}
+                  aria-pressed={activa}
+                  className="w-full px-3.5 py-3 text-left"
                 >
-                  {a.enfoque}
-                </span>
-                <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/78">
-                  {a.queInvestigan}
-                </span>
-                {activa && (
-                  <>
-                    <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/72">
-                      {a.queSaleDeAqui}
-                    </span>
-                    {a.conceptosClave.length > 0 && (
-                      <span className="mt-2.5 block text-sm leading-relaxed text-[var(--crema)]/72">
-                        Contenidos: {a.conceptosClave.join(", ")}.
+                  <span className="rotulo block text-[var(--crema)]/72">
+                    {nombreAsignatura(a.asignatura)}
+                  </span>
+                  <span
+                    className={`mt-1.5 block text-[15px] leading-snug ${
+                      activa ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
+                    }`}
+                  >
+                    {a.enfoque}
+                  </span>
+                  <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/78">
+                    {a.queInvestigan}
+                  </span>
+                  {activa && (
+                    <>
+                      <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/72">
+                        {a.queSaleDeAqui}
                       </span>
-                    )}
-                  </>
+                      {a.conceptosClave.length > 0 && (
+                        <span className="mt-2.5 block text-sm leading-relaxed text-[var(--crema)]/72">
+                          Contenidos: {a.conceptosClave.join(", ")}.
+                        </span>
+                      )}
+                    </>
+                  )}
+                </button>
+                {activa && (
+                  <button
+                    type="button"
+                    onClick={() => ajustar(a)}
+                    className="mb-3 ml-3.5 min-h-11 text-sm text-[var(--crema)]/75 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
+                  >
+                    Ajustar esta actividad
+                  </button>
                 )}
-              </button>
+              </div>
             </li>
           );
         })}
       </ul>
+
+      {editando === "nueva" ? (
+        <div className="mt-3">
+          <FormularioActividad
+            inicial={{
+              id: `propia-${Date.now()}`,
+              asignatura: e.asignaturas[0] ?? "biologia",
+              enfoque: "",
+              queInvestigan: "",
+              conceptos: [],
+              oa: [],
+            }}
+            cursos={e.cursos}
+            onGuardar={(v) => {
+              guardar(v);
+              ponerEditando(null);
+              ponerEnfocada(v.id);
+            }}
+            onCancelar={() => ponerEditando(null)}
+          />
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => ponerEditando("nueva")}
+          className="mt-3 min-h-11 w-full rounded-lg border border-dashed border-[var(--crema)]/25 px-3.5 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/45"
+        >
+          Escribir una actividad mía
+        </button>
+      )}
     </Columna>
   );
 }
 
-/* ── 3 · Los objetivos que abre ─────────────────────────────────────────── */
+/**
+ * El formulario de una actividad escrita por el docente.
+ *
+ * Pide lo mismo que tiene una del catálogo y en el mismo orden, para que una
+ * actividad propia llegue a la hoja de dirección igual de completa que una
+ * propuesta: qué se persigue, qué averiguan, qué contenidos hacen falta y qué
+ * objetivos cubre.
+ *
+ * Los objetivos se eligen del mismo catálogo de 353 y no se escriben a mano,
+ * por lo mismo que en el resto de la aplicación: un código tecleado a ojo
+ * acaba impreso en un papel que se firma.
+ */
+function FormularioActividad({
+  inicial,
+  cursos,
+  onGuardar,
+  onCancelar,
+  onBorrar,
+}: {
+  inicial: ActividadPropia;
+  cursos: string[];
+  onGuardar: (a: ActividadPropia) => void;
+  onCancelar: () => void;
+  onBorrar?: () => void;
+}) {
+  const [a, ponerA] = useState<ActividadPropia>(inicial);
+  const [conceptos, ponerConceptos] = useState(inicial.conceptos.join(", "));
+
+  const listo = a.enfoque.trim().length > 0;
+
+  return (
+    <div className="space-y-3 rounded-lg border border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.06] p-3.5">
+      <label className="block">
+        <span className="text-sm text-[var(--crema)]/75">Asignatura</span>
+        <select
+          value={a.asignatura}
+          onChange={(ev) => ponerA({ ...a, asignatura: ev.target.value })}
+          className="mt-1.5 min-h-11 w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--fondo)] px-3 py-2.5 text-[15px] text-[var(--crema-clara)]"
+        >
+          {ASIGNATURAS.map((x) => (
+            <option key={x.id} value={x.id}>
+              {x.nombre}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="block">
+        <span className="text-sm text-[var(--crema)]/75">
+          Qué se persigue, en una frase
+        </span>
+        <Texto
+          value={a.enfoque}
+          onChange={(ev) => ponerA({ ...a, enfoque: ev.target.value })}
+          placeholder="Medición del polvo depositado en las ventanas"
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm text-[var(--crema)]/75">Qué averiguan</span>
+        <Parrafo
+          value={a.queInvestigan}
+          onChange={(ev) => ponerA({ ...a, queInvestigan: ev.target.value })}
+          placeholder="Cuánto polvo se deposita en una semana, a tres distancias distintas de la planta."
+          rows={2}
+        />
+      </label>
+
+      <label className="block">
+        <span className="text-sm text-[var(--crema)]/75">
+          Contenidos, separados por coma
+        </span>
+        <Texto
+          value={conceptos}
+          onChange={(ev) => ponerConceptos(ev.target.value)}
+          placeholder="material particulado, muestra, promedio"
+        />
+      </label>
+
+      <div>
+        <span className="text-sm text-[var(--crema)]/75">
+          Objetivos de Aprendizaje que cubre
+        </span>
+        <div className="mt-1.5">
+          <SelectorOA
+            cursos={cursos}
+            elegidos={a.oa}
+            onElegir={(v) => ponerA({ ...a, oa: v })}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          disabled={!listo}
+          onClick={() =>
+            onGuardar({
+              ...a,
+              conceptos: conceptos
+                .split(",")
+                .map((c: string) => c.trim())
+                .filter(Boolean),
+            })
+          }
+          className="min-h-11 rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
+          onClick={onCancelar}
+          className="min-h-11 text-sm text-[var(--crema)]/75 hover:text-[var(--crema-clara)]"
+        >
+          Cancelar
+        </button>
+        {onBorrar && (
+          <button
+            type="button"
+            onClick={onBorrar}
+            className="ml-auto min-h-11 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
+          >
+            Borrar
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── 3 · Los Objetivos de Aprendizaje ───────────────────────────────────── */
 
 function ColumnaObjetivos({
   e,
@@ -413,6 +773,7 @@ function ColumnaObjetivos({
   hayProblema,
   codigos,
   actividad,
+  nombrePropia,
   verTodos,
   ponerVerTodos,
 }: {
@@ -421,69 +782,110 @@ function ColumnaObjetivos({
   hayProblema: boolean;
   codigos: string[];
   actividad: Angulo | null;
+  /** Si lo enfocado es una actividad del docente, su asignatura. */
+  nombrePropia: string | null;
   verTodos: boolean;
   ponerVerTodos: (v: boolean) => void;
 }) {
+  /**
+   * Los sugeridos que todavía no están marcados. Son los que pueblan el
+   * desplegable; los marcados salen de él y pasan a la lista de abajo, para
+   * que no aparezcan en los dos sitios a la vez.
+   */
+  const porMarcar = codigos.filter((c) => !e.oa.includes(c));
+
   return (
     <Columna
       n={3}
-      titulo="Los objetivos que abre"
+      titulo="Objetivos de Aprendizaje"
       bajada={
-        actividad
-          ? `Los que abre la actividad de ${nombreAsignatura(actividad.asignatura).toLowerCase()}.`
-          : "Salen de la actividad, no al revés: primero qué se va a hacer, después dónde encaja."
+        nombrePropia
+          ? `Los que marcaste en tu actividad de ${nombrePropia.toLowerCase()}.`
+          : actividad
+            ? `Los que cubre la actividad de ${nombreAsignatura(actividad.asignatura).toLowerCase()}.`
+            : "Primero la actividad y después el objetivo, que es como se planifica de verdad."
       }
     >
       {!hayProblema ? (
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
-          Aquí van a aparecer los objetivos del programa que abre cada
-          actividad, para marcarlos sin salir de esta pantalla.
-        </p>
-      ) : codigos.length === 0 ? (
-        <p className="text-[15px] leading-relaxed text-[var(--crema)]/78">
-          Las actividades que tienes a la vista son de asignaturas cuyos
-          objetivos todavía no están cargados: por ahora están los de Ciencias
-          Naturales y los de Matemática, de 5º a 8º. Puedes buscarlos abajo o
-          escribirlos tú en la planificación.
+          Aquí aparecen los Objetivos de Aprendizaje que cubre cada actividad,
+          para marcarlos sin salir de esta pantalla.
         </p>
       ) : (
-        <ul className="space-y-2">
-          {codigos.map((cod) => {
-            const oa = buscarOA(cod);
-            const marcado = e.oa.includes(cod);
-            return (
-              <li key={cod}>
-                <button
-                  type="button"
-                  onClick={() =>
-                    set(
-                      "oa",
-                      marcado ? e.oa.filter((x) => x !== cod) : [...e.oa, cod]
-                    )
-                  }
-                  aria-pressed={marcado}
-                  className={`w-full rounded-lg border px-3.5 py-2.5 text-left transition ${
-                    marcado
-                      ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12]"
-                      : "border-[var(--crema)]/12 hover:border-[var(--crema)]/30"
-                  }`}
-                >
-                  <span
-                    className={`block font-mono text-xs ${
-                      marcado ? "text-[var(--tierra-300)]" : "text-[var(--tierra-600)]"
-                    }`}
+        <>
+          {/* El desplegable en vez de la pila de tarjetas. Eran hasta cinco
+              recuadros con el texto completo del objetivo, que en una columna
+              estrecha son dos pantallas de lectura para elegir uno. */}
+          {porMarcar.length > 0 ? (
+            <label className="block">
+              <span className="text-sm text-[var(--crema)]/75">
+                {actividad
+                  ? "Sugeridos para esta actividad"
+                  : "Sugeridos para las actividades a la vista"}
+              </span>
+              <select
+                value=""
+                onChange={(ev) => {
+                  if (!ev.target.value) return;
+                  set("oa", [...e.oa, ev.target.value]);
+                }}
+                className="mt-2 min-h-11 w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--fondo)] px-3 py-2.5 text-[15px] text-[var(--crema-clara)]"
+              >
+                <option value="">
+                  Elegir uno de los {porMarcar.length}…
+                </option>
+                {porMarcar.map((cod) => {
+                  const oa = buscarOA(cod);
+                  return (
+                    <option key={cod} value={cod}>
+                      {cod} · {recortar(oa?.texto ?? "", 90)}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          ) : (
+            <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
+              {codigos.length
+                ? "Ya marcaste todos los sugeridos para esto."
+                : nombrePropia
+                  ? "Tu actividad todavía no tiene objetivos. Búscalos abajo y quedan guardados en ella."
+                  : "Las actividades a la vista son de asignaturas o cursos sin objetivos cargados. Búscalos abajo o escríbelos en la planificación."}
+            </p>
+          )}
+
+          {/* Lo marcado, con su texto completo: aquí sí hace falta leerlo
+              entero, porque es lo que va a la hoja que firma la dirección. */}
+          {e.oa.length > 0 && (
+            <ul className="mt-3.5 space-y-2">
+              {e.oa.map((cod) => {
+                const oa = buscarOA(cod);
+                return (
+                  <li
+                    key={cod}
+                    className="rounded-lg border border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.1] px-3.5 py-2.5"
                   >
-                    {cod}
-                    {marcado ? " · marcado" : ""}
-                  </span>
-                  <span className="mt-1.5 block text-[15px] leading-relaxed text-[var(--crema)]/85">
-                    {oa?.texto}
-                  </span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-mono text-xs text-[var(--tierra-300)]">
+                        {cod}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => set("oa", e.oa.filter((x) => x !== cod))}
+                        className="ml-auto min-h-11 shrink-0 px-1 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
+                      >
+                        Quitar
+                      </button>
+                    </div>
+                    <p className="text-[15px] leading-relaxed text-[var(--crema)]/85">
+                      {oa?.texto ?? cod}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </>
       )}
 
       {/* El buscador completo queda plegado: el que confía en la propuesta no
@@ -495,7 +897,7 @@ function ColumnaObjetivos({
         aria-expanded={verTodos}
         className="mt-3.5 min-h-11 text-sm text-[var(--crema)]/78 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
       >
-        {verTodos ? "Cerrar el buscador" : "Buscar otro objetivo del programa"}
+        {verTodos ? "Cerrar el buscador" : "Buscar entre todos los objetivos"}
       </button>
 
       {verTodos && (
@@ -507,16 +909,13 @@ function ColumnaObjetivos({
           />
         </div>
       )}
-
-      {e.oa.length > 0 && (
-        <p className="mt-3.5 border-t border-[var(--crema)]/12 pt-3 text-sm leading-relaxed text-[var(--crema)]/78">
-          {e.oa.length === 1
-            ? "1 objetivo marcado para este proyecto."
-            : `${e.oa.length} objetivos marcados para este proyecto.`}
-        </p>
-      )}
     </Columna>
   );
+}
+
+/** El texto del objetivo, cortado para que quepa en una línea del desplegable. */
+function recortar(texto: string, largo: number): string {
+  return texto.length <= largo ? texto : `${texto.slice(0, largo - 1).trimEnd()}…`;
 }
 
 /**

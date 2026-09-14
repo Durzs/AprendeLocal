@@ -36,7 +36,7 @@ export default function CrearPage() {
   const { expedicion: e, avance, estado, cambiar: setE, cambiarAvance } = useExpedicion();
 
   const completo = completitudPaso1(e);
-  const hayLugar = Boolean(e.entorno || e.ubicacion.trim() || e.fenomeno.trim());
+  const hayLugar = Boolean(e.entorno || e.ubicacion.trim());
 
   const laminas: Lamina[] = [
     {
@@ -53,7 +53,7 @@ export default function CrearPage() {
       marca: "II · Lo que pone el lugar",
       titulo: "Qué hay al otro lado de la puerta",
       bajada:
-        "Busca tu escuela por su nombre, elige la problemática y los objetivos que abre, y prepara la clase previa a la salida.",
+        "Busca tu escuela por su nombre, elige la problemática y sus Objetivos de Aprendizaje, y prepara la clase previa a la salida.",
       contenido: <PasoLugar e={e} onCambio={setE} />,
       puedeAvanzar: hayLugar,
       faltaPara: "Falta decir qué hay alrededor de la escuela.",

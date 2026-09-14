@@ -68,7 +68,7 @@ export function PasoPrograma({ e, onCambio }: Props) {
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="Quién y cuánto" orden={4}>
+      <Hoja titulo="El curso y el tiempo disponible" orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Campo etiqueta="Tu nombre" ayuda="Va firmado en la carta a las familias.">
             <Texto

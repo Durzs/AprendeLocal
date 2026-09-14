@@ -54,7 +54,7 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   const [abierto, ponerAbierto] = useState<string | null>(null);
 
   return (
-    <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
+    <Hoja titulo="El método, etapa por etapa" orden={orden}>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Son seis etapas y sirven para proyectos muy distintos. Un curso puede
         medir la contaminación de un río y terminar armando una campaña. Otro
@@ -63,7 +63,7 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
       </p>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         No dicen qué actividad hacer. Describen qué suele estar pasando en cada
-        tramo, qué se lleva el curso de ahí, y de quién acaba siendo cada parte.
+        tramo, qué aprende el curso ahí, y de quién acaba siendo cada parte.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
         El orden es el que suele funcionar, y el peso de cada etapa cambia mucho
@@ -141,7 +141,7 @@ function EtapaPlegada({
               se pide para el papeleo. Cada uno trae cómo se ve que ocurrió,
               que es lo que permite mirarlo en la sala en vez de suponerlo. */}
           <div>
-            <p className="rotulo text-[var(--crema)]/72">Qué se lleva el curso</p>
+            <p className="rotulo text-[var(--crema)]/72">Qué aprende el curso</p>
             <ul className="mt-2 space-y-2.5">
               {m.aprendizajes.map((a) => (
                 <li key={a.nombre}>
@@ -154,7 +154,7 @@ function EtapaPlegada({
           </div>
 
           <div>
-            <p className="rotulo text-[var(--tierra-600)]">Preguntas que abren</p>
+            <p className="rotulo text-[var(--tierra-600)]">Preguntas para la sala</p>
             <ul className="mt-2 space-y-1.5">
               {m.preguntasQueAbren.map((q) => (
                 <li key={q} className="text-[var(--crema-clara)]">
@@ -283,7 +283,7 @@ export function ElegirFormato({
   );
 
   return (
-    <Hoja titulo="Qué van a construir ellos" orden={orden}>
+    <Hoja titulo="El producto y su destinatario" orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Esto lo decide el curso, después de volver del terreno y no antes: hasta
         que no sepan qué encontraron, no pueden saber qué hacer con ello. Lo que

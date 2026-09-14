@@ -138,13 +138,6 @@ function Justificacion({ e }: { e: Expedicion }) {
             : ""}
         </p>
 
-        {e.fenomeno.trim() && (
-          <p>
-            <span className="text-[var(--crema-clara)]">Cómo se manifiesta aquí:</span>{" "}
-            {e.fenomeno}
-          </p>
-        )}
-
         {oas.length > 0 && (
           <div>
             <p className="text-[var(--crema-clara)]">Objetivos de aprendizaje que cubre</p>

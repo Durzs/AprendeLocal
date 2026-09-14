@@ -19,7 +19,13 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { Hoja } from "./Campos";
-import { HUECOS, generar, huecosPendientes, type RutaIA } from "./generar";
+import {
+  HUECOS,
+  generar,
+  huecosPendientes,
+  type FaseIA,
+  type RutaIA,
+} from "./generar";
 import type { Expedicion } from "./expedicion";
 
 export default function RutaGenerada({
@@ -137,9 +143,8 @@ export default function RutaGenerada({
             Faltan {faltan.length} de 4
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/85">
-            La ruta está armada, pero le falta lo que solo sabes tú. Son cuatro
-            cosas y están más abajo: sin ellas el curso sale a terreno sin saber
-            dónde para ni a quién le entrega lo que haga.
+            La ruta está armada. Faltan cuatro cosas que solo sabes tú, más
+            abajo.
           </p>
         </div>
       )}
@@ -168,17 +173,15 @@ export default function RutaGenerada({
           />
         </div>
 
-        <p className="mt-4 border-t border-[var(--crema)]/12 pt-3 text-xs text-[var(--crema)]/45">
-          Todo esto se puede reescribir. Lo que quede aquí es lo que sale
-          impreso.
+        <p className="mt-4 text-sm text-[var(--crema)]/70">
+          Todo esto se puede reescribir.
         </p>
       </Hoja>
 
       {/* ── Los cuatro huecos ───────────────────────────────────────────── */}
-      <Hoja titulo="Lo que pones tú" orden={4}>
-        <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
-          Cuatro cosas de tu escuela que nadie más sabe. Van vacías a propósito:
-          rellenarlas por ti sería inventarlas.
+      <Hoja titulo="Lo que completa el docente" orden={4}>
+        <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
+          Van vacías a propósito: rellenarlas por ti sería inventarlas.
         </p>
 
         <div className="space-y-4">
@@ -226,46 +229,22 @@ export default function RutaGenerada({
         </div>
       </Hoja>
 
-      {/* ── Las semanas ─────────────────────────────────────────────────── */}
+      {/* ── Las semanas, como línea y no como lista ─────────────────────
+          Eran ocho recuadros apilados, cada uno con dos campos de texto: media
+          pantalla de prosa para algo que en realidad es una secuencia. Puesto
+          en línea se ve de un vistazo dónde está la salida, cuánto falta para
+          la entrega y qué tramo quedó demasiado cargado. El detalle sigue ahí,
+          pero se abre al tocar la semana, no antes. */}
       <Hoja titulo="Semana por semana" orden={5}>
-        <ol className="space-y-3">
-          {ruta.fases.map((f, i) => (
-            <li key={i} className="flex gap-4 rounded-xl border border-[var(--crema)]/12 p-4">
-              <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--tierra-600)]/50 font-mono text-xs text-[var(--tierra-600)]">
-                {f.semana}
-              </span>
-              <div className="min-w-0 flex-1 space-y-2">
-                <Linea
-                  etiqueta=""
-                  valor={f.titulo}
-                  onCambio={(v) =>
-                    set(
-                      "fases",
-                      ruta.fases.map((x, j) => (j === i ? { ...x, titulo: v } : x))
-                    )
-                  }
-                />
-                <Linea
-                  etiqueta=""
-                  valor={f.que_ocurre}
-                  onCambio={(v) =>
-                    set(
-                      "fases",
-                      ruta.fases.map((x, j) => (j === i ? { ...x, que_ocurre: v } : x))
-                    )
-                  }
-                  filas={2}
-                  tenue
-                />
-              </div>
-            </li>
-          ))}
-        </ol>
+        <LineaDeTiempo
+          fases={ruta.fases}
+          onCambio={(fases) => set("fases", fases)}
+        />
       </Hoja>
 
       {/* ── Cada curso ──────────────────────────────────────────────────── */}
       {ruta.por_curso.length > 0 && (
-        <Hoja titulo="Qué hace cada curso" orden={6}>
+        <Hoja titulo="El papel de cada curso" orden={6}>
           <ul className="space-y-2.5">
             {ruta.por_curso.map((c, i) => (
               <li key={i} className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
@@ -289,16 +268,12 @@ export default function RutaGenerada({
                 </span>
                 {c.codigos.length > 0 && (
                   <span className="font-mono text-[10px] text-[var(--crema)]/40">
-                    {c.codigos.map((k) => k.replace(/_CN_/, "·")).join(" ")}
+                    {c.codigos.map((k) => k.replace(/_[A-Z]+_/, "·")).join(" ")}
                   </span>
                 )}
               </li>
             ))}
           </ul>
-          <p className="mt-3.5 border-t border-[var(--crema)]/12 pt-3 text-xs leading-relaxed text-[var(--crema)]/45">
-            Los menores conocen el lugar; los mayores sacan cuentas con lo que
-            los menores levantaron. Cada uno lo suyo y se necesitan.
-          </p>
         </Hoja>
       )}
 
@@ -432,5 +407,110 @@ function Aviso({ aviso }: { aviso: { tono: "malo" | "neutro"; texto: string } | 
     >
       {aviso.texto}
     </p>
+  );
+}
+
+/**
+ * La ruta como una línea, no como una pila de recuadros.
+ *
+ * QUÉ CAMBIA AL DIBUJARLA
+ *
+ * Una secuencia de ocho semanas en forma de lista obliga a leerla entera para
+ * saber dónde está la salida a terreno. Dibujada, eso se ve sin leer: la
+ * salida es un punto en la línea, y se ve cuántas semanas quedan después para
+ * ordenar lo que se trajo y construir la entrega. Casi todos los problemas de
+ * una planificación se ven ahí, en la forma, antes que en el texto.
+ *
+ * El detalle de cada semana no desaparece: se abre al tocarla. Y sigue siendo
+ * editable, porque lo que quede escrito es lo que sale impreso.
+ *
+ * En pantalla angosta la línea se vuelve vertical, que es lo que cabe.
+ */
+function LineaDeTiempo({
+  fases,
+  onCambio,
+}: {
+  fases: FaseIA[];
+  onCambio: (fases: FaseIA[]) => void;
+}) {
+  const [abierta, ponerAbierta] = useState<number | null>(null);
+
+  if (fases.length === 0) return null;
+
+  return (
+    <div>
+      <ol className="flex flex-col gap-1.5 sm:flex-row sm:items-stretch sm:gap-0">
+        {fases.map((f, i) => {
+          const activa = abierta === i;
+          return (
+            <li key={i} className="min-w-0 flex-1">
+              <button
+                type="button"
+                onClick={() => ponerAbierta(activa ? null : i)}
+                aria-expanded={activa}
+                className="group flex w-full items-center gap-2.5 text-left sm:block"
+              >
+                {/* El riel. En horizontal la línea une los puntos; en vertical
+                    se apoya en el orden de la lista y no hace falta. */}
+                <span className="relative flex shrink-0 items-center sm:block sm:h-6">
+                  <span
+                    aria-hidden
+                    className={`hidden sm:block absolute top-1/2 h-px w-full -translate-y-1/2 ${
+                      i === 0 ? "left-1/2 w-1/2" : ""
+                    } ${i === fases.length - 1 ? "w-1/2" : ""} bg-[var(--crema)]/20`}
+                  />
+                  <span
+                    className={`relative flex h-6 w-6 items-center justify-center rounded-full border font-mono text-[11px] transition sm:mx-auto ${
+                      activa
+                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                        : "border-[var(--crema)]/35 bg-[var(--fondo)] text-[var(--crema)]/75 group-hover:border-[var(--crema)]/60"
+                    }`}
+                  >
+                    {f.semana}
+                  </span>
+                </span>
+                <span
+                  className={`block min-w-0 text-[15px] leading-snug sm:mt-2 sm:px-1.5 sm:text-sm ${
+                    activa ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
+                  }`}
+                >
+                  {f.titulo}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+
+      {abierta !== null && fases[abierta] && (
+        <div className="mt-4 space-y-2 rounded-xl border border-[var(--crema)]/14 p-4">
+          <p className="rotulo text-[var(--tierra-600)]">
+            Semana {fases[abierta].semana}
+          </p>
+          <Linea
+            etiqueta=""
+            valor={fases[abierta].titulo}
+            onCambio={(v) =>
+              onCambio(fases.map((x, j) => (j === abierta ? { ...x, titulo: v } : x)))
+            }
+          />
+          <Linea
+            etiqueta=""
+            valor={fases[abierta].que_ocurre}
+            onCambio={(v) =>
+              onCambio(
+                fases.map((x, j) => (j === abierta ? { ...x, que_ocurre: v } : x))
+              )
+            }
+            filas={3}
+            tenue
+          />
+        </div>
+      )}
+
+      <p className="mt-3 text-sm text-[var(--crema)]/70">
+        Toca una semana para ver y cambiar lo que pasa en ella.
+      </p>
+    </div>
   );
 }

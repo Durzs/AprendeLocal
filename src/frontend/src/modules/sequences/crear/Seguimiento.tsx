@@ -44,7 +44,7 @@ export default function Seguimiento({
 
   if (!semanas.length) {
     return (
-      <Hoja titulo="Por dónde vas" orden={7}>
+      <Hoja titulo="Avance del proyecto" orden={7}>
         <p className="text-sm leading-relaxed text-[var(--crema)]/60">
           El seguimiento aparece cuando la ruta tenga sus semanas. Ármala con
           el modelo aquí arriba y vuelve: esta es la hoja a la que se vuelve
@@ -58,7 +58,7 @@ export default function Seguimiento({
   const siguiente = semanas.find((s) => !estaHecha(avance, s.semana));
 
   return (
-    <Hoja titulo="Por dónde vas" orden={7}>
+    <Hoja titulo="Avance del proyecto" orden={7}>
       <p className="mb-5 text-sm leading-relaxed text-[var(--crema)]/70">
         {hechas === 0 ? (
           <>Todavía no empieza en la sala. Marca cada semana cuando se dé.</>

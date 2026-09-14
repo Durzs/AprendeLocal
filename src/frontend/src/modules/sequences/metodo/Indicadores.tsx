@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Hoja } from "../crear/Campos";
 import { buscarOA } from "../crear/oa";
+import { indicadoresDe } from "../crear/indicadores";
 import type { Expedicion } from "../crear/expedicion";
 import { ETAPAS } from "./etapas";
 import { tecnicaPorId } from "./tecnicas";
@@ -21,35 +22,49 @@ import { tecnicaPorId } from "./tecnicas";
  * Que dos personas pidan lo mismo sin hablar entre ellas es la señal más
  * fuerte que da una validación.
  *
- * POR QUÉ NO SE COPIAN LOS DEL MINISTERIO
+ * QUÉ SE MUESTRA
  *
- * Por dos razones, y la segunda pesa más.
+ * Primero, tres indicadores escritos para ese objetivo en concreto, que viven
+ * en `indicadores.ts` y están a la vista para marcar. Antes lo único que había
+ * eran las frases del método, las mismas para los noventa y tres objetivos, y
+ * eso no es un indicador de nada: uno que sirve para cualquier objetivo no
+ * distingue ninguno.
  *
- * La primera es que no los tenemos. Los indicadores viven en los programas de
- * estudio, que son documentos aparte de las Bases Curriculares y que ella misma
- * describió como imposibles de encontrar. Escribirlos de memoria sería
- * inventar datos del currículum y ponerlos en una hoja que se firma.
+ * Después, plegadas, esas frases del método. Siguen sirviendo porque describen
+ * lo que se ve en cada etapa, pero ya no son lo único.
  *
- * La segunda es que, cuando los tuvo delante, no le servían. Leyó uno en voz
- * alta y su conclusión fue: «jamás voy a evaluar nada con eso». Un indicador
- * sirve si dice qué se va a mirar en la sala este jueves, y los del programa
- * están escritos para otra cosa.
+ * Y siempre, el campo para escribir los suyos y el botón para editar los
+ * propuestos, que es como trabaja un docente de verdad: corrige, que es mucho
+ * más rápido que redactar de cero.
  *
- * DE DÓNDE SALEN ENTONCES
+ * NO SON LOS DEL MINISTERIO, Y SE DICE
  *
- * De lo que ya está escrito en este proyecto y es observable. Cada etapa del
- * método trae aprendizajes y cada aprendizaje trae un «se nota en que», que es
- * un indicador en todo menos en el nombre: dice qué se ve cuando ocurrió. La
- * técnica que van a ensayar trae lo que queda registrado. Esas frases existen,
- * no se generan, y describen a este curso.
+ * Se intentó traerlos. No están en las Bases Curriculares ni en las fichas por
+ * objetivo del sitio del currículum: viven dentro de los Programas de Estudio,
+ * que hay que descargar en PDF. Una profesora entrevistada los describió como
+ * imposibles de encontrar, y tenía razón.
  *
- * Se ofrecen para marcar, se pueden editar y se pueden escribir otros. Y se
- * dice en pantalla que no son los del programa, porque alguien va a copiar esta
- * hoja en un documento oficial y tiene que saber qué está copiando.
+ * El aviso va arriba y no en letra chica, porque alguien va a copiar esta hoja
+ * en un documento que se firma y tiene que saber qué está copiando.
  */
 
 /** Un indicador candidato, con de dónde salió para poder decirlo. */
 type Candidato = { texto: string; deDonde: string };
+
+/**
+ * Los indicadores escritos para ESTE objetivo.
+ *
+ * Van primero y son la respuesta a lo que se pidió. Antes lo único que se
+ * ofrecía eran las frases del método, las mismas para los noventa y tres
+ * objetivos, y eso no es un indicador de nada: un indicador que sirve para
+ * cualquier objetivo no distingue ninguno.
+ */
+function candidatosDelObjetivo(codigo: string): Candidato[] {
+  return indicadoresDe(codigo).map((texto) => ({
+    texto,
+    deDonde: "Escrito para este objetivo",
+  }));
+}
 
 /**
  * Los indicadores que este proyecto ya tiene escritos.
@@ -96,7 +111,7 @@ export function Indicadores({
 
   if (marcados.length === 0) {
     return (
-      <Hoja titulo="Con qué vas a mirar cada objetivo" orden={orden}>
+      <Hoja titulo="Indicadores de evaluación" orden={orden}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
           Esto aparece cuando marques objetivos de aprendizaje. Para cada uno
           vas a poder dejar escrito qué se mira en la sala para saber si
@@ -109,7 +124,7 @@ export function Indicadores({
   const candidatos = candidatosDe(e);
 
   return (
-    <Hoja titulo="Con qué vas a mirar cada objetivo" orden={orden}>
+    <Hoja titulo="Indicadores de evaluación" orden={orden}>
       <p className="mb-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Un objetivo del programa no se puede mirar directamente: hay que decir
         qué se ve en la sala cuando ocurrió. Eso es lo que va aquí, y es lo que
@@ -132,6 +147,7 @@ export function Indicadores({
             codigo={cod}
             texto={oa!.texto}
             puestos={e.indicadores[cod] ?? []}
+            propios={candidatosDelObjetivo(cod)}
             candidatos={candidatos}
             onCambio={(lista) =>
               onCambio({ ...e, indicadores: { ...e.indicadores, [cod]: lista } })
@@ -147,12 +163,16 @@ function PorObjetivo({
   codigo,
   texto,
   puestos,
+  propios,
   candidatos,
   onCambio,
 }: {
   codigo: string;
   texto: string;
   puestos: string[];
+  /** Los escritos para este objetivo. Van a la vista, sin plegar. */
+  propios: Candidato[];
+  /** Los del método, que sirven para cualquiera. Van plegados. */
   candidatos: Candidato[];
   onCambio: (lista: string[]) => void;
 }) {
@@ -186,9 +206,55 @@ function PorObjetivo({
         {texto}
       </p>
 
-      {puestos.length > 0 && (
-        <ul className="mt-3.5 space-y-2">
-          {puestos.map((x, i) => (
+      {/* Los de este objetivo, a la vista y para marcar. Estaban plegados
+          junto con los genéricos, y plegado nadie los abría. */}
+      {propios.length > 0 && (
+        <ul className="mt-3.5 space-y-1.5">
+          {propios.map((c) => {
+            const puesto = puestos.includes(c.texto);
+            return (
+              <li key={c.texto}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onCambio(
+                      puesto
+                        ? puestos.filter((x) => x !== c.texto)
+                        : [...puestos, c.texto]
+                    )
+                  }
+                  aria-pressed={puesto}
+                  className={`flex w-full items-start gap-2.5 rounded-lg border px-3.5 py-2.5 text-left transition ${
+                    puesto
+                      ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                      : "border-[var(--crema)]/12 hover:border-[var(--crema)]/30"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[11px] font-bold ${
+                      puesto
+                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                        : "border-[var(--crema)]/30 text-transparent"
+                    }`}
+                  >
+                    ✓
+                  </span>
+                  <span className="min-w-0 flex-1 text-[15px] leading-relaxed text-[var(--crema)]/85">
+                    {c.texto}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {/* Los que el docente escribió o editó, aparte de los propuestos. */}
+      {puestos.filter((x) => !propios.some((c) => c.texto === x)).length > 0 && (
+        <ul className="mt-2.5 space-y-2">
+          {puestos.map((x, i) =>
+            propios.some((c) => c.texto === x) ? null : (
             <li key={`${x}-${i}`}>
               {editando === i ? (
                 <div className="flex flex-wrap gap-2">
@@ -243,7 +309,8 @@ function PorObjetivo({
                 </div>
               )}
             </li>
-          ))}
+            )
+          )}
         </ul>
       )}
 
@@ -280,8 +347,8 @@ function PorObjetivo({
         className="mt-3 min-h-11 text-sm text-[var(--crema)]/78 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
       >
         {abierto
-          ? "Cerrar los de este proyecto"
-          : "Tomar uno de los que ya tiene este proyecto"}
+          ? "Cerrar los del método"
+          : "Ver también los del método, que sirven para cualquier objetivo"}
       </button>
 
       {abierto && (

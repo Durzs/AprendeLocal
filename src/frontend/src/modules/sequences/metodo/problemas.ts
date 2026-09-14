@@ -83,6 +83,52 @@ export type Noticia = {
   queAporta?: string;
 };
 
+/**
+ * Las cuatro familias en que se agrupan las problemáticas.
+ *
+ * Diez problemáticas en una columna son diez botones que hay que leer enteros
+ * para elegir uno, y a la décima ya nadie está leyendo. Cuatro familias se
+ * abarcan de una mirada, y dentro de cada una hay dos o cuatro cosas.
+ *
+ * El agrupamiento no es temático sino de terreno: están juntas las que se
+ * trabajan yendo al mismo sitio y con las mismas técnicas. Quien tiene un
+ * estero cerca entra por «El agua» y ahí están las dos que le sirven; quien no
+ * tiene nada de eso pero ve vaciarse el pueblo entra por la última.
+ */
+export type Familia = {
+  id: string;
+  nombre: string;
+  /** Qué tienen en común, para reconocer la suya sin abrirla. */
+  deQueVa: string;
+};
+
+export const FAMILIAS_PROBLEMA: Familia[] = [
+  {
+    id: "agua",
+    nombre: "Agua y cauces",
+    deQueVa: "Calidad y disponibilidad del agua. El terreno es el cauce, el pozo o el estanque.",
+  },
+  {
+    id: "tierra",
+    nombre: "Suelo y vegetación",
+    deQueVa: "Erosión y cobertura vegetal. El terreno es una ladera, un corte de camino o un pedazo de monte.",
+  },
+  {
+    id: "aire_residuos",
+    nombre: "Aire y residuos",
+    deQueVa: "Calidad del aire y manejo de residuos. El terreno es la sala, la calle y el sitio de acumulación.",
+  },
+  {
+    id: "gente",
+    nombre: "Población y cultura local",
+    deQueVa: "Población, patrimonio cultural y acceso a servicios. Se trabaja preguntando, en las casas y el pueblo.",
+  },
+];
+
+export function familiaProblemaPorId(id: string): Familia | undefined {
+  return FAMILIAS_PROBLEMA.find((f) => f.id === id);
+}
+
 /** El mismo problema, mirado desde una asignatura. */
 export type Angulo = {
   asignatura: Asignatura;
@@ -127,6 +173,8 @@ export type Angulo = {
 
 export type Problema = {
   id: string;
+  /** A cuál de las cuatro familias pertenece. */
+  familia: string;
   nombre: string;
   queEs: string;
   /** Dónde se da. No todas las escuelas lo tienen delante. */
@@ -150,7 +198,8 @@ export type Problema = {
 export const PROBLEMAS: Problema[] = [
   {
     id: "rio_contaminado",
-    nombre: "Un río o estero contaminado",
+    familia: "agua",
+    nombre: "Contaminación de un río o estero",
     queEs:
       "El agua que pasa cerca de la escuela cambió: cambió de color, de olor, de lo que vive dentro, o de lo que se puede hacer con ella. Puede venir de arriba, de un desagüe, de la agricultura o de la basura.",
     dondeAparece:
@@ -214,7 +263,7 @@ export const PROBLEMAS: Problema[] = [
       {
         asignatura: "historia",
         enfoque:
-          "Revisar cómo el río ha ayudado a las comunidades en los últimos años, y digitalizar ese proceso.",
+          "Usos históricos del río y su registro digital.",
         queInvestigan:
           "Para qué se usaba el río, quién vivía de él, en qué década dejó de usarse y por qué. Se hace con entrevistas y con fotos familiares, que es el archivo que existe.",
         queSaleDeAqui:
@@ -225,7 +274,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Ordenar lo medido para que diga algo.",
+        enfoque: "Tratamiento y presentación de los datos medidos.",
         queInvestigan:
           "Promedios, diferencias entre puntos, cómo cambia a lo largo de las semanas. Y cuál medición se sale de todas las demás, que es la pregunta interesante.",
         queSaleDeAqui:
@@ -236,7 +285,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "lenguaje",
-        enfoque: "Escribir para que alguien de afuera lo entienda y actúe.",
+        enfoque: "Redacción de un texto para un destinatario externo.",
         queInvestigan:
           "Cómo está contada la problemática en la prensa: qué se dice, qué se omite, a quién se cita. Y cómo se escribe una nota propia que no se pueda desarmar.",
         queSaleDeAqui:
@@ -249,7 +298,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "falta_agua",
-    nombre: "El agua que no alcanza",
+    familia: "agua",
+    nombre: "Escasez de agua",
     queEs:
       "Pozos que bajan, vertientes que se secan antes que otros años, camiones aljibe que llegan dos veces por semana. No es solo que llueva menos: es cómo se reparte lo que hay.",
     dondeAparece:
@@ -295,7 +345,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "matematica",
-        enfoque: "Saber cuánta agua hay y cuánta se usa.",
+        enfoque: "Cálculo de la disponibilidad y el consumo de agua.",
         queInvestigan:
           "El consumo real de la escuela o de una casa durante una semana, contra lo que entra. Se cuenta con lo que hay: el contador, los estanques, los viajes del camión.",
         queSaleDeAqui:
@@ -306,7 +356,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "biologia",
-        enfoque: "Qué aguanta y qué no con menos agua.",
+        enfoque: "Tolerancia de las especies a la falta de agua.",
         queInvestigan:
           "Qué plantas del lugar siguen ahí después de varios años secos y cuáles desaparecieron de las huertas. Se pregunta a quien siembra.",
         queSaleDeAqui:
@@ -317,7 +367,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Cómo se repartía el agua antes, y quién decidía.",
+        enfoque: "Historia del reparto del agua y de quién lo decidía.",
         queInvestigan:
           "Turnos de riego, acuerdos entre vecinos, en qué momento cambió la cosa. Es un asunto de reglas, no solo de lluvia.",
         queSaleDeAqui:
@@ -328,7 +378,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "tecnologia",
-        enfoque: "Construir algo que ahorre agua de verdad.",
+        enfoque: "Construcción de un dispositivo de ahorro de agua.",
         queInvestigan:
           "Riego por goteo casero, recolección de lluvia, acolchado. Se prueba y se mide si sirvió.",
         queSaleDeAqui:
@@ -341,7 +391,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "basura",
-    nombre: "Microbasurales y basura que no se retira",
+    familia: "aire_residuos",
+    nombre: "Microbasurales y manejo de residuos",
     queEs:
       "Sitios donde la basura se acumula porque el camión no llega, porque no hay dónde dejarla, o porque siempre se ha dejado ahí. Suelen estar en las salidas del pueblo y al lado de los cauces.",
     dondeAparece:
@@ -372,7 +423,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "matematica",
-        enfoque: "Cuánta basura hay, de qué tipo y de dónde viene.",
+        enfoque: "Caracterización y cuantificación de los residuos.",
         queInvestigan:
           "Se cuenta y se clasifica una muestra: qué proporción es envase, orgánico, escombro. El escombro cambia el diagnóstico porque no lo deja una persona a pie.",
         queSaleDeAqui:
@@ -383,7 +434,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "biologia",
-        enfoque: "Qué le hace al suelo y al agua de al lado.",
+        enfoque: "Efectos de los residuos sobre el suelo y el agua cercana.",
         queInvestigan:
           "Qué crece y qué no crece alrededor, adónde escurre cuando llueve, qué animales llegan.",
         queSaleDeAqui:
@@ -394,7 +445,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Desde cuándo se deja basura ahí y por qué ahí.",
+        enfoque: "Origen histórico del microbasural y su localización.",
         queInvestigan:
           "Se pregunta a los vecinos más antiguos. Los microbasurales suelen estar donde antes hubo otra cosa: un pozo, un camino, un botadero autorizado.",
         queSaleDeAqui:
@@ -405,7 +456,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Hacer visible lo que se volvió invisible.",
+        enfoque: "Representación visual de un problema normalizado.",
         queInvestigan:
           "Fotografía del mismo punto en distintos momentos, o registro de lo que se encuentra tratado como catálogo.",
         queSaleDeAqui:
@@ -418,7 +469,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "aire_lena",
-    nombre: "El humo de la leña y el frío en las casas",
+    familia: "aire_residuos",
+    nombre: "Contaminación del aire por leña",
     queEs:
       "En invierno el aire del pueblo se pone denso y las casas siguen frías. Las dos cosas son el mismo problema: se quema mucho porque la casa no retiene el calor.",
     dondeAparece:
@@ -457,7 +509,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "fisica",
-        enfoque: "Por dónde se escapa el calor de una casa o de la sala.",
+        enfoque: "Pérdidas de calor en una vivienda o en la sala.",
         queInvestigan:
           "Temperatura en varios puntos a la misma hora durante una semana, y dónde está la diferencia grande.",
         queSaleDeAqui:
@@ -468,7 +520,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "quimica",
-        enfoque: "Qué se quema y qué sale de eso.",
+        enfoque: "Composición de la leña y productos de su combustión.",
         queInvestigan:
           "Qué leña se usa, cuán húmeda está, y qué diferencia hace la humedad en cuánto humo sale.",
         queSaleDeAqui:
@@ -479,7 +531,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Cuánto se gasta en calefacción y cuánto se podría no gastar.",
+        enfoque: "Costo de la calefacción y potencial de ahorro.",
         queInvestigan:
           "Metros de leña por invierno por casa, precio, y qué pasaría tapando las filtraciones.",
         queSaleDeAqui:
@@ -490,7 +542,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Cómo se calentaban las casas antes de que hubiera estufas.",
+        enfoque: "Historia de la calefacción doméstica en el sector.",
         queInvestigan:
           "Orientación de las casas antiguas, dónde iba el fuego, qué materiales se usaban.",
         queSaleDeAqui:
@@ -503,7 +555,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "suelo_erosion",
-    nombre: "La tierra que se va",
+    familia: "tierra",
+    nombre: "Erosión del suelo",
     queEs:
       "Cárcavas que crecen, raíces al aire, tierra arrastrada al pie de los cortes. Se pierde en un invierno lo que tardó siglos en formarse, y se nota primero en lo que deja de prender.",
     dondeAparece:
@@ -532,7 +585,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "biologia",
-        enfoque: "Qué sostiene la tierra y qué la suelta.",
+        enfoque: "Papel de la vegetación en la retención del suelo.",
         queInvestigan:
           "Qué crece en la parte que aguanta y qué falta donde se cae. Se comparan dos pedazos a pocos metros.",
         queSaleDeAqui:
@@ -543,7 +596,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "quimica",
-        enfoque: "Qué tiene esta tierra y qué retiene.",
+        enfoque: "Composición del suelo y su capacidad de retención.",
         queInvestigan:
           "Cuánta agua se queda en cada capa, qué se deshace en la mano, qué color tiene.",
         queSaleDeAqui:
@@ -554,7 +607,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Cuánto se está yendo y en cuánto tiempo.",
+        enfoque: "Medición de la tasa de pérdida de suelo.",
         queInvestigan:
           "Grosor de las capas, avance de una cárcava medido entre dos visitas, superficie afectada.",
         queSaleDeAqui:
@@ -565,7 +618,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "tecnologia",
-        enfoque: "Frenarlo con lo que hay.",
+        enfoque: "Obras de contención con materiales del lugar.",
         queInvestigan:
           "Barreras vivas, zanjas de infiltración, cobertura. Se instala y se vuelve a medir.",
         queSaleDeAqui:
@@ -578,7 +631,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "bosque_que_retrocede",
-    nombre: "El bosque nativo que retrocede",
+    familia: "tierra",
+    nombre: "Pérdida de bosque nativo",
     queEs:
       "Un bosque que ya no llega donde llegaba: tala, incendios, ganado que entra, o un clima que dejó de servirle. En algunas especies el retroceso ya está medido y proyectado, y eso permite trabajar con una fecha en la mano.",
     dondeAparece:
@@ -609,7 +663,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "biologia",
-        enfoque: "Qué se está perdiendo aquí, y qué se está regenerando.",
+        enfoque: "Estado del bosque: pérdida y regeneración.",
         queInvestigan:
           "Qué hay en el pedazo de bosque de al lado: los árboles grandes, lo que está creciendo abajo, y si hay renovales de las especies que importan o solo de las que invaden.",
         queSaleDeAqui:
@@ -620,7 +674,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Hasta dónde llegaba el bosque, y quién se acuerda.",
+        enfoque: "Extensión histórica del bosque según la memoria local.",
         queInvestigan:
           "Dónde había monte hace cuarenta años, en qué década se cortó y para qué. Fotos familiares, escrituras, y lo que cuenten los mayores.",
         queSaleDeAqui:
@@ -631,7 +685,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Cuánto queda y a qué ritmo se va.",
+        enfoque: "Superficie de bosque restante y ritmo de pérdida.",
         queInvestigan:
           "Superficie del pedazo que tienen, cuántos árboles por área, y comparación entre imágenes satelitales de distintos años, que son públicas.",
         queSaleDeAqui:
@@ -642,7 +696,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "tecnologia",
-        enfoque: "Hacer algo que ayude a que vuelva.",
+        enfoque: "Diseño de una intervención para favorecer la regeneración.",
         queInvestigan:
           "Recolección de semillas, un vivero pequeño en la escuela, cercado de un pedazo para que no entre el ganado. Se planta y se vuelve a mirar.",
         queSaleDeAqui:
@@ -653,7 +707,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Registrar lo que todavía está.",
+        enfoque: "Registro visual del bosque y sus especies.",
         queInvestigan:
           "Dibujo o fotografía de los árboles grandes que quedan, uno por uno, con su ubicación.",
         queSaleDeAqui:
@@ -666,7 +720,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "memoria_oficios",
-    nombre: "Lo que se está dejando de saber",
+    familia: "gente",
+    nombre: "Pérdida de oficios y saberes locales",
     queEs:
       "Oficios, cultivos, palabras, recetas y maneras de hacer que sabe la generación mayor del pueblo y que no está pasando a la siguiente. No es nostalgia: es conocimiento que funciona y que se va a perder este año o el próximo.",
     dondeAparece:
@@ -691,7 +746,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "historia",
-        enfoque: "Registrar antes de que no se pueda.",
+        enfoque: "Registro de oficios y saberes con sus portadores.",
         queInvestigan:
           "Entrevistas grabadas con quienes saben, con las preguntas preparadas por los estudiantes. Se ordena por tema y por fecha.",
         queSaleDeAqui:
@@ -702,7 +757,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "lenguaje",
-        enfoque: "Cómo se dice aquí lo que en otras partes se dice de otro modo.",
+        enfoque: "Variedades léxicas propias del sector.",
         queInvestigan:
           "Las palabras propias del lugar y del oficio: cómo se llama cada herramienta, cada parte, cada momento del año.",
         queSaleDeAqui:
@@ -713,7 +768,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Mostrar el oficio, no describirlo.",
+        enfoque: "Representación visual de un oficio en ejercicio.",
         queInvestigan:
           "Registro visual del proceso completo, paso a paso, con las manos de quien lo hace.",
         queSaleDeAqui:
@@ -724,7 +779,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "biologia",
-        enfoque: "Qué sabe de los seres vivos quien trabaja con ellos.",
+        enfoque: "Conocimiento biológico asociado a un oficio local.",
         queInvestigan:
           "Qué plantas se usan y para qué, en qué época se recogen, qué señales se miran para decidir cuándo sembrar.",
         queSaleDeAqui:
@@ -737,7 +792,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "lengua_que_se_calla",
-    nombre: "La lengua que ya casi no se habla",
+    familia: "gente",
+    nombre: "Pérdida de la lengua originaria",
     queEs:
       "En el sector hay personas mayores que hablan una lengua que los jóvenes ya no hablan. No se perdió sola: dejó de pasar de una generación a la siguiente, y con ella se van los nombres de los cerros, de las plantas y de las cosas que solo tienen nombre en esa lengua.",
     dondeAparece:
@@ -767,7 +823,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "lenguaje",
-        enfoque: "Grabar cómo se habla aquí, antes de que no quede quién.",
+        enfoque: "Registro sonoro y transcripción del habla local.",
         queInvestigan:
           "Qué palabras usa la gente mayor del sector que los jóvenes ya no usan, para qué sirven y de dónde vienen. Se graba en audio, con permiso, y se transcribe.",
         queSaleDeAqui:
@@ -778,7 +834,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Qué pasó para que se dejara de hablar.",
+        enfoque: "Causas históricas de la pérdida de transmisión.",
         queInvestigan:
           "En qué década la gente del sector dejó de hablarla con sus hijos y por qué. Se pregunta a tres generaciones de la misma familia, que suelen contestar cosas distintas.",
         queSaleDeAqui:
@@ -789,7 +845,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Cuántos quedan, de qué edad y dónde.",
+        enfoque: "Encuesta de hablantes por edad y sector.",
         queInvestigan:
           "Una encuesta corta en el sector: quién la entiende, quién la habla, quién la habla en su casa. Se cruza con la edad y se compara con las cifras del estudio nacional.",
         queSaleDeAqui:
@@ -800,7 +856,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Poner la palabra donde se pueda ver.",
+        enfoque: "Intervención visual con la lengua en espacio público.",
         queInvestigan:
           "Cómo se ve una palabra que casi no se dice. Se prueba en distintos soportes y tamaños, en los sitios por donde la gente pasa todos los días.",
         queSaleDeAqui:
@@ -811,7 +867,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "tecnologia",
-        enfoque: "Hacer que se pueda escuchar desde cualquier parte.",
+        enfoque: "Archivo, resguardo y publicación del registro sonoro.",
         queInvestigan:
           "Cómo se guarda y se publica un archivo de audio para que dure y para que lo encuentre alguien que no sabe que existe. Incluye pedir permiso y decidir qué no se publica.",
         queSaleDeAqui:
@@ -822,7 +878,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "biologia",
-        enfoque: "Los seres vivos que solo tienen nombre en esa lengua.",
+        enfoque: "Nombres de especies locales en la lengua originaria.",
         queInvestigan:
           "Qué plantas y animales del sector nombra la gente mayor en su lengua, para qué se usaban, y cuáles de esos ya no se encuentran cerca.",
         queSaleDeAqui:
@@ -835,7 +891,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "sin_conexion",
-    nombre: "La conexión que no llega",
+    familia: "gente",
+    nombre: "Falta de conectividad digital",
     queEs:
       "En el sector no hay señal, o la hay a ratos y en un solo punto. Eso decide quién puede estudiar en la casa, quién puede pedir hora al consultorio y quién tiene que viajar para hacer un trámite que otros hacen desde el teléfono.",
     dondeAparece:
@@ -874,7 +931,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "tecnologia",
-        enfoque: "Hacer el mapa de señal que no existe.",
+        enfoque: "Levantamiento de un mapa de cobertura móvil.",
         queInvestigan:
           "Dónde hay señal, de qué compañía y con cuánta fuerza, medido en varios puntos del sector a la misma hora. Se anota lo que marca el teléfono, que es un instrumento que ya tienen.",
         queSaleDeAqui:
@@ -885,7 +942,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "Cuánta gente queda fuera, en números.",
+        enfoque: "Medición del acceso a internet en el sector.",
         queInvestigan:
           "Una encuesta en el sector: quién tiene internet en la casa, quién solo con el teléfono, cuánto gasta al mes y qué dejó de hacer por no tener.",
         queSaleDeAqui:
@@ -896,7 +953,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "historia",
-        enfoque: "Quién tiene que resolverlo, y cómo se le pide.",
+        enfoque: "Institucionalidad responsable y vías de solicitud.",
         queInvestigan:
           "Qué organismo decide dónde va una antena, qué se prometió para este sector y en qué año, y por qué conducto se reclama. Se revisan actas del concejo municipal.",
         queSaleDeAqui:
@@ -907,7 +964,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "lenguaje",
-        enfoque: "Escribirle a quien decide, de manera que conteste.",
+        enfoque: "Redacción de una carta formal a la autoridad.",
         queInvestigan:
           "Cómo está escrita una carta que consigue respuesta: qué pide, en cuántas líneas, con qué dato adelante y a quién va dirigida por su nombre.",
         queSaleDeAqui:
@@ -918,7 +975,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Mostrar la espera.",
+        enfoque: "Serie fotográfica sobre el acceso a la señal.",
         queInvestigan:
           "Cómo se ve tener que subir un cerro para mandar un mensaje. Se fotografía a la misma hora, en los mismos puntos, a lo largo de varias semanas.",
         queSaleDeAqui:
@@ -931,7 +988,8 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "pueblo_que_se_vacia",
-    nombre: "El pueblo que se está quedando sin gente",
+    familia: "gente",
+    nombre: "Despoblamiento rural",
     queEs:
       "Cada año hay menos niños en la escuela, más casas cerradas y menos gente joven en el sector. Los que se van no se van por gusto: se van por agua, por trabajo, por salud o para seguir estudiando.",
     dondeAparece:
@@ -961,7 +1019,7 @@ export const PROBLEMAS: Problema[] = [
     angulos: [
       {
         asignatura: "historia",
-        enfoque: "Cuánta gente había y cuánta queda.",
+        enfoque: "Evolución de la población del sector según el censo.",
         queInvestigan:
           "Los datos del censo de la comuna en dos momentos, y qué pasó en medio. Se contrasta con lo que cuenta la gente del sector sobre quiénes se fueron y adónde.",
         queSaleDeAqui:
@@ -972,7 +1030,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "matematica",
-        enfoque: "La matrícula de esta escuela, año por año.",
+        enfoque: "Serie histórica de la matrícula escolar.",
         queInvestigan:
           "Cuántos estudiantes tuvo la escuela cada año de la última década. Está en los libros de la dirección y casi nunca se ha mirado junto.",
         queSaleDeAqui:
@@ -983,7 +1041,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "lenguaje",
-        enfoque: "Las historias de los que se fueron y los que se quedaron.",
+        enfoque: "Relatos de quienes migraron y quienes permanecieron.",
         queInvestigan:
           "Por qué se fue quien se fue y por qué se quedó quien se quedó. Se entrevista a personas de las dos clases, incluidas las que ya no viven aquí.",
         queSaleDeAqui:
@@ -994,7 +1052,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "artes",
-        enfoque: "Las casas que quedaron cerradas.",
+        enfoque: "Catastro visual de las viviendas desocupadas.",
         queInvestigan:
           "Cuántas casas del sector están cerradas y cómo se ven. Se recorre, se fotografía y se marca en un plano hecho a mano.",
         queSaleDeAqui:
@@ -1005,7 +1063,7 @@ export const PROBLEMAS: Problema[] = [
       },
       {
         asignatura: "tecnologia",
-        enfoque: "Algo que le sirva a quien se queda.",
+        enfoque: "Producto tecnológico para una necesidad de quienes permanecen.",
         queInvestigan:
           "Qué le falta a la gente que sigue viviendo aquí y que se podría construir o arreglar con lo que hay en el pueblo.",
         queSaleDeAqui:
