@@ -171,6 +171,48 @@ export function ubicarse(): Promise<Coordenada> {
   });
 }
 
+/**
+ * Qué hay en el punto que alguien tocó en el mapa.
+ *
+ * Distinto de `comunaDe`, que mira a escala de comuna. Aquí se mira de cerca,
+ * porque lo que se busca es el nombre del sitio concreto: el estero, el puente,
+ * la calle. Si no hay nada con nombre propio devuelve la localidad, que es
+ * mejor que dejar el campo vacío.
+ */
+export async function queHayEn(c: Coordenada): Promise<string> {
+  const url =
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2` +
+    `&lat=${c.lat}&lon=${c.lng}&zoom=17&accept-language=es`;
+  const r = (await traer(url)) as {
+    name?: string;
+    address?: Record<string, string>;
+  };
+  const a = r?.address ?? {};
+  return (
+    r?.name?.trim() ||
+    a.water ||
+    a.river ||
+    a.stream ||
+    a.natural ||
+    a.road ||
+    a.hamlet ||
+    a.village ||
+    a.town ||
+    ""
+  );
+}
+
+/**
+ * Buscar cualquier sitio de Chile por su nombre.
+ *
+ * `buscarEscuela` hace lo mismo y se llama así porque la escuela es la puerta
+ * de entrada, pero el buscador del mapa no tiene por qué limitarse a escuelas:
+ * en una entrevista se pidió poder buscar ubicaciones sin más, que es lo que
+ * uno espera de un mapa. Es el mismo servicio con otro nombre, para que se lea
+ * bien en cada sitio donde se usa.
+ */
+export const buscarSitio = buscarEscuela;
+
 /** Comuna y región a partir de la coordenada. Esto es lo que era automático. */
 export async function comunaDe(c: Coordenada): Promise<Donde> {
   const url =

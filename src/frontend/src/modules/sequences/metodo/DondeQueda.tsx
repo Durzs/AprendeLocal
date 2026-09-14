@@ -5,16 +5,18 @@ import type { Entorno as EntornoExpedicion, Expedicion } from "../crear/expedici
 import {
   EJEMPLO_ARAUCANIA,
   aQueDistancia,
-  buscarEscuela,
+  buscarSitio,
   comunaDe,
   lugaresCerca,
   metrosEntre,
+  queHayEn,
   ubicarse,
   type Coordenada,
   type Donde,
   type Escuela,
   type Lugar,
 } from "./lugar";
+import { Mapa } from "./Mapa";
 
 /**
  * Dónde queda la escuela, resuelto solo.
@@ -62,19 +64,22 @@ export function DondeQueda({
   const [centro, ponerCentro] = useState<Coordenada | null>(null);
   const [donde, ponerDonde] = useState<Donde | null>(null);
   const [lugares, ponerLugares] = useState<Lugar[]>([]);
+  const [nombrando, ponerNombrando] = useState(false);
 
   /**
-   * Buscar la escuela por su nombre.
+   * Buscar por nombre: la escuela, el pueblo o el sitio mismo.
    *
    * Va primero porque es lo único que se puede hacer desde la casa un domingo
-   * por la noche, que es cuando se planifica de verdad.
+   * por la noche, que es cuando se planifica de verdad. Y no se limita a
+   * escuelas: en una entrevista se pidió poder buscar ubicaciones sin más, que
+   * es lo que uno espera de un mapa.
    */
   async function buscarPorNombre() {
     if (texto.trim().length < 3) return;
     ponerBuscandoEscuela(true);
     ponerMotivo("");
     try {
-      const r = await buscarEscuela(texto);
+      const r = await buscarSitio(texto);
       ponerEscuelas(r);
       if (!r.length) ponerMotivo("nada_cerca");
     } catch {
@@ -115,6 +120,25 @@ export function DondeQueda({
     }
   }
 
+  /**
+   * Tocar un punto del mapa que no es ninguno de los de la lista.
+   *
+   * La mitad de los sitios a los que va una escuela rural no están cargados en
+   * ningún mapa. Se toma la coordenada, se le pregunta al mapa cómo se llama
+   * eso, y si no tiene nombre el campo queda para que lo escriba quien sabe.
+   */
+  async function tocarPunto(c: Coordenada) {
+    ponerNombrando(true);
+    try {
+      const nombre = await queHayEn(c);
+      if (nombre) onCambio({ ...e, ubicacion: nombre });
+    } catch {
+      /* Sin señal se queda la coordenada marcada y el nombre lo pone él. */
+    } finally {
+      ponerNombrando(false);
+    }
+  }
+
   function elegir(l: Lugar) {
     const mismo = e.ubicacion === l.nombre;
     onCambio({
@@ -127,10 +151,10 @@ export function DondeQueda({
   return (
     <Hoja titulo="Dónde queda la escuela" orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Escribe el nombre de la escuela o su dirección. Con eso se obtienen la
-        comuna, la región y los lugares que hay alrededor, y tú eliges a cuál
-        puede ir el curso caminando. No hace falta estar en la escuela para
-        hacer esto.
+        Escribe el nombre de la escuela, del pueblo o del sitio mismo. Aparece
+        el mapa de alrededor con lo que hay cerca, y ahí se elige a cuál puede
+        ir el curso caminando. No hace falta estar en la escuela para hacer
+        esto, que es lo normal cuando se planifica desde la casa.
       </p>
 
       <div className="grid gap-2.5 sm:grid-cols-[1fr_auto]">
@@ -208,6 +232,17 @@ export function DondeQueda({
             </span>
           )}
         </p>
+      )}
+
+      {centro && (
+        <Mapa
+          centro={centro}
+          lugares={lugares}
+          elegido={e.ubicacion}
+          onElegirLugar={elegir}
+          onTocarPunto={(c) => void tocarPunto(c)}
+          buscando={nombrando}
+        />
       )}
 
       {lugares.length > 0 && centro && (
