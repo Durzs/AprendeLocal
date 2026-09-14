@@ -13,24 +13,43 @@
  * rural el internet es lo primero que falta, y elegir un OA no puede depender
  * de que la base responda.
  *
- * A los de Ciencias Naturales se sumaron los de Matemática, que se leyeron de
- * curriculumnacional.cl y viven en `oaMatematica.ts`. Faltan Historia, Lenguaje
- * y Artes: cuando entren, se agregan igual, con su asignatura, y las listas los
- * agrupan solas.
+ * Están las seis asignaturas desde las que se puede entrar a un proyecto:
+ * Ciencias Naturales, Matemática, Lenguaje, Historia y Geografía, Artes
+ * Visuales y Tecnología. Cada una vive en su archivo y todas se leyeron de
+ * curriculumnacional.cl, una por una.
+ *
+ * De Historia solo están los ejes de Geografía y Formación Ciudadana, y es
+ * deliberado: el proceso de hominización no se conecta con el estero de al
+ * lado, y ofrecerlo aquí empujaría a forzar el encaje. Está dicho en su
+ * archivo.
  */
 
 import { MATEMATICA } from "./oaMatematica";
+import { LENGUAJE } from "./oaLenguaje";
+import { HISTORIA } from "./oaHistoria";
+import { ARTES } from "./oaArtes";
+import { TECNOLOGIA } from "./oaTecnologia";
 
 /** Los cuatro cursos que atiende hoy la plataforma. */
 export type NivelOA = "5to_basico" | "6to_basico" | "7mo_basico" | "8vo_basico";
 
 /** Las asignaturas que ya tienen sus objetivos cargados. */
-export type AsignaturaOA = "ciencias_naturales" | "matematica";
+export type AsignaturaOA =
+  | "ciencias_naturales"
+  | "matematica"
+  | "lenguaje"
+  | "historia"
+  | "artes"
+  | "tecnologia";
 
 /** Cómo se llama cada una donde hay que mostrarla. */
 export const NOMBRE_ASIGNATURA_OA: Record<AsignaturaOA, string> = {
   ciencias_naturales: "Ciencias Naturales",
   matematica: "Matemática",
+  lenguaje: "Lenguaje",
+  historia: "Historia y Geografía",
+  artes: "Artes Visuales",
+  tecnologia: "Tecnología",
 };
 
 export type OA = {
@@ -60,7 +79,19 @@ export const EJES: Record<string, string> = {
   "geometria": "Geometría",
   "medicion": "Medición",
   "datos_probabilidades": "Datos y probabilidades",
-  "probabilidad_estadistica": "Probabilidad y estadística"
+  "probabilidad_estadistica": "Probabilidad y estadística",
+  "lectura": "Lectura",
+  "escritura": "Escritura",
+  "oralidad": "Comunicación oral",
+  "investigacion": "Investigación",
+  "geografia": "Geografía",
+  "ciudadania": "Formación ciudadana",
+  "crear": "Expresar y crear",
+  "apreciar": "Apreciar y responder",
+  "difundir": "Difundir y comunicar",
+  "disenar": "Diseñar, hacer y probar",
+  "tic": "Tecnologías de la información",
+  "tecnologia_sociedad": "Tecnología, ambiente y sociedad"
 };
 
 /** `5to_basico` → `5º`. */
@@ -642,6 +673,10 @@ const CIENCIAS: Omit<OA, "asignatura">[] = [
 export const OBJETIVOS: OA[] = [
   ...CIENCIAS.map((o) => ({ ...o, asignatura: "ciencias_naturales" as const })),
   ...MATEMATICA,
+  ...LENGUAJE,
+  ...HISTORIA,
+  ...ARTES,
+  ...TECNOLOGIA,
 ];
 
 /** Índice por código, para no recorrer la lista en cada búsqueda. */

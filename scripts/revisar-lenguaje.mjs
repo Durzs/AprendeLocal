@@ -194,3 +194,40 @@ console.log(
   `Lenguaje revisado: ${ARCHIVOS.length} archivos, ${cursos} cursos con su espera, ` +
     `${salidas.length} salidas que hacen algo más que medir.`,
 );
+
+// ── Los códigos de objetivo tienen que existir ─────────────────────────
+//
+// Un código mal escrito en el catálogo de problemáticas no rompe nada: la
+// pantalla simplemente no muestra ese objetivo, y nadie se entera. Pero ese
+// mismo código puede acabar impreso en la hoja que se lleva a la dirección, y
+// entonces es un papel firmado citando un objetivo que no existe. Se comprueba
+// aquí, en cada compilación.
+{
+  const base = resolve(RAIZ, "src/modules/sequences/crear");
+  const archivosOA = [
+    "oa.ts", "oaMatematica.ts", "oaLenguaje.ts",
+    "oaHistoria.ts", "oaArtes.ts", "oaTecnologia.ts",
+  ];
+  const existen = new Set();
+  for (const f of archivosOA) {
+    const texto = readFileSync(resolve(base, f), "utf8");
+    for (const m of texto.matchAll(/codigo: "([^"]+)"/g)) existen.add(m[1]);
+  }
+
+  const catalogo = readFileSync(
+    resolve(RAIZ, "src/modules/sequences/metodo/problemas.ts"),
+    "utf8"
+  );
+  const rotos = [
+    ...new Set([...catalogo.matchAll(/OA\d+_[A-Z]+_\d/g)].map((m) => m[0])),
+  ].filter((c) => !existen.has(c));
+
+  if (rotos.length) {
+    console.error(
+      `\n\u2717 Objetivos citados que no existen en la base: ${rotos.join(", ")}`
+    );
+    process.exitCode = 1;
+  } else {
+    console.log(`Objetivos: ${existen.size} cargados, todos los citados existen.`);
+  }
+}
