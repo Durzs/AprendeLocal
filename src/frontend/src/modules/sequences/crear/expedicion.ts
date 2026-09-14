@@ -135,6 +135,24 @@ export type Expedicion = {
   formato: string | null;
   /** A quién le sirve. Con nombre: «la comunidad» no es un destinatario. */
   destinatario: string;
+  /**
+   * De qué clase es ese destinatario: quien causa, quien sufre, quien decide,
+   * el pueblo o la propia escuela. Se pregunta antes del nombre porque nadie
+   * escribe un nombre concreto en una caja vacía, y sí lo escribe cuando ya
+   * reconoció de qué clase es el suyo.
+   */
+  familiaDestinatario: string | null;
+  /**
+   * Qué se mira en la sala para saber si cada objetivo ocurrió, por código.
+   *
+   * Lo pidieron dos docentes por separado: un objetivo del programa no se
+   * puede observar, y sin traducirlo a algo que se vea no hay con qué evaluar.
+   * No son los indicadores oficiales del programa de estudio y se dice en
+   * pantalla, porque esta hoja se copia en documentos que se firman.
+   */
+  indicadores: Record<string, string[]>;
+  /** Edad, dónde están y qué necesitan. De aquí sale si el formato les llega. */
+  rasgosDestinatario: { edad: string; donde: string; necesidad: string };
 };
 
 export const VACIA: Expedicion = {
@@ -162,6 +180,9 @@ export const VACIA: Expedicion = {
   rutaId: null,
   formato: null,
   destinatario: "",
+  familiaDestinatario: null,
+  indicadores: {},
+  rasgosDestinatario: { edad: "", donde: "", necesidad: "" },
 };
 
 /**

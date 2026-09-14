@@ -26,6 +26,7 @@ import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
 import { Permisos } from "../metodo/Permisos";
+import { Indicadores } from "../metodo/Indicadores";
 import type { Avance } from "./avance";
 import type { EstadoNube } from "./nube";
 
@@ -55,8 +56,15 @@ export default function Paso3({
       <ElegirFormato
         formato={e.formato}
         destinatario={e.destinatario}
+        familia={e.familiaDestinatario}
+        rasgos={e.rasgosDestinatario}
         onCambio={(cambio) => onCambio({ ...e, ...cambio })}
       />
+
+      {/* Los indicadores van antes de la hoja de dirección porque es de donde
+          esa hoja saca con qué se evalúa. Lo pidieron dos docentes distintos
+          en dos entrevistas, sin conocerse. */}
+      <Indicadores e={e} onCambio={onCambio} orden={5} />
 
       <Justificacion e={e} />
 
@@ -139,7 +147,18 @@ function Justificacion({ e }: { e: Expedicion }) {
                   <span className="shrink-0 font-mono text-xs text-[var(--tierra-600)]">
                     {cod}
                   </span>
-                  <span>{oa?.texto}</span>
+                  <span>
+                    {oa?.texto}
+                    {/* Los indicadores van pegados a su objetivo y no en una
+                        lista aparte: la hoja se lee para comprobar que cada
+                        objetivo tiene con qué mirarse. */}
+                    {(e.indicadores[cod] ?? []).length > 0 && (
+                      <span className="mt-1.5 block text-[var(--crema)]/75">
+                        Se mira en que:{" "}
+                        {(e.indicadores[cod] ?? []).join("; ")}.
+                      </span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -182,6 +201,10 @@ function Justificacion({ e }: { e: Expedicion }) {
           lo que el curso decida construir después de volver del terreno, en su
           segunda versión y corregido por sus compañeros.
           {e.destinatario.trim() ? ` Se entrega a: ${e.destinatario}.` : ""}
+          {[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde]
+            .filter((x) => x.trim())
+            .join("; ") &&
+            ` Ese destinatario es: ${[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde, e.rasgosDestinatario.necesidad].filter((x) => x.trim()).join("; ")}.`}
         </p>
 
         <p>

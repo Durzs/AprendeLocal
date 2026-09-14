@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ETAPAS, type Decide, type Etapa } from "./etapas";
 import { COMO_SE_ELIGE, FORMATOS, type Formato } from "./formatos";
+import { FAMILIAS, RASGOS, familiaPorId, type Rasgos } from "./destinatarios";
 import { Hoja } from "../crear/Campos";
 
 /**
@@ -190,31 +191,63 @@ function EtapaPlegada({
   );
 }
 
+
 /**
- * El momento en que el curso decide qué construye.
+ * A quién le llega lo que el curso construye, y recién después con qué.
  *
- * Va aparte de los otros nueve porque es el único que deja algo guardado: la
- * decisión del curso se escribe aquí y viaja con la expedición. Y porque es el
- * que faltaba entero: con el producto puesto de antemano no hay proyecto, hay
- * tarea larga.
+ * ESTE ORDEN NO ES UN DETALLE
  *
- * La lista no está para elegir de ella. Está para descartar con argumento, que
- * es un razonamiento mejor: un curso que deja fuera el informe porque en su
- * pueblo nadie lee informes está pensando en su destinatario, y eso es la
- * mitad del trabajo.
+ * Antes el destinatario era una caja de texto con la advertencia de que «la
+ * comunidad» no es un nombre, y enseguida venía la lista de formatos. Dos
+ * problemas, los dos dichos en una entrevista de validación por alguien que
+ * lleva tres años pidiendo esto mismo en tecnología.
+ *
+ * El primero: con una barra de texto se escribe «la comunidad», «para todos»,
+ * «cualquier persona». Saber que hay que concretar no es saber cómo. Hacen
+ * falta criterios y opciones, no un hueco. Por eso ahora hay cinco familias de
+ * destinatario con ejemplos de verdad, y tres preguntas que lo caracterizan:
+ * qué edad tienen, dónde están y qué necesitan.
+ *
+ * El segundo: el formato se elegía antes de saber a quién le llega, y las
+ * preguntas de la sala hablaban de «la campaña» cuando nadie había decidido
+ * que fuera una campaña. Va al revés. Una campaña en redes funciona con
+ * adolescentes que andan con el teléfono y no funciona en una caleta donde no
+ * hay señal, por buena que sea la campaña.
+ *
+ * Los formatos que no le llegan a ese destinatario no desaparecen: quedan
+ * marcados con el motivo. Descartar con argumento es un razonamiento mejor que
+ * no haber visto nunca la opción, y es lo que el curso tiene que aprender a
+ * hacer.
  */
 export function ElegirFormato({
   formato,
   destinatario,
+  familia,
+  rasgos,
   onCambio,
   orden = 7,
 }: {
   formato: string | null;
   destinatario: string;
-  onCambio: (cambio: { formato?: string | null; destinatario?: string }) => void;
+  familia: string | null;
+  rasgos: Rasgos;
+  onCambio: (cambio: {
+    formato?: string | null;
+    destinatario?: string;
+    familiaDestinatario?: string | null;
+    rasgosDestinatario?: Rasgos;
+  }) => void;
   orden?: number;
 }) {
   const elegido = FORMATOS.find((f) => f.id === formato) ?? null;
+  const suFamilia = familia ? familiaPorId(familia) : null;
+
+  // Lo que no le llega a esta gente, con su motivo, para marcarlo sin
+  // esconderlo. Sin familia elegida no se marca nada: sería inventarse un
+  // impedimento antes de saber para quién.
+  const noLlega = new Map(
+    (suFamilia?.noLlegan ?? []).map((x) => [x.formato, x.porQue])
+  );
 
   return (
     <Hoja titulo="Qué van a construir ellos" orden={orden}>
@@ -224,60 +257,192 @@ export function ElegirFormato({
         se marque aquí queda registrado para no perderlo de vista.
       </p>
 
-      <label className="block">
-        <span className="rotulo text-[var(--crema)]/75">
-          A quién le sirve, con nombre
-        </span>
-        <input
-          type="text"
-          value={destinatario}
-          onChange={(ev) => onCambio({ destinatario: ev.target.value })}
-          placeholder="El comité de agua, no «la comunidad»"
-          className="mt-2 min-h-11 w-full rounded-xl border border-[var(--crema)]/18 bg-transparent px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
-        />
-        <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/70">
-          Si no se puede nombrar a una persona o a un grupo concreto, todavía no
-          hay destinatario, y sin destinatario el trabajo termina en la nota.
-        </span>
-      </label>
+      {/* ── 1 · De qué clase es el destinatario ───────────────────────── */}
+      <p className="rotulo text-[var(--tierra-600)]">
+        1 · A quién le va a llegar
+      </p>
+      <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
+        Primero a quién y después qué, porque lo segundo depende de lo primero.
+        Estas son las cinco clases que aparecen siempre; la de ustedes es una de
+        estas, aunque el nombre sea otro.
+      </p>
 
-      <div className="mt-6">
-        <p className="rotulo text-[var(--crema)]/75">
-          Cómo se elige, en la sala
-        </p>
-        <ul className="mt-2.5 space-y-1.5">
-          {COMO_SE_ELIGE.map((q) => (
-            <li key={q} className="text-[15px] leading-relaxed text-[var(--crema-clara)]">
-              «{q}»
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-6">
-        <p className="rotulo text-[var(--crema)]/75">
-          Si no se les ocurre nada, para mirar
-        </p>
-        <ul className="mt-2.5 flex flex-wrap gap-2">
-          {FORMATOS.map((f) => {
-            const activo = f.id === formato;
-            return (
-              <li key={f.id}>
-                <button
-                  type="button"
-                  onClick={() => onCambio({ formato: activo ? null : f.id })}
-                  aria-pressed={activo}
-                  className={`min-h-11 rounded-full border px-4 text-sm transition ${
-                    activo
-                      ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
-                      : "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
+      <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+        {FAMILIAS.map((f) => {
+          const activa = f.id === familia;
+          return (
+            <li key={f.id}>
+              <button
+                type="button"
+                onClick={() =>
+                  onCambio({ familiaDestinatario: activa ? null : f.id })
+                }
+                aria-pressed={activa}
+                className={`h-full w-full rounded-xl border px-4 py-3 text-left transition ${
+                  activa
+                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                    : "border-[var(--crema)]/14 hover:border-[var(--crema)]/32"
+                }`}
+              >
+                <span
+                  className={`block text-[15px] leading-snug ${
+                    activa ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
                   }`}
                 >
                   {f.nombre}
-                </button>
+                </span>
+                <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/75">
+                  {f.quienEs}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      {suFamilia && (
+        <div className="mt-4 rounded-xl border border-[var(--crema)]/14 p-4">
+          <p className="rotulo text-[var(--crema)]/72">
+            De esta clase, por ejemplo
+          </p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {suFamilia.ejemplos.map((x) => (
+              <li
+                key={x}
+                className="rounded-full border border-[var(--crema)]/14 px-3 py-1 text-sm text-[var(--crema)]/82"
+              >
+                {x}
               </li>
-            );
-          })}
+            ))}
+          </ul>
+          <p className="mt-3.5 text-[15px] leading-relaxed text-[var(--crema)]/82">
+            <span className="text-[var(--crema-clara)]">Qué les mueve:</span>{" "}
+            {suFamilia.queLesMueve}
+          </p>
+
+          <label className="mt-4 block">
+            <span className="rotulo text-[var(--crema)]/75">
+              El de ustedes, con nombre propio
+            </span>
+            <input
+              type="text"
+              value={destinatario}
+              onChange={(ev) => onCambio({ destinatario: ev.target.value })}
+              placeholder={suFamilia.ejemplos[0]}
+              className="mt-2 min-h-11 w-full rounded-xl border border-[var(--crema)]/18 bg-transparent px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
+            />
+          </label>
+        </div>
+      )}
+
+      {/* ── 2 · Cómo es esa gente ─────────────────────────────────────── */}
+      {/* El marco va siempre, aunque no haya destinatario elegido: cuando el
+          paso 2 desaparecía, en pantalla se leía «1 · …» y enseguida «3 · …»,
+          y el salto parecía un error. */}
+      <div className="mt-6">
+        <p className="rotulo text-[var(--tierra-600)]">2 · Cómo es esa gente</p>
+        {!suFamilia && (
+          <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
+            Tres preguntas sobre el destinatario: qué edad tiene, dónde está y
+            qué necesita. Aparecen en cuanto elijas arriba de qué clase es.
+          </p>
+        )}
+      </div>
+      {suFamilia && (
+        <div className="mt-3">
+          <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
+            Se contestan en la sala. De aquí sale la mitad de la decisión
+            siguiente: si en el sector no hay señal, no hay campaña en redes que
+            llegue, y el curso puede decir por qué la descartó.
+          </p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            {RASGOS.map((r) => (
+              <label key={r.id} className="block">
+                <span className="block text-[15px] text-[var(--crema-clara)]">
+                  {r.pregunta}
+                </span>
+                <input
+                  type="text"
+                  value={rasgos[r.id]}
+                  onChange={(ev) =>
+                    onCambio({
+                      rasgosDestinatario: { ...rasgos, [r.id]: ev.target.value },
+                    })
+                  }
+                  placeholder={r.ejemplo}
+                  className="mt-2 min-h-11 w-full rounded-xl border border-[var(--crema)]/18 bg-transparent px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
+                />
+                <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/70">
+                  {r.ayuda}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── 3 · Recién ahora, con qué ─────────────────────────────────── */}
+      <div className="mt-6">
+        <p className="rotulo text-[var(--tierra-600)]">
+          3 · Con qué se lo van a entregar
+        </p>
+        <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
+          {suFamilia
+            ? `Lo que le llega a ${suFamilia.nombre.toLowerCase()} va primero. Lo tachado no es que esté prohibido: es que a esta gente no le llega, y conviene que el curso sepa por qué antes de insistir.`
+            : "Elige arriba a quién le va a llegar y esta lista se ordena sola, marcando lo que a esa gente no le sirve."}
+        </p>
+
+        <ul className="mt-3 space-y-2">
+          {[...FORMATOS]
+            .sort((a, b) => {
+              if (!suFamilia) return 0;
+              const puntos = (id: string) =>
+                suFamilia.llegan.includes(id) ? 0 : noLlega.has(id) ? 2 : 1;
+              return puntos(a.id) - puntos(b.id);
+            })
+            .map((f) => {
+              const activo = f.id === formato;
+              const motivo = noLlega.get(f.id);
+              const llega = suFamilia?.llegan.includes(f.id);
+              return (
+                <li key={f.id}>
+                  <button
+                    type="button"
+                    onClick={() => onCambio({ formato: activo ? null : f.id })}
+                    aria-pressed={activo}
+                    className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                      activo
+                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                        : "border-[var(--crema)]/14 hover:border-[var(--crema)]/32"
+                    }`}
+                  >
+                    <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <span
+                        className={`text-[15px] ${
+                          activo
+                            ? "text-[var(--tierra-300)]"
+                            : motivo
+                              ? "text-[var(--crema)]/55"
+                              : "text-[var(--crema-clara)]"
+                        }`}
+                      >
+                        {f.nombre}
+                      </span>
+                      {llega && (
+                        <span className="rounded-full bg-[var(--tierra-600)]/20 px-2 py-0.5 rotulo text-[var(--tierra-300)]">
+                          le llega
+                        </span>
+                      )}
+                    </span>
+                    {motivo && (
+                      <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/70">
+                        {motivo}
+                      </span>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
         </ul>
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
           Si inventan uno que no está, mejor: esta lista no está para cerrar.
@@ -285,10 +450,27 @@ export function ElegirFormato({
       </div>
 
       {elegido && <FichaFormato f={elegido} />}
+
+      {/* Las preguntas de la sala van al final y no al principio: son para
+          discutir una decisión que ya está tomada, no para tomarla a ciegas. */}
+      <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
+        <p className="rotulo text-[var(--crema)]/75">
+          Para discutirlo en la sala
+        </p>
+        <ul className="mt-2.5 space-y-1.5">
+          {COMO_SE_ELIGE.map((q) => (
+            <li
+              key={q}
+              className="text-[15px] leading-relaxed text-[var(--crema-clara)]"
+            >
+              «{q}»
+            </li>
+          ))}
+        </ul>
+      </div>
     </Hoja>
   );
 }
-
 function FichaFormato({ f }: { f: Formato }) {
   return (
     <div className="mt-5 space-y-3 rounded-xl border border-[var(--crema)]/14 p-4 text-[15px] leading-relaxed">
