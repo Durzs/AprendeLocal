@@ -122,12 +122,13 @@ export const ETAPAS: Etapa[] = [
       {
         nombre: "Apropiación del problema",
         queEs:
-          "Formula preguntas o reflexiones propias que muestran interés y que la noticia no contesta.",
+          "Formula preguntas o reflexiones propias que muestran interés y que la noticia no contesta. No sale de pedirlas: sale de mostrar dos o tres preguntas hechas, desarmarlas delante del curso para ver de qué están hechas, y corregir las primeras que escriban. Pedir preguntas complejas en la primera sesión, sin ese trabajo previo, devuelve preguntas de una línea que nadie va a querer investigar.",
         seNotaEn:
           "las preguntas son sobre aquí y no sobre la noticia. Esta es la que decide si hay proyecto: sin preguntas propias, lo que sigue es comprensión de lectura.",
       },
     ],
     preguntasQueAbren: [
+      "Esta pregunta que traigo yo, ¿de qué está hecha? ¿Qué la hace difícil de contestar de una vez?",
       "¿De cuándo es esto, quién lo escribió y a quién le convenía escribirlo?",
       "¿Esto nos pasa a nosotros? ¿Dónde exactamente?",
       "¿Quién cree que sí y quién cree que no? Párense de este lado y de este otro",

@@ -17,7 +17,10 @@
  * de empujarse encima de un proyecto que no es el suyo.
  */
 
+import { useRef } from "react";
+
 import { Hoja } from "./Campos";
+import { Copiar } from "./Copiar";
 import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
@@ -95,6 +98,7 @@ export default function Paso3({
  * desde la primera lámina.
  */
 function Justificacion({ e }: { e: Expedicion }) {
+  const hoja = useRef<HTMLDivElement>(null);
   const oas = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropio.trim();
@@ -121,7 +125,10 @@ function Justificacion({ e }: { e: Expedicion }) {
         nuevo que llenar: se imprime y se firma.
       </p>
 
-      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85">
+      <div
+        ref={hoja}
+        className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85"
+      >
         <p>
           <span className="text-[var(--crema-clara)]">Proyecto:</span> {titulo}.
           {e.cursos.length > 0 ? ` Cursos ${e.cursos.join(", ")}.` : ""}
@@ -221,13 +228,20 @@ function Justificacion({ e }: { e: Expedicion }) {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => window.print()}
-        className="mt-4 min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
-      >
-        Imprimir esta hoja
-      </button>
+      {/* Imprimir y copiar, las dos. Se pidió en una entrevista que el
+          material viniera en formato editable: casi nadie usa un documento
+          entero, se toma un pedazo y se adapta, y algo que solo se imprime
+          obliga a teclearlo de nuevo para cambiar una línea. */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
+        >
+          Imprimir esta hoja
+        </button>
+        <Copiar de={hoja} que="la hoja" />
+      </div>
     </Hoja>
   );
 }

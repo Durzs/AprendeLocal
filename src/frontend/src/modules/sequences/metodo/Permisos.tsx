@@ -1,4 +1,7 @@
+import { useRef } from "react";
+
 import { Hoja } from "../crear/Campos";
+import { Copiar } from "../crear/Copiar";
 import { buscarOA } from "../crear/oa";
 import type { Expedicion } from "../crear/expedicion";
 import { problemaPorId } from "./problemas";
@@ -83,6 +86,7 @@ const QUE_LLEVAR: { titulo: string; cosas: string[]; cuando: string }[] = [
 ];
 
 export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
+  const papeles = useRef<HTMLDivElement>(null);
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropio.trim();
   const tecnicas = e.tecnicas.map(tecnicaPorId).filter(Boolean);
@@ -113,6 +117,7 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
       </p>
 
       {/* ── Superintendencia ──────────────────────────────────────────── */}
+      <div ref={papeles}>
       <div className="space-y-3.5 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85">
         <p className="rotulo text-[var(--tierra-600)]">
           Formulario de la Superintendencia de Educación
@@ -216,6 +221,8 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
         </p>
       </div>
 
+      </div>
+
       {/* ── Qué llevar ────────────────────────────────────────────────── */}
       <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
         <p className="rotulo text-[var(--crema)]/75">Qué tiene que llevar el curso</p>
@@ -246,13 +253,16 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={() => window.print()}
-        className="mt-5 min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
-      >
-        Imprimir los dos documentos
-      </button>
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
+        >
+          Imprimir los dos documentos
+        </button>
+        <Copiar de={papeles} que="los dos documentos" />
+      </div>
     </Hoja>
   );
 }

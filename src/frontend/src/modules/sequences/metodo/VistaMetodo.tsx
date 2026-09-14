@@ -41,7 +41,12 @@ const ANILLO: Record<string, string> = {
 };
 
 export function VistaMetodo({ orden = 5 }: { orden?: number }) {
-  const [abierto, ponerAbierto] = useState<string | null>(ETAPAS[0]?.id ?? null);
+  // Ninguna abierta de entrada. Venía la primera abierta de oficio, y en una
+  // entrevista se pidió quitar los destacados predeterminados justamente por
+  // la diversidad de contextos: dejar una abierta sugiere que ahí empieza lo
+  // importante, y la lista cerrada se lee entera de un vistazo, que es para lo
+  // que está.
+  const [abierto, ponerAbierto] = useState<string | null>(null);
 
   return (
     <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
