@@ -57,16 +57,19 @@ export default function RutaGenerada({
   /* ── Todavía no hay ruta armada ──────────────────────────────────────── */
   if (!ruta) {
     return (
-      <Hoja titulo="Armar una para tu escuela" orden={3}>
+      <Hoja titulo="Armar la ruta de tu escuela" orden={3}>
         <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-          Con la problemática que elegiste, las asignaturas desde las que
-          entras, los objetivos que marcaste y el lugar que quedó ubicado en el
-          mapa. Es lo único de esta lámina que se fabrica para tu escuela y no
-          sirve para ninguna otra.
+          La ruta es el plan de clases del proyecto: qué se hace en cada
+          sesión, en qué orden y con qué. Se arma con la problemática que
+          elegiste, las asignaturas desde las que entras, los objetivos que
+          marcaste y el lugar que quedó ubicado en el mapa. Es lo único de esta
+          lámina que se fabrica para tu escuela y no sirve para ninguna otra.
         </p>
         <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-          Vuelve a medio hacer, y es a propósito: cuatro cosas de tu escuela no
-          las puede saber y te las va a preguntar.
+          La ruta llega con algunas partes en blanco, a propósito. Son las
+          decisiones que dependen de cosas que pasan en tu escuela y que
+          nosotros no tenemos cómo saber, así que en vez de rellenarlas a ojo
+          quedan marcadas para que las completes tú.
         </p>
 
         {/* Sin sesión se dice aquí y no después de pulsar. Que el docente
@@ -84,8 +87,8 @@ export default function RutaGenerada({
         ) : (
           <div className="rounded-xl border border-[var(--crema)]/20 bg-[var(--crema)]/[0.04] p-4">
             <p className="text-sm leading-relaxed text-[var(--crema)]/80">
-              Armar una con el modelo pide entrar con cuenta, porque cada una
-              nos cuesta. Lo que estuviste haciendo no se pierde: queda guardado
+              Armar la ruta con el modelo pide entrar con cuenta, porque cada
+              una nos cuesta. Lo que estuviste haciendo no se pierde: queda guardado
               en este computador y sigue aquí cuando vuelvas.
             </p>
             <div className="mt-3.5 flex flex-wrap items-center gap-4">

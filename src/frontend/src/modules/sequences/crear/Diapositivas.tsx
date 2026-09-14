@@ -108,7 +108,7 @@ export default function Diapositivas({
   if (!actual) return null;
 
   return (
-    <div className="min-h-screen bg-[#1e2a24] text-[var(--crema)]">
+    <div className="min-h-screen bg-[var(--fondo)] text-[var(--crema)]">
       {/* Grano de papel. Sostiene el resto del diseño: sin esta capa el verde
           queda plano y el conjunto se lee como una diapositiva de empresa. */}
       <div
@@ -191,7 +191,7 @@ export default function Diapositivas({
         </main>
 
         {/* ── Pie: avanzar y volver ────────────────────────────────────── */}
-        <footer className="sticky bottom-0 -mx-5 flex items-center justify-between gap-4 border-t border-[var(--crema)]/12 bg-[#1e2a24]/95 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
+        <footer className="sticky bottom-0 -mx-5 flex items-center justify-between gap-4 border-t border-[var(--crema)]/12 bg-[var(--fondo)]/95 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
           <button
             type="button"
             onClick={() => ir(indice - 1)}

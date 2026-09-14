@@ -12,12 +12,15 @@
  *
  * Ahora solo aparece lo que es de ESTE proyecto: el método por el que se guía,
  * qué van a construir los estudiantes, la ruta que arma el modelo con sus
- * datos, la hoja para visar en dirección y el seguimiento semana a semana. Las
+ * datos, la hoja que firma la dirección y el seguimiento semana a semana. Las
  * cuatro rutas escritas siguen en el repositorio y se pueden leer, pero dejaron
  * de empujarse encima de un proyecto que no es el suyo.
  */
 
+import { useRef } from "react";
+
 import { Hoja } from "./Campos";
+import { Copiar } from "./Copiar";
 import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
@@ -26,6 +29,7 @@ import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
 import { Permisos } from "../metodo/Permisos";
+import { Indicadores } from "../metodo/Indicadores";
 import type { Avance } from "./avance";
 import type { EstadoNube } from "./nube";
 
@@ -55,8 +59,15 @@ export default function Paso3({
       <ElegirFormato
         formato={e.formato}
         destinatario={e.destinatario}
+        familia={e.familiaDestinatario}
+        rasgos={e.rasgosDestinatario}
         onCambio={(cambio) => onCambio({ ...e, ...cambio })}
       />
+
+      {/* Los indicadores van antes de la hoja de dirección porque es de donde
+          esa hoja saca con qué se evalúa. Lo pidieron dos docentes distintos
+          en dos entrevistas, sin conocerse. */}
+      <Indicadores e={e} onCambio={onCambio} orden={5} />
 
       <Justificacion e={e} />
 
@@ -72,7 +83,7 @@ export default function Paso3({
 }
 
 /**
- * La hoja que se lleva a la dirección para que la visen.
+ * La hoja que se lleva a la dirección para que la firmen.
  *
  * Es el trámite que hoy hace que un proyecto no se haga. Un docente puede
  * tener la unidad entera pensada y quedarse ahí, porque justificar por escrito
@@ -87,6 +98,7 @@ export default function Paso3({
  * desde la primera lámina.
  */
 function Justificacion({ e }: { e: Expedicion }) {
+  const hoja = useRef<HTMLDivElement>(null);
   const oas = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropio.trim();
@@ -97,7 +109,7 @@ function Justificacion({ e }: { e: Expedicion }) {
 
   if (!titulo) {
     return (
-      <Hoja titulo="Para visar en la dirección" orden={6}>
+      <Hoja titulo="La hoja que firma la dirección" orden={6}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
           Esta hoja se arma sola cuando elijas de qué va a tratar el proyecto.
           No hay nada que llenar aquí: sale de lo que ya escribiste.
@@ -107,13 +119,16 @@ function Justificacion({ e }: { e: Expedicion }) {
   }
 
   return (
-    <Hoja titulo="Para visar en la dirección" orden={6}>
+    <Hoja titulo="La hoja que firma la dirección" orden={6}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
         nuevo que llenar: se imprime y se firma.
       </p>
 
-      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85">
+      <div
+        ref={hoja}
+        className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85"
+      >
         <p>
           <span className="text-[var(--crema-clara)]">Proyecto:</span> {titulo}.
           {e.cursos.length > 0 ? ` Cursos ${e.cursos.join(", ")}.` : ""}
@@ -139,7 +154,18 @@ function Justificacion({ e }: { e: Expedicion }) {
                   <span className="shrink-0 font-mono text-xs text-[var(--tierra-600)]">
                     {cod}
                   </span>
-                  <span>{oa?.texto}</span>
+                  <span>
+                    {oa?.texto}
+                    {/* Los indicadores van pegados a su objetivo y no en una
+                        lista aparte: la hoja se lee para comprobar que cada
+                        objetivo tiene con qué mirarse. */}
+                    {(e.indicadores[cod] ?? []).length > 0 && (
+                      <span className="mt-1.5 block text-[var(--crema)]/75">
+                        Se mira en que:{" "}
+                        {(e.indicadores[cod] ?? []).join("; ")}.
+                      </span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -182,6 +208,10 @@ function Justificacion({ e }: { e: Expedicion }) {
           lo que el curso decida construir después de volver del terreno, en su
           segunda versión y corregido por sus compañeros.
           {e.destinatario.trim() ? ` Se entrega a: ${e.destinatario}.` : ""}
+          {[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde]
+            .filter((x) => x.trim())
+            .join("; ") &&
+            ` Ese destinatario es: ${[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde, e.rasgosDestinatario.necesidad].filter((x) => x.trim()).join("; ")}.`}
         </p>
 
         <p>
@@ -198,13 +228,20 @@ function Justificacion({ e }: { e: Expedicion }) {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => window.print()}
-        className="mt-4 min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
-      >
-        Imprimir esta hoja
-      </button>
+      {/* Imprimir y copiar, las dos. Se pidió en una entrevista que el
+          material viniera en formato editable: casi nadie usa un documento
+          entero, se toma un pedazo y se adapta, y algo que solo se imprime
+          obliga a teclearlo de nuevo para cambiar una línea. */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
+        >
+          Imprimir esta hoja
+        </button>
+        <Copiar de={hoja} que="la hoja" />
+      </div>
     </Hoja>
   );
 }

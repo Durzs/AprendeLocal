@@ -9,23 +9,48 @@ import {
   angulosDe,
   nombreAsignatura,
   problemaPorId,
+  type Angulo,
+  type Problema,
 } from "./problemas";
 import SelectorOA from "../crear/SelectorOA";
-import { buscarOA } from "../crear/oa";
+import { buscarOA, type NivelOA } from "../crear/oa";
+
+/** «7º» es lo que marca el docente; `7mo_basico` es como se llama en el catálogo. */
+const NIVEL_DE_CURSO: Record<string, NivelOA> = {
+  "5º": "5to_basico",
+  "6º": "6to_basico",
+  "7º": "7mo_basico",
+  "8º": "8vo_basico",
+};
 
 /**
- * De dónde arranca el proyecto: la problemática.
+ * De dónde arranca el proyecto, en tres columnas.
  *
- * Sustituye a la lámina «Qué pasa ahí», que eran cinco cuadros de texto en
- * blanco —asignatura, temáticas, fenómeno local, qué se podría averiguar,
- * producto final— puestos delante de alguien que abrió la aplicación
- * justamente porque no tenía eso pensado. Pedirle a un docente que redacte lo
- * que vino a buscar es la manera más segura de que cierre la pestaña.
+ * POR QUÉ TRES Y NO UNA LISTA LARGA
  *
- * Ahora elige de una lista de problemáticas que están ocurriendo, marca desde
- * qué asignaturas entra, y ve cómo cambia el trabajo según eso. Lo único que
- * escribe es cómo se ve el problema en SU sitio, que es lo único que la
- * plataforma no puede saber.
+ * Esto venía en vertical: primero se elegía la problemática, más abajo
+ * aparecían las actividades por asignatura, y más abajo todavía los objetivos.
+ * Tres cosas que se piensan juntas, puestas una debajo de otra, obligan a
+ * subir y bajar para cruzarlas. En una entrevista de validación se dijo de dos
+ * maneras distintas: que el objetivo y el tema tienen que verse a la vez para
+ * poder emparejarlos, y que las actividades por asignatura se leían como una
+ * lluvia de ideas porque no se veía de qué objetivo colgaban.
+ *
+ * Las tres columnas arreglan las dos cosas de una vez, porque la unión queda
+ * dibujada: el problema a la izquierda, lo que se puede hacer con él en el
+ * medio, y a la derecha los objetivos del programa que esa actividad abre. Se
+ * lee de izquierda a derecha y esa dirección es el argumento.
+ *
+ * EL ORDEN IMPORTA
+ *
+ * Va del problema al objetivo y no al revés, que es como trabaja un docente de
+ * verdad: no parte del objetivo buscando actividad, parte de algo que quiere
+ * hacer y después reconoce dónde encaja. «Medir cuánta agua gasta la escuela»
+ * ya implica diferencia, suma y resta; el objetivo se reconoce, no se elige
+ * primero.
+ *
+ * Al elegir una actividad, la tercera columna se queda solo con los objetivos
+ * de esa actividad. Es la manera de mostrar el vínculo sin dibujar flechas.
  */
 export function ElegirProblema({
   e,
@@ -37,216 +62,78 @@ export function ElegirProblema({
   orden?: number;
 }) {
   const [proponiendo, ponerProponiendo] = useState(Boolean(e.problemaPropio));
+  /** La actividad en la que está puesta la atención, para filtrar la tercera columna. */
+  const [enfocada, ponerEnfocada] = useState<string | null>(null);
+  const [verTodos, ponerVerTodos] = useState(false);
+
   const set = <K extends keyof Expedicion>(k: K, v: Expedicion[K]) =>
     onCambio({ ...e, [k]: v });
 
-  const elegido = e.problemaId ? problemaPorId(e.problemaId) : null;
+  const elegido = (e.problemaId ? problemaPorId(e.problemaId) : null) ?? null;
+  const angulos = elegido ? angulosDe(elegido, e.asignaturas) : [];
+  const activa = angulos.find((a) => a.asignatura === enfocada) ?? null;
+
+  // Si hay una actividad enfocada manda ella; si no, se muestran los objetivos
+  // de todas las actividades visibles, sin repetir.
+  //
+  // Se descarta el código que no está en la base. Un objetivo que no se puede
+  // leer no sirve de nada y, peor, se veía como una tarjeta con el código
+  // repetido dos veces, que parece un objetivo cargado cuando no lo hay.
+  //
+  // Y se descarta el que no sea de un curso de esta sala. Al entrar Matemática
+  // los objetivos pasaron a cubrir de 5º a 8º, así que una actividad puede
+  // abrir uno de 5º y otro de 8º a la vez; a quien tiene séptimo y octavo no
+  // le sirve que le ofrezcan el de quinto. Sin cursos marcados se muestran
+  // todos, que es mejor que una columna vacía sin explicación.
+  const niveles = new Set(e.cursos.map((c) => NIVEL_DE_CURSO[c]).filter(Boolean));
+  const codigos = [
+    ...new Set((activa ? [activa] : angulos).flatMap((a) => a.oaQueAbre)),
+  ].filter((cod) => {
+    const oa = buscarOA(cod);
+    return oa && (niveles.size === 0 || niveles.has(oa.nivel));
+  });
 
   return (
     <Hoja titulo="De qué va a tratar" orden={orden}>
-      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Un proyecto empieza por algo que está pasando, no por un tema. Elige una
-        de estas o propone la tuya, y después marca desde qué asignaturas
-        entras: la misma problemática abre trabajos distintos según eso.
+      <p className="mb-5 max-w-3xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+        Un proyecto empieza por algo que está pasando, no por un tema. Las tres
+        columnas se leen de izquierda a derecha: el problema, lo que se puede
+        hacer con él desde cada asignatura, y los objetivos del programa que esa
+        actividad abre.
       </p>
 
-      <ul className="grid gap-2.5 sm:grid-cols-2">
-        {PROBLEMAS.map((p) => {
-          const activo = p.id === e.problemaId && !proponiendo;
-          return (
-            <li key={p.id}>
-              <button
-                type="button"
-                onClick={() => {
-                  ponerProponiendo(false);
-                  onCambio({ ...e, problemaId: activo ? null : p.id, problemaPropio: "" });
-                }}
-                aria-pressed={activo}
-                className={`h-full w-full rounded-xl border px-4 py-3.5 text-left transition ${
-                  activo
-                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
-                    : "border-[var(--crema)]/14 hover:border-[var(--crema)]/30"
-                }`}
-              >
-                <span
-                  className={`block text-[17px] leading-snug ${
-                    activo ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
-                  }`}
-                >
-                  {p.nombre}
-                </span>
-                <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/75">
-                  {p.dondeAparece}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <ColumnaProblema
+          e={e}
+          onCambio={onCambio}
+          proponiendo={proponiendo}
+          ponerProponiendo={ponerProponiendo}
+          set={set}
+          elegido={elegido}
+        />
 
-      <button
-        type="button"
-        onClick={() => {
-          ponerProponiendo(true);
-          set("problemaId", null);
-        }}
-        aria-pressed={proponiendo}
-        className={`mt-3 min-h-11 rounded-full border px-4 text-sm transition ${
-          proponiendo
-            ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
-            : "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
-        }`}
-      >
-        Ninguna: la mía es otra
-      </button>
+        <ColumnaActividades
+          e={e}
+          set={set}
+          elegido={elegido}
+          angulos={angulos}
+          enfocada={enfocada}
+          ponerEnfocada={ponerEnfocada}
+        />
 
-      {proponiendo && (
-        <Campo
-          etiqueta="Cuál es"
-          ayuda="Algo que esté ocurriendo aquí y de lo que se pueda averiguar algo."
-          ancho="entera"
-        >
-          <Parrafo
-            value={e.problemaPropio}
-            onChange={(ev) => set("problemaPropio", ev.target.value)}
-            placeholder="La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas."
-            rows={2}
-          />
-        </Campo>
-      )}
+        <ColumnaObjetivos
+          e={e}
+          set={set}
+          hayProblema={Boolean(elegido)}
+          codigos={codigos}
+          actividad={activa}
+          verTodos={verTodos}
+          ponerVerTodos={ponerVerTodos}
+        />
+      </div>
 
       {elegido && !proponiendo && (
-        <>
-          <p className="mt-5 text-[15px] leading-relaxed text-[var(--crema)]/85">
-            {elegido.queEs}
-          </p>
-
-          <Noticias e={e} onCambio={onCambio} problema={elegido} />
-
-          <div className="mt-6">
-            <p className="rotulo text-[var(--crema)]/75">Desde qué asignaturas entras</p>
-            <ul className="mt-2.5 flex flex-wrap gap-2">
-              {ASIGNATURAS.map((a) => {
-                const marcada = e.asignaturas.includes(a.id);
-                const hayAngulo = elegido.angulos.some((x) => x.asignatura === a.id);
-                return (
-                  <li key={a.id}>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        set(
-                          "asignaturas",
-                          marcada
-                            ? e.asignaturas.filter((x) => x !== a.id)
-                            : [...e.asignaturas, a.id]
-                        )
-                      }
-                      aria-pressed={marcada}
-                      className={`min-h-11 rounded-full border px-4 text-sm transition ${
-                        marcada
-                          ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
-                          : hayAngulo
-                            ? "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
-                            : "border-[var(--crema)]/10 text-[var(--crema)]/35"
-                      }`}
-                    >
-                      {a.nombre}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-            {/* Las apagadas no se esconden: que una asignatura no tenga ángulo
-                escrito para este problema es información, y esconderla haría
-                creer que no da para entrar por ahí. */}
-            <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/70">
-              Las apagadas no traen un ángulo escrito para esta problemática.
-              Puedes marcarlas igual: quiere decir que ese lo armas tú.
-            </p>
-          </div>
-
-          <div className="mt-5 space-y-2.5">
-            {angulosDe(elegido, e.asignaturas).map((a) => (
-              <div
-                key={a.asignatura}
-                className="rounded-xl border border-[var(--crema)]/12 p-4"
-              >
-                <p className="rotulo text-[var(--tierra-600)]">
-                  {nombreAsignatura(a.asignatura)}
-                </p>
-                <p className="mt-1.5 text-base leading-relaxed text-[var(--crema-clara)]">
-                  {a.enfoque}
-                </p>
-                <p className="mt-2 text-[15px] leading-relaxed text-[var(--crema)]/82">
-                  {a.queInvestigan}
-                </p>
-                <p className="mt-2 text-[15px] leading-relaxed text-[var(--crema)]/75">
-                  {a.queSaleDeAqui}
-                </p>
-
-                {/* El objetivo sale de la actividad y no al revés. Un docente
-                    no parte del objetivo para buscar qué hacer: parte de algo
-                    que quiere hacer y después reconoce dónde encaja. */}
-                {a.oaQueAbre.length > 0 ? (
-                  <div className="mt-3 border-t border-[var(--crema)]/12 pt-3">
-                    <p className="rotulo text-[var(--crema)]/72">
-                      Objetivos que abre esta actividad
-                    </p>
-                    <ul className="mt-2 space-y-1.5">
-                      {a.oaQueAbre.map((cod) => {
-                        const oa = buscarOA(cod);
-                        const marcado = e.oa.includes(cod);
-                        return (
-                          <li key={cod}>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                set(
-                                  "oa",
-                                  marcado
-                                    ? e.oa.filter((x) => x !== cod)
-                                    : [...e.oa, cod]
-                                )
-                              }
-                              aria-pressed={marcado}
-                              className={`flex min-h-11 w-full gap-2.5 rounded-lg border px-3 py-2 text-left text-[15px] leading-relaxed transition ${
-                                marcado
-                                  ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1] text-[var(--tierra-300)]"
-                                  : "border-[var(--crema)]/12 text-[var(--crema)]/85 hover:border-[var(--crema)]/30"
-                              }`}
-                            >
-                              <span className="shrink-0 font-mono text-xs text-[var(--tierra-600)]">
-                                {cod}
-                              </span>
-                              <span>{oa?.texto ?? cod}</span>
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ) : (
-                  <p className="mt-3 border-t border-[var(--crema)]/12 pt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-                    Todavía no hay objetivos cargados para esta asignatura: la
-                    base solo tiene los de Ciencias Naturales de 5º a 8º. El
-                    objetivo de este ángulo lo pones tú más abajo.
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Y el buscador completo, en la misma pantalla, porque un docente
-              tiene el objetivo a medias en la cabeza y quiere cruzarlo con el
-              tema mirando los dos a la vez, no en pantallas separadas. */}
-          <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
-            <SelectorOA
-              cursos={e.cursos}
-              elegidos={e.oa}
-              onElegir={(v) => set("oa", v)}
-            />
-          </div>
-        </>
+        <Noticias e={e} onCambio={onCambio} problema={elegido} />
       )}
 
       <Campo
@@ -264,6 +151,371 @@ export function ElegirProblema({
 
       {(elegido || e.problemaPropio.trim()) && <QueSacanDeAhi />}
     </Hoja>
+  );
+}
+
+/** El marco de cada columna, para que las tres se lean como una sola cosa. */
+function Columna({
+  n,
+  titulo,
+  bajada,
+  children,
+}: {
+  n: number;
+  titulo: string;
+  bajada: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="flex min-w-0 flex-col rounded-xl border border-[var(--crema)]/14 p-4">
+      <p className="rotulo text-[var(--tierra-600)]">
+        {n} · {titulo}
+      </p>
+      <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">{bajada}</p>
+      <div className="mt-3.5 min-w-0 flex-1">{children}</div>
+    </section>
+  );
+}
+
+/* ── 1 · La problemática ────────────────────────────────────────────────── */
+
+function ColumnaProblema({
+  e,
+  onCambio,
+  proponiendo,
+  ponerProponiendo,
+  set,
+  elegido,
+}: {
+  e: Expedicion;
+  onCambio: (e: Expedicion) => void;
+  proponiendo: boolean;
+  ponerProponiendo: (v: boolean) => void;
+  set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
+  elegido: Problema | null;
+}) {
+  return (
+    <Columna
+      n={1}
+      titulo="La problemática local"
+      bajada="Algo que está ocurriendo y de lo que ya se escribió."
+    >
+      <ul className="space-y-2">
+        {PROBLEMAS.map((p) => {
+          const activo = p.id === e.problemaId && !proponiendo;
+          return (
+            <li key={p.id}>
+              <button
+                type="button"
+                onClick={() => {
+                  ponerProponiendo(false);
+                  onCambio({
+                    ...e,
+                    problemaId: activo ? null : p.id,
+                    problemaPropio: "",
+                  });
+                }}
+                aria-pressed={activo}
+                className={`min-h-11 w-full rounded-lg border px-3.5 py-2.5 text-left text-[15px] leading-snug transition ${
+                  activo
+                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12] text-[var(--tierra-300)]"
+                    : "border-[var(--crema)]/12 text-[var(--crema-clara)] hover:border-[var(--crema)]/30"
+                }`}
+              >
+                {p.nombre}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <button
+        type="button"
+        onClick={() => {
+          ponerProponiendo(true);
+          set("problemaId", null);
+        }}
+        aria-pressed={proponiendo}
+        className={`mt-2.5 min-h-11 w-full rounded-lg border px-3.5 text-sm transition ${
+          proponiendo
+            ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+            : "border-dashed border-[var(--crema)]/25 text-[var(--crema)]/85 hover:border-[var(--crema)]/45"
+        }`}
+      >
+        Ninguna: la mía es otra
+      </button>
+
+      {proponiendo && (
+        <div className="mt-3">
+          <Parrafo
+            value={e.problemaPropio}
+            onChange={(ev) => set("problemaPropio", ev.target.value)}
+            placeholder="La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas."
+            rows={3}
+          />
+          <p className="mt-2 text-sm leading-relaxed text-[var(--crema)]/72">
+            Al proponer una problemática propia, las dos columnas de al lado
+            quedan en tus manos: no hay actividades ni objetivos escritos para
+            algo que todavía no está en la lista.
+          </p>
+        </div>
+      )}
+
+      {elegido && !proponiendo && (
+        <>
+          <p className="mt-4 border-t border-[var(--crema)]/12 pt-3.5 text-[15px] leading-relaxed text-[var(--crema)]/85">
+            {elegido.queEs}
+          </p>
+          <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/72">
+            {elegido.dondeAparece}
+          </p>
+          {elegido.respaldo.length > 0 && (
+            <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/72">
+              {elegido.respaldo.length === 1
+                ? "1 noticia nacional respalda este problema."
+                : `${elegido.respaldo.length} noticias nacionales respaldan este problema.`}{" "}
+              Están más abajo, con su medio y su fecha.
+            </p>
+          )}
+        </>
+      )}
+    </Columna>
+  );
+}
+
+/* ── 2 · Las actividades por asignatura ─────────────────────────────────── */
+
+function ColumnaActividades({
+  e,
+  set,
+  elegido,
+  angulos,
+  enfocada,
+  ponerEnfocada,
+}: {
+  e: Expedicion;
+  set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
+  elegido: Problema | null;
+  angulos: Angulo[];
+  enfocada: string | null;
+  ponerEnfocada: (v: string | null) => void;
+}) {
+  if (!elegido) {
+    return (
+      <Columna
+        n={2}
+        titulo="Actividades por asignatura"
+        bajada="La misma problemática abre trabajos distintos según desde dónde se entre."
+      >
+        <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
+          Elige una problemática en la columna de la izquierda y aquí aparecen
+          las actividades que abre en cada asignatura.
+        </p>
+      </Columna>
+    );
+  }
+
+  return (
+    <Columna
+      n={2}
+      titulo="Actividades por asignatura"
+      bajada="Elige una actividad y a la derecha quedan solo los objetivos que abre."
+    >
+      {/* El filtro de asignaturas va aquí, pegado a lo que filtra, y no suelto
+          arriba como estaba: así se entiende que lo que hace es recortar esta
+          columna. */}
+      <ul className="mb-3.5 flex flex-wrap gap-1.5">
+        {ASIGNATURAS.map((a) => {
+          const marcada = e.asignaturas.includes(a.id);
+          const hayAngulo = elegido.angulos.some((x) => x.asignatura === a.id);
+          return (
+            <li key={a.id}>
+              <button
+                type="button"
+                onClick={() =>
+                  set(
+                    "asignaturas",
+                    marcada
+                      ? e.asignaturas.filter((x) => x !== a.id)
+                      : [...e.asignaturas, a.id]
+                  )
+                }
+                aria-pressed={marcada}
+                className={`min-h-11 rounded-full border px-3 text-sm transition ${
+                  marcada
+                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                    : hayAngulo
+                      ? "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
+                      : "border-[var(--crema)]/10 text-[var(--crema)]/40"
+                }`}
+              >
+                {a.nombre}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <ul className="space-y-2.5">
+        {angulos.map((a) => {
+          const activa = enfocada === a.asignatura;
+          return (
+            <li key={a.asignatura}>
+              <button
+                type="button"
+                onClick={() => ponerEnfocada(activa ? null : a.asignatura)}
+                aria-pressed={activa}
+                className={`w-full rounded-lg border px-3.5 py-3 text-left transition ${
+                  activa
+                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                    : "border-[var(--crema)]/12 hover:border-[var(--crema)]/30"
+                }`}
+              >
+                <span className="rotulo block text-[var(--crema)]/72">
+                  {nombreAsignatura(a.asignatura)}
+                </span>
+                <span
+                  className={`mt-1.5 block text-[15px] leading-snug ${
+                    activa ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
+                  }`}
+                >
+                  {a.enfoque}
+                </span>
+                <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/78">
+                  {a.queInvestigan}
+                </span>
+                {activa && (
+                  <>
+                    <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/72">
+                      {a.queSaleDeAqui}
+                    </span>
+                    {a.conceptosClave.length > 0 && (
+                      <span className="mt-2.5 block text-sm leading-relaxed text-[var(--crema)]/72">
+                        Contenidos: {a.conceptosClave.join(", ")}.
+                      </span>
+                    )}
+                  </>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </Columna>
+  );
+}
+
+/* ── 3 · Los objetivos que abre ─────────────────────────────────────────── */
+
+function ColumnaObjetivos({
+  e,
+  set,
+  hayProblema,
+  codigos,
+  actividad,
+  verTodos,
+  ponerVerTodos,
+}: {
+  e: Expedicion;
+  set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
+  hayProblema: boolean;
+  codigos: string[];
+  actividad: Angulo | null;
+  verTodos: boolean;
+  ponerVerTodos: (v: boolean) => void;
+}) {
+  return (
+    <Columna
+      n={3}
+      titulo="Los objetivos que abre"
+      bajada={
+        actividad
+          ? `Los que abre la actividad de ${nombreAsignatura(actividad.asignatura).toLowerCase()}.`
+          : "Salen de la actividad, no al revés: primero qué se va a hacer, después dónde encaja."
+      }
+    >
+      {!hayProblema ? (
+        <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
+          Aquí van a aparecer los objetivos del programa que abre cada
+          actividad, para marcarlos sin salir de esta pantalla.
+        </p>
+      ) : codigos.length === 0 ? (
+        <p className="text-[15px] leading-relaxed text-[var(--crema)]/78">
+          Las actividades que tienes a la vista son de asignaturas cuyos
+          objetivos todavía no están cargados: por ahora están los de Ciencias
+          Naturales y los de Matemática, de 5º a 8º. Puedes buscarlos abajo o
+          escribirlos tú en la planificación.
+        </p>
+      ) : (
+        <ul className="space-y-2">
+          {codigos.map((cod) => {
+            const oa = buscarOA(cod);
+            const marcado = e.oa.includes(cod);
+            return (
+              <li key={cod}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    set(
+                      "oa",
+                      marcado ? e.oa.filter((x) => x !== cod) : [...e.oa, cod]
+                    )
+                  }
+                  aria-pressed={marcado}
+                  className={`w-full rounded-lg border px-3.5 py-2.5 text-left transition ${
+                    marcado
+                      ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12]"
+                      : "border-[var(--crema)]/12 hover:border-[var(--crema)]/30"
+                  }`}
+                >
+                  <span
+                    className={`block font-mono text-xs ${
+                      marcado ? "text-[var(--tierra-300)]" : "text-[var(--tierra-600)]"
+                    }`}
+                  >
+                    {cod}
+                    {marcado ? " · marcado" : ""}
+                  </span>
+                  <span className="mt-1.5 block text-[15px] leading-relaxed text-[var(--crema)]/85">
+                    {oa?.texto}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {/* El buscador completo queda plegado: el que confía en la propuesta no
+          lo abre, y el que tiene su objetivo decidido de antes lo abre y lo
+          busca sin que nadie le haya puesto una lista delante. */}
+      <button
+        type="button"
+        onClick={() => ponerVerTodos(!verTodos)}
+        aria-expanded={verTodos}
+        className="mt-3.5 min-h-11 text-sm text-[var(--crema)]/78 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
+      >
+        {verTodos ? "Cerrar el buscador" : "Buscar otro objetivo del programa"}
+      </button>
+
+      {verTodos && (
+        <div className="mt-3 border-t border-[var(--crema)]/12 pt-3.5">
+          <SelectorOA
+            cursos={e.cursos}
+            elegidos={e.oa}
+            onElegir={(v) => set("oa", v)}
+          />
+        </div>
+      )}
+
+      {e.oa.length > 0 && (
+        <p className="mt-3.5 border-t border-[var(--crema)]/12 pt-3 text-sm leading-relaxed text-[var(--crema)]/78">
+          {e.oa.length === 1
+            ? "1 objetivo marcado para este proyecto."
+            : `${e.oa.length} objetivos marcados para este proyecto.`}
+        </p>
+      )}
+    </Columna>
   );
 }
 
@@ -309,9 +561,10 @@ function Noticias({
             Noticias nacionales sobre este problema
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-            Estas noticias son de alcance nacional y sirven para plantear el
-            asunto en la sala. Más abajo se agregan las noticias de tu comuna,
-            que son las que de verdad mueven a un curso.
+            Las noticias de aquí arriba son de alcance nacional y sirven para
+            plantear el asunto en la sala. Más abajo se pueden agregar noticias
+            de tu comuna, que suelen enganchar más a un curso porque hablan de
+            un lugar que conocen.
           </p>
           <ul className="mt-3 space-y-3.5">
             {problema.respaldo.map((n) => (
@@ -408,17 +661,104 @@ function Noticias({
           Las noticias de cada comuna todavía no están cargadas en la
           plataforma, así que esas las agrega el docente.
         </p>
-        <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/82">
-          <span className="text-[var(--crema-clara)]">Cómo buscarlas:</span>{" "}
-          {problema.comoSeBuscan.terminos.join(" · ")}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-          {problema.comoSeBuscan.donde}
-        </p>
-        <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-          {problema.comoSeBuscan.queNotaSirve}
-        </p>
+        <ConsejosDeBusqueda como={problema.comoSeBuscan} />
       </div>
+    </div>
+  );
+}
+
+/**
+ * Cómo encontrar las noticias de la propia comuna.
+ *
+ * ESTO ERA UN PÁRRAFO Y SE LEÍA COMO UNA ORDEN
+ *
+ * Estaba suelto debajo del campo, con los términos de búsqueda separados por
+ * puntos: «contaminación río + comuna · denuncia riles + río · mortandad de
+ * peces + región». En una entrevista de validación alguien lo leyó, copió la
+ * fórmula entera con la palabra «comuna» dentro, y la pegó en el buscador de
+ * arriba, que no es un buscador de internet sino el campo del titular.
+ *
+ * Fueron tres errores a la vez, y los tres estaban en el diseño. Los ejemplos
+ * no se leían como ejemplos sino como un procedimiento obligatorio. Los puntos
+ * separadores parecían parte de lo que hay que escribir. Y un bloque de texto
+ * pegado a un campo de entrada invita a escribir ahí lo que dice el bloque.
+ *
+ * Ahora es un botón que abre los consejos, con el mismo formato de aviso que
+ * ya se usaba para «se cae cuando». Eso también salió de ahí: que ese formato
+ * rojizo funciona para marcar algo que aporta pero que no es un paso, y que
+ * convenía repetirlo. Cada término va en su propia línea y en tipografía de
+ * código, para que se vea que es algo que se teclea y no una frase que se lee.
+ */
+function ConsejosDeBusqueda({
+  como,
+}: {
+  como: { terminos: string[]; donde: string; queNotaSirve: string };
+}) {
+  const [abierto, ponerAbierto] = useState(false);
+
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => ponerAbierto(!abierto)}
+        aria-expanded={abierto}
+        className="min-h-11 rounded-full border border-[var(--tierra-300)]/40 px-4 text-sm text-[var(--tierra-300)] transition hover:bg-[var(--tierra-300)]/[0.08]"
+      >
+        {abierto ? "Cerrar los consejos" : "Consejos para buscar noticias"}
+      </button>
+
+      {abierto && (
+        <div className="mt-3 rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3.5 text-[var(--tierra-300)]">
+          <p className="text-[15px] leading-relaxed">
+            Esto se busca en Google, no aquí arriba. Estos son ejemplos: cambia
+            «comuna» por el nombre de la tuya.
+          </p>
+
+          <ul className="mt-3 space-y-1.5">
+            {como.terminos.map((t) => (
+              <li
+                key={t}
+                className="rounded-lg bg-[var(--tierra-300)]/[0.1] px-3 py-2 font-mono text-[13px] leading-relaxed"
+              >
+                {t}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-3.5 text-[15px] leading-relaxed">
+            <span className="font-medium">Dónde buscar:</span> {como.donde}
+          </p>
+          <p className="mt-1.5 text-[15px] leading-relaxed">
+            <span className="font-medium">Qué noticia sirve:</span>{" "}
+            {como.queNotaSirve}
+          </p>
+
+          {/* Los operadores los pidió ella y son lo que de verdad cambia una
+              búsqueda. Van al final porque son para quien ya buscó una vez y
+              se ahogó en resultados. */}
+          <div className="mt-3.5 border-t border-[var(--tierra-300)]/25 pt-3">
+            <p className="text-[15px] font-medium">
+              Tres cosas que acotan mucho la búsqueda
+            </p>
+            <ul className="mt-2 space-y-2 text-[15px] leading-relaxed">
+              <li>
+                <span className="font-mono text-[13px]">"entre comillas"</span>{" "}
+                busca esa frase exacta y no las palabras sueltas.
+              </li>
+              <li>
+                <span className="font-mono text-[13px]">site:bcn.cl</span>{" "}
+                busca solo dentro de ese sitio. Sirve para municipios, diarios
+                regionales y servicios públicos.
+              </li>
+              <li>
+                <span className="font-mono text-[13px]">-futbol</span> con guion
+                delante saca del resultado las noticias que traen esa palabra.
+                Útil cuando tu comuna se llama igual que otra cosa.
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

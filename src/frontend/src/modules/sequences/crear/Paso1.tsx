@@ -17,31 +17,44 @@ import type { Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
 
-/** Clases, no semanas: es el tiempo que el docente tiene de verdad. */
+/**
+ * Cuántas clases hay para esto.
+ *
+ * Se cuenta en clases y no en semanas porque lo dijo una docente probando la
+ * plataforma: tres semanas en un ramo que se ve una vez por semana son tres
+ * clases, y hay colegios de 45 minutos y colegios con tres bloques seguidos.
+ * La semana no dice nada; la clase sí.
+ *
+ * Y son mínimos, no topes. Eso lo pidió otro docente en otra entrevista: un
+ * proyecto completo con impacto en la comunidad pide un semestre, y poner un
+ * número máximo empuja a recortar justo lo que hace que valga la pena. Un
+ * proyecto de tres clases se puede hacer, pero hay que decir en voz alta a qué
+ * se está renunciando, que es a la parte comunitaria y a la profundidad.
+ */
 const SESIONES = [
-  { valor: "3", titulo: "3 clases" },
-  { valor: "4", titulo: "4 clases" },
-  { valor: "6", titulo: "6 clases" },
-  { valor: "8", titulo: "8 clases" },
-  { valor: "12", titulo: "12 clases" },
+  { valor: "3", titulo: "3 clases o más" },
+  { valor: "6", titulo: "6 clases o más" },
+  { valor: "10", titulo: "10 clases o más" },
+  { valor: "16", titulo: "Un semestre" },
 ];
+
+/** Qué cabe de verdad con ese tiempo, dicho antes y no después. */
+const QUE_CABE: Record<string, string> = {
+  "3":
+    "Alcanza para una salida y una entrega chica. Con tres clases se renuncia a la parte comunitaria y a la profundidad técnica: el curso sale, ordena lo que trajo y entrega algo breve. Sirve como primera vez, y conviene decirlo así en la sala.",
+  "6":
+    "Alcanza para las seis etapas sin apretar ninguna. Es el tamaño en que el proyecto cierra bien: hay clase de conceptos, salida, una clase entera para ordenar lo que se trajo, y tiempo de construir y corregir.",
+  "10":
+    "Alcanza para que la entrega salga de la escuela y llegue a alguien de fuera, y para una segunda versión después de que los compañeros la critiquen. Aquí empieza a ser un proyecto y no una unidad con salida.",
+  "16":
+    "Es el tamaño en que un proyecto de este tipo da todo lo que puede dar: hay tiempo para volver al terreno una segunda vez, para que la comunidad conteste, y para que el curso haga algo con esa respuesta.",
+};
 
 const DURACIONES = [
   { valor: "45", titulo: "45 min" },
   { valor: "90", titulo: "90 min" },
   { valor: "135", titulo: "135 min" },
 ];
-
-/** Cuántas semanas, en las duraciones que de verdad se usan. */
-
-/**
- * Los objetivos que alguna ruta escrita ya cubre.
- *
- * Se calcula una vez y no en cada tecla: son sesenta y dos objetivos contra
- * cuatro rutas, y el docente escribe mientras la lista está abierta.
- */
-
-
 
 type Props = {
   e: Expedicion;
@@ -90,13 +103,22 @@ export function PasoPrograma({ e, onCambio }: Props) {
           />
 
           <Fichas
-            etiqueta="Cuántas clases"
-            ayuda="No semanas: clases. Un proyecto de tres semanas, en un ramo que se ve una vez por semana, son tres clases."
+            etiqueta="Cuántas clases tienes para esto"
+            ayuda="En clases y no en semanas: tres semanas en un ramo que se ve una vez por semana son tres clases. Son mínimos, no topes: si tienes más, mejor."
             opciones={SESIONES}
             elegidas={e.sesiones ? [String(e.sesiones)] : []}
             onElegir={(v) => set("sesiones", v[0] ? Number(v[0]) : null)}
             unica
           />
+
+          {/* Qué cabe con ese tiempo, dicho al elegirlo y no al final. Un
+              proyecto de tres clases se puede hacer; lo que no se puede es
+              hacerlo creyendo que va a llegar a la comunidad. */}
+          {e.sesiones && QUE_CABE[String(e.sesiones)] && (
+            <p className="sm:col-span-2 rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-[15px] leading-relaxed text-[var(--crema)]/82">
+              {QUE_CABE[String(e.sesiones)]}
+            </p>
+          )}
 
           <Fichas
             etiqueta="Cuánto dura cada clase"
@@ -106,12 +128,6 @@ export function PasoPrograma({ e, onCambio }: Props) {
             onElegir={(v) => set("duracionSesion", v[0] ? Number(v[0]) : null)}
             unica
           />
-        </div>
-      </Hoja>
-
-      <Hoja titulo="Lo que el programa exige" orden={5}>
-        <div className="grid gap-5 sm:grid-cols-2">
-
         </div>
       </Hoja>
     </div>
