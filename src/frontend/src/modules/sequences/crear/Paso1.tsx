@@ -12,6 +12,7 @@
 import { RUTAS } from "../rutas/catalogo";
 import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
+import { AntesDeSalir } from "../metodo/AntesDeSalir";
 import SelectorOA from "./SelectorOA";
 import type { Entorno, Expedicion } from "./expedicion";
 
@@ -143,6 +144,8 @@ export function PasoLugar({ e, onCambio }: Props) {
       </Hoja>
 
       <ElegirProblema e={e} onCambio={onCambio} orden={5} />
+
+      <AntesDeSalir e={e} onCambio={onCambio} orden={6} />
     </div>
   );
 }

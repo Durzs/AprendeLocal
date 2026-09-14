@@ -92,6 +92,17 @@ export type Angulo = {
   queInvestigan: string;
   /** Qué clase de hallazgo sale de este ángulo y no de los otros. */
   queSaleDeAqui: string;
+  /**
+   * Los términos del programa que hacen falta para entender esto.
+   *
+   * Van aquí y no en un cuadro de texto porque dependen del problema Y de la
+   * asignatura: «bioindicador» hace falta para mirar un río desde biología y
+   * no hace ninguna falta para mirarlo desde historia. Se proponen para que el
+   * docente los corrija, que es más fácil que escribirlos de cero.
+   */
+  conceptosClave: string[];
+  /** Las técnicas de terreno que este ángulo necesita ensayar antes de salir. */
+  tecnicas: string[];
 };
 
 export type Problema = {
@@ -164,6 +175,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué vive todavía en el agua y en la orilla, y qué había antes que ya no se ve. Se comparan tramos: arriba del punto sospechoso y abajo.",
         queSaleDeAqui:
           "Una lista de lo que falta. Es el dato que más convence y el único que no se consigue con instrumentos: hay que saber qué buscar y preguntarle a quien lleva años mirando.",
+        conceptosClave: ["ecosistema", "bioindicador", "cadena alimentaria", "especie nativa e introducida"],
+        tecnicas: ["cuadrante", "bitacora", "foto_punto_fijo"],
       },
       {
         asignatura: "quimica",
@@ -173,6 +186,8 @@ export const PROBLEMAS: Problema[] = [
           "pH, turbidez y temperatura en varios puntos del mismo cauce, siempre a la misma hora, para que se puedan comparar entre sí.",
         queSaleDeAqui:
           "Un mapa del cauce con los puntos marcados. Sirve para señalar dónde entra el problema, que es distinto de decir que el río está sucio.",
+        conceptosClave: ["pH", "escala logarítmica", "turbidez", "disolución", "contaminante"],
+        tecnicas: ["muestreo_agua", "bitacora"],
       },
       {
         asignatura: "historia",
@@ -182,6 +197,8 @@ export const PROBLEMAS: Problema[] = [
           "Para qué se usaba el río, quién vivía de él, en qué década dejó de usarse y por qué. Se hace con entrevistas y con fotos familiares, que es el archivo que existe.",
         queSaleDeAqui:
           "La línea de tiempo del río contada por quienes estaban. Es lo único que explica por qué a la gente del pueblo le importa, y sin eso el proyecto es un informe técnico.",
+        conceptosClave: ["fuente oral", "memoria colectiva", "uso del territorio", "línea de tiempo"],
+        tecnicas: ["entrevista", "foto_punto_fijo"],
       },
       {
         asignatura: "matematica",
@@ -190,6 +207,8 @@ export const PROBLEMAS: Problema[] = [
           "Promedios, diferencias entre puntos, cómo cambia a lo largo de las semanas. Y cuál medición se sale de todas las demás, que es la pregunta interesante.",
         queSaleDeAqui:
           "Los gráficos con los que se defiende el hallazgo. Sin esto los números son una lista y no un argumento.",
+        conceptosClave: ["promedio", "mediana", "dato atípico", "variable y escala", "gráfico de barras y de líneas"],
+        tecnicas: ["medicion_dimensiones", "bitacora"],
       },
       {
         asignatura: "lenguaje",
@@ -198,6 +217,8 @@ export const PROBLEMAS: Problema[] = [
           "Cómo está contada la problemática en la prensa: qué se dice, qué se omite, a quién se cita. Y cómo se escribe una nota propia que no se pueda desarmar.",
         queSaleDeAqui:
           "El texto que va a leer el municipio o el vecindario. Es la pieza de la que depende que todo lo demás sirva de algo.",
+        conceptosClave: ["hecho y opinión", "fuente", "propósito del texto", "destinatario"],
+        tecnicas: ["entrevista", "encuesta"],
       },
     ],
   },
@@ -254,6 +275,8 @@ export const PROBLEMAS: Problema[] = [
           "El consumo real de la escuela o de una casa durante una semana, contra lo que entra. Se cuenta con lo que hay: el contador, los estanques, los viajes del camión.",
         queSaleDeAqui:
           "La diferencia entre lo que se cree que se gasta y lo que se gasta. Nunca coinciden, y esa brecha es el proyecto.",
+        conceptosClave: ["volumen y litro", "consumo por persona", "proporción", "estimación"],
+        tecnicas: ["medicion_dimensiones", "bitacora"],
       },
       {
         asignatura: "biologia",
@@ -262,6 +285,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué plantas del lugar siguen ahí después de varios años secos y cuáles desaparecieron de las huertas. Se pregunta a quien siembra.",
         queSaleDeAqui:
           "Una lista de lo que conviene sembrar aquí ahora, que es un consejo que alguien va a usar.",
+        conceptosClave: ["requerimientos de los seres vivos", "tolerancia a la sequía", "raíz y absorción"],
+        tecnicas: ["cuadrante", "entrevista"],
       },
       {
         asignatura: "historia",
@@ -270,6 +295,8 @@ export const PROBLEMAS: Problema[] = [
           "Turnos de riego, acuerdos entre vecinos, en qué momento cambió la cosa. Es un asunto de reglas, no solo de lluvia.",
         queSaleDeAqui:
           "Entender que la escasez tiene tanto de reparto como de clima, que es la parte que la prensa casi nunca cuenta.",
+        conceptosClave: ["derechos de agua", "turnos de riego", "organización comunitaria", "bien común"],
+        tecnicas: ["entrevista", "encuesta"],
       },
       {
         asignatura: "tecnologia",
@@ -278,6 +305,8 @@ export const PROBLEMAS: Problema[] = [
           "Riego por goteo casero, recolección de lluvia, acolchado. Se prueba y se mide si sirvió.",
         queSaleDeAqui:
           "Una cosa instalada y funcionando, más el dato de cuánta agua ahorró. Sin el dato es una maqueta.",
+        conceptosClave: ["prototipo", "variable a controlar", "eficiencia", "prueba y error"],
+        tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
       },
     ],
   },
@@ -319,6 +348,8 @@ export const PROBLEMAS: Problema[] = [
           "Se cuenta y se clasifica una muestra: qué proporción es envase, orgánico, escombro. El escombro cambia el diagnóstico porque no lo deja una persona a pie.",
         queSaleDeAqui:
           "Saber si el microbasural es doméstico o es de camioneta, que lleva a soluciones opuestas.",
+        conceptosClave: ["muestra y población", "porcentaje", "clasificación", "volumen estimado"],
+        tecnicas: ["cuadrante", "pauta_observacion"],
       },
       {
         asignatura: "biologia",
@@ -327,6 +358,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué crece y qué no crece alrededor, adónde escurre cuando llueve, qué animales llegan.",
         queSaleDeAqui:
           "La conexión entre el sitio y algo que a la gente sí le importa, que casi siempre es el agua o los perros.",
+        conceptosClave: ["lixiviado", "escorrentía", "descomposición", "vector de enfermedad"],
+        tecnicas: ["pauta_observacion", "muestra_suelo"],
       },
       {
         asignatura: "historia",
@@ -335,6 +368,8 @@ export const PROBLEMAS: Problema[] = [
           "Se pregunta a los vecinos más antiguos. Los microbasurales suelen estar donde antes hubo otra cosa: un pozo, un camino, un botadero autorizado.",
         queSaleDeAqui:
           "La razón real, que casi nunca es que la gente sea desordenada.",
+        conceptosClave: ["uso histórico del suelo", "gestión municipal", "responsabilidad pública"],
+        tecnicas: ["entrevista", "foto_punto_fijo"],
       },
       {
         asignatura: "artes",
@@ -343,6 +378,8 @@ export const PROBLEMAS: Problema[] = [
           "Fotografía del mismo punto en distintos momentos, o registro de lo que se encuentra tratado como catálogo.",
         queSaleDeAqui:
           "Una pieza que obliga a mirar un sitio por el que todos pasan sin verlo.",
+        conceptosClave: ["encuadre", "serie fotográfica", "punto de vista", "catálogo visual"],
+        tecnicas: ["foto_punto_fijo", "mapa_a_mano"],
       },
     ],
   },
@@ -392,6 +429,8 @@ export const PROBLEMAS: Problema[] = [
           "Temperatura en varios puntos a la misma hora durante una semana, y dónde está la diferencia grande.",
         queSaleDeAqui:
           "El punto de fuga, que casi nunca es donde la gente cree. Eso permite pedir algo concreto en vez de quejarse.",
+        conceptosClave: ["calor y temperatura", "conducción", "aislación", "transferencia de energía"],
+        tecnicas: ["medicion_dimensiones", "bitacora"],
       },
       {
         asignatura: "quimica",
@@ -400,6 +439,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué leña se usa, cuán húmeda está, y qué diferencia hace la humedad en cuánto humo sale.",
         queSaleDeAqui:
           "Una recomendación que se puede seguir esta semana, no el año que viene.",
+        conceptosClave: ["combustión", "material particulado", "humedad de la madera", "producto de reacción"],
+        tecnicas: ["bitacora", "pauta_observacion"],
       },
       {
         asignatura: "matematica",
@@ -408,6 +449,8 @@ export const PROBLEMAS: Problema[] = [
           "Metros de leña por invierno por casa, precio, y qué pasaría tapando las filtraciones.",
         queSaleDeAqui:
           "Una cifra en pesos, que es la que hace que alguien actúe.",
+        conceptosClave: ["promedio", "costo unitario", "proyección", "comparación de series"],
+        tecnicas: ["encuesta", "medicion_dimensiones"],
       },
       {
         asignatura: "historia",
@@ -416,6 +459,8 @@ export const PROBLEMAS: Problema[] = [
           "Orientación de las casas antiguas, dónde iba el fuego, qué materiales se usaban.",
         queSaleDeAqui:
           "Soluciones que ya se probaron aquí durante generaciones y que la construcción actual olvidó.",
+        conceptosClave: ["arquitectura tradicional", "adaptación al clima", "saber técnico local"],
+        tecnicas: ["entrevista", "mapa_a_mano"],
       },
     ],
   },
@@ -455,6 +500,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué crece en la parte que aguanta y qué falta donde se cae. Se comparan dos pedazos a pocos metros.",
         queSaleDeAqui:
           "Qué plantar, y dónde, para que agarre. Se puede hacer el mismo día.",
+        conceptosClave: ["cobertura vegetal", "sistema radicular", "sucesión"],
+        tecnicas: ["cuadrante", "foto_punto_fijo"],
       },
       {
         asignatura: "quimica",
@@ -463,6 +510,8 @@ export const PROBLEMAS: Problema[] = [
           "Cuánta agua se queda en cada capa, qué se deshace en la mano, qué color tiene.",
         queSaleDeAqui:
           "Por qué esta tierra se seca aunque llueva, que es la pregunta que todos los que siembran se hacen.",
+        conceptosClave: ["textura del suelo", "retención de agua", "porosidad", "materia orgánica"],
+        tecnicas: ["muestra_suelo", "medicion_dimensiones"],
       },
       {
         asignatura: "matematica",
@@ -471,6 +520,8 @@ export const PROBLEMAS: Problema[] = [
           "Grosor de las capas, avance de una cárcava medido entre dos visitas, superficie afectada.",
         queSaleDeAqui:
           "Una tasa: centímetros por año. Es lo que convierte un paisaje feo en un problema con plazo.",
+        conceptosClave: ["tasa de cambio", "superficie", "escala temporal", "proporción"],
+        tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
       },
       {
         asignatura: "tecnologia",
@@ -479,6 +530,8 @@ export const PROBLEMAS: Problema[] = [
           "Barreras vivas, zanjas de infiltración, cobertura. Se instala y se vuelve a medir.",
         queSaleDeAqui:
           "Una obra pequeña que se puede mostrar, y el dato de si funcionó.",
+        conceptosClave: ["barrera viva", "infiltración", "diseño de una solución", "seguimiento"],
+        tecnicas: ["foto_punto_fijo", "medicion_dimensiones"],
       },
     ],
   },
@@ -520,6 +573,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué hay en el pedazo de bosque de al lado: los árboles grandes, lo que está creciendo abajo, y si hay renovales de las especies que importan o solo de las que invaden.",
         queSaleDeAqui:
           "Saber si ese bosque se está reponiendo solo o no. Un bosque sin árboles jóvenes está muerto aunque los grandes sigan de pie, y eso se ve contando.",
+        conceptosClave: ["regeneración natural", "renoval", "especie nativa e introducida", "dosel y sotobosque"],
+        tecnicas: ["cuadrante", "bitacora"],
       },
       {
         asignatura: "historia",
@@ -528,6 +583,8 @@ export const PROBLEMAS: Problema[] = [
           "Dónde había monte hace cuarenta años, en qué década se cortó y para qué. Fotos familiares, escrituras, y lo que cuenten los mayores.",
         queSaleDeAqui:
           "El mapa de lo que había, que casi nunca existe en ninguna parte y que cambia la discusión de si esto siempre fue así.",
+        conceptosClave: ["uso del territorio", "fuente oral", "cambio en el paisaje"],
+        tecnicas: ["entrevista", "mapa_a_mano"],
       },
       {
         asignatura: "matematica",
@@ -536,6 +593,8 @@ export const PROBLEMAS: Problema[] = [
           "Superficie del pedazo que tienen, cuántos árboles por área, y comparación entre imágenes satelitales de distintos años, que son públicas.",
         queSaleDeAqui:
           "Una cifra local puesta al lado de la nacional. Que el estudio diga 74% y aquí dé otra cosa es exactamente lo interesante.",
+        conceptosClave: ["superficie", "densidad por área", "porcentaje de pérdida", "escala de un mapa"],
+        tecnicas: ["cuadrante", "medicion_dimensiones"],
       },
       {
         asignatura: "tecnologia",
@@ -544,6 +603,8 @@ export const PROBLEMAS: Problema[] = [
           "Recolección de semillas, un vivero pequeño en la escuela, cercado de un pedazo para que no entre el ganado. Se planta y se vuelve a mirar.",
         queSaleDeAqui:
           "Árboles vivos, o el dato de por qué no prendieron. Las dos cosas sirven.",
+        conceptosClave: ["germinación", "vivero", "sustrato", "seguimiento con fecha"],
+        tecnicas: ["muestra_suelo", "foto_punto_fijo"],
       },
       {
         asignatura: "artes",
@@ -552,6 +613,8 @@ export const PROBLEMAS: Problema[] = [
           "Dibujo o fotografía de los árboles grandes que quedan, uno por uno, con su ubicación.",
         queSaleDeAqui:
           "Un catastro que en diez años va a valer mucho más que ahora.",
+        conceptosClave: ["dibujo de observación", "proporción", "registro con escala"],
+        tecnicas: ["foto_punto_fijo", "bitacora"],
       },
     ],
   },
@@ -587,6 +650,8 @@ export const PROBLEMAS: Problema[] = [
           "Entrevistas grabadas con quienes saben, con las preguntas preparadas por los estudiantes. Se ordena por tema y por fecha.",
         queSaleDeAqui:
           "Un archivo que antes no existía y que va a quedar cuando el curso ya no esté.",
+        conceptosClave: ["fuente oral", "patrimonio inmaterial", "archivo", "testimonio"],
+        tecnicas: ["entrevista", "foto_punto_fijo"],
       },
       {
         asignatura: "lenguaje",
@@ -595,6 +660,8 @@ export const PROBLEMAS: Problema[] = [
           "Las palabras propias del lugar y del oficio: cómo se llama cada herramienta, cada parte, cada momento del año.",
         queSaleDeAqui:
           "Un glosario del lugar. Es el trabajo más barato de hacer y el que más dura.",
+        conceptosClave: ["registro y variedad lingüística", "campo semántico", "glosario", "transcripción"],
+        tecnicas: ["entrevista", "bitacora"],
       },
       {
         asignatura: "artes",
@@ -603,6 +670,8 @@ export const PROBLEMAS: Problema[] = [
           "Registro visual del proceso completo, paso a paso, con las manos de quien lo hace.",
         queSaleDeAqui:
           "Algo que permite aprender el oficio mirando, que es como se aprendió siempre.",
+        conceptosClave: ["secuencia visual", "proceso", "encuadre del detalle"],
+        tecnicas: ["foto_punto_fijo", "bitacora"],
       },
       {
         asignatura: "biologia",
@@ -611,6 +680,8 @@ export const PROBLEMAS: Problema[] = [
           "Qué plantas se usan y para qué, en qué época se recogen, qué señales se miran para decidir cuándo sembrar.",
         queSaleDeAqui:
           "Conocimiento comprobable que suele coincidir con lo que dice el libro, dicho en otras palabras y con más detalle local.",
+        conceptosClave: ["uso tradicional de especies", "fenología", "clasificación"],
+        tecnicas: ["entrevista", "cuadrante"],
       },
     ],
   },
