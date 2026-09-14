@@ -53,6 +53,7 @@ const ARCHIVOS = [
   "src/modules/sequences/rutas/catalogo.ts",
   "src/modules/sequences/metodo/momentos.ts",
   "src/modules/sequences/metodo/formatos.ts",
+  "src/modules/sequences/metodo/problemas.ts",
   "src/shared/lib/demo.ts",
   "src/shared/i18n/locales/es/common.json",
 ];

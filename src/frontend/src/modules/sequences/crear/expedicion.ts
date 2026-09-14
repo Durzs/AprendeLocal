@@ -53,14 +53,35 @@ export type Expedicion = {
   objetivos: string;
   evaluacion: Evaluacion[];
 
-  /* ── Paso 1, lo que pone el lugar ────────────────────────────────────── */
-  asignatura: string;
-  tematicas: string;
+  /* ── Paso 1, la problemática ─────────────────────────────────────────── */
+  /**
+   * De dónde arranca el proyecto.
+   *
+   * Antes esta parte eran cinco cuadros de texto en blanco —asignatura,
+   * temáticas, fenómeno local, qué se podría averiguar, producto final— puestos
+   * delante de alguien que abrió la aplicación justamente para que le ayudaran
+   * a pensar. Eso no es recoger información: es pedirle el trabajo hecho.
+   *
+   * Ahora elige una problemática que ya está ocurriendo y de la que ya se
+   * escribió, o propone la suya. Lo demás sale de ahí.
+   */
+  problemaId: string | null;
+  /** Cuando ninguna de las del catálogo es la suya. */
+  problemaPropio: string;
+  /** Las notas de prensa de su zona, pegadas por él. */
+  noticias: { titular: string; url: string }[];
+  /** Desde qué asignaturas se entra. Abre ángulos distintos del mismo problema. */
+  asignaturas: string[];
   entorno: Entorno | null;
   ubicacion: string;
+  /**
+   * Cómo se ve la problemática aquí, en una frase.
+   *
+   * Es lo único que sobrevive de los cinco cuadros, porque es lo único que la
+   * plataforma no puede saber: la problemática la elige de una lista, pero
+   * cómo se manifiesta en ESTE sitio solo lo sabe quien está ahí.
+   */
   fenomeno: string;
-  indagacion: string;
-  producto: string;
 
   /* ── Paso 2, las preguntas ───────────────────────────────────────────── */
   preguntas: Pregunta[];
@@ -99,13 +120,13 @@ export const VACIA: Expedicion = {
   oa: [],
   objetivos: "",
   evaluacion: [],
-  asignatura: "",
-  tematicas: "",
+  problemaId: null,
+  problemaPropio: "",
+  noticias: [],
+  asignaturas: [],
   entorno: null,
   ubicacion: "",
   fenomeno: "",
-  indagacion: "",
-  producto: "",
   preguntas: [],
   preguntaGuia: "",
   rutaIA: null,
@@ -160,11 +181,11 @@ export function completitudPaso1(e: Expedicion): number {
     e.semanas ? "x" : "",
     e.oa.length ? "x" : "",
     e.evaluacion.length ? "x" : "",
-    e.asignatura,
+    e.problemaId || e.problemaPropio,
+    e.asignaturas.length ? "x" : "",
     e.entorno ?? "",
     e.ubicacion,
     e.fenomeno,
-    e.producto,
   ];
   const llenos = campos.filter((c) => String(c).trim().length > 0).length;
   return Math.round((llenos / campos.length) * 100);
