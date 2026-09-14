@@ -51,6 +51,9 @@ const JERGA = [
  */
 const ARCHIVOS = [
   "src/modules/sequences/rutas/catalogo.ts",
+  "src/modules/sequences/metodo/momentos.ts",
+  "src/modules/sequences/metodo/formatos.ts",
+  "src/modules/sequences/metodo/problemas.ts",
   "src/shared/lib/demo.ts",
   "src/shared/i18n/locales/es/common.json",
 ];
@@ -140,8 +143,53 @@ if (cursos !== esperas) {
   fallos++;
 }
 
+/*
+ * Afuera se hacen más cosas que medir.
+ *
+ * Esto vuelve solo, y volvió: el protocolo solo sabía de `numero` y `texto`, la
+ * tabla de terreno tenía una columna titulada «cómo se mide», y las cuatro
+ * rutas salieron con diez de dieciséis tareas convertidas en un número con
+ * unidad. Nadie decidió que fuera así; la estructura no sabía nombrar otra
+ * cosa, y lo que no se puede nombrar no se escribe.
+ *
+ * Medir no sobra. Un número zanja discusiones que las palabras no zanjan, y
+ * hay objetivos del programa que lo piden. Lo que se revisa es que no sea lo
+ * único: que en cada salida haya al menos cuatro maneras distintas de
+ * trabajar, y que el lugar quede distinto de como estaba.
+ */
+const MANERAS_MINIMAS = 4;
+const salidas = catalogo.split("salida_terreno:").slice(1);
+
+for (const salida of salidas) {
+  const protocolo = salida.slice(0, salida.indexOf("recuperacion_espaciada:"));
+  const maneras = new Set(
+    [...protocolo.matchAll(/registro:\s*"(\w+)"/g)].map((m) => m[1]),
+  );
+  if (maneras.size === 0) continue; // secuencia antigua, sin el campo todavía
+
+  if (maneras.size < MANERAS_MINIMAS) {
+    console.error(
+      `✗ Una salida trae solo ${maneras.size} manera(s) de trabajar: ${[...maneras].join(", ")}.\n` +
+        `  Afuera se puede mirar, dibujar, mapear, seguir algo, preguntarle a alguien\n` +
+        `  o dejar algo hecho. Si todo es medir, la salida es una planilla al aire libre.`,
+    );
+    fallos++;
+  }
+  if (!maneras.has("dejar_hecho")) {
+    console.error(
+      "✗ Una salida no deja nada hecho: el lugar queda igual que antes de llegar.\n" +
+        "  Un sitio que no cambió en nada no da para volver, y la diferencia entre\n" +
+        "  visitar un lugar y tener uno es justamente esa.",
+    );
+    fallos++;
+  }
+}
+
 if (fallos > 0) {
   console.error(`\n${fallos} problema(s) de lenguaje.`);
   process.exit(1);
 }
-console.log(`Lenguaje revisado: ${ARCHIVOS.length} archivos, ${cursos} cursos con su espera.`);
+console.log(
+  `Lenguaje revisado: ${ARCHIVOS.length} archivos, ${cursos} cursos con su espera, ` +
+    `${salidas.length} salidas que hacen algo más que medir.`,
+);

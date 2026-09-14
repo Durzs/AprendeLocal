@@ -111,6 +111,38 @@ function PorNivel({
 }
 
 /**
+ * La pregunta con la que se averigua quién entendió.
+ *
+ * No va al final de la clase sino en medio de ella, porque su único uso es
+ * decidir si se sigue o si se vuelve atrás. Las respuestas equivocadas se
+ * muestran igual de grandes que la correcta a propósito: lo que el docente
+ * necesita leer de un vistazo no es cuál era la buena —esa la sabe— sino qué
+ * está pensando el que contestó mal, que es lo que le dice qué repetir.
+ */
+function Comprobar({ c }: { c: NonNullable<Secuencia["instruccion_explicita"]>["comprobacion"] }) {
+  const { t } = useTranslation();
+  if (!c) return null;
+
+  return (
+    <div className="rounded-xl border border-slate-300 bg-white p-4">
+      <p className="rotulo text-slate-500">{t("preparar.checkTitle")}</p>
+      <p className="mt-1.5 font-medium text-slate-900">{c.pregunta}</p>
+      <ul className="mt-3 space-y-1.5">
+        {c.respuestas.map((r) => (
+          <li key={r.dice} className="text-slate-700">
+            <span className="font-medium text-slate-900">{r.dice}</span>{" "}
+            <span className="text-slate-500">{t("preparar.checkMeans")}</span> {r.significa}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 border-t border-slate-200 pt-3 text-slate-700">
+        <strong className="text-slate-900">{t("preparar.checkIfWrong")}</strong> {c.si_falla}
+      </p>
+    </div>
+  );
+}
+
+/**
  * Qué está haciendo la sala en este momento de la clase.
  *
  * La secuencia decía muy bien QUÉ se enseña y no decía nunca QUÉ PASA: si el
@@ -156,21 +188,64 @@ export default function VistaSecuencia({
     setEtapaActiva(numero);
   }
 
+  // Los tres momentos nuevos —el desacuerdo, la vuelta y la crítica— solo los
+  // traen las rutas escritas: una secuencia generada antes de que existieran
+  // no los tiene, y entonces el riel se lee como se leía antes. Por eso los
+  // números no están fijos en el código, se reparten según lo que haya.
+  const desacuerdo = s.desacuerdo;
+  const vuelta = s.vuelta_del_terreno;
+  const critica = s.borrador_y_critica;
+
+  let n = 0;
+  const nDesacuerdo = desacuerdo ? ++n : 0;
+  const nExplicar = ++n;
+  const nEjemplo = ++n;
+  const nGuiada = ++n;
+  const nAutonoma = ++n;
+  const red = s.red_comunitaria;
+  const transferencia = s.transferencia;
+  // Si ninguna tarea pide unidad, encabezar esa columna con «Unidad» y
+  // llenarla de rayas es decirle al docente que la salida le quedó coja. No
+  // le quedó coja: es que no toda salida es una toma de datos.
+  const hayUnidades = (s.salida_terreno?.protocolo ?? []).some((c) => c.unidad);
+
+  const nRed = red ? ++n : 0;
+  const nTerreno = ++n;
+  const nVuelta = vuelta ? ++n : 0;
+  const nCritica = critica ? ++n : 0;
+  const nRepaso = ++n;
+  const nTransfer = transferencia ? ++n : 0;
+
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
   const etapas: ResumenEtapa[] = [
-    { numero: 1, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.explain"),
+    ...(desacuerdo
+      ? [{ numero: nDesacuerdo, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.split") }]
+      : []),
+    { numero: nExplicar, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.explain"),
       unidad: "points", piezas: s.instruccion_explicita?.notas_para_el_docente?.length },
-    { numero: 2, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.example"),
+    { numero: nEjemplo, momento: t("preparar.stages.class1"), titulo: t("preparar.stages.example"),
       unidad: "steps", piezas: s.ejemplo_resuelto?.pasos?.length },
-    { numero: 3, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.guided"),
+    { numero: nGuiada, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.guided"),
       unidad: "exercises", piezas: s.practica_guiada?.ejercicios?.length },
-    { numero: 4, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
+    { numero: nAutonoma, momento: t("preparar.stages.class2"), titulo: t("preparar.stages.independent"),
       unidad: "exercises", piezas: s.practica_autonoma?.ejercicios?.length },
-    { numero: 5, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
+    ...(red
+      ? [{ numero: nRed, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.network") }]
+      : []),
+    { numero: nTerreno, momento: t("preparar.stages.class3"), titulo: t("preparar.stages.field"),
       unidad: "measurements", piezas: s.salida_terreno?.protocolo?.length },
-    { numero: 6, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
+    ...(vuelta
+      ? [{ numero: nVuelta, momento: t("preparar.stages.class4"), titulo: t("preparar.stages.back") }]
+      : []),
+    ...(critica
+      ? [{ numero: nCritica, momento: t("preparar.stages.class5"), titulo: t("preparar.stages.draft") }]
+      : []),
+    { numero: nRepaso, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.review"),
       unidad: "questions", piezas: s.recuperacion_espaciada?.length },
+    ...(transferencia
+      ? [{ numero: nTransfer, momento: t("preparar.stages.reviewWeeks"), titulo: t("preparar.stages.transfer") }]
+      : []),
   ];
 
   return (
@@ -239,8 +314,32 @@ export default function VistaSecuencia({
           <RielEtapas etapas={etapas} activa={etapaActiva} onCambiar={irA} />
 
           <div className="min-w-0 space-y-4 print:space-y-0">
+        {/* Lo primero de todo, y lo que cambia el sentido de lo que viene
+            después: si la sala no se ha dividido por una pregunta que nadie
+            puede ganar discutiendo, salir a medir es ejecutar el protocolo de
+            otro para confirmar lo que el profesor ya dijo. */}
+        {desacuerdo && (
+          <EtapaSecuencia
+            activa={etapaActiva === nDesacuerdo}
+            sentido={sentido}
+            titulo={t("preparar.stages.split")}
+            subtitulo={t("preparar.stages.splitSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p className="font-medium text-slate-900">{desacuerdo.sobre_que}</p>
+            <p>
+              <strong>{t("preparar.splitHow")}</strong> {desacuerdo.como_se_ve}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.splitWho")}</strong>{" "}
+              {desacuerdo.quien_lo_zanja}
+            </p>
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
-          activa={etapaActiva === 1}
+          activa={etapaActiva === nExplicar}
             sentido={sentido}
           titulo={t("preparar.stages.explain")}
           subtitulo={
@@ -264,10 +363,14 @@ export default function VistaSecuencia({
               {s.instruccion_explicita?.errores_frecuentes?.join("; ")}
             </p>
           )}
+          {/* Va al final de la etapa porque ese es su momento: se explicó, y
+              antes de pasar a los ejercicios hay que saber con quién se
+              cuenta. */}
+          <Comprobar c={s.instruccion_explicita?.comprobacion} />
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 2}
+          activa={etapaActiva === nEjemplo}
             sentido={sentido}
           titulo={t("preparar.stages.example")}
           subtitulo={s.ejemplo_resuelto?.situacion}
@@ -297,7 +400,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 3}
+          activa={etapaActiva === nGuiada}
             sentido={sentido}
           titulo={t("preparar.stages.guided")}
           actor="docente"
@@ -327,7 +430,7 @@ export default function VistaSecuencia({
         </EtapaSecuencia>
 
         <EtapaSecuencia
-          activa={etapaActiva === 4}
+          activa={etapaActiva === nAutonoma}
             sentido={sentido}
           titulo={t("preparar.stages.independent")}
           actor="estudiantes"
@@ -341,8 +444,51 @@ export default function VistaSecuencia({
           {s.por_nivel && <PorNivel bloques={s.por_nivel} campo="practica_autonoma" />}
         </EtapaSecuencia>
 
+        {/* Va antes de la salida y no después: las preguntas se preparan en
+            la sala, y una visita sin preguntas preparadas termina en una
+            charla de veinte minutos donde el invitado habla y el curso
+            escucha. Quien investiga tiene que ser el estudiante. */}
+        {red && (
+          <EtapaSecuencia
+            activa={etapaActiva === nRed}
+            sentido={sentido}
+            titulo={t("preparar.stages.network")}
+            subtitulo={t("preparar.stages.networkSubtitle")}
+            actor="estudiantes"
+          >
+            {red.actores.map((a) => (
+              <div key={a.quien} className="rounded-xl border border-slate-200 p-3.5">
+                <p className="font-medium text-slate-900">{a.quien}</p>
+                <p className="mt-1.5 text-slate-600">
+                  <strong className="text-slate-800">{t("preparar.netWhy")}</strong> {a.por_que}
+                </p>
+                <p className="mt-2.5 text-slate-800">
+                  <strong>{t("preparar.netAsk")}</strong>
+                </p>
+                <ul className="mt-1 list-disc space-y-1 pl-5 text-slate-700">
+                  {a.que_le_preguntan.map((q) => (
+                    <li key={q}>{q}</li>
+                  ))}
+                </ul>
+                <p className="mt-2.5 text-slate-600">
+                  <strong className="text-slate-800">{t("preparar.netWho")}</strong>{" "}
+                  {a.quien_pregunta}
+                </p>
+              </div>
+            ))}
+            {red.permisos.length > 0 && (
+              <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
+                <strong>{t("preparar.netPermits")}</strong> {red.permisos.join(" · ")}
+              </p>
+            )}
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.netBack")}</strong> {red.devolucion}
+            </p>
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
-          activa={etapaActiva === 5}
+          activa={etapaActiva === nTerreno}
             sentido={sentido}
           titulo={t("preparar.stages.field")}
           subtitulo={t("preparar.stages.fieldSubtitle")}
@@ -384,7 +530,13 @@ export default function VistaSecuencia({
                 <tr className="border-b border-slate-200 rotulo text-slate-500">
                   <th className="py-2 pr-3">{t("preparar.colWhat")}</th>
                   <th className="py-2 pr-3">{t("preparar.colHow")}</th>
-                  <th className="py-2">{t("preparar.colUnit")}</th>
+                  {/* La columna se llamaba «Unidad» y antes de eso la del medio
+                      se llamaba «Cómo se mide». Entre las dos daban por hecho
+                      que salir es tomar datos, y las rutas salieron así. Ahora
+                      la unidad solo aparece cuando de verdad hay algo que
+                      medir, y la columna dice de qué clase de trabajo se
+                      trata. */}
+                  <th className="py-2">{hayUnidades ? t("preparar.colUnit") : t("preparar.colKind")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -399,12 +551,49 @@ export default function VistaSecuencia({
                       {c.etiqueta?.trim() || nombreLegible(c.campo, c.unidad)}
                     </td>
                     <td className="py-2 pr-3">{c.instruccion}</td>
-                    <td className="py-2 font-mono text-xs">{c.unidad ?? "—"}</td>
+                    <td className="py-2">
+                      {c.unidad ? (
+                        <span className="font-mono text-xs">{c.unidad}</span>
+                      ) : c.registro ? (
+                        <span
+                          className={`whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] ${
+                            c.registro === "dejar_hecho"
+                              ? "border-emerald-300 bg-emerald-50 text-emerald-800"
+                              : "border-slate-200 bg-slate-50 text-slate-600"
+                          }`}
+                        >
+                          {t(`preparar.kinds.${c.registro}`)}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-xs">—</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {/* Sin esto la salida es llenar casillas al aire libre. La tabla de
+              arriba dice qué se anota; esto dice qué queda de verdad en sus
+              manos, y por eso va después: primero lo que está resuelto, y al
+              final lo único que no. */}
+          {s.salida_terreno?.lo_que_eligen && (
+            <div className="rounded-xl border border-slate-300 bg-white p-4">
+              <p className="rotulo text-slate-500">{t("preparar.chooseTitle")}</p>
+              <p className="mt-1.5 font-medium text-slate-900">
+                {s.salida_terreno.lo_que_eligen.que_eligen}
+              </p>
+              <p className="mt-2.5 text-slate-700">
+                <strong className="text-slate-900">{t("preparar.chooseWhy")}</strong>{" "}
+                {s.salida_terreno.lo_que_eligen.en_que_cambia}
+              </p>
+              <p className="mt-2.5 text-slate-700">
+                <strong className="text-slate-900">{t("preparar.chooseDefend")}</strong>{" "}
+                {s.salida_terreno.lo_que_eligen.como_lo_defienden}
+              </p>
+            </div>
+          )}
+
           {(s.salida_terreno?.seguridad ?? []).length > 0 && (
             <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
               <strong>{t("preparar.safety")}</strong>{" "}
@@ -413,8 +602,66 @@ export default function VistaSecuencia({
           )}
         </EtapaSecuencia>
 
+        {/* La clase de vuelta. Sin ella la salida queda como un paseo con
+            planilla: los datos son del lugar, pero la idea con la que llegaron
+            sigue en pie. Aquí la desmiente su propia medición, y la desmiente
+            a casi todo el curso a la vez, que es lo que la hace soportable. */}
+        {vuelta && (
+          <EtapaSecuencia
+            activa={etapaActiva === nVuelta}
+            sentido={sentido}
+            titulo={t("preparar.stages.back")}
+            subtitulo={t("preparar.stages.backSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <QueHaceLaSala texto={vuelta.como_empieza} />
+            <p>
+              <strong>{t("preparar.backCompare")}</strong> {vuelta.que_comparan}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.backOdd")}</strong>{" "}
+              {vuelta.si_no_calza}
+            </p>
+            {vuelta.con_la_comunidad && (
+              <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+                <strong>{t("preparar.backCommunity")}</strong> {vuelta.con_la_comunidad}
+              </p>
+            )}
+            {(s.por_nivel ?? []).length > 0 && (
+              <p className="text-slate-500">{t("preparar.backLevels")}</p>
+            )}
+          </EtapaSecuencia>
+        )}
+
+        {/* Un trabajo que no se rehace no se aprende a hacer. Esta etapa
+            faltaba entera: el producto salía en un solo borrador y se
+            entregaba, cuando la distancia entre la primera versión y la
+            segunda es la mitad de lo que el curso se lleva. */}
+        {critica && (
+          <EtapaSecuencia
+            activa={etapaActiva === nCritica}
+            sentido={sentido}
+            titulo={t("preparar.stages.draft")}
+            subtitulo={t("preparar.stages.draftSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p>
+              <strong>{t("preparar.draftFirst")}</strong> {critica.primera_version}
+            </p>
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-700">
+              <strong className="text-slate-900">{t("preparar.draftHow")}</strong>{" "}
+              {critica.como_se_critica}
+            </p>
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.draftBetter")}</strong> {critica.que_mejora}
+            </p>
+          </EtapaSecuencia>
+        )}
+
         <EtapaSecuencia
-          activa={etapaActiva === 6}
+          activa={etapaActiva === nRepaso}
             sentido={sentido}
           titulo={t("preparar.stages.review")}
           subtitulo={t("preparar.stages.reviewSubtitle")}
@@ -431,6 +678,35 @@ export default function VistaSecuencia({
             ))}
           </ul>
         </EtapaSecuencia>
+
+        {/* La última y la que de verdad prueba algo. Un curso puede contestar
+            todas las preguntas de repaso y seguir sin entender nada: se sabe
+            su caso de memoria. Lo que separa saber el caso de entender la idea
+            es poder usarla donde no se estuvo. */}
+        {transferencia && (
+          <EtapaSecuencia
+            activa={etapaActiva === nTransfer}
+            sentido={sentido}
+            titulo={t("preparar.stages.transfer")}
+            subtitulo={t("preparar.stages.transferSubtitle")}
+            actor="estudiantes"
+            destacada
+          >
+            <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-slate-800">
+              {transferencia.escenario_nuevo}
+            </p>
+            <p className="font-medium text-slate-900">
+              <strong>{t("preparar.transferAsk")}</strong> {transferencia.que_se_les_pide}
+            </p>
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-900">
+              <strong>{t("preparar.transferOk")}</strong>{" "}
+              {transferencia.que_muestra_que_lo_entendieron}
+            </p>
+            <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-amber-900">
+              <strong>{t("preparar.transferNo")}</strong> {transferencia.que_no_cuenta}
+            </p>
+          </EtapaSecuencia>
+        )}
 
             {/* Avance secuencial, para quien prefiere recorrerla en orden */}
             <div className="flex items-center justify-between gap-3 print:hidden">

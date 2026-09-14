@@ -18,6 +18,7 @@
  */
 
 import type { Entorno, Expedicion, Pregunta } from "./expedicion";
+import { angulosDe, problemaPorId, type Angulo } from "../metodo/problemas";
 
 /** Lo que el docente escribió, ya limpio y con un respaldo si dejó el campo vacío. */
 type Piezas = {
@@ -85,7 +86,9 @@ function piezas(e: Expedicion): Piezas {
   return {
     lugar,
     fenomeno: e.fenomeno.trim(),
-    producto: e.producto.trim() ? fragmento(e.producto) : "lo que hagan",
+    // El producto ya no se pide aquí: lo decide el curso en el momento 07,
+    // después de volver del terreno. Hasta entonces se nombra sin fijarlo.
+    producto: "lo que hagan",
     aQuien: "la comunidad",
   };
 }
@@ -136,12 +139,16 @@ export type Propuesta = {
  */
 export function proponer(e: Expedicion): Propuesta[] {
   const p = piezas(e);
+  // Las que salen de la problemática y de las asignaturas van primero: son las
+  // únicas que saben de qué trata el proyecto. Las de abajo sirven siempre y
+  // por eso mismo son más genéricas.
+  const delProblema = desdeElProblema(e, p.lugar);
   // Cuando el docente contó el fenómeno, las preguntas de medir lo ponen
   // delante como oración suya y preguntan después. Cuando no lo contó, se
   // arreglan sin él en vez de dejar un hueco.
   const dijo = p.fenomeno ? `${oracion(p.fenomeno)} ` : "";
 
-  return [
+  const genericas: Propuesta[] = [
     {
       id: "mirar-1",
       familia: "mirar",
@@ -189,6 +196,42 @@ export function proponer(e: Expedicion): Propuesta[] {
       texto: `¿Qué cambiaría en ${p.lugar} si ${p.aQuien} supiera lo que averiguamos?`,
     },
   ];
+
+  return [...delProblema, ...genericas];
+}
+
+/**
+ * Las preguntas que salen de la problemática elegida y de las asignaturas.
+ *
+ * Un mismo problema abre trabajos distintos según desde dónde se entre, y esa
+ * es la parte que las plantillas genéricas no pueden dar: «¿qué se puede medir
+ * aquí?» sirve para cualquier escuela del país y justamente por eso no sirve
+ * para ninguna. `queInvestigan` de cada ángulo ya es casi una pregunta; lo que
+ * falta es ponerla en el lugar del docente.
+ *
+ * Van marcadas con la familia que les toca según la asignatura, para que la
+ * diapositiva las siga agrupando igual.
+ */
+function desdeElProblema(e: Expedicion, lugar: string): Propuesta[] {
+  const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
+  if (!problema) return [];
+
+  const familiaDe: Record<string, Familia> = {
+    biologia: "mirar",
+    quimica: "medir",
+    fisica: "medir",
+    matematica: "medir",
+    historia: "preguntar",
+    lenguaje: "devolver",
+    artes: "devolver",
+    tecnologia: "devolver",
+  };
+
+  return angulosDe(problema, e.asignaturas).map((a: Angulo) => ({
+    id: `problema-${a.asignatura}`,
+    familia: familiaDe[a.asignatura] ?? "mirar",
+    texto: `En ${lugar}: ${a.queInvestigan.replace(/\.$/, "")}. ¿Qué sale de ahí?`,
+  }));
 }
 
 /** Convierte una propuesta en una pregunta de la expedición, sin elegirla aún. */

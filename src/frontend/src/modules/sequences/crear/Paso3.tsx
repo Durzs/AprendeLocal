@@ -20,6 +20,7 @@ import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Entorno, Expedicion } from "./expedicion";
 import Seguimiento from "./Seguimiento";
+import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import type { Avance } from "./avance";
 import type { EstadoNube } from "./nube";
 
@@ -75,6 +76,20 @@ function calce(ruta: Ruta, e: Expedicion): Calce {
   };
 }
 
+/**
+ * Hasta dónde sale el curso en cada semana.
+ *
+ * Se dice porque cambia lo que el docente tiene que gestionar antes: una
+ * semana en el patio no necesita permiso, ni transporte, ni que el día esté
+ * bueno; una en el vecindario necesita las tres cosas y avisar a alguien. Y
+ * la última no se camina: se llega pensando.
+ */
+const ANILLO: Record<string, string> = {
+  inmediato: "La sala y el patio",
+  intermedio: "El vecindario",
+  amplio: "La cuenca entera",
+};
+
 const ETIQUETA_EVAL: Record<string, string> = {
   cuaderno: "Cuaderno de campo",
   producto: "El producto final",
@@ -129,12 +144,25 @@ export default function Paso3({
     <div className="space-y-4">
       {/* La ruta armada para esta escuela manda. Las cuatro escritas quedan
           detrás, para cuando no hay señal o el docente prefiere una probada. */}
+      {/* El método va arriba de todo y fuera de las dos ramas. Antes esta
+          lámina empezaba designando una de cuatro rutas escritas, y por eso
+          solo le servía a quien tuviera un estero, un bosque, un corte de
+          camino o una sala fría. Lo que guía es esto; las rutas escritas
+          quedan abajo como ejemplos de alguien que ya lo hizo. */}
+      <VistaMetodo />
+
+      <ElegirFormato
+        formato={e.formato}
+        destinatario={e.destinatario}
+        onCambio={(cambio) => onCambio({ ...e, ...cambio })}
+      />
+
       <RutaGenerada e={e} onCambio={onCambio} />
 
       {e.rutaIA ? null : (
         <>
       {/* ── La ruta designada ────────────────────────────────────────── */}
-      <Hoja titulo={cambiada ? "La ruta que elegiste" : "La ruta que te toca"} orden={4}>
+      <Hoja titulo={cambiada ? "El ejemplo que elegiste" : "Un ejemplo que se parece al tuyo"} orden={4}>
         {sinOA ? (
           <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--tierra-300)]">
             No marcaste objetivos de aprendizaje en la primera lámina, así que
@@ -254,6 +282,7 @@ export default function Paso3({
           <Cobertura ruta={elegida} e={e} />
           <Sesiones ruta={elegida} e={e} />
           <Evaluacion e={e} ruta={elegida} />
+          <Justificacion e={e} ruta={elegida} />
           <Alrededor e={e} ruta={elegida} />
         </>
       )}
@@ -287,7 +316,11 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
               {i + 1}
             </span>
             <div className="min-w-0">
-              <p className="text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
+              {/* Hasta dónde llega esa semana. Va antes del título porque es
+                  lo primero que el docente necesita para saber si esa semana
+                  requiere permisos y transporte o se resuelve en el patio. */}
+              <p className="rotulo text-[var(--crema)]/45">{ANILLO[f.alcance]}</p>
+              <p className="mt-1 text-[15px] font-medium text-[var(--crema-clara)]">{f.titulo}</p>
               {f.queOcurre && (
                 <p className="mt-1 text-sm leading-relaxed text-[var(--crema)]/65">{f.queOcurre}</p>
               )}
@@ -318,6 +351,8 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
         </div>
       ) : null}
 
+      <LosRatosQueImportan ruta={ruta} />
+
       {e.semanas && e.semanas !== ruta.semanas && (
         <p className="mt-4 rounded-lg border border-[var(--tierra-300)]/35 bg-[var(--tierra-300)]/[0.07] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--tierra-300)]">
           Dijiste {e.semanas} semanas y la ruta está escrita para {ruta.semanas}.
@@ -325,6 +360,209 @@ function Sesiones({ ruta, e }: { ruta: Ruta; e: Expedicion }) {
           sesión completa.
         </p>
       )}
+    </Hoja>
+  );
+}
+
+/**
+ * Los ratos de los que depende que la ruta sea un proyecto y no una tarea.
+ *
+ * La lista de semanas de arriba se lee por encima: son títulos y se entienden
+ * solos. Estos no, y son exactamente los que se caen cuando la clase va
+ * apretada, que es siempre. Van juntos porque son la misma idea vista en
+ * cuatro momentos: que haya algo de verdad sin decidir, que ellos decidan una
+ * parte, que el dato propio zanje la discusión, y que el trabajo se rehaga.
+ *
+ * Sin el primero, salir a medir es ejecutar el protocolo de otro para
+ * confirmar lo que el profesor ya dijo. Sin el último, el trabajo sale en un
+ * solo borrador y nadie aprende a hacerlo: la distancia entre la primera
+ * versión y la segunda es la mitad de lo que el curso se lleva.
+ */
+function LosRatosQueImportan({ ruta }: { ruta: Ruta }) {
+  const s = ruta.secuencia;
+  const comprobacion = s.instruccion_explicita?.comprobacion;
+  const eligen = s.salida_terreno?.lo_que_eligen;
+
+  const ratos: { cuando: string; titular: string; cuerpo: string[] }[] = [];
+
+  if (s.desacuerdo) {
+    ratos.push({
+      cuando: "Lo primero de la clase 1, antes de que expliques nada",
+      titular: s.desacuerdo.sobre_que,
+      cuerpo: [s.desacuerdo.como_se_ve, s.desacuerdo.quien_lo_zanja],
+    });
+  }
+  if (comprobacion) {
+    ratos.push({
+      cuando: "En medio de la clase 1, antes de los ejercicios",
+      titular: comprobacion.pregunta,
+      cuerpo: [
+        ...comprobacion.respuestas.map((r) => `${r.dice}: ${r.significa}`),
+        comprobacion.si_falla,
+      ],
+    });
+  }
+  if (eligen) {
+    ratos.push({
+      cuando: "En la salida, lo que eligen ellos y no tú",
+      titular: eligen.que_eligen,
+      cuerpo: [eligen.en_que_cambia, eligen.como_lo_defienden],
+    });
+  }
+  if (s.vuelta_del_terreno) {
+    ratos.push({
+      cuando: "Al volver del terreno, antes de cualquier cálculo",
+      titular: s.vuelta_del_terreno.como_empieza,
+      cuerpo: [
+        s.vuelta_del_terreno.que_comparan,
+        ...(s.vuelta_del_terreno.con_la_comunidad
+          ? [s.vuelta_del_terreno.con_la_comunidad]
+          : []),
+      ],
+    });
+  }
+  if (s.borrador_y_critica) {
+    ratos.push({
+      cuando: "Antes de entregar: una versión, las críticas, y otra versión",
+      titular: s.borrador_y_critica.primera_version,
+      cuerpo: [s.borrador_y_critica.como_se_critica, s.borrador_y_critica.que_mejora],
+    });
+  }
+
+  if (!ratos.length) return null;
+
+  return (
+    <div className="mt-5 space-y-3 border-t border-[var(--crema)]/12 pt-4">
+      <p className="rotulo text-[var(--crema)]/55">No te saltes estos ratos</p>
+      {ratos.map((r) => (
+        <div key={r.cuando} className="rounded-xl border border-[var(--crema)]/12 p-4">
+          <p className="rotulo text-[var(--tierra-600)]">{r.cuando}</p>
+          <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
+            {r.titular}
+          </p>
+          {r.cuerpo.map((linea) => (
+            <p
+              key={linea}
+              className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/65"
+            >
+              {linea}
+            </p>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * La hoja que se lleva a la dirección para que la visen.
+ *
+ * Es el trámite que hoy hace que un proyecto no se haga. Un docente puede
+ * tener la unidad entera pensada y quedarse ahí, porque justificar por
+ * escrito qué objetivos del programa cubre y por qué el curso va a salir del
+ * recinto es otra tarde de trabajo, y esa tarde no existe.
+ *
+ * Todo lo que va aquí ya está escrito en otras partes de la expedición: los
+ * objetivos que marcó, la pregunta que eligió, las semanas de la ruta y a
+ * quién se le entrega. Esto solo lo ordena en el formato en que se pide y lo
+ * deja listo para imprimir. No se inventa nada, y por eso no lleva ninguna
+ * advertencia de revisar: si algo está mal, está mal desde la primera lámina.
+ */
+function Justificacion({ e, ruta }: { e: Expedicion; ruta: Ruta }) {
+  const oas = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
+  const sale = ruta.fases.some((f) => f.alcance === "intermedio");
+
+  return (
+    <Hoja titulo="Para visar en la dirección" orden={8}>
+      <p className="mb-5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/60">
+        Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
+        nuevo que llenar: se imprime y se firma.
+      </p>
+
+      <div className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-sm leading-relaxed text-[var(--crema)]/80">
+        <p>
+          <span className="text-[var(--crema-clara)]">Unidad:</span> {ruta.titulo}.{" "}
+          {ruta.semanas} semanas, {ruta.secuencia.sesiones ?? ruta.semanas} sesiones
+          {e.cursos.length > 0 ? `, cursos ${e.cursos.join(", ")}` : ""}
+          {e.estudiantes ? `, ${e.estudiantes} estudiantes` : ""}.
+        </p>
+
+        <p>
+          <span className="text-[var(--crema-clara)]">Pregunta que la sostiene:</span>{" "}
+          {e.preguntaGuia || ruta.preguntaGuia}
+        </p>
+
+        {oas.length > 0 && (
+          <div>
+            <p className="text-[var(--crema-clara)]">Objetivos de aprendizaje que cubre</p>
+            <ul className="mt-1.5 space-y-1">
+              {oas.map(({ cod, oa }) => (
+                <li key={cod} className="flex gap-2.5">
+                  <span className="shrink-0 font-mono text-[11px] text-[var(--tierra-600)]">
+                    {cod}
+                  </span>
+                  <span>{oa?.texto}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div>
+          <p className="text-[var(--crema-clara)]">Cómo se trabajan, semana a semana</p>
+          <ul className="mt-1.5 space-y-1">
+            {ruta.fases.map((f) => (
+              <li key={f.semana}>
+                Semana {f.semana} · {ANILLO[f.alcance].toLowerCase()} · {f.titulo}.
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p>
+          <span className="text-[var(--crema-clara)]">Qué entrega el curso:</span>{" "}
+          {ruta.producto.que} Se entrega a: {ruta.producto.paraQuien}
+        </p>
+
+        {sale && (
+          <div>
+            <p className="text-[var(--crema-clara)]">Salida del recinto</p>
+            <p className="mt-1.5">
+              Una sesión, en {ruta.lugar.toLowerCase()} Resguardos:{" "}
+              {(ruta.secuencia.salida_terreno?.seguridad ?? []).join("; ")}.
+            </p>
+            {(ruta.secuencia.red_comunitaria?.permisos ?? []).length > 0 && (
+              <p className="mt-1.5">
+                Gestiones previas:{" "}
+                {ruta.secuencia.red_comunitaria?.permisos.join("; ")}.
+              </p>
+            )}
+          </div>
+        )}
+
+        {e.evaluacion.length > 0 && (
+          <p>
+            <span className="text-[var(--crema-clara)]">Cómo se evalúa:</span>{" "}
+            {e.evaluacion.map((v) => ETIQUETA_EVAL[v] ?? v).join(", ")}.
+            {ruta.secuencia.transferencia
+              ? " Además se aplica una tarea final sobre un lugar distinto del trabajado, para comprobar que el aprendizaje no quedó atado a este caso."
+              : ""}
+          </p>
+        )}
+
+        <p className="border-t border-[var(--crema)]/12 pt-4 text-[var(--crema)]/55">
+          Docente: {e.docente || "________________"} · Firma de dirección:
+          ________________ · Fecha: ____ / ____ / ______
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => window.print()}
+        className="mt-4 min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
+      >
+        Imprimir esta hoja
+      </button>
     </Hoja>
   );
 }

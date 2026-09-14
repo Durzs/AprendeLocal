@@ -11,6 +11,7 @@
 
 import { RUTAS } from "../rutas/catalogo";
 import { Campo, Fichas, Hoja, Parrafo, Texto } from "./Campos";
+import { ElegirProblema } from "../metodo/ElegirProblema";
 import SelectorOA from "./SelectorOA";
 import type { Entorno, Evaluacion, Expedicion } from "./expedicion";
 
@@ -123,18 +124,6 @@ export function PasoPrograma({ e, onCambio }: Props) {
             />
           </Campo>
 
-          <Campo
-            etiqueta="Temas obligatorios de la unidad"
-            ayuda="Lo que hay que pasar sí o sí este semestre."
-            ancho="entera"
-          >
-            <Parrafo
-              value={e.temasObligatorios}
-              onChange={(ev) => set("temasObligatorios", ev.target.value)}
-              placeholder="El ciclo del agua. Medición de volumen. Gráficos de barras."
-            />
-          </Campo>
-
           <Fichas
             etiqueta="Cómo vas a evaluar"
             ayuda="Marca todas las que uses. Después salen en la hoja de evaluación."
@@ -180,61 +169,7 @@ export function PasoLugar({ e, onCambio }: Props) {
         </div>
       </Hoja>
 
-      <Hoja titulo="Qué pasa ahí" orden={5}>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Campo etiqueta="Asignatura" ayuda="Desde dónde entras al tema.">
-            <Texto
-              value={e.asignatura}
-              onChange={(ev) => set("asignatura", ev.target.value)}
-              placeholder="Ciencias Naturales"
-            />
-          </Campo>
-
-          <Campo etiqueta="Temáticas" ayuda="Dos o tres palabras.">
-            <Texto
-              value={e.tematicas}
-              onChange={(ev) => set("tematicas", ev.target.value)}
-              placeholder="agua, caudal, consumo"
-            />
-          </Campo>
-
-          <Campo
-            etiqueta="Fenómeno local"
-            ayuda="Algo que ahí pasa y que en otra escuela no pasaría igual."
-            ancho="entera"
-          >
-            <Parrafo
-              value={e.fenomeno}
-              onChange={(ev) => set("fenomeno", ev.target.value)}
-              placeholder="En verano el estero baja tanto que la bomba de la escuela se queda sin agua."
-            />
-          </Campo>
-
-          <Campo
-            etiqueta="Qué se podría averiguar"
-            ayuda="El espacio de indagación: lo que nadie sabe todavía y el curso podría medir."
-            ancho="entera"
-          >
-            <Parrafo
-              value={e.indagacion}
-              onChange={(ev) => set("indagacion", ev.target.value)}
-              placeholder="Cuánta agua lleva el estero en marzo comparado con septiembre."
-            />
-          </Campo>
-
-          <Campo
-            etiqueta="Producto final esperado"
-            ayuda="Qué queda al terminar, y que se le pueda pasar a alguien de afuera."
-            ancho="entera"
-          >
-            <Texto
-              value={e.producto}
-              onChange={(ev) => set("producto", ev.target.value)}
-              placeholder="Un informe de una plana con el caudal medido, para el comité de agua"
-            />
-          </Campo>
-        </div>
-      </Hoja>
+      <ElegirProblema e={e} onCambio={onCambio} orden={5} />
     </div>
   );
 }
