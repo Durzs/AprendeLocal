@@ -5,12 +5,14 @@ import type { Entorno as EntornoExpedicion, Expedicion } from "../crear/expedici
 import {
   EJEMPLO_ARAUCANIA,
   aQueDistancia,
+  buscarEscuela,
   comunaDe,
   lugaresCerca,
   metrosEntre,
   ubicarse,
   type Coordenada,
   type Donde,
+  type Escuela,
   type Lugar,
 } from "./lugar";
 
@@ -53,19 +55,45 @@ export function DondeQueda({
   orden?: number;
 }) {
   const [estado, ponerEstado] = useState<Estado>("quieto");
+  const [texto, ponerTexto] = useState("");
+  const [escuelas, ponerEscuelas] = useState<Escuela[]>([]);
+  const [buscandoEscuela, ponerBuscandoEscuela] = useState(false);
   const [motivo, ponerMotivo] = useState("");
   const [centro, ponerCentro] = useState<Coordenada | null>(null);
   const [donde, ponerDonde] = useState<Donde | null>(null);
   const [lugares, ponerLugares] = useState<Lugar[]>([]);
 
-  async function buscar(desde: "aqui" | "ejemplo") {
+  /**
+   * Buscar la escuela por su nombre.
+   *
+   * Va primero porque es lo único que se puede hacer desde la casa un domingo
+   * por la noche, que es cuando se planifica de verdad.
+   */
+  async function buscarPorNombre() {
+    if (texto.trim().length < 3) return;
+    ponerBuscandoEscuela(true);
+    ponerMotivo("");
+    try {
+      const r = await buscarEscuela(texto);
+      ponerEscuelas(r);
+      if (!r.length) ponerMotivo("nada_cerca");
+    } catch {
+      ponerMotivo("sin_senal");
+    } finally {
+      ponerBuscandoEscuela(false);
+    }
+  }
+
+  async function buscar(desde: "aqui" | "ejemplo" | Coordenada) {
     ponerEstado("buscando");
     ponerMotivo("");
     try {
       const c =
-        desde === "ejemplo"
-          ? { lat: EJEMPLO_ARAUCANIA.lat, lng: EJEMPLO_ARAUCANIA.lng }
-          : await ubicarse();
+        typeof desde !== "string"
+          ? desde
+          : desde === "ejemplo"
+            ? { lat: EJEMPLO_ARAUCANIA.lat, lng: EJEMPLO_ARAUCANIA.lng }
+            : await ubicarse();
       ponerCentro(c);
 
       // La comuna primero: es lo que se muestra aunque la lista de sitios
@@ -99,18 +127,65 @@ export function DondeQueda({
   return (
     <Hoja titulo="Dónde queda la escuela" orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Esto se resuelve solo. Con la ubicación se saca la comuna y qué hay
-        alrededor, y tú eliges el sitio al que de verdad pueden ir caminando.
+        Escribe el nombre de la escuela o su dirección. Con eso se obtienen la
+        comuna, la región y los lugares que hay alrededor, y tú eliges a cuál
+        puede ir el curso caminando. No hace falta estar en la escuela para
+        hacer esto.
       </p>
 
-      <div className="flex flex-wrap gap-2.5">
+      <div className="grid gap-2.5 sm:grid-cols-[1fr_auto]">
+        <Texto
+          value={texto}
+          onChange={(ev) => ponerTexto(ev.target.value)}
+          onKeyDown={(ev) => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              void buscarPorNombre();
+            }
+          }}
+          placeholder="Escuela Antu Mawida, Curarrehue"
+        />
+        <button
+          type="button"
+          onClick={() => void buscarPorNombre()}
+          disabled={buscandoEscuela || texto.trim().length < 3}
+          className="min-h-11 self-start rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
+        >
+          {buscandoEscuela ? "Buscando…" : "Buscar"}
+        </button>
+      </div>
+
+      {escuelas.length > 0 && (
+        <ul className="mt-3 space-y-2">
+          {escuelas.map((x) => (
+            <li key={`${x.nombre}-${x.lat}`}>
+              <button
+                type="button"
+                onClick={() => {
+                  ponerEscuelas([]);
+                  ponerTexto(x.nombre);
+                  void buscar({ lat: x.lat, lng: x.lng });
+                }}
+                className="min-h-11 w-full rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-left transition hover:border-[var(--crema)]/35"
+              >
+                <span className="block text-base text-[var(--crema-clara)]">{x.nombre}</span>
+                {x.donde && (
+                  <span className="mt-0.5 block text-sm text-[var(--crema)]/70">{x.donde}</span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-4 flex flex-wrap gap-2.5">
         <button
           type="button"
           onClick={() => buscar("aqui")}
           disabled={estado === "buscando"}
-          className="min-h-11 rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
+          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10 disabled:opacity-50"
         >
-          {estado === "buscando" ? "Buscando…" : "Usar la ubicación de la escuela"}
+          {estado === "buscando" ? "Buscando…" : "Estoy en la escuela: usar mi ubicación"}
         </button>
         <button
           type="button"

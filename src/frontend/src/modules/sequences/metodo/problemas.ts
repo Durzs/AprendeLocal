@@ -103,6 +103,20 @@ export type Angulo = {
   conceptosClave: string[];
   /** Las técnicas de terreno que este ángulo necesita ensayar antes de salir. */
   tecnicas: string[];
+  /**
+   * Los objetivos del programa que esta actividad abre.
+   *
+   * Va en este sentido y no en el contrario, y eso salió de una entrevista: un
+   * docente no parte del objetivo y busca actividad, parte de algo que quiere
+   * hacer y después busca dónde encaja. «Medir cuánta agua gasta la escuela»
+   * ya implica diferencia, suma y resta; el objetivo se reconoce, no se elige
+   * primero.
+   *
+   * Solo hay códigos de Ciencias Naturales porque es lo único cargado. Los
+   * ángulos de Historia, Lenguaje y Artes van vacíos a propósito: decirlo vale
+   * más que inventar un código que no existe.
+   */
+  oaQueAbre: string[];
 };
 
 export type Problema = {
@@ -165,7 +179,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Diarios regionales y radios locales, que es donde estas cosas se publican; también actas del concejo municipal y resoluciones de la superintendencia, que son públicas y nadie lee.",
       queNotaSirve:
-        "La que trae una fecha, un lugar preciso y alguien diciendo algo. Una nota general sobre contaminación no sirve: el curso tiene que poder ir al punto del que habla.",
+        "Prioriza noticias que traigan fecha, lugar preciso y una cita de alguien. Una nota general sobre contaminación no sirve: el curso tiene que poder ir al punto del que habla la noticia.",
     },
     angulos: [
       {
@@ -177,6 +191,7 @@ export const PROBLEMAS: Problema[] = [
           "Una lista de lo que falta. Es el dato que más convence y el único que no se consigue con instrumentos: hay que saber qué buscar y preguntarle a quien lleva años mirando.",
         conceptosClave: ["ecosistema", "bioindicador", "cadena alimentaria", "especie nativa e introducida"],
         tecnicas: ["cuadrante", "bitacora", "foto_punto_fijo"],
+        oaQueAbre: ["OA01_CN_6", "OA02_CN_6", "OA03_CN_6"],
       },
       {
         asignatura: "quimica",
@@ -188,6 +203,7 @@ export const PROBLEMAS: Problema[] = [
           "Un mapa del cauce con los puntos marcados. Sirve para señalar dónde entra el problema, que es distinto de decir que el río está sucio.",
         conceptosClave: ["pH", "escala logarítmica", "turbidez", "disolución", "contaminante"],
         tecnicas: ["muestreo_agua", "bitacora"],
+        oaQueAbre: ["OA12_CN_5", "OA16_CN_7"],
       },
       {
         asignatura: "historia",
@@ -199,6 +215,7 @@ export const PROBLEMAS: Problema[] = [
           "La línea de tiempo del río contada por quienes estaban. Es lo único que explica por qué a la gente del pueblo le importa, y sin eso el proyecto es un informe técnico.",
         conceptosClave: ["fuente oral", "memoria colectiva", "uso del territorio", "línea de tiempo"],
         tecnicas: ["entrevista", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
       {
         asignatura: "matematica",
@@ -209,6 +226,7 @@ export const PROBLEMAS: Problema[] = [
           "Los gráficos con los que se defiende el hallazgo. Sin esto los números son una lista y no un argumento.",
         conceptosClave: ["promedio", "mediana", "dato atípico", "variable y escala", "gráfico de barras y de líneas"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
+        oaQueAbre: [],
       },
       {
         asignatura: "lenguaje",
@@ -219,6 +237,7 @@ export const PROBLEMAS: Problema[] = [
           "El texto que va a leer el municipio o el vecindario. Es la pieza de la que depende que todo lo demás sirva de algo.",
         conceptosClave: ["hecho y opinión", "fuente", "propósito del texto", "destinatario"],
         tecnicas: ["entrevista", "encuesta"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -265,7 +284,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa regional, boletines de la dirección general de aguas y las actas del comité de agua potable rural, que suele tener los datos más útiles y nunca aparecen en ninguna nota.",
       queNotaSirve:
-        "La que dé una cifra: cuántas casas, cuántos litros, desde qué mes. Las notas de opinión sobre la sequía no dan por dónde empezar.",
+        "Prioriza noticias que entreguen cifras: cuántas casas, cuántos litros, desde qué mes. Las columnas de opinión sobre la sequía no dan por dónde empezar.",
     },
     angulos: [
       {
@@ -277,6 +296,7 @@ export const PROBLEMAS: Problema[] = [
           "La diferencia entre lo que se cree que se gasta y lo que se gasta. Nunca coinciden, y esa brecha es el proyecto.",
         conceptosClave: ["volumen y litro", "consumo por persona", "proporción", "estimación"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
+        oaQueAbre: ["OA12_CN_5"],
       },
       {
         asignatura: "biologia",
@@ -287,6 +307,7 @@ export const PROBLEMAS: Problema[] = [
           "Una lista de lo que conviene sembrar aquí ahora, que es un consejo que alguien va a usar.",
         conceptosClave: ["requerimientos de los seres vivos", "tolerancia a la sequía", "raíz y absorción"],
         tecnicas: ["cuadrante", "entrevista"],
+        oaQueAbre: ["OA01_CN_6", "OA04_CN_8"],
       },
       {
         asignatura: "historia",
@@ -297,6 +318,7 @@ export const PROBLEMAS: Problema[] = [
           "Entender que la escasez tiene tanto de reparto como de clima, que es la parte que la prensa casi nunca cuenta.",
         conceptosClave: ["derechos de agua", "turnos de riego", "organización comunitaria", "bien común"],
         tecnicas: ["entrevista", "encuesta"],
+        oaQueAbre: [],
       },
       {
         asignatura: "tecnologia",
@@ -307,6 +329,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cosa instalada y funcionando, más el dato de cuánta agua ahorró. Sin el dato es una maqueta.",
         conceptosClave: ["prototipo", "variable a controlar", "eficiencia", "prueba y error"],
         tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -338,7 +361,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa local y, sobre todo, actas del concejo municipal: ahí está qué se ha pedido, qué se aprobó y con qué presupuesto.",
       queNotaSirve:
-        "La que diga dónde y desde cuándo. Si no se puede ir a ver el sitio, no sirve.",
+        "Prioriza noticias que digan dónde queda el sitio y desde cuándo está así. Si el curso no puede ir a verlo, esa noticia no sirve.",
     },
     angulos: [
       {
@@ -350,6 +373,7 @@ export const PROBLEMAS: Problema[] = [
           "Saber si el microbasural es doméstico o es de camioneta, que lleva a soluciones opuestas.",
         conceptosClave: ["muestra y población", "porcentaje", "clasificación", "volumen estimado"],
         tecnicas: ["cuadrante", "pauta_observacion"],
+        oaQueAbre: [],
       },
       {
         asignatura: "biologia",
@@ -360,6 +384,7 @@ export const PROBLEMAS: Problema[] = [
           "La conexión entre el sitio y algo que a la gente sí le importa, que casi siempre es el agua o los perros.",
         conceptosClave: ["lixiviado", "escorrentía", "descomposición", "vector de enfermedad"],
         tecnicas: ["pauta_observacion", "muestra_suelo"],
+        oaQueAbre: ["OA03_CN_6", "OA05_CN_7"],
       },
       {
         asignatura: "historia",
@@ -370,6 +395,7 @@ export const PROBLEMAS: Problema[] = [
           "La razón real, que casi nunca es que la gente sea desordenada.",
         conceptosClave: ["uso histórico del suelo", "gestión municipal", "responsabilidad pública"],
         tecnicas: ["entrevista", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
       {
         asignatura: "artes",
@@ -380,6 +406,7 @@ export const PROBLEMAS: Problema[] = [
           "Una pieza que obliga a mirar un sitio por el que todos pasan sin verlo.",
         conceptosClave: ["encuadre", "serie fotográfica", "punto de vista", "catálogo visual"],
         tecnicas: ["foto_punto_fijo", "mapa_a_mano"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -419,7 +446,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa regional en invierno, y las estaciones de monitoreo públicas, que publican datos por hora y casi nadie los mira.",
       queNotaSirve:
-        "La que traiga una medición con fecha y hora. Con eso el curso puede comparar su propio día con el registro oficial.",
+        "Prioriza noticias que traigan una medición con fecha y hora. Con ese dato el curso puede comparar su propio día con el registro oficial.",
     },
     angulos: [
       {
@@ -431,6 +458,7 @@ export const PROBLEMAS: Problema[] = [
           "El punto de fuga, que casi nunca es donde la gente cree. Eso permite pedir algo concreto en vez de quejarse.",
         conceptosClave: ["calor y temperatura", "conducción", "aislación", "transferencia de energía"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
+        oaQueAbre: ["OA13_CN_5", "OA14_CN_6", "OA11_CN_8"],
       },
       {
         asignatura: "quimica",
@@ -441,6 +469,7 @@ export const PROBLEMAS: Problema[] = [
           "Una recomendación que se puede seguir esta semana, no el año que viene.",
         conceptosClave: ["combustión", "material particulado", "humedad de la madera", "producto de reacción"],
         tecnicas: ["bitacora", "pauta_observacion"],
+        oaQueAbre: ["OA15_CN_6"],
       },
       {
         asignatura: "matematica",
@@ -451,6 +480,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cifra en pesos, que es la que hace que alguien actúe.",
         conceptosClave: ["promedio", "costo unitario", "proyección", "comparación de series"],
         tecnicas: ["encuesta", "medicion_dimensiones"],
+        oaQueAbre: ["OA12_CN_7"],
       },
       {
         asignatura: "historia",
@@ -461,6 +491,7 @@ export const PROBLEMAS: Problema[] = [
           "Soluciones que ya se probaron aquí durante generaciones y que la construcción actual olvidó.",
         conceptosClave: ["arquitectura tradicional", "adaptación al clima", "saber técnico local"],
         tecnicas: ["entrevista", "mapa_a_mano"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -490,7 +521,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa regional después de cada temporal, y los programas de recuperación de suelos del agro, que publican qué predios están degradados.",
       queNotaSirve:
-        "La que muestre un antes y un después, o un lugar al que se pueda llegar caminando.",
+        "Prioriza noticias que muestren un antes y un después, o un lugar al que se pueda llegar caminando.",
     },
     angulos: [
       {
@@ -502,6 +533,7 @@ export const PROBLEMAS: Problema[] = [
           "Qué plantar, y dónde, para que agarre. Se puede hacer el mismo día.",
         conceptosClave: ["cobertura vegetal", "sistema radicular", "sucesión"],
         tecnicas: ["cuadrante", "foto_punto_fijo"],
+        oaQueAbre: ["OA18_CN_6", "OA04_CN_8"],
       },
       {
         asignatura: "quimica",
@@ -512,6 +544,7 @@ export const PROBLEMAS: Problema[] = [
           "Por qué esta tierra se seca aunque llueva, que es la pregunta que todos los que siembran se hacen.",
         conceptosClave: ["textura del suelo", "retención de agua", "porosidad", "materia orgánica"],
         tecnicas: ["muestra_suelo", "medicion_dimensiones"],
+        oaQueAbre: ["OA16_CN_6", "OA17_CN_6"],
       },
       {
         asignatura: "matematica",
@@ -522,6 +555,7 @@ export const PROBLEMAS: Problema[] = [
           "Una tasa: centímetros por año. Es lo que convierte un paisaje feo en un problema con plazo.",
         conceptosClave: ["tasa de cambio", "superficie", "escala temporal", "proporción"],
         tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
       {
         asignatura: "tecnologia",
@@ -532,6 +566,7 @@ export const PROBLEMAS: Problema[] = [
           "Una obra pequeña que se puede mostrar, y el dato de si funcionó.",
         conceptosClave: ["barrera viva", "infiltración", "diseño de una solución", "seguimiento"],
         tecnicas: ["foto_punto_fijo", "medicion_dimensiones"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -563,7 +598,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa regional después de cada temporada de incendios, y los estudios de universidades, que se publican con enlace abierto y casi nunca llegan a la escuela que tiene ese bosque al lado.",
       queNotaSirve:
-        "La que dé una superficie, un porcentaje o un año. Con una cifra proyectada el curso puede preguntarse qué pasa con la suya, que es una pregunta con fecha.",
+        "Prioriza noticias o estudios que den una superficie, un porcentaje o un año. Con una cifra proyectada el curso puede preguntarse qué pasa con su propio bosque, que es una pregunta con fecha.",
     },
     angulos: [
       {
@@ -575,6 +610,7 @@ export const PROBLEMAS: Problema[] = [
           "Saber si ese bosque se está reponiendo solo o no. Un bosque sin árboles jóvenes está muerto aunque los grandes sigan de pie, y eso se ve contando.",
         conceptosClave: ["regeneración natural", "renoval", "especie nativa e introducida", "dosel y sotobosque"],
         tecnicas: ["cuadrante", "bitacora"],
+        oaQueAbre: ["OA01_CN_5", "OA02_CN_6", "OA04_CN_8"],
       },
       {
         asignatura: "historia",
@@ -585,6 +621,7 @@ export const PROBLEMAS: Problema[] = [
           "El mapa de lo que había, que casi nunca existe en ninguna parte y que cambia la discusión de si esto siempre fue así.",
         conceptosClave: ["uso del territorio", "fuente oral", "cambio en el paisaje"],
         tecnicas: ["entrevista", "mapa_a_mano"],
+        oaQueAbre: [],
       },
       {
         asignatura: "matematica",
@@ -595,6 +632,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cifra local puesta al lado de la nacional. Que el estudio diga 74% y aquí dé otra cosa es exactamente lo interesante.",
         conceptosClave: ["superficie", "densidad por área", "porcentaje de pérdida", "escala de un mapa"],
         tecnicas: ["cuadrante", "medicion_dimensiones"],
+        oaQueAbre: [],
       },
       {
         asignatura: "tecnologia",
@@ -605,6 +643,7 @@ export const PROBLEMAS: Problema[] = [
           "Árboles vivos, o el dato de por qué no prendieron. Las dos cosas sirven.",
         conceptosClave: ["germinación", "vivero", "sustrato", "seguimiento con fecha"],
         tecnicas: ["muestra_suelo", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
       {
         asignatura: "artes",
@@ -615,6 +654,7 @@ export const PROBLEMAS: Problema[] = [
           "Un catastro que en diez años va a valer mucho más que ahora.",
         conceptosClave: ["dibujo de observación", "proporción", "registro con escala"],
         tecnicas: ["foto_punto_fijo", "bitacora"],
+        oaQueAbre: [],
       },
     ],
   },
@@ -640,7 +680,7 @@ export const PROBLEMAS: Problema[] = [
       donde:
         "Prensa local en fiestas y aniversarios, registros municipales de cultura, y sobre todo lo que sepa el educador tradicional o la biblioteca pública.",
       queNotaSirve:
-        "Cualquiera que nombre a una persona que todavía está viva y se pueda entrevistar.",
+        "Prioriza noticias que nombren a una persona que todavía esté viva y se pueda entrevistar.",
     },
     angulos: [
       {
@@ -652,6 +692,7 @@ export const PROBLEMAS: Problema[] = [
           "Un archivo que antes no existía y que va a quedar cuando el curso ya no esté.",
         conceptosClave: ["fuente oral", "patrimonio inmaterial", "archivo", "testimonio"],
         tecnicas: ["entrevista", "foto_punto_fijo"],
+        oaQueAbre: [],
       },
       {
         asignatura: "lenguaje",
@@ -662,6 +703,7 @@ export const PROBLEMAS: Problema[] = [
           "Un glosario del lugar. Es el trabajo más barato de hacer y el que más dura.",
         conceptosClave: ["registro y variedad lingüística", "campo semántico", "glosario", "transcripción"],
         tecnicas: ["entrevista", "bitacora"],
+        oaQueAbre: [],
       },
       {
         asignatura: "artes",
@@ -672,6 +714,7 @@ export const PROBLEMAS: Problema[] = [
           "Algo que permite aprender el oficio mirando, que es como se aprendió siempre.",
         conceptosClave: ["secuencia visual", "proceso", "encuadre del detalle"],
         tecnicas: ["foto_punto_fijo", "bitacora"],
+        oaQueAbre: [],
       },
       {
         asignatura: "biologia",
@@ -682,6 +725,7 @@ export const PROBLEMAS: Problema[] = [
           "Conocimiento comprobable que suele coincidir con lo que dice el libro, dicho en otras palabras y con más detalle local.",
         conceptosClave: ["uso tradicional de especies", "fenología", "clasificación"],
         tecnicas: ["entrevista", "cuadrante"],
+        oaQueAbre: ["OA01_CN_5"],
       },
     ],
   },

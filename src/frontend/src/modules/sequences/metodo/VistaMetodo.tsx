@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ETAPAS, DE_LOS_ESTUDIANTES, type Decide, type Etapa } from "./etapas";
+import { ETAPAS, type Decide, type Etapa } from "./etapas";
 import { COMO_SE_ELIGE, FORMATOS, type Formato } from "./formatos";
 import { Hoja } from "../crear/Campos";
 
@@ -18,10 +18,19 @@ import { Hoja } from "../crear/Campos";
  * preguntas que se hacen en la sala.
  */
 
+/**
+ * De quién es cada etapa.
+ *
+ * Decía «lo deciden ellos» y en una entrevista se leyó como que los
+ * estudiantes votaban cuáles de las cinco etapas hacer. No es eso: las cinco
+ * se hacen siempre, y lo que cambia es quién las arma. «Se construye con el
+ * curso» dice lo que pasa; «lo deciden ellos» daba a entender que podían
+ * decidir no hacerla.
+ */
 const ETIQUETA_DECIDE: Record<Decide, string> = {
-  docente: "Lo decides tú",
-  estudiantes: "Lo deciden ellos",
-  ambos: "Lo deciden entre todos",
+  docente: "La preparas tú",
+  estudiantes: "Se construye con el curso",
+  ambos: "Se arma entre todos",
 };
 
 const ANILLO: Record<string, string> = {
@@ -42,8 +51,9 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
         pasando, qué se lleva el curso, y quién decide.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-        {DE_LOS_ESTUDIANTES} de las {ETAPAS.length} las deciden los estudiantes.
-        La segunda la decides tú entera, y esa no se vota.
+        Las cinco etapas se hacen siempre, en este orden. Lo que cambia es
+        quién las arma: la primera se arma entre todos, la segunda la preparas
+        tú, y de la tercera a la quinta se construyen con el curso.
       </p>
 
       <ol className="space-y-2">
@@ -207,7 +217,7 @@ export function ElegirFormato({
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Esto lo decide el curso, después de volver del terreno y no antes: hasta
         que no sepan qué encontraron, no pueden saber qué hacer con ello. Lo que
-        marques aquí es para que no se te pierda.
+        se marque aquí queda registrado para no perderlo de vista.
       </p>
 
       <label className="block">

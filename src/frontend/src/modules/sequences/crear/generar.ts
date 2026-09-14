@@ -125,7 +125,8 @@ export async function generar(e: Expedicion): Promise<Resultado> {
       body: {
         objetivos,
         cursos: e.cursos,
-        semanas: e.semanas,
+        sesiones: e.sesiones,
+        duracionSesion: e.duracionSesion,
         entorno: e.entorno,
         ubicacion: e.ubicacion,
         fenomeno: e.fenomeno,

@@ -25,6 +25,7 @@ import Seguimiento from "./Seguimiento";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
+import { Permisos } from "../metodo/Permisos";
 import type { Avance } from "./avance";
 import type { EstadoNube } from "./nube";
 
@@ -58,6 +59,11 @@ export default function Paso3({
       />
 
       <Justificacion e={e} />
+
+      {/* Los dos papeles de la salida. Salió de la entrevista: nadie lo había
+          pedido y es lo más concreto que se puede automatizar, porque son
+          campos que el docente ya escribió. */}
+      <Permisos e={e} />
 
       {/* Lo único a lo que se vuelve semana tras semana. */}
       <Seguimiento e={e} avance={avance} onCambio={onAvance} estado={estadoNube} />
@@ -112,7 +118,9 @@ function Justificacion({ e }: { e: Expedicion }) {
           <span className="text-[var(--crema-clara)]">Proyecto:</span> {titulo}.
           {e.cursos.length > 0 ? ` Cursos ${e.cursos.join(", ")}.` : ""}
           {e.estudiantes ? ` ${e.estudiantes} estudiantes.` : ""}
-          {e.semanas ? ` ${e.semanas} semanas.` : ""}
+          {e.sesiones
+            ? ` ${e.sesiones} clases${e.duracionSesion ? ` de ${e.duracionSesion} minutos` : ""}.`
+            : ""}
         </p>
 
         {e.fenomeno.trim() && (

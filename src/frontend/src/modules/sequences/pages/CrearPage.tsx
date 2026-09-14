@@ -44,7 +44,7 @@ export default function CrearPage() {
       marca: "I · Lo que pide el programa",
       titulo: "Antes de salir, lo que ya está decidido",
       bajada:
-        "Los cursos que tienes, las semanas que hay y lo que la unidad exige. Es lo que no se elige, y por eso conviene ponerlo primero.",
+        "Los cursos que tienes y cuántas clases hay de verdad para esto. Es lo que no se elige, y por eso conviene ponerlo primero.",
       contenido: <PasoPrograma e={e} onCambio={setE} />,
       puedeAvanzar: true,
     },
@@ -53,7 +53,7 @@ export default function CrearPage() {
       marca: "II · Lo que pone el lugar",
       titulo: "Qué hay al otro lado de la puerta",
       bajada:
-        "Lo que se alcanza caminando, cómo se llama y qué pasa ahí que en otra escuela no pasaría igual. De aquí sale todo lo demás.",
+        "Busca tu escuela por su nombre, elige la problemática y los objetivos que abre, y prepara la clase previa a la salida.",
       contenido: <PasoLugar e={e} onCambio={setE} />,
       puedeAvanzar: hayLugar,
       faltaPara: "Falta decir qué hay alrededor de la escuela.",

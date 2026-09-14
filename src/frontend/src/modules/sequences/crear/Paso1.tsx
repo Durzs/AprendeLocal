@@ -9,18 +9,30 @@
  * mirando por la ventana.
  */
 
-import { RUTAS } from "../rutas/catalogo";
 import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
 import { AntesDeSalir } from "../metodo/AntesDeSalir";
 import { DondeQueda } from "../metodo/DondeQueda";
-import SelectorOA from "./SelectorOA";
 import type { Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
 
+/** Clases, no semanas: es el tiempo que el docente tiene de verdad. */
+const SESIONES = [
+  { valor: "3", titulo: "3 clases" },
+  { valor: "4", titulo: "4 clases" },
+  { valor: "6", titulo: "6 clases" },
+  { valor: "8", titulo: "8 clases" },
+  { valor: "12", titulo: "12 clases" },
+];
+
+const DURACIONES = [
+  { valor: "45", titulo: "45 min" },
+  { valor: "90", titulo: "90 min" },
+  { valor: "135", titulo: "135 min" },
+];
+
 /** Cuántas semanas, en las duraciones que de verdad se usan. */
-const SEMANAS = [2, 3, 4, 6];
 
 /**
  * Los objetivos que alguna ruta escrita ya cubre.
@@ -28,7 +40,6 @@ const SEMANAS = [2, 3, 4, 6];
  * Se calcula una vez y no en cada tecla: son sesenta y dos objetivos contra
  * cuatro rutas, y el docente escribe mientras la lista está abierta.
  */
-const CON_RUTA = new Set(RUTAS.flatMap((r) => r.cubre.flatMap((c) => c.codigos)));
 
 
 
@@ -79,11 +90,20 @@ export function PasoPrograma({ e, onCambio }: Props) {
           />
 
           <Fichas
-            etiqueta="Cuántas semanas"
-            ayuda="Tres es lo habitual: una para preparar, una de salida y una para armar lo que entregan."
-            opciones={SEMANAS.map((n) => ({ valor: String(n), titulo: `${n} semanas` }))}
-            elegidas={e.semanas ? [String(e.semanas)] : []}
-            onElegir={(v) => set("semanas", v[0] ? Number(v[0]) : null)}
+            etiqueta="Cuántas clases"
+            ayuda="No semanas: clases. Un proyecto de tres semanas, en un ramo que se ve una vez por semana, son tres clases."
+            opciones={SESIONES}
+            elegidas={e.sesiones ? [String(e.sesiones)] : []}
+            onElegir={(v) => set("sesiones", v[0] ? Number(v[0]) : null)}
+            unica
+          />
+
+          <Fichas
+            etiqueta="Cuánto dura cada clase"
+            ayuda="Con esto se sabe el tiempo real que tienes, que es lo que decide si el proyecto cabe."
+            opciones={DURACIONES}
+            elegidas={e.duracionSesion ? [String(e.duracionSesion)] : []}
+            onElegir={(v) => set("duracionSesion", v[0] ? Number(v[0]) : null)}
             unica
           />
         </div>
@@ -91,12 +111,6 @@ export function PasoPrograma({ e, onCambio }: Props) {
 
       <Hoja titulo="Lo que el programa exige" orden={5}>
         <div className="grid gap-5 sm:grid-cols-2">
-          <SelectorOA
-            cursos={e.cursos}
-            elegidos={e.oa}
-            onElegir={(v) => set("oa", v)}
-            conRuta={CON_RUTA}
-          />
 
         </div>
       </Hoja>

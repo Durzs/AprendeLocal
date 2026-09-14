@@ -10,9 +10,21 @@
  * escuela y «el estero» de la de al lado son cadenas de texto distintas y el
  * sistema no puede saber que hablan del mismo cauce.
  *
- * Con la coordenada sí se puede. El navegador la da, se pregunta a
- * OpenStreetMap qué hay alrededor, y el docente elige de una lista de sitios
- * que existen, con su nombre real.
+ * Con la coordenada sí se puede. Se pregunta a OpenStreetMap qué hay
+ * alrededor y el docente elige de una lista de sitios que existen, con su
+ * nombre real.
+ *
+ * Y LA COORDENADA NO PUEDE VENIR SOLO DEL NAVEGADOR
+ *
+ * Esto se aprendió en una entrevista y era un error grueso. La primera versión
+ * pedía la ubicación del navegador y nada más, o sea daba por hecho que el
+ * docente planifica sentado en la escuela. No planifica ahí: planifica en su
+ * casa, un domingo por la noche, a treinta kilómetros. Pedirle el GPS en ese
+ * momento devuelve su living.
+ *
+ * Por eso lo primero es buscar la escuela por su nombre, que es lo que
+ * cualquiera puede escribir desde donde esté. El GPS queda de atajo para quien
+ * sí esté en la escuela.
  *
  * QUÉ PASA CUANDO NO HAY SEÑAL
  *
@@ -101,6 +113,50 @@ async function traer(url: string): Promise<unknown> {
   } finally {
     clearTimeout(reloj);
   }
+}
+
+/** Una escuela encontrada por su nombre, con dónde queda. */
+export type Escuela = {
+  nombre: string;
+  /** Comuna y región, para distinguir dos escuelas que se llaman igual. */
+  donde: string;
+  lat: number;
+  lng: number;
+};
+
+/**
+ * Busca una escuela por su nombre o su dirección.
+ *
+ * Es la puerta principal de esta lámina, no un extra: un docente planifica
+ * desde su casa y el nombre de su escuela es lo único que puede escribir sin
+ * estar ahí. Se limita a Chile porque hay escuelas con el mismo nombre en
+ * media Hispanoamérica y el ruido no ayuda a nadie.
+ */
+export async function buscarEscuela(texto: string): Promise<Escuela[]> {
+  const q = texto.trim();
+  if (q.length < 3) return [];
+  const url =
+    `https://nominatim.openstreetmap.org/search?format=jsonv2` +
+    `&q=${encodeURIComponent(q)}&countrycodes=cl&limit=6` +
+    `&addressdetails=1&accept-language=es`;
+  const filas = (await traer(url)) as {
+    name?: string;
+    display_name?: string;
+    lat?: string;
+    lon?: string;
+    address?: Record<string, string>;
+  }[];
+  return filas.map((f) => {
+    const a = f.address ?? {};
+    return {
+      nombre: (f.name ?? f.display_name ?? "").split(",")[0].trim(),
+      donde: [a.town || a.village || a.city || a.hamlet, a.state]
+        .filter(Boolean)
+        .join(", "),
+      lat: Number(f.lat),
+      lng: Number(f.lon),
+    };
+  });
 }
 
 /** La coordenada del navegador. Falla rápido: nadie espera medio minuto. */
