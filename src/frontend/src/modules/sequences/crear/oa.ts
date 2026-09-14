@@ -13,17 +13,31 @@
  * rural el internet es lo primero que falta, y elegir un OA no puede depender
  * de que la base responda.
  *
- * Solo hay Ciencias Naturales. Cuando entren Matemática o Historia, se
- * agregan aquí con su asignatura y la lista los agrupa sola.
+ * A los de Ciencias Naturales se sumaron los de Matemática, que se leyeron de
+ * curriculumnacional.cl y viven en `oaMatematica.ts`. Faltan Historia, Lenguaje
+ * y Artes: cuando entren, se agregan igual, con su asignatura, y las listas los
+ * agrupan solas.
  */
+
+import { MATEMATICA } from "./oaMatematica";
 
 /** Los cuatro cursos que atiende hoy la plataforma. */
 export type NivelOA = "5to_basico" | "6to_basico" | "7mo_basico" | "8vo_basico";
+
+/** Las asignaturas que ya tienen sus objetivos cargados. */
+export type AsignaturaOA = "ciencias_naturales" | "matematica";
+
+/** Cómo se llama cada una donde hay que mostrarla. */
+export const NOMBRE_ASIGNATURA_OA: Record<AsignaturaOA, string> = {
+  ciencias_naturales: "Ciencias Naturales",
+  matematica: "Matemática",
+};
 
 export type OA = {
   /** El código con que aparece en el programa, por ejemplo OA12_CN_5. */
   codigo: string;
   nivel: NivelOA;
+  asignatura: AsignaturaOA;
   eje: string;
   /** El número dentro del nivel, que es como los nombra un docente: «el OA 12». */
   n: number;
@@ -39,7 +53,14 @@ export const EJES: Record<string, string> = {
   "ciencias_fisicas": "Ciencias físicas y químicas",
   "fisica": "Física",
   "quimica": "Química",
-  "ciencias_tierra": "Ciencias de la Tierra y el Universo"
+  "ciencias_tierra": "Ciencias de la Tierra y el Universo",
+  "numeros": "Números",
+  "patrones_algebra": "Patrones y álgebra",
+  "algebra_funciones": "Álgebra y funciones",
+  "geometria": "Geometría",
+  "medicion": "Medición",
+  "datos_probabilidades": "Datos y probabilidades",
+  "probabilidad_estadistica": "Probabilidad y estadística"
 };
 
 /** `5to_basico` → `5º`. */
@@ -50,7 +71,7 @@ export const CURSO_CORTO: Record<NivelOA, string> = {
   "8vo_basico": "8º"
 };
 
-export const OBJETIVOS: OA[] = [
+const CIENCIAS: Omit<OA, "asignatura">[] = [
   {
     codigo: "OA01_CN_5",
     nivel: "5to_basico",
@@ -611,6 +632,18 @@ export const OBJETIVOS: OA[] = [
   },
 ];
 
+/**
+ * Todos juntos.
+ *
+ * Los de Ciencias Naturales se escribieron antes de que hubiera más de una
+ * asignatura, así que no traen el campo y se les pone aquí. Es preferible a
+ * repetir la misma línea sesenta y dos veces.
+ */
+export const OBJETIVOS: OA[] = [
+  ...CIENCIAS.map((o) => ({ ...o, asignatura: "ciencias_naturales" as const })),
+  ...MATEMATICA,
+];
+
 /** Índice por código, para no recorrer la lista en cada búsqueda. */
 const PORCODIGO = new Map(OBJETIVOS.map((o) => [o.codigo, o]));
 
@@ -618,9 +651,29 @@ export function buscarOA(codigo: string): OA | undefined {
   return PORCODIGO.get(codigo);
 }
 
-/** Los de un curso, en el orden en que vienen en el programa. */
-export function objetivosDe(nivel: NivelOA): OA[] {
-  return OBJETIVOS.filter((o) => o.nivel === nivel).sort((a, b) => a.n - b.n);
+/**
+ * Los de un curso, en el orden en que vienen en el programa.
+ *
+ * Con `asignatura` se acota a una sola. Sirve para la columna de objetivos,
+ * que muestra los de la asignatura de la actividad elegida y no los de todas.
+ */
+export function objetivosDe(nivel: NivelOA, asignatura?: AsignaturaOA): OA[] {
+  return OBJETIVOS.filter(
+    (o) => o.nivel === nivel && (!asignatura || o.asignatura === asignatura)
+  ).sort(
+    // Primero por asignatura y después por número. Ordenando solo por número,
+    // el OA 1 de ciencias y el OA 1 de matemática quedarían pegados y la lista
+    // alternaría las dos asignaturas de arriba abajo.
+    (a, b) =>
+      a.asignatura === b.asignatura
+        ? a.n - b.n
+        : a.asignatura.localeCompare(b.asignatura)
+  );
+}
+
+/** Qué asignaturas tienen objetivos cargados, para no prometer las que no. */
+export function asignaturasConOA(): AsignaturaOA[] {
+  return [...new Set(OBJETIVOS.map((o) => o.asignatura))];
 }
 
 /**
@@ -634,7 +687,9 @@ export function filtrarOA(lista: OA[], consulta: string): OA[] {
   if (!q) return lista;
   const partes = q.split(/\s+/);
   return lista.filter((o) => {
-    const heno = normalizar(`${o.codigo} ${o.n} ${o.texto} ${o.claves.join(" ")}`);
+    const heno = normalizar(
+      `${o.codigo} ${o.n} ${NOMBRE_ASIGNATURA_OA[o.asignatura]} ${o.texto} ${o.claves.join(" ")}`
+    );
     return partes.every((p) => heno.includes(p));
   });
 }

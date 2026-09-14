@@ -112,9 +112,14 @@ export type Angulo = {
    * ya implica diferencia, suma y resta; el objetivo se reconoce, no se elige
    * primero.
    *
-   * Solo hay códigos de Ciencias Naturales porque es lo único cargado. Los
-   * ángulos de Historia, Lenguaje y Artes van vacíos a propósito: decirlo vale
-   * más que inventar un código que no existe.
+   * Hay códigos de Ciencias Naturales y de Matemática, que son las dos
+   * asignaturas cargadas. Matemática entró después de una entrevista en la que
+   * quedó a la vista el peor caso posible: la plataforma proponía una actividad
+   * de matemática y acto seguido avisaba de que sus objetivos no estaban.
+   *
+   * Los ángulos de Historia, Lenguaje, Artes y Tecnología van vacíos a
+   * propósito, y se avisa en pantalla. Decirlo vale más que inventar un código
+   * que no existe: esto se imprime en la hoja que se lleva a la dirección.
    */
   oaQueAbre: string[];
 };
@@ -226,7 +231,7 @@ export const PROBLEMAS: Problema[] = [
           "Los gráficos con los que se defiende el hallazgo. Sin esto los números son una lista y no un argumento.",
         conceptosClave: ["promedio", "mediana", "dato atípico", "variable y escala", "gráfico de barras y de líneas"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
-        oaQueAbre: [],
+        oaQueAbre: ["OA23_MA_5", "OA26_MA_5", "OA17_MA_7", "OA16_MA_8"],
       },
       {
         asignatura: "lenguaje",
@@ -296,7 +301,7 @@ export const PROBLEMAS: Problema[] = [
           "La diferencia entre lo que se cree que se gasta y lo que se gasta. Nunca coinciden, y esa brecha es el proyecto.",
         conceptosClave: ["volumen y litro", "consumo por persona", "proporción", "estimación"],
         tecnicas: ["medicion_dimensiones", "bitacora"],
-        oaQueAbre: ["OA12_CN_5"],
+        oaQueAbre: ["OA12_CN_5", "OA19_MA_6", "OA03_MA_6", "OA08_MA_7"],
       },
       {
         asignatura: "biologia",
@@ -373,7 +378,7 @@ export const PROBLEMAS: Problema[] = [
           "Saber si el microbasural es doméstico o es de camioneta, que lleva a soluciones opuestas.",
         conceptosClave: ["muestra y población", "porcentaje", "clasificación", "volumen estimado"],
         tecnicas: ["cuadrante", "pauta_observacion"],
-        oaQueAbre: [],
+        oaQueAbre: ["OA04_MA_6", "OA15_MA_7", "OA16_MA_7"],
       },
       {
         asignatura: "biologia",
@@ -480,7 +485,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cifra en pesos, que es la que hace que alguien actúe.",
         conceptosClave: ["promedio", "costo unitario", "proyección", "comparación de series"],
         tecnicas: ["encuesta", "medicion_dimensiones"],
-        oaQueAbre: ["OA12_CN_7"],
+        oaQueAbre: ["OA12_CN_7", "OA23_MA_5", "OA05_MA_8", "OA08_MA_8"],
       },
       {
         asignatura: "historia",
@@ -555,7 +560,7 @@ export const PROBLEMAS: Problema[] = [
           "Una tasa: centímetros por año. Es lo que convierte un paisaje feo en un problema con plazo.",
         conceptosClave: ["tasa de cambio", "superficie", "escala temporal", "proporción"],
         tecnicas: ["medicion_dimensiones", "foto_punto_fijo"],
-        oaQueAbre: [],
+        oaQueAbre: ["OA22_MA_5", "OA08_MA_7", "OA07_MA_8"],
       },
       {
         asignatura: "tecnologia",
@@ -632,7 +637,7 @@ export const PROBLEMAS: Problema[] = [
           "Una cifra local puesta al lado de la nacional. Que el estudio diga 74% y aquí dé otra cosa es exactamente lo interesante.",
         conceptosClave: ["superficie", "densidad por área", "porcentaje de pérdida", "escala de un mapa"],
         tecnicas: ["cuadrante", "medicion_dimensiones"],
-        oaQueAbre: [],
+        oaQueAbre: ["OA22_MA_5", "OA04_MA_6", "OA05_MA_8"],
       },
       {
         asignatura: "tecnologia",

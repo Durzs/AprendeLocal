@@ -45,10 +45,14 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   return (
     <Hoja titulo="Cómo se guía un proyecto" orden={orden}>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Cinco etapas que sirven igual para medir la contaminación de un río y
-        armar una campaña, que para catalogar el desierto florido y montarlo en
-        la plaza. No dicen qué actividad hacer: dicen qué tiene que estar
-        pasando, qué se lleva el curso, y quién decide.
+        Son cinco etapas y sirven para proyectos muy distintos. Un curso puede
+        medir la contaminación de un río y terminar armando una campaña. Otro
+        puede catalogar el desierto florido y terminar montando una exposición
+        en la plaza. Las dos cosas pasan por estas mismas cinco etapas.
+      </p>
+      <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+        Las etapas no dicen qué actividad hacer. Dicen qué tiene que estar
+        pasando, qué se lleva el curso de ahí, y quién lo decide.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
         Las cinco etapas se hacen siempre, en este orden. Lo que cambia es

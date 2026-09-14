@@ -18,7 +18,15 @@
 
 import { useMemo, useState } from "react";
 
-import { CURSO_CORTO, EJES, filtrarOA, objetivosDe, type NivelOA, type OA } from "./oa";
+import {
+  CURSO_CORTO,
+  EJES,
+  NOMBRE_ASIGNATURA_OA,
+  filtrarOA,
+  objetivosDe,
+  type NivelOA,
+  type OA,
+} from "./oa";
 
 /** Los cursos de la sala, traducidos al nombre que usa el catálogo de OA. */
 const NIVEL_DE_CURSO: Record<string, NivelOA> = {
@@ -81,7 +89,7 @@ export default function SelectorOA({
         type="search"
         value={busqueda}
         onChange={(ev) => setBusqueda(ev.target.value)}
-        placeholder="Busca por palabra: agua, suelo, energía, células…"
+        placeholder="Busca por palabra: agua, promedio, porcentaje, células…"
         className="w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--crema)]/[0.045] px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] outline-none transition placeholder:text-[var(--crema)]/30 focus:border-[var(--tierra-600)] focus:bg-[var(--crema)]/[0.08]"
       />
 
@@ -97,7 +105,7 @@ export default function SelectorOA({
                 onClick={() => alternar(c)}
                 className="group inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
               >
-                {c.replace(/_CN_/, " · ")}
+                {c.replace(/_[A-Z]+_/, " · ")}
                 <span aria-hidden className="opacity-60 group-hover:opacity-100">
                   ×
                 </span>
@@ -165,8 +173,8 @@ export default function SelectorOA({
       </div>
 
       <p className="mt-2.5 text-xs leading-relaxed text-[var(--crema)]/45">
-        Son los de Ciencias Naturales de las Bases Curriculares. Marca los que
-        vas a pasar: de ahí sale la ruta que se te arma después.
+        Son los de Ciencias Naturales y Matemática de las Bases Curriculares.
+        Marca los que vas a pasar: de ahí sale la ruta que se te arma después.
       </p>
     </div>
   );
@@ -189,7 +197,7 @@ function Objetivo({
     <li>
       {primeroDelEje && (
         <p className="border-t border-[var(--crema)]/8 bg-[var(--crema)]/[0.02] px-4 py-1.5 rotulo text-[var(--crema)]/40 first:border-t-0">
-          {EJES[oa.eje] ?? oa.eje}
+          {NOMBRE_ASIGNATURA_OA[oa.asignatura]} · {EJES[oa.eje] ?? oa.eje}
         </p>
       )}
       <button

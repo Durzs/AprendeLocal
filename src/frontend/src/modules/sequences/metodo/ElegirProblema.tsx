@@ -13,7 +13,15 @@ import {
   type Problema,
 } from "./problemas";
 import SelectorOA from "../crear/SelectorOA";
-import { buscarOA } from "../crear/oa";
+import { buscarOA, type NivelOA } from "../crear/oa";
+
+/** «7º» es lo que marca el docente; `7mo_basico` es como se llama en el catálogo. */
+const NIVEL_DE_CURSO: Record<string, NivelOA> = {
+  "5º": "5to_basico",
+  "6º": "6to_basico",
+  "7º": "7mo_basico",
+  "8º": "8vo_basico",
+};
 
 /**
  * De dónde arranca el proyecto, en tres columnas.
@@ -71,9 +79,19 @@ export function ElegirProblema({
   // Se descarta el código que no está en la base. Un objetivo que no se puede
   // leer no sirve de nada y, peor, se veía como una tarjeta con el código
   // repetido dos veces, que parece un objetivo cargado cuando no lo hay.
+  //
+  // Y se descarta el que no sea de un curso de esta sala. Al entrar Matemática
+  // los objetivos pasaron a cubrir de 5º a 8º, así que una actividad puede
+  // abrir uno de 5º y otro de 8º a la vez; a quien tiene séptimo y octavo no
+  // le sirve que le ofrezcan el de quinto. Sin cursos marcados se muestran
+  // todos, que es mejor que una columna vacía sin explicación.
+  const niveles = new Set(e.cursos.map((c) => NIVEL_DE_CURSO[c]).filter(Boolean));
   const codigos = [
     ...new Set((activa ? [activa] : angulos).flatMap((a) => a.oaQueAbre)),
-  ].filter((cod) => buscarOA(cod));
+  ].filter((cod) => {
+    const oa = buscarOA(cod);
+    return oa && (niveles.size === 0 || niveles.has(oa.nivel));
+  });
 
   return (
     <Hoja titulo="De qué va a tratar" orden={orden}>
@@ -424,9 +442,9 @@ function ColumnaObjetivos({
       ) : codigos.length === 0 ? (
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/78">
           Las actividades que tienes a la vista son de asignaturas cuyos
-          objetivos todavía no están cargados: la base solo trae los 62 de
-          Ciencias Naturales de 5º a 8º. Puedes buscarlos abajo o escribirlos
-          tú en la planificación.
+          objetivos todavía no están cargados: por ahora están los de Ciencias
+          Naturales y los de Matemática, de 5º a 8º. Puedes buscarlos abajo o
+          escribirlos tú en la planificación.
         </p>
       ) : (
         <ul className="space-y-2">
@@ -543,9 +561,10 @@ function Noticias({
             Noticias nacionales sobre este problema
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-            Estas noticias son de alcance nacional y sirven para plantear el
-            asunto en la sala. Más abajo se agregan las noticias de tu comuna,
-            que son las que de verdad mueven a un curso.
+            Las noticias de aquí arriba son de alcance nacional y sirven para
+            plantear el asunto en la sala. Más abajo se pueden agregar noticias
+            de tu comuna, que suelen enganchar más a un curso porque hablan de
+            un lugar que conocen.
           </p>
           <ul className="mt-3 space-y-3.5">
             {problema.respaldo.map((n) => (

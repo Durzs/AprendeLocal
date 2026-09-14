@@ -12,7 +12,7 @@
  *
  * Ahora solo aparece lo que es de ESTE proyecto: el método por el que se guía,
  * qué van a construir los estudiantes, la ruta que arma el modelo con sus
- * datos, la hoja para visar en dirección y el seguimiento semana a semana. Las
+ * datos, la hoja que firma la dirección y el seguimiento semana a semana. Las
  * cuatro rutas escritas siguen en el repositorio y se pueden leer, pero dejaron
  * de empujarse encima de un proyecto que no es el suyo.
  */
@@ -72,7 +72,7 @@ export default function Paso3({
 }
 
 /**
- * La hoja que se lleva a la dirección para que la visen.
+ * La hoja que se lleva a la dirección para que la firmen.
  *
  * Es el trámite que hoy hace que un proyecto no se haga. Un docente puede
  * tener la unidad entera pensada y quedarse ahí, porque justificar por escrito
@@ -97,7 +97,7 @@ function Justificacion({ e }: { e: Expedicion }) {
 
   if (!titulo) {
     return (
-      <Hoja titulo="Para visar en la dirección" orden={6}>
+      <Hoja titulo="La hoja que firma la dirección" orden={6}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
           Esta hoja se arma sola cuando elijas de qué va a tratar el proyecto.
           No hay nada que llenar aquí: sale de lo que ya escribiste.
@@ -107,7 +107,7 @@ function Justificacion({ e }: { e: Expedicion }) {
   }
 
   return (
-    <Hoja titulo="Para visar en la dirección" orden={6}>
+    <Hoja titulo="La hoja que firma la dirección" orden={6}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
         nuevo que llenar: se imprime y se firma.
