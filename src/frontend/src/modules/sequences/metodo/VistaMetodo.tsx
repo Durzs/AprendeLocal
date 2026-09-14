@@ -20,18 +20,23 @@ import { Hoja } from "../crear/Campos";
  */
 
 /**
- * De quién es cada etapa.
+ * De quién suele ser cada etapa.
  *
- * Decía «lo deciden ellos» y en una entrevista se leyó como que los
- * estudiantes votaban cuáles de las etapas hacer. No es eso: todas se hacen
- * siempre, y lo que cambia es quién las arma. «Se construye con el
- * curso» dice lo que pasa; «lo deciden ellos» daba a entender que podían
- * decidir no hacerla.
+ * Dos correcciones, las dos de entrevistas.
+ *
+ * La primera: decía «lo deciden ellos» y se leyó como que los estudiantes
+ * votaban cuáles de las etapas hacer. «Se construye con el curso» dice lo que
+ * pasa sin dar a entender que se pueda saltar.
+ *
+ * La segunda es de tono y llegó después. Decía «la preparas tú», que le dice
+ * al docente lo que tiene que hacer. Nadie que lleva veinte años en una sala
+ * necesita que una aplicación le reparta el trabajo. Ahora describe lo que
+ * suele pasar y deja la decisión donde estaba: en quien conoce su curso.
  */
 const ETIQUETA_DECIDE: Record<Decide, string> = {
-  docente: "La preparas tú",
-  estudiantes: "Se construye con el curso",
-  ambos: "Se arma entre todos",
+  docente: "Suele salir de ti",
+  estudiantes: "Suele tomarla el curso",
+  ambos: "Suele armarse entre todos",
 };
 
 const ANILLO: Record<string, string> = {
@@ -57,13 +62,14 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
         en la plaza. Las dos cosas pasan por estas mismas seis etapas.
       </p>
       <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Las etapas no dicen qué actividad hacer. Dicen qué tiene que estar
-        pasando, qué se lleva el curso de ahí, y quién lo decide.
+        No dicen qué actividad hacer. Describen qué suele estar pasando en cada
+        tramo, qué se lleva el curso de ahí, y de quién acaba siendo cada parte.
       </p>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-        Las seis se hacen siempre, en este orden. Lo que cambia es quién las
-        arma: la primera se arma entre todos, la segunda la preparas tú, y de
-        la tercera a la sexta se construyen con el curso.
+        El orden es el que suele funcionar, y el peso de cada etapa cambia mucho
+        de un curso a otro. En la mayoría de los proyectos la primera se arma
+        entre todos, la segunda sale del docente y de la tercera en adelante la
+        va tomando el curso. Es una manera de repartirlo, no la única.
       </p>
 
       <ol className="space-y-2">

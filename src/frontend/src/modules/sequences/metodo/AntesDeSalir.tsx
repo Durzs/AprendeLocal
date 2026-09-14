@@ -61,14 +61,16 @@ export function AntesDeSalir({
   return (
     <Hoja titulo="Lo que se enseña antes de salir" orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Esta parte la decides tú y no se negocia. Son una o dos clases: los
-        conceptos que hacen falta para entender el problema, y ensayar en la
-        sala la técnica con la que van a levantar el dato, sobre algo que no
-        importe.
+        Esta suele ser la parte que el docente prepara solo, y hay un motivo:
+        mandar a un curso a averiguar algo sin haberle enseñado a usar lo que va
+        a usar no es dejarlo crear, es dejarlo solo. Cabe en una o dos clases:
+        los conceptos que hacen falta para entender el problema, y un ensayo en
+        la sala de la técnica con la que van a levantar el dato, sobre algo que
+        no importe.
       </p>
 
       {/* ── Conceptos, por asignatura ──────────────────────────────────── */}
-      <p className="rotulo text-[var(--crema)]/75">Conceptos que hay que pasar</p>
+      <p className="rotulo text-[var(--crema)]/75">Conceptos que abre este problema</p>
       <div className="mt-3 space-y-3.5">
         {angulos.map((a) => (
           <div key={a.asignatura}>
