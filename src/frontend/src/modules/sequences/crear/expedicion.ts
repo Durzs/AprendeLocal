@@ -42,7 +42,21 @@ export type Expedicion = {
   docente: string;
   cursos: string[];
   estudiantes: number | null;
-  semanas: number | null;
+  /**
+   * Cuántas clases dura, no cuántas semanas.
+   *
+   * Decía «semanas» y eso engaña en casi todas las asignaturas. Una profesora
+   * de artes y tecnología lo dijo así en una entrevista: un proyecto de tres
+   * semanas, en un ramo que se ve una vez por semana, son tres clases. Con
+   * «tres semanas» en la cabeza uno planifica para nueve horas y tiene tres.
+   *
+   * Por eso se piden las dos cosas: cuántas clases y cuánto dura cada una. Con
+   * eso se sabe el tiempo real, que es lo único que importa para decidir si un
+   * proyecto cabe.
+   */
+  sesiones: number | null;
+  /** Minutos de cada clase. 45 y 90 son los dos casos de siempre. */
+  duracionSesion: number | null;
   temasObligatorios: string;
   /**
    * Los códigos que marcó en la lista: «OA12_CN_5». Es la parte sugerida.
@@ -127,7 +141,8 @@ export const VACIA: Expedicion = {
   docente: "",
   cursos: [],
   estudiantes: null,
-  semanas: null,
+  sesiones: null,
+  duracionSesion: null,
   temasObligatorios: "",
   oa: [],
   objetivos: "",
@@ -192,7 +207,7 @@ export function completitudPaso1(e: Expedicion): number {
     e.docente,
     e.cursos.length ? "x" : "",
     e.estudiantes ? "x" : "",
-    e.semanas ? "x" : "",
+    e.sesiones ? "x" : "",
     e.oa.length ? "x" : "",
     e.evaluacion.length ? "x" : "",
     e.problemaId || e.problemaPropio,

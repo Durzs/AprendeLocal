@@ -496,3 +496,55 @@ body {
   section { break-inside: avoid; border-color: #999 !important; }
   a[href]::after { content: ""; }
 }
+
+/*
+ * Modo accesible: más contraste y letra más grande.
+ *
+ * Salió de una entrevista: el texto gris pequeño sobre fondo oscuro cuesta
+ * leerlo, y en una sala con sol de frente o en una pantalla vieja de escuela
+ * se pierde del todo. Se arregla con dos interruptores en vez de rediseñar,
+ * porque el diseño base también tiene que existir.
+ *
+ * Sube el suelo de opacidad de todos los tonos apagados en vez de listar cada
+ * clase: cualquier texto nuevo que alguien escriba mañana queda cubierto sin
+ * que haya que acordarse de esto.
+ */
+.mas-contraste {
+  --crema: #fdfbf6;
+  --crema-clara: #ffffff;
+  --tierra-300: #ffc79b;
+  --tierra-600: #ff9142;
+}
+.mas-contraste [class*="text-[var(--crema)]\\/"] {
+  color: var(--crema) !important;
+  opacity: 1 !important;
+}
+.mas-contraste .rotulo {
+  color: var(--crema) !important;
+  letter-spacing: .14em;
+}
+.mas-contraste ::placeholder {
+  color: color-mix(in srgb, var(--crema) 70%, transparent) !important;
+}
+.mas-contraste .lienzo,
+.mas-contraste [class*="border-[var(--crema)]\\/"] {
+  border-color: color-mix(in srgb, var(--crema) 45%, transparent) !important;
+}
+
+.letra-grande {
+  font-size: 118%;
+}
+.letra-grande .rotulo {
+  font-size: 0.72rem;
+}
+
+/* Quien pide menos movimiento no lo pide solo para las animaciones bonitas. */
+@media (prefers-reduced-motion: reduce) {
+  .animar-hoja,
+  .animar-asoma,
+  [class*="animar-"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

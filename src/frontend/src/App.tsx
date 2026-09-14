@@ -14,6 +14,7 @@
  * /recuperar     → Solicitud del enlace para recuperar la contraseña
  * *              → 404
  */
+import Accesibilidad from "./shared/components/Accesibilidad";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
@@ -108,6 +109,9 @@ export default function App() {
           poder aparecer en cualquier pantalla, incluidas las de
           autenticación, que no cuelgan del Layout. */}
       <EstadoConexion />
+      {/* También fuera del router: quien necesita más contraste lo necesita en
+          todas las pantallas, no solo en las que cuelgan del Layout. */}
+      <Accesibilidad />
     </>
   );
 }

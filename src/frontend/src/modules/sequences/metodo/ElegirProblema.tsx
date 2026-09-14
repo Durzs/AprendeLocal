@@ -10,6 +10,8 @@ import {
   nombreAsignatura,
   problemaPorId,
 } from "./problemas";
+import SelectorOA from "../crear/SelectorOA";
+import { buscarOA } from "../crear/oa";
 
 /**
  * De dónde arranca el proyecto: la problemática.
@@ -181,8 +183,68 @@ export function ElegirProblema({
                 <p className="mt-2 text-[15px] leading-relaxed text-[var(--crema)]/75">
                   {a.queSaleDeAqui}
                 </p>
+
+                {/* El objetivo sale de la actividad y no al revés. Un docente
+                    no parte del objetivo para buscar qué hacer: parte de algo
+                    que quiere hacer y después reconoce dónde encaja. */}
+                {a.oaQueAbre.length > 0 ? (
+                  <div className="mt-3 border-t border-[var(--crema)]/12 pt-3">
+                    <p className="rotulo text-[var(--crema)]/72">
+                      Objetivos que abre esta actividad
+                    </p>
+                    <ul className="mt-2 space-y-1.5">
+                      {a.oaQueAbre.map((cod) => {
+                        const oa = buscarOA(cod);
+                        const marcado = e.oa.includes(cod);
+                        return (
+                          <li key={cod}>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                set(
+                                  "oa",
+                                  marcado
+                                    ? e.oa.filter((x) => x !== cod)
+                                    : [...e.oa, cod]
+                                )
+                              }
+                              aria-pressed={marcado}
+                              className={`flex min-h-11 w-full gap-2.5 rounded-lg border px-3 py-2 text-left text-[15px] leading-relaxed transition ${
+                                marcado
+                                  ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1] text-[var(--tierra-300)]"
+                                  : "border-[var(--crema)]/12 text-[var(--crema)]/85 hover:border-[var(--crema)]/30"
+                              }`}
+                            >
+                              <span className="shrink-0 font-mono text-xs text-[var(--tierra-600)]">
+                                {cod}
+                              </span>
+                              <span>{oa?.texto ?? cod}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="mt-3 border-t border-[var(--crema)]/12 pt-3 text-sm leading-relaxed text-[var(--crema)]/70">
+                    Todavía no hay objetivos cargados para esta asignatura: la
+                    base solo tiene los de Ciencias Naturales de 5º a 8º. El
+                    objetivo de este ángulo lo pones tú más abajo.
+                  </p>
+                )}
               </div>
             ))}
+          </div>
+
+          {/* Y el buscador completo, en la misma pantalla, porque un docente
+              tiene el objetivo a medias en la cabeza y quiere cruzarlo con el
+              tema mirando los dos a la vez, no en pantallas separadas. */}
+          <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
+            <SelectorOA
+              cursos={e.cursos}
+              elegidos={e.oa}
+              onElegir={(v) => set("oa", v)}
+            />
           </div>
         </>
       )}
@@ -243,7 +305,14 @@ function Noticias({
           que son las que de verdad mueven a un curso y que no tenemos. */}
       {problema.respaldo.length > 0 ? (
         <>
-          <p className="rotulo text-[var(--crema)]/75">De dónde sale este problema</p>
+          <p className="rotulo text-[var(--crema)]/75">
+            Noticias nacionales sobre este problema
+          </p>
+          <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
+            Estas noticias son de alcance nacional y sirven para plantear el
+            asunto en la sala. Más abajo se agregan las noticias de tu comuna,
+            que son las que de verdad mueven a un curso.
+          </p>
           <ul className="mt-3 space-y-3.5">
             {problema.respaldo.map((n) => (
               <li key={n.titular}>
@@ -283,7 +352,7 @@ function Noticias({
       )}
 
       <p className="mt-5 border-t border-[var(--crema)]/12 pt-4 rotulo text-[var(--crema)]/75">
-        Las noticias de tu zona
+        Noticias de tu comuna
       </p>
 
       {e.noticias.length > 0 && (
@@ -336,9 +405,8 @@ function Noticias({
 
       <div className="mt-4 border-t border-[var(--crema)]/12 pt-3.5">
         <p className="text-sm leading-relaxed text-[var(--crema)]/75">
-          Las de arriba son nacionales y sirven para plantear el asunto. La que
-          de verdad mueve a un curso es la de su propia comuna, y esa no la
-          tenemos cargada todavía: la pones tú.
+          Las noticias de cada comuna todavía no están cargadas en la
+          plataforma, así que esas las agrega el docente.
         </p>
         <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/82">
           <span className="text-[var(--crema-clara)]">Cómo buscarlas:</span>{" "}

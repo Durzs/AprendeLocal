@@ -32,7 +32,7 @@ export default function SelectorOA({
   cursos,
   elegidos,
   onElegir,
-  conRuta,
+  conRuta = new Set<string>(),
 }: {
   /** Los cursos que el docente marcó arriba: «5º», «6º»… */
   cursos: string[];
@@ -40,7 +40,7 @@ export default function SelectorOA({
   elegidos: string[];
   onElegir: (codigos: string[]) => void;
   /** Códigos que alguna ruta escrita ya cubre. */
-  conRuta: Set<string>;
+  conRuta?: Set<string>;
 }) {
   const [busqueda, setBusqueda] = useState("");
   const [abierto, setAbierto] = useState<NivelOA | null>(null);
