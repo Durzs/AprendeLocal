@@ -139,9 +139,7 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
         <div>
           <p className="text-[var(--crema-clara)]">Objetivo de la actividad</p>
           <p className="mt-1">
-            {e.fenomeno.trim()
-              ? `Que el curso levante en terreno los datos que necesita para responder a esta situación: ${e.fenomeno}`
-              : `Que el curso levante en terreno los datos que necesita para trabajar la problemática de ${titulo.toLowerCase()}.`}
+            {`Que el curso levante en terreno los datos que necesita para trabajar la problemática de ${titulo.toLowerCase()}.`}
           </p>
         </div>
 

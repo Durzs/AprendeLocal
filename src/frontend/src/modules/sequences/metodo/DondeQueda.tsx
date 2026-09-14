@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Campo, Hoja, Texto } from "../crear/Campos";
+import { Hoja, Texto } from "../crear/Campos";
 import type { Entorno as EntornoExpedicion, Expedicion } from "../crear/expedicion";
 import {
   EJEMPLO_ARAUCANIA,
@@ -150,11 +150,9 @@ export function DondeQueda({
 
   return (
     <Hoja titulo="Dónde queda la escuela" orden={orden}>
-      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Escribe el nombre de la escuela, del pueblo o del sitio mismo. Aparece
-        el mapa de alrededor con lo que hay cerca, y ahí se elige a cuál puede
-        ir el curso caminando. No hace falta estar en la escuela para hacer
-        esto, que es lo normal cuando se planifica desde la casa.
+      <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+        Busca la escuela por su nombre y elige en el mapa a qué sitio puede ir
+        el curso caminando.
       </p>
 
       <div className="grid gap-2.5 sm:grid-cols-[1fr_auto]">
@@ -180,7 +178,7 @@ export function DondeQueda({
       </div>
 
       {escuelas.length > 0 && (
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-2.5 space-y-1.5">
           {escuelas.map((x) => (
             <li key={`${x.nombre}-${x.lat}`}>
               <button
@@ -190,9 +188,9 @@ export function DondeQueda({
                   ponerTexto(x.nombre);
                   void buscar({ lat: x.lat, lng: x.lng });
                 }}
-                className="min-h-11 w-full rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-left transition hover:border-[var(--crema)]/35"
+                className="min-h-11 w-full rounded-lg border border-[var(--crema)]/14 px-3.5 py-2.5 text-left transition hover:border-[var(--crema)]/35"
               >
-                <span className="block text-base text-[var(--crema-clara)]">{x.nombre}</span>
+                <span className="block text-[15px] text-[var(--crema-clara)]">{x.nombre}</span>
                 {x.donde && (
                   <span className="mt-0.5 block text-sm text-[var(--crema)]/70">{x.donde}</span>
                 )}
@@ -202,106 +200,125 @@ export function DondeQueda({
         </ul>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2.5">
+      {/* Los dos atajos van en letra chica y no como botones grandes: el que
+          planifica desde su casa no los necesita, y el que sí está en la
+          escuela los encuentra igual. */}
+      <p className="mt-2.5 text-sm text-[var(--crema)]/70">
+        {estado === "buscando" ? "Buscando… " : ""}
         <button
           type="button"
           onClick={() => buscar("aqui")}
           disabled={estado === "buscando"}
-          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10 disabled:opacity-50"
+          className="underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)] disabled:opacity-50"
         >
-          {estado === "buscando" ? "Buscando…" : "Estoy en la escuela: usar mi ubicación"}
+          Estoy en la escuela
         </button>
+        {" · "}
         <button
           type="button"
           onClick={() => buscar("ejemplo")}
           disabled={estado === "buscando"}
-          className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10 disabled:opacity-50"
+          className="underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)] disabled:opacity-50"
         >
           Ver un ejemplo de La Araucanía
         </button>
-      </div>
+      </p>
 
       {estado === "falla" && <PorQueFallo motivo={motivo} />}
 
-      {donde && (
-        <p className="mt-5 text-[15px] leading-relaxed text-[var(--crema-clara)]">
-          {[donde.localidad, donde.comuna, donde.region].filter(Boolean).join(" · ")}
-          {centro && (
-            <span className="ml-2 text-sm text-[var(--crema)]/70">
-              {centro.lat.toFixed(4)}, {centro.lng.toFixed(4)}
-            </span>
-          )}
-        </p>
-      )}
-
+      {/* El mapa y los lugares, uno al lado del otro. Separados obligaban a
+          subir y bajar para cruzar «cuál es» con «dónde queda», que son la
+          misma pregunta. */}
       {centro && (
-        <Mapa
-          centro={centro}
-          lugares={lugares}
-          elegido={e.ubicacion}
-          onElegirLugar={elegir}
-          onTocarPunto={(c) => void tocarPunto(c)}
-          buscando={nombrando}
-        />
-      )}
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+          <div className="min-w-0">
+            <Mapa
+              centro={centro}
+              lugares={lugares}
+              elegido={e.ubicacion}
+              onElegirLugar={elegir}
+              onTocarPunto={(c) => void tocarPunto(c)}
+              buscando={nombrando}
+            />
+          </div>
 
-      {lugares.length > 0 && centro && (
-        <div className="mt-5">
-          <p className="rotulo text-[var(--crema)]/75">
-            Qué hay alrededor. Elige a cuál pueden ir
-          </p>
-          <ul className="mt-2.5 space-y-2">
-            {lugares.map((l) => {
-              const elegido = e.ubicacion === l.nombre;
-              return (
-                <li key={`${l.nombre}-${l.lat}`}>
-                  <button
-                    type="button"
-                    onClick={() => elegir(l)}
-                    aria-pressed={elegido}
-                    className={`flex min-h-11 w-full flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border px-4 py-3 text-left transition ${
-                      elegido
-                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
-                        : "border-[var(--crema)]/14 hover:border-[var(--crema)]/30"
-                    }`}
-                  >
-                    <span
-                      className={`text-base ${
-                        elegido ? "text-[var(--tierra-300)]" : "text-[var(--crema-clara)]"
+          <div className="min-w-0">
+            {donde && (
+              <p className="text-[15px] leading-snug text-[var(--crema-clara)]">
+                {[donde.localidad, donde.comuna, donde.region]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            )}
+
+            <p className="rotulo mt-3 text-[var(--crema)]/75">
+              {lugares.length ? "Adónde pueden ir" : "Sin sitios con nombre cerca"}
+            </p>
+
+            <ul className="mt-2 space-y-1.5">
+              {lugares.map((l) => {
+                const elegidoEste = e.ubicacion === l.nombre;
+                return (
+                  <li key={`${l.nombre}-${l.lat}`}>
+                    <button
+                      type="button"
+                      onClick={() => elegir(l)}
+                      aria-pressed={elegidoEste}
+                      className={`min-h-11 w-full rounded-lg border px-3.5 py-2.5 text-left transition ${
+                        elegidoEste
+                          ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
+                          : "border-[var(--crema)]/14 hover:border-[var(--crema)]/30"
                       }`}
                     >
-                      {l.nombre}
-                    </span>
-                    <span className="text-sm text-[var(--crema)]/70">
-                      {ETIQUETA_ENTORNO[l.entorno]} · {aQueDistancia(metrosEntre(centro, l))}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-            Los nombres salen de OpenStreetMap, así que son los que están en el
-            mapa y no siempre los que usa la gente de ahí. Si en tu sector se
-            llama de otro modo, cámbialo abajo: manda el nombre de la gente.
-          </p>
+                      <span
+                        className={`block text-[15px] leading-snug ${
+                          elegidoEste
+                            ? "text-[var(--tierra-300)]"
+                            : "text-[var(--crema-clara)]"
+                        }`}
+                      >
+                        {l.nombre}
+                      </span>
+                      <span className="mt-0.5 block text-sm text-[var(--crema)]/70">
+                        {ETIQUETA_ENTORNO[l.entorno]} ·{" "}
+                        {aQueDistancia(metrosEntre(centro, l))}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* Escrito a mano, siempre. Es lo que queda cuando no hay señal, y
+                lo que permite cambiar el nombre del mapa por el del sector. */}
+            <label className="mt-3 block">
+              <span className="text-sm text-[var(--crema)]/75">
+                O escríbelo tú, con el nombre que usa la gente de ahí
+              </span>
+              <Texto
+                value={e.ubicacion}
+                onChange={(ev) => onCambio({ ...e, ubicacion: ev.target.value })}
+                placeholder="El estero Trailelfu, detrás de la cancha"
+              />
+            </label>
+          </div>
         </div>
       )}
 
-      {/* Escrito a mano, siempre. Es lo que queda cuando no hay señal, que en
-          una escuela rural pasa seguido, y es lo que permite corregir el
-          nombre del mapa por el del sector. */}
-      <Campo
-        etiqueta="Cómo se llama, si lo quieres escribir tú"
-        ayuda="El nombre que usa la gente de ahí. Si ya elegiste uno arriba, aquí lo puedes corregir."
-        ancho="entera"
-      >
-        <Texto
-          value={e.ubicacion}
-          onChange={(ev) => onCambio({ ...e, ubicacion: ev.target.value })}
-          placeholder="El estero Trailelfu, detrás de la cancha"
-        />
-      </Campo>
+      {/* Sin centro todavía no hay mapa, pero el campo a mano tiene que estar:
+          es lo único que funciona sin señal. */}
+      {!centro && (
+        <label className="mt-4 block max-w-xl">
+          <span className="text-sm text-[var(--crema)]/75">
+            O escribe el lugar a mano, si no hay señal para el mapa
+          </span>
+          <Texto
+            value={e.ubicacion}
+            onChange={(ev) => onCambio({ ...e, ubicacion: ev.target.value })}
+            placeholder="El estero Trailelfu, detrás de la cancha"
+          />
+        </label>
+      )}
     </Hoja>
   );
 }

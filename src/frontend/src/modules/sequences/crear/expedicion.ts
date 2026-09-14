@@ -100,14 +100,6 @@ export type Expedicion = {
   tecnicas: string[];
   entorno: Entorno | null;
   ubicacion: string;
-  /**
-   * Cómo se ve la problemática aquí, en una frase.
-   *
-   * Es lo único que sobrevive de los cinco cuadros, porque es lo único que la
-   * plataforma no puede saber: la problemática la elige de una lista, pero
-   * cómo se manifiesta en ESTE sitio solo lo sabe quien está ahí.
-   */
-  fenomeno: string;
 
   /* ── Paso 2, las preguntas ───────────────────────────────────────────── */
   preguntas: Pregunta[];
@@ -173,7 +165,6 @@ export const VACIA: Expedicion = {
   tecnicas: [],
   entorno: null,
   ubicacion: "",
-  fenomeno: "",
   preguntas: [],
   preguntaGuia: "",
   rutaIA: null,
@@ -235,7 +226,6 @@ export function completitudPaso1(e: Expedicion): number {
     e.asignaturas.length ? "x" : "",
     e.entorno ?? "",
     e.ubicacion,
-    e.fenomeno,
   ];
   const llenos = campos.filter((c) => String(c).trim().length > 0).length;
   return Math.round((llenos / campos.length) * 100);

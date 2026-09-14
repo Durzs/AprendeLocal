@@ -129,7 +129,6 @@ export async function generar(e: Expedicion): Promise<Resultado> {
         duracionSesion: e.duracionSesion,
         entorno: e.entorno,
         ubicacion: e.ubicacion,
-        fenomeno: e.fenomeno,
         problema: e.problemaId ?? e.problemaPropio,
         asignaturas: e.asignaturas,
         preguntaGuia: e.preguntaGuia,

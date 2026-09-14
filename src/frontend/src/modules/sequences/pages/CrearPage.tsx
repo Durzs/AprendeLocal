@@ -36,7 +36,7 @@ export default function CrearPage() {
   const { expedicion: e, avance, estado, cambiar: setE, cambiarAvance } = useExpedicion();
 
   const completo = completitudPaso1(e);
-  const hayLugar = Boolean(e.entorno || e.ubicacion.trim() || e.fenomeno.trim());
+  const hayLugar = Boolean(e.entorno || e.ubicacion.trim());
 
   const laminas: Lamina[] = [
     {

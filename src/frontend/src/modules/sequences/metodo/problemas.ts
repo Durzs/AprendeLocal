@@ -83,6 +83,52 @@ export type Noticia = {
   queAporta?: string;
 };
 
+/**
+ * Las cuatro familias en que se agrupan las problemáticas.
+ *
+ * Diez problemáticas en una columna son diez botones que hay que leer enteros
+ * para elegir uno, y a la décima ya nadie está leyendo. Cuatro familias se
+ * abarcan de una mirada, y dentro de cada una hay dos o cuatro cosas.
+ *
+ * El agrupamiento no es temático sino de terreno: están juntas las que se
+ * trabajan yendo al mismo sitio y con las mismas técnicas. Quien tiene un
+ * estero cerca entra por «El agua» y ahí están las dos que le sirven; quien no
+ * tiene nada de eso pero ve vaciarse el pueblo entra por la última.
+ */
+export type Familia = {
+  id: string;
+  nombre: string;
+  /** Qué tienen en común, para reconocer la suya sin abrirla. */
+  deQueVa: string;
+};
+
+export const FAMILIAS_PROBLEMA: Familia[] = [
+  {
+    id: "agua",
+    nombre: "El agua",
+    deQueVa: "De dónde viene, cómo llega y qué trae. Se trabaja yendo al cauce, al pozo o al estanque.",
+  },
+  {
+    id: "tierra",
+    nombre: "La tierra y el bosque",
+    deQueVa: "El suelo que se va y lo que crecía encima. Se trabaja en una ladera, un corte de camino o un pedazo de monte.",
+  },
+  {
+    id: "aire_residuos",
+    nombre: "Lo que respiramos y lo que botamos",
+    deQueVa: "El humo adentro de las casas y lo que queda tirado afuera. Se trabaja en la sala, en la calle y en el sitio donde se junta.",
+  },
+  {
+    id: "gente",
+    nombre: "La gente del lugar",
+    deQueVa: "Quiénes quedan, qué saben y qué les llega. Se trabaja preguntando, y el terreno son las casas y el pueblo.",
+  },
+];
+
+export function familiaProblemaPorId(id: string): Familia | undefined {
+  return FAMILIAS_PROBLEMA.find((f) => f.id === id);
+}
+
 /** El mismo problema, mirado desde una asignatura. */
 export type Angulo = {
   asignatura: Asignatura;
@@ -127,6 +173,8 @@ export type Angulo = {
 
 export type Problema = {
   id: string;
+  /** A cuál de las cuatro familias pertenece. */
+  familia: string;
   nombre: string;
   queEs: string;
   /** Dónde se da. No todas las escuelas lo tienen delante. */
@@ -150,6 +198,7 @@ export type Problema = {
 export const PROBLEMAS: Problema[] = [
   {
     id: "rio_contaminado",
+    familia: "agua",
     nombre: "Un río o estero contaminado",
     queEs:
       "El agua que pasa cerca de la escuela cambió: cambió de color, de olor, de lo que vive dentro, o de lo que se puede hacer con ella. Puede venir de arriba, de un desagüe, de la agricultura o de la basura.",
@@ -249,6 +298,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "falta_agua",
+    familia: "agua",
     nombre: "El agua que no alcanza",
     queEs:
       "Pozos que bajan, vertientes que se secan antes que otros años, camiones aljibe que llegan dos veces por semana. No es solo que llueva menos: es cómo se reparte lo que hay.",
@@ -341,6 +391,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "basura",
+    familia: "aire_residuos",
     nombre: "Microbasurales y basura que no se retira",
     queEs:
       "Sitios donde la basura se acumula porque el camión no llega, porque no hay dónde dejarla, o porque siempre se ha dejado ahí. Suelen estar en las salidas del pueblo y al lado de los cauces.",
@@ -418,6 +469,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "aire_lena",
+    familia: "aire_residuos",
     nombre: "El humo de la leña y el frío en las casas",
     queEs:
       "En invierno el aire del pueblo se pone denso y las casas siguen frías. Las dos cosas son el mismo problema: se quema mucho porque la casa no retiene el calor.",
@@ -503,6 +555,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "suelo_erosion",
+    familia: "tierra",
     nombre: "La tierra que se va",
     queEs:
       "Cárcavas que crecen, raíces al aire, tierra arrastrada al pie de los cortes. Se pierde en un invierno lo que tardó siglos en formarse, y se nota primero en lo que deja de prender.",
@@ -578,6 +631,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "bosque_que_retrocede",
+    familia: "tierra",
     nombre: "El bosque nativo que retrocede",
     queEs:
       "Un bosque que ya no llega donde llegaba: tala, incendios, ganado que entra, o un clima que dejó de servirle. En algunas especies el retroceso ya está medido y proyectado, y eso permite trabajar con una fecha en la mano.",
@@ -666,6 +720,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "memoria_oficios",
+    familia: "gente",
     nombre: "Lo que se está dejando de saber",
     queEs:
       "Oficios, cultivos, palabras, recetas y maneras de hacer que sabe la generación mayor del pueblo y que no está pasando a la siguiente. No es nostalgia: es conocimiento que funciona y que se va a perder este año o el próximo.",
@@ -737,6 +792,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "lengua_que_se_calla",
+    familia: "gente",
     nombre: "La lengua que ya casi no se habla",
     queEs:
       "En el sector hay personas mayores que hablan una lengua que los jóvenes ya no hablan. No se perdió sola: dejó de pasar de una generación a la siguiente, y con ella se van los nombres de los cerros, de las plantas y de las cosas que solo tienen nombre en esa lengua.",
@@ -835,6 +891,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "sin_conexion",
+    familia: "gente",
     nombre: "La conexión que no llega",
     queEs:
       "En el sector no hay señal, o la hay a ratos y en un solo punto. Eso decide quién puede estudiar en la casa, quién puede pedir hora al consultorio y quién tiene que viajar para hacer un trámite que otros hacen desde el teléfono.",
@@ -931,6 +988,7 @@ export const PROBLEMAS: Problema[] = [
   },
   {
     id: "pueblo_que_se_vacia",
+    familia: "gente",
     nombre: "El pueblo que se está quedando sin gente",
     queEs:
       "Cada año hay menos niños en la escuela, más casas cerradas y menos gente joven en el sector. Los que se van no se van por gusto: se van por agua, por trabajo, por salud o para seguir estudiando.",

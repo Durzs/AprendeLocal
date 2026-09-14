@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import { Campo, Hoja, Parrafo, Texto } from "../crear/Campos";
+import { Hoja, Parrafo, Texto } from "../crear/Campos";
 import type { Expedicion } from "../crear/expedicion";
 import {
   ASIGNATURAS,
+  FAMILIAS_PROBLEMA,
   PROBLEMAS,
   QUE_SACAN_DE_LA_NOTICIA,
   angulosDe,
@@ -136,19 +137,6 @@ export function ElegirProblema({
         <Noticias e={e} onCambio={onCambio} problema={elegido} />
       )}
 
-      <Campo
-        etiqueta="Cómo se ve eso aquí"
-        ayuda="En una frase, lo que se nota en tu sitio y que en otra escuela no se notaría igual. Es lo único que no podemos saber nosotros."
-        ancho="entera"
-      >
-        <Parrafo
-          value={e.fenomeno}
-          onChange={(ev) => set("fenomeno", ev.target.value)}
-          placeholder="El estero baja tanto en verano que la bomba de la escuela se queda sin agua."
-          rows={2}
-        />
-      </Campo>
-
       {(elegido || e.problemaPropio.trim()) && <QueSacanDeAhi />}
     </Hoja>
   );
@@ -194,36 +182,84 @@ function ColumnaProblema({
   set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
   elegido: Problema | null;
 }) {
+  const [familiaAbierta, ponerFamiliaAbierta] = useState<string | null>(null);
+
   return (
     <Columna
       n={1}
       titulo="La problemática local"
       bajada="Algo que está ocurriendo y de lo que ya se escribió."
     >
+      {/* Agrupadas en cuatro familias. Diez botones seguidos son diez cosas
+          que hay que leer enteras para elegir una, y a la décima ya nadie está
+          leyendo. Cuatro se abarcan de una mirada, y la familia se abre sola
+          cuando ya hay una problemática elegida dentro. */}
       <ul className="space-y-2">
-        {PROBLEMAS.map((p) => {
-          const activo = p.id === e.problemaId && !proponiendo;
+        {FAMILIAS_PROBLEMA.map((f) => {
+          const suyas = PROBLEMAS.filter((p) => p.familia === f.id);
+          const tieneLaElegida = suyas.some(
+            (p) => p.id === e.problemaId && !proponiendo
+          );
+          const abierta = familiaAbierta === f.id || tieneLaElegida;
           return (
-            <li key={p.id}>
+            <li key={f.id} className="overflow-hidden rounded-lg border border-[var(--crema)]/12">
               <button
                 type="button"
-                onClick={() => {
-                  ponerProponiendo(false);
-                  onCambio({
-                    ...e,
-                    problemaId: activo ? null : p.id,
-                    problemaPropio: "",
-                  });
-                }}
-                aria-pressed={activo}
-                className={`min-h-11 w-full rounded-lg border px-3.5 py-2.5 text-left text-[15px] leading-snug transition ${
-                  activo
-                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12] text-[var(--tierra-300)]"
-                    : "border-[var(--crema)]/12 text-[var(--crema-clara)] hover:border-[var(--crema)]/30"
-                }`}
+                onClick={() => ponerFamiliaAbierta(abierta ? null : f.id)}
+                aria-expanded={abierta}
+                className="flex min-h-11 w-full items-baseline gap-2.5 px-3.5 py-2.5 text-left transition hover:bg-[var(--crema)]/[0.04]"
               >
-                {p.nombre}
+                <span className="min-w-0 flex-1">
+                  <span
+                    className={`block text-[15px] leading-snug ${
+                      tieneLaElegida
+                        ? "text-[var(--tierra-300)]"
+                        : "text-[var(--crema-clara)]"
+                    }`}
+                  >
+                    {f.nombre}
+                  </span>
+                  {!abierta && (
+                    <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/70">
+                      {f.deQueVa}
+                    </span>
+                  )}
+                </span>
+                <span aria-hidden className="shrink-0 text-[var(--crema)]/40">
+                  {abierta ? "\u2212" : "+"}
+                </span>
               </button>
+
+              {abierta && (
+                <ul className="border-t border-[var(--crema)]/10 p-2">
+                  {suyas.map((p) => {
+                    const activo = p.id === e.problemaId && !proponiendo;
+                    return (
+                      <li key={p.id}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            ponerProponiendo(false);
+                            onCambio({
+                              ...e,
+                              problemaId: activo ? null : p.id,
+                              problemaPropio: "",
+                            });
+                          }}
+                          aria-pressed={activo}
+                          className={`min-h-11 w-full rounded-lg border px-3 py-2 text-left text-[15px] leading-snug transition ${
+                            activo
+                              ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.12] text-[var(--tierra-300)]"
+                              : "border-transparent text-[var(--crema-clara)] hover:border-[var(--crema)]/25"
+                          }`}
+                        >
+                          {p.nombre}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
             </li>
           );
         })}

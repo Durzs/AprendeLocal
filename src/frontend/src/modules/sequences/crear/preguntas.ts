@@ -23,7 +23,6 @@ import { angulosDe, problemaPorId, type Angulo } from "../metodo/problemas";
 /** Lo que el docente escribió, ya limpio y con un respaldo si dejó el campo vacío. */
 type Piezas = {
   lugar: string;
-  fenomeno: string;
   producto: string;
   aQuien: string;
 };
@@ -68,24 +67,12 @@ function fragmento(texto: string): string {
   return t;
 }
 
-/**
- * Un fenómeno suele venir escrito como oración completa, no como sintagma.
- * Meterlo dentro de «¿Cuánto es X?» produce un engendro; por eso las preguntas
- * que lo usan lo ponen delante, como lo que él dijo, y preguntan después.
- */
-function oracion(texto: string): string {
-  const t = texto.trim().replace(/\s+/g, " ");
-  if (!t) return "";
-  return /[.!?]$/.test(t) ? t : `${t}.`;
-}
-
 function piezas(e: Expedicion): Piezas {
   const lugar = e.ubicacion.trim()
     ? fragmento(e.ubicacion)
     : (e.entorno ? LUGAR_POR_ENTORNO[e.entorno] : "") || "el lugar donde está la escuela";
   return {
     lugar,
-    fenomeno: e.fenomeno.trim(),
     // El producto ya no se pide aquí: lo decide el curso en el momento 07,
     // después de volver del terreno. Hasta entonces se nombra sin fijarlo.
     producto: "lo que hagan",
@@ -143,10 +130,6 @@ export function proponer(e: Expedicion): Propuesta[] {
   // únicas que saben de qué trata el proyecto. Las de abajo sirven siempre y
   // por eso mismo son más genéricas.
   const delProblema = desdeElProblema(e, p.lugar);
-  // Cuando el docente contó el fenómeno, las preguntas de medir lo ponen
-  // delante como oración suya y preguntan después. Cuando no lo contó, se
-  // arreglan sin él en vez de dejar un hueco.
-  const dijo = p.fenomeno ? `${oracion(p.fenomeno)} ` : "";
 
   const genericas: Propuesta[] = [
     {
@@ -162,16 +145,12 @@ export function proponer(e: Expedicion): Propuesta[] {
     {
       id: "medir-1",
       familia: "medir",
-      texto: p.fenomeno
-        ? `${dijo}¿Cuánto es, y con qué se puede comparar?`
-        : `¿Qué se puede medir en ${p.lugar} que nadie haya medido?`,
+      texto: `¿Qué se puede medir en ${p.lugar} que nadie haya medido?`,
     },
     {
       id: "medir-2",
       familia: "medir",
-      texto: p.fenomeno
-        ? `${dijo}¿Alcanza para lo que la escuela necesita?`
-        : `¿Cuánto cambia ${p.lugar} de una estación a otra?`,
+      texto: `¿Cuánto cambia ${p.lugar} de una estación a otra?`,
     },
     {
       id: "preguntar-1",
@@ -181,9 +160,7 @@ export function proponer(e: Expedicion): Propuesta[] {
     {
       id: "preguntar-2",
       familia: "preguntar",
-      texto: p.fenomeno
-        ? `${dijo}¿Quién de por aquí lo ha visto pasar antes, y qué nos puede contar?`
-        : `¿Quién de por aquí conoce ${p.lugar} mejor que nadie?`,
+      texto: `¿Quién de por aquí conoce ${p.lugar} mejor que nadie?`,
     },
     {
       id: "devolver-1",
