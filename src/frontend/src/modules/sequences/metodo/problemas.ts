@@ -203,7 +203,7 @@ export const PROBLEMAS: Problema[] = [
           "Un mapa del cauce con los puntos marcados. Sirve para señalar dónde entra el problema, que es distinto de decir que el río está sucio.",
         conceptosClave: ["pH", "escala logarítmica", "turbidez", "disolución", "contaminante"],
         tecnicas: ["muestreo_agua", "bitacora"],
-        oaQueAbre: ["OA12_CN_5", "OA16_CN_7"],
+        oaQueAbre: ["OA12_CN_5", "OA14_CN_7"],
       },
       {
         asignatura: "historia",

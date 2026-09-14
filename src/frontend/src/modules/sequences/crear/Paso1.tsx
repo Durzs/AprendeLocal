@@ -108,12 +108,6 @@ export function PasoPrograma({ e, onCambio }: Props) {
           />
         </div>
       </Hoja>
-
-      <Hoja titulo="Lo que el programa exige" orden={5}>
-        <div className="grid gap-5 sm:grid-cols-2">
-
-        </div>
-      </Hoja>
     </div>
   );
 }
