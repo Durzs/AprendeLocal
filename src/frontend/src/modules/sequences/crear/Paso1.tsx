@@ -13,8 +13,9 @@ import { RUTAS } from "../rutas/catalogo";
 import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
 import { AntesDeSalir } from "../metodo/AntesDeSalir";
+import { DondeQueda } from "../metodo/DondeQueda";
 import SelectorOA from "./SelectorOA";
-import type { Entorno, Expedicion } from "./expedicion";
+import type { Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
 
@@ -30,14 +31,6 @@ const SEMANAS = [2, 3, 4, 6];
 const CON_RUTA = new Set(RUTAS.flatMap((r) => r.cubre.flatMap((c) => c.codigos)));
 
 
-const ENTORNOS: { valor: Entorno; titulo: string }[] = [
-  { valor: "rio", titulo: "Río o estero" },
-  { valor: "bosque", titulo: "Bosque" },
-  { valor: "campo", titulo: "Campo o huerta" },
-  { valor: "costa", titulo: "Costa o lago" },
-  { valor: "cordillera", titulo: "Cerro o volcán" },
-  { valor: "pueblo", titulo: "Pueblo o camino" },
-];
 
 type Props = {
   e: Expedicion;
@@ -113,35 +106,9 @@ export function PasoPrograma({ e, onCambio }: Props) {
 
 /** Lámina 2: lo que pone el lugar. */
 export function PasoLugar({ e, onCambio }: Props) {
-  const set = <K extends keyof Expedicion>(k: K, v: Expedicion[K]) =>
-    onCambio({ ...e, [k]: v });
-
   return (
     <div className="space-y-4">
-      <Hoja titulo="Dónde queda la escuela" orden={4}>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Fichas
-            etiqueta="Qué hay a distancia de caminata"
-            ayuda="Lo que se alcanza a pie en un recreo largo. Elige uno."
-            opciones={ENTORNOS}
-            elegidas={e.entorno ? [e.entorno] : []}
-            onElegir={(v) => set("entorno", (v[0] as Entorno) ?? null)}
-            unica
-          />
-
-          <Campo
-            etiqueta="Cómo se llama ese lugar"
-            ayuda="Su nombre de verdad, el que usa la gente de ahí."
-            ancho="entera"
-          >
-            <Texto
-              value={e.ubicacion}
-              onChange={(ev) => set("ubicacion", ev.target.value)}
-              placeholder="El estero Trailelfu, detrás de la cancha"
-            />
-          </Campo>
-        </div>
-      </Hoja>
+      <DondeQueda e={e} onCambio={onCambio} orden={4} />
 
       <ElegirProblema e={e} onCambio={onCambio} orden={5} />
 

@@ -46,8 +46,9 @@ export default function Seguimiento({
     return (
       <Hoja titulo="Por dónde vas" orden={7}>
         <p className="text-sm leading-relaxed text-[var(--crema)]/60">
-          El seguimiento aparece cuando la ruta tenga sus semanas: arma la ruta
-          con el modelo, o deja designada una de las escritas.
+          El seguimiento aparece cuando la ruta tenga sus semanas. Ármala con
+          el modelo aquí arriba y vuelve: esta es la hoja a la que se vuelve
+          semana tras semana.
         </p>
       </Hoja>
     );

@@ -51,7 +51,7 @@ const JERGA = [
  */
 const ARCHIVOS = [
   "src/modules/sequences/rutas/catalogo.ts",
-  "src/modules/sequences/metodo/momentos.ts",
+  "src/modules/sequences/metodo/etapas.ts",
   "src/modules/sequences/metodo/formatos.ts",
   "src/modules/sequences/metodo/problemas.ts",
   "src/modules/sequences/metodo/tecnicas.ts",

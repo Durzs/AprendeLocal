@@ -58,12 +58,13 @@ export default function RutaGenerada({
   if (!ruta) {
     return (
       <Hoja titulo="Armar una para tu escuela" orden={3}>
-        <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/70">
-          Las rutas escritas sirven mientras el lugar se parezca al que tenían
-          en la cabeza quienes las escribieron. Esto arma una con tus objetivos
-          y con el estero, el cerro o el camino que describiste.
+        <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+          Con la problemática que elegiste, las asignaturas desde las que
+          entras, los objetivos que marcaste y el lugar que quedó ubicado en el
+          mapa. Es lo único de esta lámina que se fabrica para tu escuela y no
+          sirve para ninguna otra.
         </p>
-        <p className="mb-4 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/55">
+        <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
           Vuelve a medio hacer, y es a propósito: cuatro cosas de tu escuela no
           las puede saber y te las va a preguntar.
         </p>
@@ -102,9 +103,9 @@ export default function RutaGenerada({
               </Link>
             </div>
             <p className="mt-3.5 border-t border-[var(--crema)]/12 pt-3 text-xs leading-relaxed text-[var(--crema)]/50">
-              Las cuatro rutas escritas, las láminas y los documentos para
-              imprimir siguen funcionando sin cuenta y sin señal. Lo único
-              detrás de la puerta es lo que cuesta plata.
+              El método, las láminas y los documentos para imprimir siguen
+              funcionando sin cuenta y sin señal. Lo único detrás de la puerta
+              es lo que cuesta plata.
             </p>
           </div>
         )}

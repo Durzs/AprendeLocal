@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 
 import Diapositivas, { type Lamina } from "../crear/Diapositivas";
 import { PasoLugar, PasoPrograma } from "../crear/Paso1";
-import Paso2 from "../crear/Paso2";
 import Paso3 from "../crear/Paso3";
 import { completitudPaso1 } from "../crear/expedicion";
 import { useExpedicion } from "../crear/useExpedicion";
@@ -38,7 +37,6 @@ export default function CrearPage() {
 
   const completo = completitudPaso1(e);
   const hayLugar = Boolean(e.entorno || e.ubicacion.trim() || e.fenomeno.trim());
-  const hayPregunta = Boolean(e.preguntaGuia.trim());
 
   const laminas: Lamina[] = [
     {
@@ -61,18 +59,8 @@ export default function CrearPage() {
       faltaPara: "Falta decir qué hay alrededor de la escuela.",
     },
     {
-      id: "preguntas",
-      marca: "III · Las preguntas",
-      titulo: "La pregunta que aguanta tres semanas",
-      bajada:
-        "Aquí el sistema propone y tú corriges. Las de abajo son borradores armados con lo que escribiste; la que llegue a la ruta debería llevar tus palabras.",
-      contenido: <Paso2 e={e} onCambio={setE} />,
-      puedeAvanzar: hayPregunta,
-      faltaPara: "Falta la pregunta que va al centro.",
-    },
-    {
       id: "ruta",
-      marca: "IV · La ruta armada",
+      marca: "III · La ruta armada",
       titulo: "Las sesiones, el curso y lo que vive ahí",
       bajada:
         "De los objetivos que marcaste y del lugar que describiste sale una ruta, con sus sesiones, su material, la evaluación que elegiste y lo que vive alrededor. Si no te convence, hay otras.",
