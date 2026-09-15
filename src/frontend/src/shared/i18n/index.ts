@@ -32,7 +32,7 @@ i18n
      * institucional— recibía la portada a medio traducir. El titular en
      * inglés, «¿Qué es AprendeLocal?» en español, los pilares otra vez en
      * inglés y la sección del territorio entera en español. No es que
-     * faltaran unas cadenas: `TerritorioSection` y `EtapasSobel` no pasaron
+     * faltaran unas cadenas: `TerritorioSection` y `EtapasMetodo` no pasaron
      * nunca por i18n y no tienen una sola llamada a `t()`.
      *
      * Quitando "navigator", quien llega sin haber elegido ve el sitio en

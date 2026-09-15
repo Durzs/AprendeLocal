@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { NATIVAS } from "../../biodiversidad/nativas";
-import EtapasSobel from "./EtapasSobel";
+import EtapasMetodo from "./EtapasMetodo";
 
 /**
  * El territorio, en la portada.
@@ -134,13 +134,14 @@ export default function TerritorioSection() {
 
         {/* ── La metodología, como las etapas del viaje ────────────────── */}
         <div className="mt-16">
-          {/* Eran cuatro párrafos en una rejilla. Ahora cada etapa trae su
-              dibujo y su pregunta, y la pregunta se rehace con lo que el
-              visitante escoge que hay cerca de su escuela. Está aparte porque
-              tiene estado propio y esta sección ya es larga. */}
-          <EtapasSobel />
+          {/* Eran cuatro tarjetas que ya no correspondían a nada: el método
+              tiene seis etapas y la portada seguía prometiendo cuatro. Ahora
+              son las seis, y lo que el visitante escoge son los dos proyectos
+              de ejemplo. Está aparte porque tiene estado propio y esta sección
+              ya es larga. */}
+          <EtapasMetodo />
 
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600">
             Los menores conocen el lugar y los mayores hacen algo por él: en
             una sala con varios cursos a la vez, eso deja de ser un estorbo y
             pasa a ser el reparto del trabajo.{" "}
