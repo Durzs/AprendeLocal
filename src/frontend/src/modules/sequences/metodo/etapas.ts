@@ -64,6 +64,16 @@ export type Etapa = {
   nombre: string;
   /** Qué pasa, contado como se lo contarías a un colega. */
   queOcurre: string;
+  /**
+   * Lo mismo en una línea, para donde no cabe el párrafo.
+   *
+   * La portada muestra las seis etapas de una sola pasada, y ahí `queOcurre`
+   * ocupa cuatro renglones por tarjeta: veinticuatro renglones de teoría antes
+   * de llegar a lo concreto, que es el ejemplo. La versión corta vive aquí
+   * junto a la larga, y no en la portada, para que quien edite una etapa vea
+   * las dos y las mueva juntas.
+   */
+  enUnaLinea: string;
   alcance: Alcance;
   decide: Decide;
   aprendizajes: Aprendizaje[];
@@ -102,6 +112,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Presentación de la problemática",
     queOcurre:
       "Se elige una de las problemáticas que trae la plataforma, con las noticias y los estudios que la sostienen, o el docente propone la suya. El curso las lee, las desarma, y de ahí sale una pregunta que los divide y que no se puede ganar conversando.",
+    enUnaLinea:
+      "Se lee una problemática del lugar hasta que sale una pregunta que divide al curso.",
     alcance: "inmediato",
     decide: "ambos",
     aprendizajes: [
@@ -168,6 +180,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Enseñanza en aula",
     queOcurre:
       "Una o dos clases con los conceptos del programa que hacen falta para entender la problemática, y el ensayo en la sala de la técnica con la que van a levantar el dato, practicada sobre algo que no importe.",
+    enUnaLinea:
+      "Los conceptos del programa que hacen falta, y la técnica ensayada antes de salir.",
     alcance: "inmediato",
     decide: "docente",
     aprendizajes: [
@@ -242,6 +256,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Indagación en el terreno",
     queOcurre:
       "Salen al territorio a levantar datos, tomar muestras, entrevistar, mapear o revisar documentos antiguos. Al volver, lo que trajeron se pone al lado de lo que creían el primer día, y los conceptos de la clase sirven para leerlo.",
+    enUnaLinea:
+      "Salen a levantar el dato y vuelven con material que nadie tenía el primer día.",
     alcance: "intermedio",
     decide: "estudiantes",
     aprendizajes: [
@@ -310,6 +326,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Análisis de los datos recogidos",
     queOcurre:
       "El curso vuelve del terreno con registros sueltos y todavía no tiene un hallazgo: tiene material. Aquí se ordena, se cruza con lo que ya sabían, y se decide qué es lo que de verdad encontraron. Es la etapa donde el dato se convierte en algo que se puede decir en voz alta y defender.",
+    enUnaLinea:
+      "Se ordena lo que trajeron hasta que aparece un hallazgo que se puede defender.",
     alcance: "inmediato",
     decide: "estudiantes",
     aprendizajes: [
@@ -384,6 +402,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Creación de propuestas y acción comunitaria",
     queOcurre:
       "Con lo que encontraron, el curso diseña algo que se pueda hacer aquí: una campaña, un modelo, una restauración, una propuesta a la municipalidad. Se hace una primera versión, se la critican entre ellos, y se rehace.",
+    enUnaLinea:
+      "Diseñan algo que se pueda hacer aquí, se lo critican entre ellos y lo rehacen.",
     alcance: "amplio",
     decide: "estudiantes",
     aprendizajes: [
@@ -451,6 +471,8 @@ export const ETAPAS: Etapa[] = [
     nombre: "Difusión y reflexión",
     queOcurre:
       "Presentan lo que encontraron y lo que hicieron ante gente de verdad: vecinos, autoridades, quien sepa del tema. Después, y esto no se salta, miran atrás: en qué cambió lo que pensaban del lugar y de su propio papel en él.",
+    enUnaLinea:
+      "Lo presentan ante gente de fuera y después miran en qué cambiaron de idea.",
     alcance: "amplio",
     decide: "estudiantes",
     aprendizajes: [
