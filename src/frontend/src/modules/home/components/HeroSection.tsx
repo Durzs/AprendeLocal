@@ -43,32 +43,15 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const escribiendo = letras < fullText.length;
 
   return (
-    <section
-      id="hero"
-      className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-28 min-h-[calc(100vh-4rem)] flex flex-col justify-center text-center bg-[#0a0047]"
-    >
-      {/* El fondo va en el azul de la marca, el mismo de la barra de arriba.
-          La ilustración está dibujada para eso: son líneas blancas sobre un
-          fondo casi negro, y su color medio es (5, 5, 6). Puesta al 40 % de
-          opacidad sobre blanco, que es como estaba, el navegador mezclaba y
-          devolvía un gris de (155, 155, 155): el hero entero se veía gris y el
-          título negro peleaba contra él. Sobre el azul se ve lo que la
-          ilustración es, y a opacidad completa. */}
+    <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-28 min-h-[calc(100vh-4rem)] flex flex-col justify-center text-center bg-white border-b border-slate-100">
+      {/* Background with constellation line art */}
       <div
-        className="absolute inset-0 -z-20 bg-no-repeat pointer-events-none"
+        className="absolute inset-0 -z-20 bg-no-repeat opacity-40 pointer-events-none"
         style={{
           backgroundImage: `url(${homeBg})`,
-          backgroundSize: "cover",
+          backgroundSize: "100%",
           backgroundPosition: "center top",
         }}
-      />
-
-      {/* Un velo sobre la ilustración, detrás del texto. Las líneas pasan por
-          donde va el subtítulo y sin esto compiten con él; con el velo la
-          ilustración sigue viéndose y el texto se lee encima. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(10,0,71,0.85)_0%,rgba(10,0,71,0.55)_45%,rgba(10,0,71,0.15)_75%)]"
       />
 
       <div className="mx-auto max-w-7xl w-full flex flex-col items-center justify-center">
@@ -76,7 +59,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         {/* El titulo completo va en el DOM para quien lo lee con lector de
             pantalla o buscador; lo que se escribe letra a letra es la copia
             visible, que por eso queda oculta a la lectura. */}
-        <h1 className="mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-white sm:text-5xl md:text-7xl lg:text-8xl">
+        <h1 className="mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
           <span className="sr-only">{fullText}</span>
           <span aria-hidden>
             {displayedText}
@@ -87,7 +70,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         </h1>
 
         {/* Subtitle with Teacher focus */}
-        <p className="mx-auto mt-6 max-w-4xl text-base leading-relaxed text-white/80 sm:text-lg">
+        <p className="mx-auto mt-6 max-w-4xl text-base leading-relaxed text-slate-600 sm:text-lg">
           {t(
             "home.hero.subtitle",
             "Diseña, planifica e implementa experiencias científicas conectadas a los ríos, cuencas, agricultura y biodiversidad de tu escuela rural, con alineación curricular inmediata."
@@ -98,15 +81,15 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <button
             onClick={onStart}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#f97316] hover:bg-[#ea6a0c] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-black/25 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0a0047] hover:bg-[#140066] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#0a0047]/25 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
           >
-            <Compass className="h-4 w-4 text-white" />
+            <Compass className="h-4 w-4 text-amber-300" />
             <span>{t("home.hero.ctaStart", "Comenzar a Planificar")}</span>
           </button>
 
           <button
             onClick={onExplore}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 hover:bg-white/20 px-8 py-4 text-sm font-bold text-white backdrop-blur transition hover:-translate-y-0.5 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 px-8 py-4 text-sm font-bold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
           >
             <span>{t("home.hero.ctaExplore", "Conoce cómo funciona")}</span>
             <ArrowDown className="h-4 w-4 text-[#f97316]" />
