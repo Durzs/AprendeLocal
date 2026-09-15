@@ -125,19 +125,11 @@ export function Indicadores({
 
   return (
     <Hoja titulo="Indicadores de evaluación" orden={orden}>
-      <p className="mb-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Un objetivo del programa no se puede mirar directamente: hay que decir
-        qué se ve en la sala cuando ocurrió. Eso es lo que va aquí, y es lo que
-        después se copia en la pauta de evaluación.
-      </p>
-
-      {/* Esto va arriba y no en letra chica al final. Alguien va a copiar esta
-          hoja en un documento oficial, y tiene que saber qué está copiando. */}
-      <p className="mb-5 max-w-2xl rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3 text-[15px] leading-relaxed text-[var(--tierra-300)]">
-        Estos no son los indicadores oficiales del programa de estudio. Son los
-        de este proyecto, escritos para poder mirarlos en clase. Si tu
-        establecimiento te pide los del programa, estos van además, no en lugar
-        de aquellos.
+      {/* El aviso va arriba y no en letra chica: alguien va a copiar esta hoja
+          en un documento que se firma y tiene que saber qué está copiando. */}
+      <p className="mb-5 max-w-2xl rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-[var(--tierra-300)]">
+        No son los indicadores oficiales del programa. Son los de este proyecto,
+        escritos para poder mirarlos en clase.
       </p>
 
       <div className="space-y-3">

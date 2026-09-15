@@ -65,17 +65,10 @@ export default function RutaGenerada({
     return (
       <Hoja titulo="Armar la ruta de tu escuela" orden={3}>
         <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-          La ruta es el plan de clases del proyecto: qué se hace en cada
-          sesión, en qué orden y con qué. Se arma con la problemática que
-          elegiste, las asignaturas desde las que entras, los objetivos que
-          marcaste y el lugar que quedó ubicado en el mapa. Es lo único de esta
-          lámina que se fabrica para tu escuela y no sirve para ninguna otra.
-        </p>
-        <p className="mb-4 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-          La ruta llega con algunas partes en blanco, a propósito. Son las
-          decisiones que dependen de cosas que pasan en tu escuela y que
-          nosotros no tenemos cómo saber, así que en vez de rellenarlas a ojo
-          quedan marcadas para que las completes tú.
+          El plan de clases del proyecto: qué se hace en cada sesión, en qué
+          orden y con qué. Se arma con lo que elegiste en las láminas
+          anteriores, y llega con algunas partes en blanco a propósito, porque
+          dependen de cosas de tu escuela que no tenemos cómo saber.
         </p>
 
         {/* Sin sesión se dice aquí y no después de pulsar. Que el docente

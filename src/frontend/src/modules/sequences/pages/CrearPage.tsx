@@ -42,18 +42,18 @@ export default function CrearPage() {
     {
       id: "programa",
       marca: "I · Lo que pide el programa",
-      titulo: "Antes de salir, lo que ya está decidido",
+      titulo: "El curso y el tiempo que hay",
       bajada:
-        "Los cursos que tienes y cuántas clases hay de verdad para esto. Es lo que no se elige, y por eso conviene ponerlo primero.",
+        "Los cursos que tienes y cuántas clases hay de verdad para esto.",
       contenido: <PasoPrograma e={e} onCambio={setE} />,
       puedeAvanzar: true,
     },
     {
       id: "lugar",
       marca: "II · Lo que pone el lugar",
-      titulo: "Qué hay al otro lado de la puerta",
+      titulo: "El lugar y la problemática",
       bajada:
-        "Busca tu escuela por su nombre, elige la problemática y sus Objetivos de Aprendizaje, y prepara la clase previa a la salida.",
+        "Busca tu escuela, elige la problemática y sus Objetivos de Aprendizaje, y prepara la clase previa a la salida.",
       contenido: <PasoLugar e={e} onCambio={setE} />,
       puedeAvanzar: hayLugar,
       faltaPara: "Falta decir qué hay alrededor de la escuela.",
@@ -61,9 +61,9 @@ export default function CrearPage() {
     {
       id: "ruta",
       marca: "III · La ruta armada",
-      titulo: "Las sesiones, el curso y lo que vive ahí",
+      titulo: "La ruta armada",
       bajada:
-        "De los objetivos que marcaste y del lugar que describiste sale una ruta, con sus sesiones, su material, la evaluación que elegiste y lo que vive alrededor. Si no te convence, hay otras.",
+        "El plan de clases, el producto, los indicadores y los papeles de la salida. Todo sale de lo que ya elegiste.",
       contenido: (
         <Paso3
           e={e}

@@ -119,11 +119,11 @@ function Justificacion({ e }: { e: Expedicion }) {
   }
 
   return (
-    <Hoja titulo="La hoja que firma la dirección" orden={6}>
-      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Lo que hay que presentar, armado con lo que ya escribiste. No hay nada
-        nuevo que llenar: se imprime y se firma.
-      </p>
+    <Hoja
+      titulo="La hoja que firma la dirección"
+      orden={6}
+      resumen="Armada con lo que ya escribiste. No hay nada nuevo que llenar: se imprime y se firma."
+    >
 
       <div
         ref={hoja}
