@@ -108,12 +108,14 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
   const linea = "________________";
 
   return (
-    <Hoja titulo="Los permisos de la salida" orden={orden}>
+    <Hoja
+      titulo="Los permisos de la salida"
+      orden={orden}
+      resumen="El formulario de la Superintendencia y la autorización de apoderados, armados con lo que ya escribiste, más la lista de qué llevar."
+    >
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Una salida a terreno necesita dos documentos: el formulario de la
-        Superintendencia de Educación y la autorización de los apoderados. Casi
-        todos los campos salen de lo que ya está escrito aquí; los que no, van
-        con línea para completar.
+        Los campos salen de lo que ya escribiste. Los que llevan línea son los
+        que hay que completar a mano.
       </p>
 
       {/* ── Superintendencia ──────────────────────────────────────────── */}
@@ -225,8 +227,7 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
       <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
         <p className="rotulo text-[var(--crema)]/75">Qué tiene que llevar el curso</p>
         <p className="mt-1.5 text-[15px] leading-relaxed text-[var(--crema)]/78">
-          Va en la circular a las familias. Cambia con la estación y con el
-          terreno, así que están los dos casos y lo que depende del sitio.
+          Va en la circular a las familias.
         </p>
         <div className="mt-3.5 grid gap-3 sm:grid-cols-2">
           {QUE_LLEVAR.map((b) => (

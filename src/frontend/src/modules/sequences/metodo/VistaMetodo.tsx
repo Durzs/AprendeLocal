@@ -54,22 +54,15 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   const [abierto, ponerAbierto] = useState<string | null>(null);
 
   return (
-    <Hoja titulo="El método, etapa por etapa" orden={orden}>
-      <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Son seis etapas y sirven para proyectos muy distintos. Un curso puede
-        medir la contaminación de un río y terminar armando una campaña. Otro
-        puede catalogar el desierto florido y terminar montando una exposición
-        en la plaza. Las dos cosas pasan por estas mismas seis etapas.
-      </p>
-      <p className="mb-1 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        No dicen qué actividad hacer. Describen qué suele estar pasando en cada
-        tramo, qué aprende el curso ahí, y de quién acaba siendo cada parte.
-      </p>
-      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-        El orden es el que suele funcionar, y el peso de cada etapa cambia mucho
-        de un curso a otro. En la mayoría de los proyectos la primera se arma
-        entre todos, la segunda sale del docente y de la tercera en adelante la
-        va tomando el curso. Es una manera de repartirlo, no la única.
+    <Hoja
+      titulo="El método, etapa por etapa"
+      orden={orden}
+      resumen="Las seis etapas por las que pasa cualquier proyecto, con lo que aprende el curso en cada una y las preguntas para la sala."
+    >
+      <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+        No dicen qué actividad hacer: describen qué suele estar pasando en cada
+        tramo. El orden es el que suele funcionar y el peso de cada etapa cambia
+        de un curso a otro; es una manera de repartirlo, no la única.
       </p>
 
       <ol className="space-y-2">
@@ -285,9 +278,8 @@ export function ElegirFormato({
   return (
     <Hoja titulo="El producto y su destinatario" orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Esto lo decide el curso, después de volver del terreno y no antes: hasta
-        que no sepan qué encontraron, no pueden saber qué hacer con ello. Lo que
-        se marque aquí queda registrado para no perderlo de vista.
+        Lo decide el curso después de volver del terreno: hasta que no sepan qué
+        encontraron, no pueden saber qué hacer con ello.
       </p>
 
       {/* ── 1 · De qué clase es el destinatario ───────────────────────── */}
@@ -296,8 +288,6 @@ export function ElegirFormato({
       </p>
       <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
         Primero a quién y después qué, porque lo segundo depende de lo primero.
-        Estas son las cinco clases que aparecen siempre; la de ustedes es una de
-        estas, aunque el nombre sea otro.
       </p>
 
       <ul className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -324,9 +314,11 @@ export function ElegirFormato({
                 >
                   {f.nombre}
                 </span>
-                <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/75">
-                  {f.quienEs}
-                </span>
+                {activa && (
+                  <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/75">
+                    {f.quienEs}
+                  </span>
+                )}
               </button>
             </li>
           );
@@ -385,8 +377,7 @@ export function ElegirFormato({
         <div className="mt-3">
           <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
             Se contestan en la sala. De aquí sale la mitad de la decisión
-            siguiente: si en el sector no hay señal, no hay campaña en redes que
-            llegue, y el curso puede decir por qué la descartó.
+            siguiente.
           </p>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
             {RASGOS.map((r) => (
@@ -403,11 +394,9 @@ export function ElegirFormato({
                     })
                   }
                   placeholder={r.ejemplo}
+                  title={r.ayuda}
                   className="mt-2 min-h-11 w-full rounded-xl border border-[var(--crema)]/18 bg-transparent px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
                 />
-                <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/70">
-                  {r.ayuda}
-                </span>
               </label>
             ))}
           </div>
@@ -425,7 +414,7 @@ export function ElegirFormato({
             : "Elige arriba a quién le va a llegar y esta lista se ordena sola, marcando lo que a esa gente no le sirve."}
         </p>
 
-        <ul className="mt-3 space-y-2">
+        <ul className="mt-3 flex flex-wrap gap-2">
           {[...FORMATOS]
             .sort((a, b) => {
               if (!suFamilia) return 0;
@@ -443,42 +432,31 @@ export function ElegirFormato({
                     type="button"
                     onClick={() => onCambio({ formato: activo ? null : f.id })}
                     aria-pressed={activo}
-                    className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                    title={motivo ?? undefined}
+                    className={`min-h-11 rounded-full border px-4 text-sm transition ${
                       activo
-                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)]/[0.1]"
-                        : "border-[var(--crema)]/14 hover:border-[var(--crema)]/32"
+                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                        : motivo
+                          ? "border-[var(--crema)]/10 text-[var(--crema)]/45 line-through decoration-[var(--crema)]/25"
+                          : llega
+                            ? "border-[var(--tierra-600)]/45 text-[var(--crema-clara)] hover:border-[var(--tierra-600)]"
+                            : "border-[var(--crema)]/16 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
                     }`}
                   >
-                    <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <span
-                        className={`text-[15px] ${
-                          activo
-                            ? "text-[var(--tierra-300)]"
-                            : motivo
-                              ? "text-[var(--crema)]/55"
-                              : "text-[var(--crema-clara)]"
-                        }`}
-                      >
-                        {f.nombre}
-                      </span>
-                      {llega && (
-                        <span className="rounded-full bg-[var(--tierra-600)]/20 px-2 py-0.5 rotulo text-[var(--tierra-300)]">
-                          le llega
-                        </span>
-                      )}
-                    </span>
-                    {motivo && (
-                      <span className="mt-1.5 block text-sm leading-relaxed text-[var(--crema)]/70">
-                        {motivo}
-                      </span>
-                    )}
+                    {f.nombre}
                   </button>
                 </li>
               );
             })}
         </ul>
+        {formato && noLlega.has(formato) && (
+          <p className="mt-3 rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-2.5 text-sm leading-relaxed text-[var(--tierra-300)]">
+            {noLlega.get(formato)}
+          </p>
+        )}
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-          Si inventan uno que no está, mejor: esta lista no está para cerrar.
+          Lo tachado no le llega a esa gente; pasa el cursor para ver por qué.
+          Si inventan uno que no está, mejor: la lista no está para cerrar.
         </p>
       </div>
 
@@ -486,10 +464,10 @@ export function ElegirFormato({
 
       {/* Las preguntas de la sala van al final y no al principio: son para
           discutir una decisión que ya está tomada, no para tomarla a ciegas. */}
-      <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
-        <p className="rotulo text-[var(--crema)]/75">
-          Para discutirlo en la sala
-        </p>
+      <details className="mt-6 border-t border-[var(--crema)]/12 pt-5">
+        <summary className="min-h-11 cursor-pointer text-sm text-[var(--crema)]/78 hover:text-[var(--crema-clara)]">
+          Seis preguntas para discutirlo en la sala
+        </summary>
         <ul className="mt-2.5 space-y-1.5">
           {COMO_SE_ELIGE.map((q) => (
             <li
@@ -500,7 +478,7 @@ export function ElegirFormato({
             </li>
           ))}
         </ul>
-      </div>
+      </details>
     </Hoja>
   );
 }
