@@ -149,7 +149,7 @@ export const ETAPAS: Etapa[] = [
     estaListoCuando: [
       "Hay dos bandos y los dos tienen un argumento, no una corazonada",
       "Tú tampoco sabes la respuesta con seguridad",
-      "Las razones de cada lado quedaron escritas en la pizarra, y esa parte se tapa hasta la etapa 3",
+      "Las razones de cada lado quedaron escritas en la pizarra, y esa parte se tapa hasta que vuelvan del terreno",
     ],
     seCaeCuando:
       "Se empieza por el tema en vez de por el caso. En cuanto dices «hoy vamos a ver contaminación» el curso deja de leer y empieza a adivinar qué respuesta quieres.",

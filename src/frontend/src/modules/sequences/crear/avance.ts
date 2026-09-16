@@ -1,6 +1,7 @@
 import type { Expedicion } from "./expedicion";
 import type { RutaIA } from "./generar";
 import { RUTAS } from "../rutas/catalogo";
+import { BITACORA_VACIA, type Bitacora } from "../seguimiento/bitacora";
 
 /**
  * Por dónde va la ruta en la sala.
@@ -37,11 +38,49 @@ export type SemanaHecha = {
 
 export type Avance = {
   hechas: SemanaHecha[];
+  /**
+   * Por dónde va el método, etapa por etapa.
+   *
+   * Vive dentro del avance y no en su propia llave porque se guarda, se sube y
+   * se baja junto con lo demás: una sola columna, una sola sincronización, un
+   * solo sitio donde mirar cuando algo no cuadre. Lo que hay dentro está en
+   * §seguimiento/bitacora.ts.
+   *
+   * Las semanas de arriba y las etapas de aquí no son lo mismo, y por eso
+   * conviven. Las semanas son el calendario y las trae la ruta armada; las
+   * etapas son el método y valen igual con ruta o sin ella. Una etapa puede
+   * ocupar tres semanas o media clase.
+   */
+  bitacora: Bitacora;
   /** Cuándo se tocó el seguimiento por última vez. */
   ultimoToque: string | null;
 };
 
-export const AVANCE_VACIO: Avance = { hechas: [], ultimoToque: null };
+export const AVANCE_VACIO: Avance = {
+  hechas: [],
+  bitacora: BITACORA_VACIA,
+  ultimoToque: null,
+};
+
+/**
+ * Un avance guardado, con los campos que le falten puestos.
+ *
+ * Todo lo que se lee de `localStorage` o de la cuenta pasa por aquí. Un avance
+ * escrito antes de que existiera la bitácora vuelve sin ese campo, y la
+ * pantalla que lo recibe haría `bitacora[etapa]` sobre `undefined`. Mezclar
+ * contra el vacío en un solo sitio evita tener que acordarse de hacerlo en los
+ * tres que leen.
+ */
+export function normalizarAvance(crudo: unknown): Avance {
+  if (!crudo || typeof crudo !== "object") return { ...AVANCE_VACIO };
+  const a = crudo as Partial<Avance>;
+  return {
+    ...AVANCE_VACIO,
+    ...a,
+    hechas: Array.isArray(a.hechas) ? a.hechas : [],
+    bitacora: a.bitacora && typeof a.bitacora === "object" ? a.bitacora : {},
+  };
+}
 
 /** El día de hoy, en el formato corto que guardamos. */
 export function hoy(): string {
@@ -79,6 +118,7 @@ export function estaHecha(a: Avance, semana: number): boolean {
 export function alternar(a: Avance, semana: number, fecha = hoy()): Avance {
   const ya = estaHecha(a, semana);
   return {
+    ...a,
     hechas: ya
       ? a.hechas.filter((h) => h.semana !== semana)
       : [...a.hechas, { semana, fecha, nota: "" }].sort((x, y) => x.semana - y.semana),
@@ -89,6 +129,7 @@ export function alternar(a: Avance, semana: number, fecha = hoy()): Avance {
 /** Cambia la fecha de una semana ya marcada, para cuando se dio otro día. */
 export function corregirFecha(a: Avance, semana: number, fecha: string): Avance {
   return {
+    ...a,
     hechas: a.hechas.map((h) => (h.semana === semana ? { ...h, fecha } : h)),
     ultimoToque: new Date().toISOString(),
   };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { guardar, leer, type Expedicion } from "./expedicion";
-import { AVANCE_VACIO, type Avance } from "./avance";
+import { AVANCE_VACIO, normalizarAvance, type Avance } from "./avance";
 import { bajarUltima, masReciente, subir, type EstadoNube } from "./nube";
 
 /**
@@ -55,7 +55,7 @@ function escribirLocal(llave: string, valor: unknown): void {
 export function useExpedicion() {
   const [expedicion, ponerExpedicion] = useState<Expedicion>(() => leer());
   const [avance, ponerAvance] = useState<Avance>(() =>
-    leerLocal(LLAVE_AVANCE, AVANCE_VACIO)
+    normalizarAvance(leerLocal(LLAVE_AVANCE, AVANCE_VACIO))
   );
   const [estado, ponerEstado] = useState<EstadoNube>("sin_cuenta");
   const [bajada, ponerBajada] = useState(false);
@@ -76,7 +76,7 @@ export function useExpedicion() {
         const gana = masReciente(
           {
             expedicion: leer(),
-            avance: leerLocal(LLAVE_AVANCE, AVANCE_VACIO),
+            avance: normalizarAvance(leerLocal(LLAVE_AVANCE, AVANCE_VACIO)),
             tocada: leerLocal<string | null>(LLAVE_TOCADA, null),
           },
           remoto

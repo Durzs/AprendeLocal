@@ -11,14 +11,18 @@ import {
 import type { EstadoNube } from "./nube";
 
 /**
- * Por dónde va la ruta, semana a semana.
+ * El calendario de la ruta, semana a semana.
  *
- * El cuaderno terminaba cuando la ruta quedaba armada, y esa era la mitad del
- * trabajo. Una ruta de tres semanas se da en tres semanas: se sale a terreno
- * un martes, se vuelve con datos, la semana siguiente se arma el producto.
- * Entre una sesión y otra pasan siete días y otras cuatro asignaturas. Cuando
- * el docente vuelve a abrir esto, lo primero que necesita saber no es qué dice
- * la ruta —eso ya lo sabe— sino dónde la dejó.
+ * QUÉ LLEVA ESTA HOJA Y QUÉ LLEVA LA DE AL LADO
+ *
+ * Esta lleva las semanas que trae la ruta armada, que son el calendario, y
+ * contesta qué toca el martes. La bitácora de más arriba lleva las seis etapas
+ * del método y contesta en qué parte del proyecto está el curso. Una etapa
+ * puede ocupar tres semanas o media clase, así que ninguna de las dos se puede
+ * deducir de la otra.
+ *
+ * Esta llega plegada porque es una lista de casillas: se abre, se marca una y
+ * se cierra. La bitácora llega abierta porque hay algo que leer en ella.
  *
  * Marcar una semana es un clic y desmarcarla también. No hay confirmación ni
  * hay que explicar por qué: una semana que no se dio porque llovió y no se
@@ -44,11 +48,14 @@ export default function Seguimiento({
 
   if (!semanas.length) {
     return (
-      <Hoja titulo="Avance del proyecto" orden={7}>
+      <Hoja
+        titulo="El calendario de la ruta"
+        orden={8}
+        resumen="Las semanas aparecen cuando la ruta esté armada con el modelo."
+      >
         <p className="text-sm leading-relaxed text-[var(--crema)]/60">
-          El seguimiento aparece cuando la ruta tenga sus semanas. Ármala con
-          el modelo aquí arriba y vuelve: esta es la hoja a la que se vuelve
-          semana tras semana.
+          Las semanas salen de la ruta armada. Ármala con el modelo aquí arriba
+          y vuelve: aquí se van marcando a medida que se dan.
         </p>
       </Hoja>
     );
@@ -58,7 +65,17 @@ export default function Seguimiento({
   const siguiente = semanas.find((s) => !estaHecha(avance, s.semana));
 
   return (
-    <Hoja titulo="Avance del proyecto" orden={7}>
+    <Hoja
+      titulo="El calendario de la ruta"
+      orden={8}
+      resumen={
+        hechas === 0
+          ? `${semanas.length} semanas, ninguna marcada todavía.`
+          : `Van ${hechas} de ${semanas.length} semanas${
+              siguiente ? `. Sigue: ${siguiente.titulo}` : ""
+            }.`
+      }
+    >
       <p className="mb-5 text-sm leading-relaxed text-[var(--crema)]/70">
         {hechas === 0 ? (
           <>Todavía no empieza en la sala. Marca cada semana cuando se dé.</>
