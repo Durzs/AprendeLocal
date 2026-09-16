@@ -25,6 +25,7 @@ import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
 import Seguimiento from "./Seguimiento";
+import Bitacora from "../seguimiento/Bitacora";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
@@ -76,7 +77,22 @@ export default function Paso3({
           campos que el docente ya escribió. */}
       <Permisos e={e} />
 
-      {/* Lo único a lo que se vuelve semana tras semana. */}
+      {/* Lo único a lo que se vuelve semana tras semana, y por eso va al final:
+          las hojas de arriba se llenan una vez, esta se abre cada martes.
+
+          Son dos hojas y no una porque miden cosas distintas. La bitácora sigue
+          el método y contesta «en qué parte del proyecto estoy»; el calendario
+          sigue las semanas de la ruta armada y contesta «qué toca el martes».
+          La bitácora va abierta; el calendario, plegado, porque es una lista de
+          casillas que se marcan de a una y no hay nada que leer en él. */}
+      <Bitacora
+        e={e}
+        hojas={avance.bitacora}
+        onCambio={(b) => onAvance({ ...avance, bitacora: b })}
+        estado={estadoNube}
+        orden={7}
+      />
+
       <Seguimiento e={e} avance={avance} onCambio={onAvance} estado={estadoNube} />
     </div>
   );

@@ -4,7 +4,16 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { completitudPaso1, leer, type Expedicion } from "../../sequences/crear/expedicion";
-import { AVANCE_VACIO, resumen, semanasDe, estaHecha, type Avance } from "../../sequences/crear/avance";
+import {
+  AVANCE_VACIO,
+  estaHecha,
+  normalizarAvance,
+  resumen,
+  semanasDe,
+  type Avance,
+} from "../../sequences/crear/avance";
+import { cerradas, resumenBitacora } from "../../sequences/seguimiento/bitacora";
+import { ETAPAS } from "../../sequences/metodo/etapas";
 import { huecosPendientes } from "../../sequences/crear/generar";
 import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 
@@ -128,7 +137,7 @@ export default function EscritorioPage() {
     // domingo. Ver §avance.ts.
     try {
       const crudo = localStorage.getItem("aprendelocal:expedicion:avance");
-      if (crudo) setAvance({ ...AVANCE_VACIO, ...JSON.parse(crudo) });
+      if (crudo) setAvance(normalizarAvance(JSON.parse(crudo)));
     } catch {
       /* Ventana privada. Se muestra sin avance, que es lo mismo que sin empezar. */
     }
@@ -171,7 +180,12 @@ export default function EscritorioPage() {
   const faltan = expedicion?.rutaIA ? huecosPendientes(expedicion.rutaIA) : [];
   const etapa = LAMINAS[laminaDe(expedicion)];
 
-  // El seguimiento solo tiene algo que decir cuando la ruta ya tiene semanas.
+  // Por dónde va en la sala, en dos escalas. La del método vale siempre y es
+  // la que va primero: contesta en qué parte del proyecto está el curso. La de
+  // las semanas solo tiene algo que decir cuando la ruta ya está armada, y
+  // contesta qué toca el martes.
+  const etapas = expedicion ? cerradas(avance.bitacora) : 0;
+  const enMetodo = empezada ? resumenBitacora(avance.bitacora) : null;
   const semanas = expedicion ? semanasDe(expedicion) : [];
   const hechas = semanas.filter((s) => estaHecha(avance, s.semana)).length;
   const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
@@ -261,12 +275,21 @@ export default function EscritorioPage() {
                     falta por escribir porque, a partir de la primera semana
                     dada, esta es la pregunta: no qué me queda por planificar,
                     sino qué toca el martes. */}
-                {enSala && (
+                {enMetodo && (
                   <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-700">
                     <span className="rotulo rounded-full bg-white px-2.5 py-1.5 text-orange-700 shadow-sm">
-                      {hechas} de {semanas.length} semanas
+                      {etapas} de {ETAPAS.length} etapas
                     </span>
-                    {enSala}
+                    {enMetodo}
+                  </p>
+                )}
+
+                {/* El calendario va debajo y en voz más baja: dice qué toca el
+                    martes, que es útil, pero la pregunta de arriba es en qué
+                    parte del proyecto está el curso. */}
+                {enSala && (
+                  <p className="mt-2 text-sm text-slate-500">
+                    {hechas} de {semanas.length} semanas de la ruta. {enSala}
                   </p>
                 )}
 
