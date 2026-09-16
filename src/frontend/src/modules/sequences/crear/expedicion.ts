@@ -11,9 +11,16 @@
  * dependa de que nada de eso pase es pedir demasiado.
  */
 
-import type { RutaIA } from "./generar";
-
 const LLAVE = "aprendelocal:expedicion";
+
+/**
+ * Una clase del plan, con el título que le puso el docente.
+ *
+ * Antes las semanas venían de la ruta que armaba el modelo, así que un docente
+ * sin cuenta o sin señal no tenía calendario. Ahora las escribe él, que además
+ * es quien sabe si el 18 de septiembre le parte la unidad en dos.
+ */
+export type Semana = { id: string; titulo: string };
 
 /** Cómo el curso va a mostrar lo que aprendió. */
 export type Evaluacion =
@@ -142,13 +149,25 @@ export type Expedicion = {
   /** La que quedó al centro. Es la que el curso repite tres semanas. */
   preguntaGuia: string;
 
-  /* ── Paso 3, la ruta y el curso ──────────────────────────────────────── */
+  /* ── Paso 2, lo que solo sabe quien ha estado ahí ────────────────────── */
   /**
-   * La ruta armada para esta escuela, con los huecos que el docente llena.
-   * Cuando está puesta, manda sobre `rutaId`: la escrita pasa a ser el plan B.
+   * A quién de la comunidad le preguntan, con nombre si se sabe.
+   *
+   * Estos tres venían como huecos dentro de la ruta que armaba el modelo, y
+   * eran la única parte de esa ruta que no se podía generar: son justamente lo
+   * que el modelo no puede saber. Al sacar la ruta armada se quedaron, porque
+   * son ellos los que valían, y pasaron a ser campos del cuaderno como
+   * cualquier otro. Los tres salen impresos en los papeles de la salida.
    */
-  rutaIA: RutaIA | null;
-  rutaId: string | null;
+  preguntarA: string;
+  /** El punto exacto donde se para el curso, y cómo se llega. */
+  puntoDeSalida: string;
+  /** Qué hay que cuidar ahí. Es lo único que, si falta, alguien se lastima. */
+  queCuidar: string;
+
+  /* ── Paso 3, el plan de clases ───────────────────────────────────────── */
+  /** Las clases del plan, en orden, tituladas por el docente. */
+  semanas: Semana[];
 
   /* ── Paso 3, lo que decide el curso ──────────────────────────────────── */
   /**
@@ -205,8 +224,10 @@ export const VACIA: Expedicion = {
   ubicacion: "",
   preguntas: [],
   preguntaGuia: "",
-  rutaIA: null,
-  rutaId: null,
+  preguntarA: "",
+  puntoDeSalida: "",
+  queCuidar: "",
+  semanas: [],
   formato: null,
   destinatario: "",
   familiaDestinatario: null,

@@ -14,7 +14,6 @@ import {
 } from "../../sequences/crear/avance";
 import { cerradas, resumenBitacora } from "../../sequences/seguimiento/bitacora";
 import { ETAPAS } from "../../sequences/metodo/etapas";
-import { huecosPendientes } from "../../sequences/crear/generar";
 import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 
 /**
@@ -118,7 +117,10 @@ const LAMINAS = [
  */
 function laminaDe(e: Expedicion | null): number {
   if (!e) return 0;
-  if (e.rutaIA) return 3;
+  // La cuarta era «hay ruta armada por el modelo». Al retirarse esa ruta, lo
+  // que marca haber llegado a la última lámina es haber decidido lo que se
+  // decide ahí: qué van a construir y para quién.
+  if (e.formato || e.destinatario.trim() || e.semanas.length) return 3;
   if (e.preguntaGuia.trim()) return 2;
   if (e.ubicacion.trim() || e.entorno) return 1;
   return 0;
@@ -175,19 +177,31 @@ export default function EscritorioPage() {
       (expedicion.oa.length > 0 ||
         expedicion.ubicacion.trim() ||
         expedicion.preguntaGuia.trim() ||
-        expedicion.rutaIA)
+        expedicion.problemaId)
   );
-  const faltan = expedicion?.rutaIA ? huecosPendientes(expedicion.rutaIA) : [];
   const etapa = LAMINAS[laminaDe(expedicion)];
 
+  // Lo que falta, con nombre. Eran los cuatro huecos de la ruta que armaba el
+  // modelo; ahora son tres campos del cuaderno y el destinatario, que se elige
+  // junto con el formato. Los cuatro salen impresos en los papeles de la
+  // salida, así que faltan de verdad.
+  const faltan = expedicion
+    ? [
+        expedicion.destinatario.trim() ? null : "a quién le entregan",
+        expedicion.preguntarA.trim() ? null : "a quién le preguntan",
+        expedicion.puntoDeSalida.trim() ? null : "dónde se para el curso",
+        expedicion.queCuidar.trim() ? null : "qué hay que cuidar ahí",
+      ].filter(Boolean)
+    : [];
+
   // Por dónde va en la sala, en dos escalas. La del método vale siempre y es
-  // la que va primero: contesta en qué parte del proyecto está el curso. La de
-  // las semanas solo tiene algo que decir cuando la ruta ya está armada, y
-  // contesta qué toca el martes.
+  // la que va primero: contesta en qué parte del proyecto está el curso. La
+  // del calendario aparece cuando haya clases anotadas, y contesta qué toca el
+  // martes.
   const etapas = expedicion ? cerradas(avance.bitacora) : 0;
   const enMetodo = empezada ? resumenBitacora(avance.bitacora) : null;
   const semanas = expedicion ? semanasDe(expedicion) : [];
-  const hechas = semanas.filter((s) => estaHecha(avance, s.semana)).length;
+  const hechas = semanas.filter((s) => estaHecha(avance, s.id)).length;
   const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
 
   return (
@@ -257,13 +271,13 @@ export default function EscritorioPage() {
             <div className="animar-asoma mt-6 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 max-w-2xl">
                 <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
-                  {expedicion.rutaIA?.titulo ||
+                  {expedicion.problemaPropioNombre ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
                     "Una ruta sin nombre todavía"}
                 </h2>
 
-                {expedicion.rutaIA?.titulo && expedicion.preguntaGuia && (
+                {expedicion.problemaPropioNombre && expedicion.preguntaGuia && (
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {expedicion.preguntaGuia}
                   </p>
@@ -289,7 +303,7 @@ export default function EscritorioPage() {
                     parte del proyecto está el curso. */}
                 {enSala && (
                   <p className="mt-2 text-sm text-slate-500">
-                    {hechas} de {semanas.length} semanas de la ruta. {enSala}
+                    {hechas} de {semanas.length} clases dadas. {enSala}
                   </p>
                 )}
 
@@ -304,11 +318,12 @@ export default function EscritorioPage() {
                   {expedicion.oa.length === 0 && <Ficha>Faltan los objetivos</Ficha>}
                   {!expedicion.ubicacion.trim() && <Ficha>Falta el lugar</Ficha>}
                   {!expedicion.preguntaGuia.trim() && <Ficha>Falta la pregunta</Ficha>}
-                  {faltan.length > 0 && (
-                    <Ficha>
-                      {faltan.length} cosa{faltan.length === 1 ? "" : "s"} que pones tú
-                    </Ficha>
-                  )}
+                  {/* Con nombre y no contadas. «4 cosas que pones tú» obliga a
+                      entrar a averiguar cuáles son; «falta dónde se para el
+                      curso» se puede resolver o dejar pasar sin abrir nada. */}
+                  {faltan.map((f) => (
+                    <Ficha key={f}>Falta {f}</Ficha>
+                  ))}
                 </ul>
               </div>
 

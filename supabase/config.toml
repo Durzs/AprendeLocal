@@ -13,9 +13,9 @@ project_id = "aprendelocal"
 # para que sigan aplicándose las políticas RLS.
 verify_jwt = false
 
-[functions.generar-ruta]
-# Igual que la anterior: la invoca el navegador con la clave anónima, así que
-# el portón de Supabase la dejaría pasar de todos modos. La comprobación se
-# hace dentro para poder responder «entra con tu cuenta» en vez de un 401 seco,
-# y ahí mismo se aplica el tope diario por persona.
-verify_jwt = false
+# Aquí estaba `generar-ruta`, que le pedía al modelo el plan de clases de cada
+# escuela. Se retiró junto con la ruta armada: devolvía un plan por semanas que
+# repetía lo que ya dicen las seis etapas, más cuatro huecos que el docente
+# llenaba igual. Esos cuatro huecos eran lo único que valía y ahora son campos
+# del cuaderno. De paso, armar una ruta dejó de necesitar cuenta iniciada,
+# señal y una clave de Anthropic en los secretos del proyecto.

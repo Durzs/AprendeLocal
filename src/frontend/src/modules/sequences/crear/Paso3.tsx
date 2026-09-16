@@ -11,14 +11,19 @@
  * sin relación con lo que acababa de elegir dos pantallas antes.
  *
  * Ahora solo aparece lo que es de ESTE proyecto: el método por el que se guía,
- * qué van a construir los estudiantes, la ruta que arma el modelo con sus
- * datos y la hoja que firma la dirección. Las cuatro rutas escritas siguen en
- * el repositorio y se pueden leer, pero dejaron de empujarse encima de un
- * proyecto que no es el suyo.
+ * qué van a construir los estudiantes, con qué se evalúa y la hoja que firma la
+ * dirección. Las cuatro rutas escritas siguen en el repositorio y se pueden
+ * leer, pero dejaron de empujarse encima de un proyecto que no es el suyo.
  *
- * Y el seguimiento se fue de aquí. Esta lámina es de armar: se abre una vez,
- * se llena en una tarde y se cierra. Seguir el proyecto se hace todos los
- * martes, así que vive en su propia página y esta lámina solo tiene la puerta.
+ * DOS COSAS MÁS QUE SE FUERON DE AQUÍ
+ *
+ * La ruta que armaba el modelo, con su plan por semanas y sus cuatro huecos. El
+ * plan repetía lo que ya dicen las seis etapas, y los cuatro huecos, que eran
+ * lo que valía, pasaron a ser campos del cuaderno en la lámina anterior.
+ *
+ * Y el seguimiento. Esta lámina es de armar: se abre una vez, se llena en una
+ * tarde y se cierra. Seguir el proyecto se hace todos los martes, así que vive
+ * en su propia página y aquí solo queda la puerta.
  */
 
 import { useRef } from "react";
@@ -26,7 +31,6 @@ import { Link } from "react-router-dom";
 
 import { Hoja } from "./Campos";
 import { Copiar } from "./Copiar";
-import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
@@ -48,10 +52,11 @@ export default function Paso3({
           así que ocupa cinco líneas hasta que alguien abra una etapa. */}
       <VistaMetodo orden={3} />
 
-      {/* La ruta armada con sus datos. Es lo único de esta lámina que se
-          fabrica para esta escuela y no sirve para ninguna otra. */}
-      <RutaGenerada e={e} onCambio={onCambio} />
-
+      {/* Aquí iba la ruta que armaba el modelo, con su plan por semanas y sus
+          cuatro huecos. Se retiró: el plan repetía lo que ya dicen las seis
+          etapas, y los cuatro huecos, que eran lo que valía, pasaron a ser
+          campos del cuaderno. El plan de clases lo escribe el docente, en el
+          calendario de la página de seguimiento. */}
       <ElegirFormato
         formato={e.formato}
         destinatario={e.destinatario}
@@ -95,7 +100,7 @@ export default function Paso3({
  * su trabajo no cuenta hasta que el formulario lo apruebe.
  */
 function Entrega({ e }: { e: Expedicion }) {
-  const armada = Boolean(e.rutaIA || e.rutaId);
+  const armada = e.semanas.length > 0;
 
   return (
     <Hoja titulo="Cuando empiece en la sala" orden={7}>
@@ -106,8 +111,8 @@ function Entrega({ e }: { e: Expedicion }) {
       </p>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/70">
         {armada
-          ? "Se abre cuando se dé la primera clase, y se vuelve a ella el martes siguiente."
-          : "Se puede abrir desde ya, con la ruta a medio armar: las seis etapas del método no dependen de que la ruta esté lista."}
+          ? "Ahí está también el calendario, con las clases que anotaste. Se abre el día de la primera y se vuelve a ella el martes siguiente."
+          : "Ahí se anotan también las clases del plan, una por una y con el título que les pongas. Se puede abrir desde ya: las seis etapas del método no dependen de que el resto esté listo."}
       </p>
 
       <Link

@@ -426,7 +426,7 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
   const poner = (cambio: Partial<typeof r>) =>
     onCambio(ponerRegistro(b, "terreno", cambio));
 
-  const donde = e.rutaIA?.punto_de_salida?.trim() || e.ubicacion.trim();
+  const donde = e.puntoDeSalida.trim() || e.ubicacion.trim();
 
   return (
     <div>

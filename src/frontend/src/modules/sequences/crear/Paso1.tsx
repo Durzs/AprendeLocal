@@ -13,6 +13,7 @@ import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
 import { AntesDeSalir } from "../metodo/AntesDeSalir";
 import { DondeQueda } from "../metodo/DondeQueda";
+import { LaSalida } from "../metodo/LaSalida";
 import type { Expedicion } from "./expedicion";
 
 const CURSOS = ["5º", "6º", "7º", "8º"];
@@ -143,6 +144,11 @@ export function PasoLugar({ e, onCambio }: Props) {
       <ElegirProblema e={e} onCambio={onCambio} orden={5} />
 
       <AntesDeSalir e={e} onCambio={onCambio} orden={6} />
+
+      {/* Va al final de la lámina del lugar porque los tres campos son del
+          lugar, y porque se contestan mirando por la ventana o acordándose del
+          camino, no con la planificación al lado. */}
+      <LaSalida e={e} onCambio={onCambio} orden={7} />
     </div>
   );
 }

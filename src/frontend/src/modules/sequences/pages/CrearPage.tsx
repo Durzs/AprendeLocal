@@ -60,10 +60,10 @@ export default function CrearPage() {
     },
     {
       id: "ruta",
-      marca: "III · La ruta armada",
-      titulo: "La ruta armada",
+      marca: "III · Lo que queda armado",
+      titulo: "Lo que queda armado",
       bajada:
-        "El plan de clases, el producto, los indicadores y los papeles de la salida. Todo sale de lo que ya elegiste.",
+        "El producto, los indicadores y los papeles de la salida. Todo sale de lo que ya elegiste. El plan de clases se anota en el seguimiento, que es donde se marca a medida que se dan.",
       contenido: <Paso3 e={e} onCambio={setE} />,
     },
   ];

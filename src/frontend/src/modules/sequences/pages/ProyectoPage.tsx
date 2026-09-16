@@ -29,8 +29,8 @@
 
 import { Link, useNavigate } from "react-router-dom";
 
-import Seguimiento from "../crear/Seguimiento";
 import Bitacora from "../seguimiento/Bitacora";
+import Calendario from "../seguimiento/Calendario";
 import { useExpedicion } from "../crear/useExpedicion";
 import { problemaPorId } from "../metodo/problemas";
 
@@ -39,24 +39,15 @@ export default function ProyectoPage() {
 
   // El mismo enganche que usa el cuaderno, así que los dos leen y escriben el
   // mismo trabajo: lo que se marca aquí un martes está en `/crear` sin más.
-  const { expedicion: e, avance, estado, cambiarAvance } = useExpedicion();
+  const { expedicion: e, avance, estado, cambiar, cambiarAvance } = useExpedicion();
 
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
-  const titulo =
-    e.rutaIA?.titulo ||
-    e.problemaPropioNombre ||
-    problema?.nombre ||
-    e.preguntaGuia ||
-    "";
+  const titulo = e.problemaPropioNombre || problema?.nombre || e.preguntaGuia || "";
 
   // Hay proyecto cuando hay algo escrito, no por haber abierto la página una
   // vez. Es la misma regla que usa el escritorio.
   const hay = Boolean(
-    e.oa.length ||
-      e.ubicacion.trim() ||
-      e.preguntaGuia.trim() ||
-      e.problemaId ||
-      e.rutaIA
+    e.oa.length || e.ubicacion.trim() || e.preguntaGuia.trim() || e.problemaId
   );
 
   return (
@@ -106,11 +97,13 @@ export default function ProyectoPage() {
                 orden={1}
               />
 
-              <Seguimiento
+              {/* El calendario escribe en dos sitios: las clases son del plan
+                  y viven en la expedición, y cuáles se dieron es del avance. */}
+              <Calendario
                 e={e}
                 avance={avance}
-                onCambio={cambiarAvance}
-                estado={estado}
+                onExpedicion={cambiar}
+                onAvance={cambiarAvance}
               />
 
               {/* De vuelta a armar. Va abajo y en voz baja: se viene aquí a
