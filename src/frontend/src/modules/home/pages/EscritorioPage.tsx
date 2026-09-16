@@ -312,8 +312,32 @@ export default function EscritorioPage() {
                 </ul>
               </div>
 
+              {/* Dos puertas y no una, porque son dos momentos. El seguimiento
+                  va primero en cuanto el proyecto empezó en la sala: a partir
+                  de ahí, quien abre esto un martes viene a ver dónde quedó, no
+                  a seguir armando. */}
               <div className="flex shrink-0 flex-col gap-3">
-                <Boton a="/crear">Seguir con esta</Boton>
+                {etapas > 0 ? (
+                  <>
+                    <Boton a="/proyecto">Ver por dónde va</Boton>
+                    <Link
+                      to="/crear"
+                      className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
+                    >
+                      Abrir el cuaderno
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Boton a="/crear">Seguir con esta</Boton>
+                    <Link
+                      to="/proyecto"
+                      className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
+                    >
+                      Empezar el seguimiento
+                    </Link>
+                  </>
+                )}
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
                   Va {porcentajePaso1}% del primer paso. Queda guardada en este
                   computador, no en tu cuenta: en otro equipo no va a estar.

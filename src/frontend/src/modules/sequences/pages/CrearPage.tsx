@@ -33,7 +33,7 @@ export default function CrearPage() {
    * lo que se armó el viernes en la sala de profesores esté el lunes en la
    * casa. El hook lleva las dos y decide cuál gana al abrir.
    */
-  const { expedicion: e, avance, estado, cambiar: setE, cambiarAvance } = useExpedicion();
+  const { expedicion: e, cambiar: setE } = useExpedicion();
 
   const completo = completitudPaso1(e);
   const hayLugar = Boolean(e.entorno || e.ubicacion.trim());
@@ -64,15 +64,7 @@ export default function CrearPage() {
       titulo: "La ruta armada",
       bajada:
         "El plan de clases, el producto, los indicadores y los papeles de la salida. Todo sale de lo que ya elegiste.",
-      contenido: (
-        <Paso3
-          e={e}
-          onCambio={setE}
-          avance={avance}
-          onAvance={cambiarAvance}
-          estadoNube={estado}
-        />
-      ),
+      contenido: <Paso3 e={e} onCambio={setE} />,
     },
   ];
 
