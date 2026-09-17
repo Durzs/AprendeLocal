@@ -386,6 +386,20 @@ function ColumnaActividades({
   const hayProblema = Boolean(elegido || e.problemaPropio.trim() || e.problemaPropioNombre.trim());
   const [editando, ponerEditando] = useState<string | null>(null);
 
+  /**
+   * Guarda la actividad, y sus objetivos con ella.
+   *
+   * Esto último faltaba, y era el peor desajuste del cuaderno. El docente
+   * escribía su actividad, marcaba ahí los objetivos que cubre, guardaba, y el
+   * resto de la aplicación seguía diciendo que no tenía ninguno: el contador
+   * del escritorio, los indicadores, la hoja que firma la dirección y los dos
+   * permisos de la salida leen `e.oa`, y los de la actividad se quedaban
+   * dentro de ella. Para que aparecieran había que volver a elegirlos uno por
+   * uno en la columna de la derecha, cosa que nadie podía adivinar.
+   *
+   * Se unen y no se reemplazan: puede haber objetivos marcados que no vienen
+   * de ninguna actividad propia, y guardar una no es motivo para borrárselos.
+   */
   function guardar(a: ActividadPropia) {
     const existe = e.actividadesPropias.some((x) => x.id === a.id);
     onCambio({
@@ -393,6 +407,7 @@ function ColumnaActividades({
       actividadesPropias: existe
         ? e.actividadesPropias.map((x) => (x.id === a.id ? a : x))
         : [...e.actividadesPropias, a],
+      oa: [...new Set([...e.oa, ...a.oa])],
     });
   }
 

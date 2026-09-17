@@ -3,7 +3,7 @@
  *
  * Reemplaza el formulario largo que había antes: todo a la vista, todo
  * obligatorio, y la sensación de trámite antes de haber escrito una palabra.
- * Ahora son cuatro láminas, una cosa a la vez, y lo escrito se guarda solo
+ * Ahora son tres láminas, una cosa a la vez, y lo escrito se guarda solo
  * después de cada tecla.
  *
  * El paso uno viene partido en dos porque son dos conversaciones distintas:
@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import Diapositivas, { type Lamina } from "../crear/Diapositivas";
 import { PasoLugar, PasoPrograma } from "../crear/Paso1";
 import Paso3 from "../crear/Paso3";
-import { completitudPaso1 } from "../crear/expedicion";
+import { completitud } from "../crear/expedicion";
 import { useExpedicion } from "../crear/useExpedicion";
 
 export default function CrearPage() {
@@ -35,7 +35,7 @@ export default function CrearPage() {
    */
   const { expedicion: e, cambiar: setE } = useExpedicion();
 
-  const completo = completitudPaso1(e);
+  const completo = completitud(e);
   const hayLugar = Boolean(e.entorno || e.ubicacion.trim());
 
   const laminas: Lamina[] = [
@@ -79,7 +79,7 @@ export default function CrearPage() {
       {/* Lo escrito no se pierde al salir: se lee de vuelta al entrar. Se dice
           en voz baja, para que nadie tenga que averiguarlo probando. */}
       <p className="sr-only">
-        Llevas {completo}% del primer paso. Todo queda guardado en este
+        Llevas {completo}% del cuaderno. Todo queda guardado en este
         computador.
       </p>
     </>

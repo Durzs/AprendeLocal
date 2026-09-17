@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { supabase } from "../../../shared/lib/supabaseClient";
-import { completitudPaso1, leer, type Expedicion } from "../../sequences/crear/expedicion";
+import { completitud, leer, type Expedicion } from "../../sequences/crear/expedicion";
 import {
   AVANCE_VACIO,
   estaHecha,
@@ -63,16 +63,21 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  */
 
 /**
- * Las cuatro láminas del cuaderno, con el color de cada una.
+ * Las láminas del cuaderno, con el color de cada una.
  *
- * Los colores no son nuevos: son los mismos cuatro que la sección de los
- * dibujos usa en la portada, en el mismo orden. Un docente que vio el sitio
- * antes de tener cuenta ya los asoció a las cuatro etapas, y aquí los vuelve
- * a encontrar diciendo lo mismo.
+ * SON LAS QUE HAY, Y ANTES NO LO ERAN
  *
- * Lo que hace que esto no sea decoración es de dónde sale la lámina: de lo
- * que el docente tiene efectivamente escrito, no de un contador. El color
- * cambia cuando cambia su trabajo, y por eso significa algo.
+ * Aquí había cuatro y el cuaderno tiene tres, así que el escritorio anunciaba
+ * «Lámina 2 de 4» para un recorrido de tres. Peor todavía, la segunda decía
+ * «ya tienes los objetivos» cuando los objetivos se marcan justamente en la
+ * segunda, no antes: quien llegaba ahí leía que ya tenía hecho lo que estaba
+ * a punto de hacer. Ahora son las mismas tres, con el mismo nombre que les da
+ * el cuaderno.
+ *
+ * Los colores no son nuevos: vienen de la portada, en el mismo orden. Lo que
+ * hace que esto no sea decoración es de dónde sale la lámina: de lo que el
+ * docente tiene efectivamente escrito, no de un contador. El color cambia
+ * cuando cambia su trabajo, y por eso significa algo.
  */
 const LAMINAS = [
   {
@@ -80,7 +85,7 @@ const LAMINAS = [
     nombre: "El programa",
     fondo: "var(--tinta-950)",
     acento: "text-amber-300",
-    dice: "Arma la clase de esta unidad con el lugar donde está tu escuela.",
+    dice: "Los cursos que tienes y cuántas clases hay de verdad para esto.",
   },
   {
     numero: 2,
@@ -89,21 +94,14 @@ const LAMINAS = [
     // Sobre el terracota, el ámbar no se despega del fondo: van los dos al
     // mismo matiz y a la misma luz. El blanco sí se lee.
     acento: "text-white/85",
-    dice: "Ya tienes los objetivos. Falta contar qué hay al otro lado de la puerta.",
+    dice: "Busca tu escuela, elige la problemática y marca los objetivos que abre.",
   },
   {
     numero: 3,
-    nombre: "La pregunta",
-    fondo: "var(--tinta-800)",
-    acento: "text-amber-300",
-    dice: "Tienes el lugar. Ahora la pregunta que va a sostener las tres semanas.",
-  },
-  {
-    numero: 4,
-    nombre: "La ruta",
+    nombre: "Lo que queda armado",
     fondo: "#1e2a24",
     acento: "text-amber-300",
-    dice: "La ruta está armada. Queda ponerle lo que solo tú sabes de tu escuela.",
+    dice: "Qué van a construir y para quién, con qué se evalúa y los papeles de la salida.",
   },
 ] as const;
 
@@ -111,18 +109,17 @@ const LAMINAS = [
  * En qué lámina va, según lo que hay escrito.
  *
  * Se lee de atrás para adelante: la lámina es la última que alcanzó, no la
- * primera que le falta. Un docente que ya tiene la ruta armada pero borró el
- * lugar sigue estando en la cuatro, porque volver a mandarlo a la dos por un
- * campo vacío sería decirle que perdió el trabajo.
+ * primera que le falta. Un docente que ya decidió el producto pero borró el
+ * lugar sigue estando en la tercera, porque volver a mandarlo a la segunda por
+ * un campo vacío sería decirle que perdió el trabajo.
  */
 function laminaDe(e: Expedicion | null): number {
   if (!e) return 0;
-  // La cuarta era «hay ruta armada por el modelo». Al retirarse esa ruta, lo
-  // que marca haber llegado a la última lámina es haber decidido lo que se
-  // decide ahí: qué van a construir y para quién.
-  if (e.formato || e.destinatario.trim() || e.semanas.length) return 3;
-  if (e.preguntaGuia.trim()) return 2;
-  if (e.ubicacion.trim() || e.entorno) return 1;
+  // La última era «hay ruta armada por el modelo». Al retirarse esa ruta, lo
+  // que marca haber llegado ahí es haber decidido lo que se decide ahí: qué
+  // van a construir y para quién.
+  if (e.formato || e.destinatario.trim() || e.semanas.length) return 2;
+  if (e.ubicacion.trim() || e.entorno || e.problemaId || e.oa.length) return 1;
   return 0;
 }
 
@@ -171,7 +168,7 @@ export default function EscritorioPage() {
 
   // Una expedición cuenta como empezada cuando ya hay algo escrito, no por el
   // hecho de haber abierto la página una vez.
-  const porcentajePaso1 = expedicion ? completitudPaso1(expedicion) : 0;
+  const lleno = expedicion ? completitud(expedicion) : 0;
   const empezada = Boolean(
     expedicion &&
       (expedicion.oa.length > 0 ||
@@ -226,7 +223,7 @@ export default function EscritorioPage() {
             {etapa.dice}
           </p>
 
-          {/* Las cuatro láminas, para que el color no sea un misterio: se ve
+          {/* Las láminas, para que el color no sea un misterio: se ve
               cuál está encendida y cuántas quedan. Es la misma barra que la
               sección de los dibujos usa en la portada. */}
           <ol className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -354,8 +351,8 @@ export default function EscritorioPage() {
                   </>
                 )}
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
-                  Va {porcentajePaso1}% del primer paso. Queda guardada en este
-                  computador, no en tu cuenta: en otro equipo no va a estar.
+                  Va {lleno}% del cuaderno. Queda guardada en este computador, y
+                  también en tu cuenta si entraste con ella.
                 </p>
               </div>
             </div>
@@ -364,9 +361,9 @@ export default function EscritorioPage() {
               <div className="max-w-xl">
                 <h2 className="titulo text-xl text-slate-900 sm:text-2xl">Armar una ruta</h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  Cuatro láminas: lo que te toca pasar, lo que hay al otro lado
-                  de la puerta, la pregunta que la sostiene, y la ruta armada
-                  con sus documentos.
+                  Tres láminas: lo que te toca pasar, la problemática del lugar
+                  con los objetivos que abre, y lo que queda armado con sus
+                  documentos.
                 </p>
               </div>
               <Boton a="/crear">Empezar</Boton>

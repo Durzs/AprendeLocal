@@ -22,13 +22,14 @@ const LLAVE = "aprendelocal:expedicion";
  */
 export type Semana = { id: string; titulo: string };
 
-/** Cómo el curso va a mostrar lo que aprendió. */
-export type Evaluacion =
-  | "cuaderno"
-  | "presentacion"
-  | "producto"
-  | "rubrica"
-  | "observacion";
+/*
+ * Aquí estaban `Evaluacion`, `temasObligatorios` y `objetivos`. Los tres eran
+ * campos del formulario largo que el cuaderno reemplazó: ninguna pantalla los
+ * pedía ya, y `evaluacion` seguía contando para el porcentaje de avance, con
+ * lo que un cuaderno con todo lleno se quedaba en 90% para siempre sin decir
+ * qué faltaba. Cómo se evalúa se decide ahora con los indicadores y el formato
+ * del producto, que sí se piden.
+ */
 
 /** Dónde queda la escuela, en términos de lo que se puede caminar. */
 export type Entorno = "rio" | "bosque" | "campo" | "costa" | "cordillera" | "pueblo";
@@ -79,15 +80,17 @@ export type Expedicion = {
   sesiones: number | null;
   /** Minutos de cada clase. 45 y 90 son los dos casos de siempre. */
   duracionSesion: number | null;
-  temasObligatorios: string;
   /**
-   * Los códigos que marcó en la lista: «OA12_CN_5». Es la parte sugerida.
-   * De aquí sale la ruta que se le arma, así que no es un dato de adorno.
+   * Los códigos que quedaron marcados: «OA12_CN_5».
+   *
+   * Se marcan en la segunda lámina, dentro de la problemática, y de dos
+   * maneras: eligiéndolos en la tercera columna, o marcándolos dentro de una
+   * actividad propia, que al guardarse los suma aquí. Este es el único sitio
+   * del que leen los indicadores, la hoja que firma la dirección y los dos
+   * permisos de la salida, así que un objetivo que no llegue aquí es un
+   * objetivo que el docente marcó y no existe para el resto del cuaderno.
    */
   oa: string[];
-  /** Lo que él agrega con sus palabras. Es la parte que pone la escuela. */
-  objetivos: string;
-  evaluacion: Evaluacion[];
 
   /* ── Paso 1, la problemática ─────────────────────────────────────────── */
   /**
@@ -208,10 +211,7 @@ export const VACIA: Expedicion = {
   estudiantes: null,
   sesiones: null,
   duracionSesion: null,
-  temasObligatorios: "",
   oa: [],
-  objetivos: "",
-  evaluacion: [],
   problemaId: null,
   problemaPropioNombre: "",
   problemaPropio: "",
@@ -272,19 +272,44 @@ export function borrar(): void {
 }
 
 
-/** Cuánto lleva llenado el paso 1, para mostrarlo sin obligar a nada. */
-export function completitudPaso1(e: Expedicion): number {
+/**
+ * Cuánto lleva llenado el cuaderno, para mostrarlo sin obligar a nada.
+ *
+ * DOS COSAS QUE ESTABAN MAL
+ *
+ * Se llamaba `completitudPaso1` y contaba campos de las dos primeras láminas,
+ * así que en pantalla decía «va un 60% del primer paso» contando cosas que no
+ * están en el primer paso. De ahí salía el mensaje que mandaba a marcar los
+ * objetivos «en la primera lámina» cuando los objetivos se marcan en la
+ * segunda.
+ *
+ * Y contaba `evaluacion`, que ningún campo del cuaderno escribe desde hace
+ * varias versiones. El resultado era que un cuaderno con absolutamente todo
+ * lleno se quedaba en 90% para siempre, sin decir qué faltaba, porque lo que
+ * faltaba no se podía llenar.
+ *
+ * Se cuenta lo que el cuaderno pide de verdad, en el orden en que lo pide.
+ */
+export function completitud(e: Expedicion): number {
   const campos = [
+    /* Lámina 1 */
     e.docente,
     e.cursos.length ? "x" : "",
     e.estudiantes ? "x" : "",
     e.sesiones ? "x" : "",
-    e.oa.length ? "x" : "",
-    e.evaluacion.length ? "x" : "",
+    e.duracionSesion ? "x" : "",
+    /* Lámina 2 */
+    e.ubicacion,
+    e.entorno ?? "",
     e.problemaId || e.problemaPropioNombre || e.problemaPropio,
     e.asignaturas.length ? "x" : "",
-    e.entorno ?? "",
-    e.ubicacion,
+    e.oa.length ? "x" : "",
+    e.tecnicas.length ? "x" : "",
+    e.puntoDeSalida,
+    e.queCuidar,
+    /* Lámina 3 */
+    e.destinatario,
+    e.formato ?? "",
   ];
   const llenos = campos.filter((c) => String(c).trim().length > 0).length;
   return Math.round((llenos / campos.length) * 100);

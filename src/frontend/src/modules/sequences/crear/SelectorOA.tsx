@@ -4,16 +4,22 @@
  * El campo era un cuadro de texto vacío y decía «los códigos si los tienes a
  * mano». Eso obliga a acordarse del código o a ir a buscar el programa en otra
  * pestaña, que en un computador de escuela con una conexión mala es media
- * clase perdida. Aquí están los sesenta y dos de Ciencias Naturales de 5º a
- * 8º: se abre el curso, se marca lo que va a pasar y listo.
+ * clase perdida. Aquí están los de las seis asignaturas, de 5º a 8º: se abre
+ * el curso, se marca lo que va a pasar y listo.
  *
- * La lista se despliega por curso y adentro se agrupa por eje, que es como
- * están en el programa. Solo aparecen los cursos que el docente dijo tener en
- * la sala, porque nadie necesita ver los OA de 8º si su sala llega a 6º.
+ * La lista se despliega por curso y adentro se agrupa por asignatura y eje,
+ * que es como están en el programa. Solo aparecen los cursos que el docente
+ * dijo tener en la sala, porque nadie necesita ver los de 8º si su sala llega
+ * a 6º.
  *
- * Cada objetivo dice si ya hay una ruta escrita que lo cubra. Eso no es
- * decoración: es lo que después decide qué ruta se le arma, así que conviene
- * que lo sepa mientras elige y no al final.
+ * DÓNDE APARECE, Y POR QUÉ IMPORTA DÓNDE ESCRIBE
+ *
+ * En dos sitios de la misma lámina: en la tercera columna de la problemática,
+ * donde escribe en `Expedicion.oa`, y dentro del formulario de una actividad
+ * propia, donde escribe en la actividad. Lo segundo no llegaba a lo primero, y
+ * el docente marcaba objetivos en su actividad que el resto del cuaderno no
+ * veía; ahora la actividad los suma al guardarse. Ver `guardar` en
+ * §ElegirProblema.tsx.
  */
 
 import { useMemo, useState } from "react";
@@ -40,15 +46,12 @@ export default function SelectorOA({
   cursos,
   elegidos,
   onElegir,
-  conRuta = new Set<string>(),
 }: {
   /** Los cursos que el docente marcó arriba: «5º», «6º»… */
   cursos: string[];
   /** Códigos ya marcados. */
   elegidos: string[];
   onElegir: (codigos: string[]) => void;
-  /** Códigos que alguna ruta escrita ya cubre. */
-  conRuta?: Set<string>;
 }) {
   const [busqueda, setBusqueda] = useState("");
   const [abierto, setAbierto] = useState<NivelOA | null>(null);
@@ -160,7 +163,6 @@ export default function SelectorOA({
                       key={o.codigo}
                       oa={o}
                       marcado={elegidos.includes(o.codigo)}
-                      tieneRuta={conRuta.has(o.codigo)}
                       primeroDelEje={i === 0 || vistos[i - 1]?.eje !== o.eje}
                       onAlternar={() => alternar(o.codigo)}
                     />
@@ -173,8 +175,9 @@ export default function SelectorOA({
       </div>
 
       <p className="mt-2.5 text-xs leading-relaxed text-[var(--crema)]/45">
-        Son los de Ciencias Naturales y Matemática de las Bases Curriculares.
-        Marca los que vas a pasar: de ahí sale la ruta que se te arma después.
+        Son los de las Bases Curriculares, en las seis asignaturas. Marca los
+        que vas a pasar: de ahí salen los indicadores con que se evalúa y lo
+        que se cita en la hoja que firma la dirección.
       </p>
     </div>
   );
@@ -183,13 +186,11 @@ export default function SelectorOA({
 function Objetivo({
   oa,
   marcado,
-  tieneRuta,
   primeroDelEje,
   onAlternar,
 }: {
   oa: OA;
   marcado: boolean;
-  tieneRuta: boolean;
   primeroDelEje: boolean;
   onAlternar: () => void;
 }) {
@@ -223,11 +224,6 @@ function Objetivo({
             <span className="font-mono text-[11px] font-semibold text-[var(--tierra-600)]">
               OA {oa.n}
             </span>
-            {tieneRuta && (
-              <span className="rounded bg-[var(--crema)]/12 px-1.5 py-0.5 rotulo text-[var(--crema)]/70">
-                hay ruta
-              </span>
-            )}
           </span>
           <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/80">
             {oa.texto}
