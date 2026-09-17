@@ -110,7 +110,7 @@ export default function ProjectsSection() {
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 {t(
                   "home.build.outBody",
-                  "La ruta que se arma sale de los objetivos que marcaste, y te dice cuáles cubre y cuáles no. Los datos de especies vienen de iNaturalist y GBIF."
+                  "Los documentos salen de los objetivos que marcaste y de lo que escribiste del lugar, sin volver a pedírtelo. Los datos de especies vienen de iNaturalist y GBIF."
                 )}
               </p>
             </div>

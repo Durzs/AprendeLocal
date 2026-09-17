@@ -34,16 +34,13 @@ export type Semana = { id: string; titulo: string };
 /** Dónde queda la escuela, en términos de lo que se puede caminar. */
 export type Entorno = "rio" | "bosque" | "campo" | "costa" | "cordillera" | "pueblo";
 
-export type PreguntaOrigen = "propuesta" | "docente";
-
-/** Una pregunta candidata a sostener la ruta. */
-export type Pregunta = {
-  id: string;
-  texto: string;
-  /** `propuesta` la escribió el sistema; `docente` la escribió o reescribió él. */
-  origen: PreguntaOrigen;
-  elegida: boolean;
-};
+/*
+ * Aquí estaban `Pregunta` y `PreguntaOrigen`, las candidatas que el sistema
+ * proponía para que el docente las corrigiera. La lámina que las mostraba se
+ * retiró y el arreglo se quedó guardándose vacío en cada expedición, sin que
+ * nadie lo escribiera ni lo leyera. La pregunta que sí importa es una sola y
+ * es `preguntaGuia`.
+ */
 
 /** Una actividad escrita por el docente, con sus objetivos. */
 export type ActividadPropia = {
@@ -147,9 +144,18 @@ export type Expedicion = {
   entorno: Entorno | null;
   ubicacion: string;
 
-  /* ── Paso 2, las preguntas ───────────────────────────────────────────── */
-  preguntas: Pregunta[];
-  /** La que quedó al centro. Es la que el curso repite tres semanas. */
+  /**
+   * La pregunta que sostiene el proyecto y que el curso repite hasta el final.
+   *
+   * Se escribe en la etapa 1 de la bitácora, que es donde ocurre: sale de leer
+   * la problemática con el curso, no de escribirla un domingo.
+   *
+   * Aquí al lado había un `preguntas: Pregunta[]`, con las candidatas que el
+   * sistema proponía y el docente corregía. Esa lámina se retiró y el arreglo
+   * se quedó: nadie lo escribía y nadie lo leía. Peor le fue a esta, que se
+   * leía en ocho sitios y no se escribía en ninguno, así que el escritorio
+   * decía «Falta la pregunta» para siempre y no había dónde ponerla.
+   */
   preguntaGuia: string;
 
   /* ── Paso 2, lo que solo sabe quien ha estado ahí ────────────────────── */
@@ -222,7 +228,6 @@ export const VACIA: Expedicion = {
   tecnicas: [],
   entorno: null,
   ubicacion: "",
-  preguntas: [],
   preguntaGuia: "",
   preguntarA: "",
   puntoDeSalida: "",

@@ -83,6 +83,7 @@ const INSTRUMENTOS: Record<
     e: Expedicion;
     b: Hojas;
     onCambio: (b: Hojas) => void;
+    onExpedicion: (e: Expedicion) => void;
   }) => React.ReactNode
 > = {
   problematica: InstrumentoProblematica,
@@ -115,12 +116,15 @@ export default function Bitacora({
   e,
   hojas,
   onCambio,
+  onExpedicion,
   estado,
   orden = 7,
 }: {
   e: Expedicion;
   hojas: Hojas;
   onCambio: (b: Hojas) => void;
+  /** Lo poco que un instrumento escribe fuera de la bitácora: la pregunta guía. */
+  onExpedicion: (e: Expedicion) => void;
   estado: EstadoNube;
   orden?: number;
 }) {
@@ -202,7 +206,7 @@ export default function Bitacora({
 
         {/* El instrumento propio de esta etapa. */}
         <div className="mt-6 border-t border-[var(--crema)]/12 pt-6">
-          {INSTRUMENTOS[etapa.id]?.({ e, b: hojas, onCambio })}
+          {INSTRUMENTOS[etapa.id]?.({ e, b: hojas, onCambio, onExpedicion })}
         </div>
 
         {/* ── Las condiciones de término ──────────────────────────────── */}

@@ -93,6 +93,7 @@ export default function ProyectoPage() {
                 e={e}
                 hojas={avance.bitacora}
                 onCambio={(b) => cambiarAvance({ ...avance, bitacora: b })}
+                onExpedicion={cambiar}
                 estado={estado}
                 orden={1}
               />

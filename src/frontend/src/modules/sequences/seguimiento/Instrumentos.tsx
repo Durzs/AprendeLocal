@@ -50,6 +50,12 @@ type Props = {
   e: Expedicion;
   b: Bitacora;
   onCambio: (b: Bitacora) => void;
+  /**
+   * Para lo poco que un instrumento escribe en la expedición y no en la
+   * bitácora. Por ahora es solo la pregunta guía, que es del proyecto y no de
+   * una etapa: sale en la 1 y se sigue leyendo en todas las demás.
+   */
+  onExpedicion: (e: Expedicion) => void;
 };
 
 /* ── Piezas compartidas ────────────────────────────────────────────────── */
@@ -163,7 +169,7 @@ function Falta({ children }: { children: React.ReactNode }) {
  * parte: las etapas se han renumerado una vez y las frases con el número
  * dentro se quedaron mintiendo.
  */
-export function InstrumentoProblematica({ e, b, onCambio }: Props) {
+export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props) {
   const r = hojaDe(b, "problematica").registro;
   const poner = (cambio: Partial<typeof r>) =>
     onCambio(ponerRegistro(b, "problematica", cambio));
@@ -177,16 +183,33 @@ export function InstrumentoProblematica({ e, b, onCambio }: Props) {
     <div>
       <Rotulo>La pregunta que los divide</Rotulo>
       <Ayuda>
-        Escribe qué sostiene cada mitad de la sala y cuántos hay en cada una.
-        Queda tapado hasta que vuelvan del terreno, que es donde se compara con
-        lo que encontraron.
+        La que sale de leer la problemática con el curso, y la que van a
+        repetir hasta el final. Debajo, qué sostiene cada mitad de la sala y
+        cuántos hay en cada una: eso queda tapado hasta que vuelvan del
+        terreno, que es donde se compara con lo que encontraron.
       </Ayuda>
 
-      {e.preguntaGuia.trim() && (
-        <p className="mt-3 rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-[15px] leading-relaxed text-[var(--crema-clara)]">
-          «{e.preguntaGuia}»
-        </p>
-      )}
+      {/* La pregunta se escribe aquí y en ningún otro sitio.
+
+          Hasta ahora se leía en ocho sitios —el escritorio, el título de la
+          página del proyecto, esta misma tarjeta— y no había pantalla donde
+          escribirla: se quedó sin dueño cuando se retiró la lámina de las
+          preguntas propuestas. El escritorio decía «Falta la pregunta» para
+          siempre y aquí salía un hueco donde debía ir lo que sostiene el
+          proyecto entero.
+
+          Va en la etapa 1 y no en el cuaderno porque es donde ocurre: la
+          pregunta sale de leer la problemática con el curso, no de escribirla
+          un domingo. Se puede cambiar después, que es lo que suele pasar la
+          primera semana. */}
+      <label className="mt-3 block">
+        <span className="sr-only">La pregunta que sostiene el proyecto</span>
+        <Texto
+          value={e.preguntaGuia}
+          onChange={(ev) => onExpedicion({ ...e, preguntaGuia: ev.target.value })}
+          placeholder="¿Está contaminado el estero, o solo turbio porque arrastra tierra?"
+        />
+      </label>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <Lado
