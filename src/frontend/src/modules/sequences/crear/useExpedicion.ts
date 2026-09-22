@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { guardar, leer, type Expedicion } from "./expedicion";
 import { AVANCE_VACIO, normalizarAvance, type Avance } from "./avance";
+import { llaveDeSede } from "../../../shared/sede";
 import { bajarUltima, masReciente, subir, type EstadoNube } from "./nube";
 
 /**
@@ -31,9 +32,14 @@ import { bajarUltima, masReciente, subir, type EstadoNube } from "./nube";
 const ESPERA_MS = 1500;
 
 /** La marca de cuándo se tocó por última vez en este navegador. */
-const LLAVE_TOCADA = "aprendelocal:expedicion:tocada";
-const LLAVE_AVANCE = "aprendelocal:expedicion:avance";
-const LLAVE_ID = "aprendelocal:expedicion:id";
+/*
+ * Son funciones y no constantes porque dependen de la edición activa: cada
+ * una guarda su trabajo aparte. Ver `llaveDeSede` en §sede.ts. La página que
+ * usa este enganche lo vuelve a montar al cambiar de edición.
+ */
+const LLAVE_TOCADA = () => llaveDeSede("aprendelocal:expedicion:tocada");
+export const LLAVE_AVANCE = () => llaveDeSede("aprendelocal:expedicion:avance");
+const LLAVE_ID = () => llaveDeSede("aprendelocal:expedicion:id");
 
 function leerLocal<T>(llave: string, porDefecto: T): T {
   try {
@@ -55,12 +61,12 @@ function escribirLocal(llave: string, valor: unknown): void {
 export function useExpedicion() {
   const [expedicion, ponerExpedicion] = useState<Expedicion>(() => leer());
   const [avance, ponerAvance] = useState<Avance>(() =>
-    normalizarAvance(leerLocal(LLAVE_AVANCE, AVANCE_VACIO))
+    normalizarAvance(leerLocal(LLAVE_AVANCE(), AVANCE_VACIO))
   );
   const [estado, ponerEstado] = useState<EstadoNube>("sin_cuenta");
   const [bajada, ponerBajada] = useState(false);
 
-  const id = useRef<string | null>(leerLocal(LLAVE_ID, null));
+  const id = useRef<string | null>(leerLocal(LLAVE_ID(), null));
   const reloj = useRef<ReturnType<typeof setTimeout> | null>(null);
   // El primer render no debe subir nada: no ha cambiado nada todavía, y
   // subir al abrir crearía una fila por cada visita a la página.
@@ -76,18 +82,18 @@ export function useExpedicion() {
         const gana = masReciente(
           {
             expedicion: leer(),
-            avance: normalizarAvance(leerLocal(LLAVE_AVANCE, AVANCE_VACIO)),
-            tocada: leerLocal<string | null>(LLAVE_TOCADA, null),
+            avance: normalizarAvance(leerLocal(LLAVE_AVANCE(), AVANCE_VACIO)),
+            tocada: leerLocal<string | null>(LLAVE_TOCADA(), null),
           },
           remoto
         );
         id.current = gana.id;
-        escribirLocal(LLAVE_ID, gana.id);
+        escribirLocal(LLAVE_ID(), gana.id);
         if (gana.vieneDeLaNube) {
           ponerExpedicion(gana.expedicion);
           ponerAvance(gana.avance);
           guardar(gana.expedicion);
-          escribirLocal(LLAVE_AVANCE, gana.avance);
+          escribirLocal(LLAVE_AVANCE(), gana.avance);
         }
         ponerEstado("guardado");
       }
@@ -105,15 +111,15 @@ export function useExpedicion() {
       return;
     }
     guardar(expedicion);
-    escribirLocal(LLAVE_AVANCE, avance);
-    escribirLocal(LLAVE_TOCADA, new Date().toISOString());
+    escribirLocal(LLAVE_AVANCE(), avance);
+    escribirLocal(LLAVE_TOCADA(), new Date().toISOString());
 
     if (reloj.current) clearTimeout(reloj.current);
     reloj.current = setTimeout(async () => {
       ponerEstado("guardando");
       const r = await subir(expedicion, avance, id.current);
       id.current = r.id;
-      escribirLocal(LLAVE_ID, r.id);
+      escribirLocal(LLAVE_ID(), r.id);
       ponerEstado(r.estado);
     }, ESPERA_MS);
 

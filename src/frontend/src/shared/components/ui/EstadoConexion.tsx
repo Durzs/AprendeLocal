@@ -15,6 +15,7 @@
 import { useEffect, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { CloudOff, Download, RefreshCw } from "lucide-react";
+import { useTx } from "../../tx";
 
 /** El evento de instalación no está en la librería de tipos del navegador. */
 type EventoInstalacion = Event & {
@@ -23,6 +24,7 @@ type EventoInstalacion = Event & {
 };
 
 export default function EstadoConexion() {
+  const tx = useTx();
   const [sinRed, setSinRed] = useState(
     typeof navigator === "undefined" ? false : !navigator.onLine
   );
@@ -83,8 +85,16 @@ export default function EstadoConexion() {
         >
           <CloudOff className="h-4 w-4 shrink-0" aria-hidden />
           <span>
-            <strong>Sin señal.</strong> Puedes seguir trabajando: lo que anotes se
-            guarda y se envía cuando vuelva la conexión.
+            {tx(
+              <>
+                <strong>Sin señal.</strong> Puedes seguir trabajando: lo que anotes
+                se guarda y se envía cuando vuelva la conexión.
+              </>,
+              <>
+                <strong>Sem sinal.</strong> Você pode continuar trabalhando: o que
+                anotar fica salvo e é enviado quando a conexão voltar.
+              </>
+            )}
           </span>
         </div>
       )}
@@ -92,20 +102,22 @@ export default function EstadoConexion() {
       {hayVersionNueva && (
         <div className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-lg">
           <RefreshCw className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
-          <span className="flex-1 text-slate-800">Hay una versión nueva.</span>
+          <span className="flex-1 text-slate-800">
+            {tx("Hay una versión nueva.", "Há uma versão nova.")}
+          </span>
           <button
             type="button"
             onClick={() => updateServiceWorker(true)}
             className="shrink-0 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white"
           >
-            Actualizar
+            {tx("Actualizar", "Atualizar")}
           </button>
           <button
             type="button"
             onClick={() => setHayVersionNueva(false)}
             className="shrink-0 text-xs font-semibold text-slate-500 hover:text-slate-800"
           >
-            Ahora no
+            {tx("Ahora no", "Agora não")}
           </button>
         </div>
       )}
@@ -114,21 +126,24 @@ export default function EstadoConexion() {
         <div className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm shadow-lg">
           <Download className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
           <span className="flex-1 text-slate-800">
-            Instálala para usarla sin internet en terreno.
+            {tx(
+              "Instálala para usarla sin internet en terreno.",
+              "Instale para usar sem internet no campo."
+            )}
           </span>
           <button
             type="button"
             onClick={instalar}
             className="shrink-0 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white"
           >
-            Instalar
+            {tx("Instalar", "Instalar")}
           </button>
           <button
             type="button"
             onClick={() => setInstalador(null)}
             className="shrink-0 text-xs font-semibold text-slate-500 hover:text-slate-800"
           >
-            Ahora no
+            {tx("Ahora no", "Agora não")}
           </button>
         </div>
       )}

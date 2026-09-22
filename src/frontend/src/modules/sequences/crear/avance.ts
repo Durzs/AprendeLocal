@@ -1,5 +1,6 @@
 import type { Expedicion, Semana } from "./expedicion";
 import { BITACORA_VACIA, type Bitacora } from "../seguimiento/bitacora";
+import type { Idioma } from "../../../shared/tx";
 
 /**
  * Por dónde va el proyecto en la sala, en dos escalas.
@@ -179,24 +180,32 @@ export function corregirFecha(a: Avance, semana: string, fecha: string): Avance 
  * delante «0 de 1 clases dadas» y esto agregaba «Son 1 clases»: el mismo
  * número dos veces, y con el plural roto las dos.
  */
-export function resumen(e: Expedicion, a: Avance): string | null {
+export function resumen(e: Expedicion, a: Avance, idioma: Idioma = "es"): string | null {
   const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
   const n = semanas.length;
   if (!n) return null;
+  const T = (es: string, pt: string) => (idioma === "pt" ? pt : es);
 
   const hechas = semanas.filter((s) => estaHecha(a, s.id)).length;
-  const clases = (k: number) => (k === 1 ? "clase" : "clases");
+  const clases = (k: number) => (k === 1 ? T("clase", "aula") : T("clases", "aulas"));
 
   if (hechas === 0) {
     return n === 1
-      ? "Hay una clase anotada y todavía no se da."
-      : `Hay ${n} clases anotadas y todavía no se da ninguna.`;
+      ? T("Hay una clase anotada y todavía no se da.", "Há uma aula anotada e ainda não foi dada.")
+      : T(
+          `Hay ${n} clases anotadas y todavía no se da ninguna.`,
+          `Há ${n} aulas anotadas e nenhuma foi dada ainda.`
+        );
   }
   if (hechas === n) {
-    return n === 1 ? "La clase anotada ya se dio. Queda el informe." : `Se dieron las ${n} clases. Queda el informe.`;
+    return n === 1
+      ? T("La clase anotada ya se dio. Queda el informe.", "A aula anotada já foi dada. Falta o relatório.")
+      : T(`Se dieron las ${n} clases. Queda el informe.`, `As ${n} aulas foram dadas. Falta o relatório.`);
   }
 
   const siguiente = semanas.find((s) => !estaHecha(a, s.id));
-  const van = `Van ${hechas} de ${n} ${clases(n)}.`;
-  return siguiente && siguiente.titulo.trim() ? `${van} Sigue: ${siguiente.titulo}.` : van;
+  const van = T(`Van ${hechas} de ${n} ${clases(n)}.`, `${hechas} de ${n} ${clases(n)} dadas.`);
+  return siguiente && siguiente.titulo.trim()
+    ? `${van} ${T("Sigue", "Próxima")}: ${siguiente.titulo}.`
+    : van;
 }

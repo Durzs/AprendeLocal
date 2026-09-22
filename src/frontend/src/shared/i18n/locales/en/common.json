@@ -46,7 +46,9 @@
       "contact": "Contact",
       "terms": "Terms of Use"
     },
-    "copyright": "© 2025 AprendeLocal. A platform dedicated to STEM education."
+    "copyright": "© 2025 AprendeLocal. A platform dedicated to STEM education.",
+    "derechos": "All rights reserved.",
+    "nuevaPestana": "(opens in a new tab)"
   },
   "header": {
     "brandName": "AprendeLocal",
@@ -298,7 +300,7 @@
   "home": {
     "hero": {
       "title": "Your territory is your best laboratory",
-      "subtitle": "Build a project with your class around something happening near your school: the stream, the hill, the litter by the road. With the curriculum objectives marked and the field-trip paperwork ready to sign.",
+      "subtitle": "Build a project with your class around something happening near your school: the stream, the hillside, the litter on the road. With the curriculum objectives ticked and the field-trip paperwork ready to sign.",
       "ctaStart": "Build my first route",
       "ctaExplore": "See how it works",
       "ctaStartAria": "Open the notebook to build a route",
@@ -366,10 +368,10 @@
       "level": "Level"
     },
     "cta": {
-      "title": "Ready to transform your learning?",
-      "subtitle": "Join thousands of students applying STEM in real projects through maker culture",
-      "button": "Start Maker Journey",
-      "buttonAria": "Start Maker Journey"
+      "title": "What's within walking distance of your school?",
+      "subtitle": "Start there. The notebook walks with you from the curriculum objectives to the day your class hands its work to someone in the community.",
+      "button": "Open the notebook",
+      "buttonAria": "Open the notebook to build a route"
     },
     "puzzle": {
       "title": "Build your STEM station",
@@ -494,18 +496,65 @@
       }
     },
     "contact": {
-      "badge": "Contact & Partnerships",
+      "badge": "Contact",
       "title": "Want to bring AprendeLocal to your school or community?",
-      "subtitle": "We support teachers, principals, and communities with open pedagogical tools, maker guides, and local science project mentorship.",
+      "subtitle": "We support teachers, principals and communities with ready-written lessons, printable documents and field trips around the school.",
       "formTitle": "Send us a message",
-      "formSubtitle": "Fill out the form and our team will get in touch with you.",
+      "formSubtitle": "Fill in the form and we'll reply to your email.",
       "name": "Name",
       "email": "Email",
       "role": "Role / Institution",
       "message": "Message or Territory of Interest",
       "send": "Send Message",
-      "successTitle": "Message received!",
-      "successMessage": "Thank you for reaching out. We will get back to you shortly."
+      "successTitle": "Message received",
+      "successMessage": "Got it. We'll reply to this same email.",
+      "mailTitle": "We opened your email",
+      "mailBody": "The message is written in your email app and you just need to press send. If it didn't open, write to:",
+      "sending": "Sending…",
+      "privacidad": "Your name and email are stored only to answer this message. They're not shared with anyone and we won't add you to any list. To have them deleted, write to",
+      "correoDirecto": "Direct email",
+      "zona": "Pilot region",
+      "phNombre": "Your name",
+      "phCorreo": "you@school.org",
+      "phRol": "E.g. rural school teacher, principal, researcher",
+      "phMensaje": "Tell us about your school or the project you'd like to build…",
+      "asunto": "message from the website"
+    },
+    "whatIs": {
+      "title": "What is AprendeLocal?",
+      "p1": "AprendeLocal is a platform and a teaching method that lets teachers and schools turn their own surroundings (rivers, forests, watersheds, soils) into a living science lab.",
+      "p2": "Through complete teaching sequences aligned with the official curriculum, students investigate real social and environmental problems, take field measurements with simple tools and hand their findings to the school community and families.",
+      "pilares": [
+        "Living territory",
+        "Science",
+        "Teaching routes",
+        "Community impact"
+      ]
+    },
+    "build": {
+      "title": "The route is built from your place, not picked from a list",
+      "subtitle": "Three steps. The platform brings one part and you write the other, because nobody else knows the stream behind your school.",
+      "pasos": [
+        {
+          "titulo": "What is already decided",
+          "cuerpo": "Your classes, the lessons you have and the curriculum objectives you need to cover. You tick them from a list instead of writing them from memory.",
+          "pone": "From the curriculum"
+        },
+        {
+          "titulo": "What lies beyond the school gate",
+          "cuerpo": "What can be reached on foot, what it's called and what happens there that wouldn't happen the same way anywhere else. Nobody knows this but you.",
+          "pone": "From you"
+        },
+        {
+          "titulo": "The question that holds the project",
+          "cuerpo": "It comes from reading the local issue with the class and is written down in the tracking page. It's the one repeated until delivery day.",
+          "pone": "From the class"
+        }
+      ],
+      "outEyebrow": "And out of that comes",
+      "outTitle": "The lessons, the documents to print and what lives around your school.",
+      "outBody": "The documents come from the objectives you ticked and what you wrote about the place, without asking again. Species data comes from iNaturalist and GBIF.",
+      "cta": "Start building mine"
     }
   },
   "platform": {
@@ -918,5 +967,12 @@
     "oscuro": "Dark notebook",
     "oscuroAyuda": "The notebook and progress pages on a dark green background.",
     "guardado": "Saved in this browser."
+  },
+  "edicion": {
+    "titulo": "Country and language",
+    "pais": "Edition",
+    "idioma": "Language",
+    "deCuenta": "This is your account's edition. Write to us to change it.",
+    "ayuda": "Changes the curriculum, local issues and field-trip paperwork."
   }
 }

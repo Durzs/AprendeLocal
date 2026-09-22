@@ -252,10 +252,7 @@ export default function Header() {
           </nav>
 
           <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4">
-            <div className="flex min-h-11 items-center justify-between rounded-xl bg-white/10 px-4">
-              <span className="text-sm font-medium text-white">{t("header.user.language", "Idioma")}</span>
-              <LanguageSwitcher />
-            </div>
+            <LanguageSwitcher variante="fila" />
             <Accesibilidad variante="fila" />
           </div>
         </div>

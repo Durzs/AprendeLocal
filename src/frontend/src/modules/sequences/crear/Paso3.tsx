@@ -31,8 +31,10 @@ import { Link } from "react-router-dom";
 
 import { Hoja } from "./Campos";
 import { Copiar } from "./Copiar";
-import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
+import { buscarObjetivo } from "../contenido/curriculo";
+import { useContenido } from "../contenido";
+import { useTx } from "../../../shared/tx";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
@@ -101,25 +103,33 @@ export default function Paso3({
  */
 function Entrega({ e }: { e: Expedicion }) {
   const armada = e.semanas.length > 0;
+  const tx = useTx();
 
   return (
-    <Hoja titulo="Cuando empiece en la sala" orden={7}>
+    <Hoja titulo={tx("Cuando empiece en la sala", "Quando começar em sala")} orden={7}>
       <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Esta lámina se llena una vez. Lo que cambia cada semana está en otra
-        página: en qué etapa va el curso, qué salió de la salida, cuántos
-        entregaron el cierre y qué contestaron los que recibieron el trabajo.
+        {tx(
+          "Esta lámina se llena una vez. Lo que cambia cada semana está en otra página: en qué etapa va el curso, qué salió de la salida, cuántos entregaron el cierre y qué contestaron los que recibieron el trabajo.",
+          "Esta lâmina se preenche uma vez. O que muda toda semana está em outra página: em que etapa a turma está, o que saiu da saída de campo, quantos entregaram o fechamento e o que responderam os que receberam o trabalho."
+        )}
       </p>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/70">
         {armada
-          ? "Ahí está también el calendario, con las clases que anotaste. Se abre el día de la primera y se vuelve a ella el martes siguiente."
-          : "Ahí se anotan también las clases del plan, una por una y con el título que les pongas. Se puede abrir desde ya: las seis etapas del método no dependen de que el resto esté listo."}
+          ? tx(
+              "Ahí está también el calendario, con las clases que anotaste. Se abre el día de la primera y se vuelve a ella el martes siguiente.",
+              "Lá também está o calendário, com as aulas que você anotou. Abre-se no dia da primeira e volta-se a ele na semana seguinte."
+            )
+          : tx(
+              "Ahí se anotan también las clases del plan, una por una y con el título que les pongas. Se puede abrir desde ya: las seis etapas del método no dependen de que el resto esté listo.",
+              "Lá também se anotam as aulas do plano, uma por uma e com o título que você der. Dá para abrir desde já: as seis etapas do método não dependem de o resto estar pronto."
+            )}
       </p>
 
       <Link
         to="/proyecto"
         className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-3 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
       >
-        Ir al seguimiento del proyecto
+        {tx("Ir al seguimiento del proyecto", "Ir para o acompanhamento do projeto")}
         <span aria-hidden className="transition-transform group-hover:translate-x-1">
           →
         </span>
@@ -145,20 +155,24 @@ function Entrega({ e }: { e: Expedicion }) {
  */
 function Justificacion({ e }: { e: Expedicion }) {
   const hoja = useRef<HTMLDivElement>(null);
-  const oas = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
+  const tx = useTx();
+  const c = useContenido();
+  const oas = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
-  const titulo = problema?.nombre || e.problemaPropio.trim();
-  const tecnicas = e.tecnicas.map(tecnicaPorId).filter(Boolean);
+  const titulo = problema?.nombre || e.problemaPropioNombre.trim() || e.problemaPropio.trim();
+  const tecnicas = e.tecnicas.map((t) => tecnicaPorId(t, tx.idioma)).filter(Boolean);
   // Solo se sale del recinto si hay un lugar elegido. Sin eso, el proyecto se
   // resuelve en el patio y la dirección no tiene nada que autorizar.
   const sale = Boolean(e.ubicacion.trim());
 
   if (!titulo) {
     return (
-      <Hoja titulo="La hoja que firma la dirección" orden={6}>
+      <Hoja titulo={tx("La hoja que firma la dirección", "O documento que a direção assina")} orden={6}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
-          Esta hoja se arma sola cuando elijas de qué va a tratar el proyecto.
-          No hay nada que llenar aquí: sale de lo que ya escribiste.
+          {tx(
+            "Esta hoja se arma sola cuando elijas de qué va a tratar el proyecto. No hay nada que llenar aquí: sale de lo que ya escribiste.",
+            "Este documento se monta sozinho quando você escolher do que o projeto vai tratar. Não há nada para preencher aqui: sai do que você já escreveu."
+          )}
         </p>
       </Hoja>
     );
@@ -166,9 +180,12 @@ function Justificacion({ e }: { e: Expedicion }) {
 
   return (
     <Hoja
-      titulo="La hoja que firma la dirección"
+      titulo={tx("La hoja que firma la dirección", "O documento que a direção assina")}
       orden={6}
-      resumen="Armada con lo que ya escribiste. No hay nada nuevo que llenar: se imprime y se firma."
+      resumen={tx(
+        "Armada con lo que ya escribiste. No hay nada nuevo que llenar: se imprime y se firma.",
+        "Montado com o que você já escreveu. Não há nada novo para preencher: imprime-se e assina-se."
+      )}
     >
 
       <div
@@ -176,17 +193,23 @@ function Justificacion({ e }: { e: Expedicion }) {
         className="space-y-4 rounded-xl border border-[var(--crema)]/12 p-5 text-[15px] leading-relaxed text-[var(--crema)]/85"
       >
         <p>
-          <span className="text-[var(--crema-clara)]">Proyecto:</span> {titulo}.
-          {e.cursos.length > 0 ? ` Cursos ${e.cursos.join(", ")}.` : ""}
-          {e.estudiantes ? ` ${e.estudiantes} estudiantes.` : ""}
+          <span className="text-[var(--crema-clara)]">{tx("Proyecto", "Projeto")}:</span> {titulo}.
+          {e.cursos.length > 0
+            ? ` ${tx("Cursos", "Turmas")} ${e.cursos.map(c.nombreCurso).join(", ")}.`
+            : ""}
+          {e.estudiantes ? ` ${e.estudiantes} ${tx("estudiantes", "alunos")}.` : ""}
           {e.sesiones
-            ? ` ${e.sesiones} clases${e.duracionSesion ? ` de ${e.duracionSesion} minutos` : ""}.`
+            ? ` ${e.sesiones} ${tx("clases", "aulas")}${
+                e.duracionSesion ? ` ${tx("de", "de")} ${e.duracionSesion} ${tx("minutos", "minutos")}` : ""
+              }.`
             : ""}
         </p>
 
         {oas.length > 0 && (
           <div>
-            <p className="text-[var(--crema-clara)]">Objetivos de aprendizaje que cubre</p>
+            <p className="text-[var(--crema-clara)]">
+              {tx("Objetivos de aprendizaje que cubre", "Habilidades da BNCC que trabalha")}
+            </p>
             <ul className="mt-1.5 space-y-1">
               {oas.map(({ cod, oa }) => (
                 <li key={cod} className="flex gap-2.5">
@@ -200,7 +223,7 @@ function Justificacion({ e }: { e: Expedicion }) {
                         objetivo tiene con qué mirarse. */}
                     {(e.indicadores[cod] ?? []).length > 0 && (
                       <span className="mt-1.5 block text-[var(--crema)]/75">
-                        Se mira en que:{" "}
+                        {tx("Se mira en que", "Observa-se se")}:{" "}
                         {(e.indicadores[cod] ?? []).join("; ")}.
                       </span>
                     )}
@@ -213,28 +236,37 @@ function Justificacion({ e }: { e: Expedicion }) {
 
         {e.conceptos.length > 0 && (
           <p>
-            <span className="text-[var(--crema-clara)]">Conceptos que se pasan en aula:</span>{" "}
+            <span className="text-[var(--crema-clara)]">
+              {tx("Conceptos que se pasan en aula", "Conceitos trabalhados em sala")}:
+            </span>{" "}
             {e.conceptos.join(", ")}.
           </p>
         )}
 
         {sale && (
           <div>
-            <p className="text-[var(--crema-clara)]">Salida del recinto</p>
+            <p className="text-[var(--crema-clara)]">
+              {tx("Salida del recinto", "Saída da escola")}
+            </p>
             <p className="mt-1.5">
-              Una sesión, en {e.ubicacion}.
+              {tx("Una sesión, en", "Uma aula, em")} {e.ubicacion}.
               {tecnicas.length > 0
-                ? ` Técnica que se aplica: ${tecnicas.map((t) => t!.nombre.toLowerCase()).join(", ")}, ensayada antes en la sala.`
+                ? tx(
+                    ` Técnica que se aplica: ${tecnicas.map((t) => t!.nombre.toLowerCase()).join(", ")}, ensayada antes en la sala.`,
+                    ` Técnica aplicada: ${tecnicas.map((t) => t!.nombre.toLowerCase()).join(", ")}, ensaiada antes em sala.`
+                  )
                 : ""}
             </p>
             {tecnicas.length > 0 && (
               <>
                 <p className="mt-2">
-                  <span className="text-[var(--crema-clara)]">Resguardos:</span>{" "}
+                  <span className="text-[var(--crema-clara)]">{tx("Resguardos", "Cuidados")}:</span>{" "}
                   {[...new Set(tecnicas.flatMap((t) => t!.seguridad))].join("; ")}.
                 </p>
                 <p className="mt-2">
-                  <span className="text-[var(--crema-clara)]">Con las personas y el lugar:</span>{" "}
+                  <span className="text-[var(--crema-clara)]">
+                    {tx("Con las personas y el lugar", "Com as pessoas e o lugar")}:
+                  </span>{" "}
                   {[...new Set(tecnicas.flatMap((t) => t!.etica))].join("; ")}.
                 </p>
               </>
@@ -243,27 +275,32 @@ function Justificacion({ e }: { e: Expedicion }) {
         )}
 
         <p>
-          <span className="text-[var(--crema-clara)]">Qué entrega el curso:</span>{" "}
-          lo que el curso decida construir después de volver del terreno, en su
-          segunda versión y corregido por sus compañeros.
-          {e.destinatario.trim() ? ` Se entrega a: ${e.destinatario}.` : ""}
+          <span className="text-[var(--crema-clara)]">
+            {tx("Qué entrega el curso", "O que a turma entrega")}:
+          </span>{" "}
+          {tx(
+            "lo que el curso decida construir después de volver del terreno, en su segunda versión y corregido por sus compañeros.",
+            "o que a turma decidir construir depois de voltar do campo, na segunda versão e corrigido pelos colegas."
+          )}
+          {e.destinatario.trim() ? ` ${tx("Se entrega a", "Será entregue a")}: ${e.destinatario}.` : ""}
           {[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde]
             .filter((x) => x.trim())
             .join("; ") &&
-            ` Ese destinatario es: ${[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde, e.rasgosDestinatario.necesidad].filter((x) => x.trim()).join("; ")}.`}
+            ` ${tx("Ese destinatario es", "Esse destinatário é")}: ${[e.rasgosDestinatario.edad, e.rasgosDestinatario.donde, e.rasgosDestinatario.necesidad].filter((x) => x.trim()).join("; ")}.`}
         </p>
 
         <p>
-          <span className="text-[var(--crema-clara)]">Cómo se evalúa:</span> lo
-          que construyan y entreguen a ese destinatario, más lo que se les
-          pregunta en las semanas siguientes sobre un lugar distinto del
-          trabajado, para comprobar que el aprendizaje no quedó atado a este
-          caso.
+          <span className="text-[var(--crema-clara)]">{tx("Cómo se evalúa", "Como se avalia")}:</span>{" "}
+          {tx(
+            "lo que construyan y entreguen a ese destinatario, más lo que se les pregunta en las semanas siguientes sobre un lugar distinto del trabajado, para comprobar que el aprendizaje no quedó atado a este caso.",
+            "o que construírem e entregarem a esse destinatário, mais o que se pergunta nas semanas seguintes sobre um lugar diferente do trabalhado, para comprovar que a aprendizagem não ficou presa a este caso."
+          )}
         </p>
 
         <p className="border-t border-[var(--crema)]/12 pt-4 text-[var(--crema)]/72">
-          Docente: {e.docente || "________________"} · Firma de dirección:
-          ________________ · Fecha: ____ / ____ / ______
+          {tx("Docente", "Professor(a)")}: {e.docente || "________________"} ·{" "}
+          {tx("Firma de dirección", "Assinatura da direção")}: ________________ ·{" "}
+          {tx("Fecha", "Data")}: ____ / ____ / ______
         </p>
       </div>
 
@@ -277,9 +314,9 @@ function Justificacion({ e }: { e: Expedicion }) {
           onClick={() => window.print()}
           className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
         >
-          Imprimir esta hoja
+          {tx("Imprimir esta hoja", "Imprimir este documento")}
         </button>
-        <Copiar de={hoja} que="la hoja" />
+        <Copiar de={hoja} que={tx("la hoja", "o documento")} />
       </div>
     </Hoja>
   );

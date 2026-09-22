@@ -1,3 +1,5 @@
+import { INDICADORES_BR } from "./indicadores.br";
+
 /**
  * Con qué se mira cada objetivo en la sala.
  *
@@ -519,7 +521,13 @@ export const INDICADORES: Record<string, string[]> = {
   ],
 };
 
-/** Los indicadores escritos para un objetivo, si los hay. */
+/**
+ * Los indicadores escritos para un objetivo, si los hay.
+ *
+ * Busca en los dos catálogos: los códigos chilenos («OA12_CN_5») y los de la
+ * BNCC («EF06CI01») no se pisan, así que no hace falta saber de qué edición
+ * es el objetivo para encontrarlos.
+ */
 export function indicadoresDe(codigo: string): string[] {
-  return INDICADORES[codigo] ?? [];
+  return INDICADORES[codigo] ?? INDICADORES_BR[codigo] ?? [];
 }

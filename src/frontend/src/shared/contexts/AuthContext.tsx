@@ -1,16 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabaseClient";
-import i18n from "../i18n";
-import { SEDE_POR_DEFECTO, idiomaAlEntrar, sedeDe, type Sede } from "../sede";
+import { fijarSedeDeCuenta, sedeDe, useSede, type Sede } from "../sede";
 
 type AuthContextType = {
   user: User | null;
   session: Session | null;
   accessToken: string | null;
   /**
-   * Qué edición de la plataforma le toca a esta cuenta. Sin sesión es la de
-   * por defecto, que es la que ve cualquiera que llegue a la portada.
+   * Qué edición de la plataforma se está viendo. Con sesión es la de la
+   * cuenta; sin ella, la que eligió quien mira. Ver §sede.ts.
    */
   sede: Sede;
   loading: boolean;
@@ -55,25 +54,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const sede = user ? sedeDe(user.user_metadata) : SEDE_POR_DEFECTO;
-
   /*
-   * El idioma de la sede, al entrar.
+   * La sede de la cuenta manda sobre la del navegador.
    *
-   * Thais abre la plataforma desde Río y le tiene que salir en portugués sin
-   * ir a buscar el conmutador. Va en un efecto y no al calcular `sede` porque
-   * `i18n.changeLanguage` es un efecto de verdad: toca el documento y avisa a
-   * todo el árbol.
-   *
-   * `idiomaAlEntrar` devuelve `null` cuando la persona ya eligió idioma a
-   * mano, y entonces esto no hace nada: esa decisión es suya y no la revierte
-   * una sesión nueva.
+   * Se empuja a §sede.ts, que es de donde leen todas las pantallas y el
+   * idioma. Thais abre la plataforma desde un computador cualquiera y le sale
+   * la edición brasileña, en portugués, sin buscar nada. Al salir, la sede
+   * queda como estaba en el navegador, que ya es la suya.
    */
+  const sedeCuenta = user ? sedeDe(user.user_metadata) : null;
   useEffect(() => {
-    if (!user) return;
-    const debido = idiomaAlEntrar(sede, i18n.resolvedLanguage ?? "es");
-    if (debido) i18n.changeLanguage(debido);
-  }, [user, sede]);
+    if (loading) return;
+    fijarSedeDeCuenta(sedeCuenta);
+  }, [sedeCuenta, loading]);
+
+  const sede = useSede();
 
   const signOut = async () => {
     await supabase.auth.signOut();

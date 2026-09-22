@@ -29,6 +29,7 @@
 
 import { Campo, Hoja, Parrafo, Texto } from "../crear/Campos";
 import type { Expedicion } from "../crear/expedicion";
+import { useTx } from "../../../shared/tx";
 
 /**
  * Los tres, con lo que hay que decir en cada uno.
@@ -37,37 +38,66 @@ import type { Expedicion } from "../crear/expedicion";
  * escritos cuando eran huecos de la ruta: así no se puede agregar un campo sin
  * decir para qué sirve.
  */
-const CAMPOS: {
+type CampoSalida = {
   clave: "preguntarA" | "puntoDeSalida" | "queCuidar";
   etiqueta: string;
   porque: string;
   ejemplo: string;
   largo?: boolean;
-}[] = [
-  {
-    clave: "preguntarA",
-    etiqueta: "A quién de la comunidad le preguntan",
-    porque:
-      "El lugar tiene memoria y esa memoria está en personas. Escribe quién, con nombre si lo sabes.",
-    ejemplo: "A don Manuel, que araba ahí antes de que se secara",
-  },
-  {
-    clave: "puntoDeSalida",
-    etiqueta: "Dónde se para el curso",
-    porque:
-      "El punto exacto y cómo se llega. Es lo que va en la hoja de terreno y en la carta a las familias.",
-    ejemplo: "En el vado, bajando por el potrero del fondo. Veinte minutos a pie.",
-    largo: true,
-  },
-  {
-    clave: "queCuidar",
-    etiqueta: "Qué hay que cuidar ahí",
-    porque:
-      "Esto no lo puede saber nadie que no haya estado. Es lo único de la salida que, si falta, alguien se puede lastimar.",
-    ejemplo: "La barranca del lado norte está floja. Nadie cruza solo.",
-    largo: true,
-  },
-];
+};
+
+const CAMPOS: { es: CampoSalida[]; pt: CampoSalida[] } = {
+  es: [
+    {
+      clave: "preguntarA",
+      etiqueta: "A quién de la comunidad le preguntan",
+      porque:
+        "El lugar tiene memoria y esa memoria está en personas. Escribe quién, con nombre si lo sabes.",
+      ejemplo: "A don Manuel, que araba ahí antes de que se secara",
+    },
+    {
+      clave: "puntoDeSalida",
+      etiqueta: "Dónde se para el curso",
+      porque:
+        "El punto exacto y cómo se llega. Es lo que va en la hoja de terreno y en la carta a las familias.",
+      ejemplo: "En el vado, bajando por el potrero del fondo. Veinte minutos a pie.",
+      largo: true,
+    },
+    {
+      clave: "queCuidar",
+      etiqueta: "Qué hay que cuidar ahí",
+      porque:
+        "Esto no lo puede saber nadie que no haya estado. Es lo único de la salida que, si falta, alguien se puede lastimar.",
+      ejemplo: "La barranca del lado norte está floja. Nadie cruza solo.",
+      largo: true,
+    },
+  ],
+  pt: [
+    {
+      clave: "preguntarA",
+      etiqueta: "A quem da comunidade vão perguntar",
+      porque:
+        "O lugar tem memória, e essa memória está nas pessoas. Escreva quem, com nome se souber.",
+      ejemplo: "Dona Célia, que mora na beira do rio desde antes da canalização",
+    },
+    {
+      clave: "puntoDeSalida",
+      etiqueta: "Onde a turma vai ficar",
+      porque:
+        "O ponto exato e como se chega. É o que vai na ficha de campo e na autorização para as famílias.",
+      ejemplo: "Na ponte da rua principal, do lado da praça. Dez minutos a pé.",
+      largo: true,
+    },
+    {
+      clave: "queCuidar",
+      etiqueta: "O que é preciso cuidar ali",
+      porque:
+        "Isso ninguém sabe sem ter ido. É a única coisa da saída que, se faltar, alguém pode se machucar.",
+      ejemplo: "A mureta do canal é baixa e a rua tem movimento de carros. Ninguém atravessa sozinho.",
+      largo: true,
+    },
+  ],
+};
 
 export function LaSalida({
   e,
@@ -79,17 +109,19 @@ export function LaSalida({
   orden?: number;
 }) {
   const faltaCuidado = !e.queCuidar.trim();
+  const tx = useTx();
 
   return (
-    <Hoja titulo="Lo que solo sabes tú del lugar" orden={orden}>
+    <Hoja titulo={tx("Lo que solo sabes tú del lugar", "O que só você sabe do lugar")} orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Tres cosas que no están en ningún mapa ni en ningún programa, y que
-        salen impresas en los dos papeles de la salida. Se pueden dejar para
-        después; la última conviene escribirla antes de que el curso salga.
+        {tx(
+          "Tres cosas que no están en ningún mapa ni en ningún programa, y que salen impresas en los dos papeles de la salida. Se pueden dejar para después; la última conviene escribirla antes de que el curso salga.",
+          "Três coisas que não estão em nenhum mapa nem em nenhum currículo, e que saem impressas nos documentos da saída. Podem ficar para depois; a última convém escrever antes de a turma sair."
+        )}
       </p>
 
       <div className="space-y-5">
-        {CAMPOS.map((c) => (
+        {tx.de(CAMPOS).map((c) => (
           <Campo key={c.clave} etiqueta={c.etiqueta} ayuda={c.porque} ancho="entera">
             {c.largo ? (
               <Parrafo
@@ -112,9 +144,10 @@ export function LaSalida({
           se pusiera uno igual en cada campo vacío dejaría de leerse. */}
       {faltaCuidado && (
         <p className="mt-5 rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3 text-[15px] leading-relaxed text-[var(--tierra-300)]">
-          Falta qué hay que cuidar. El curso puede salir igual, y esto es lo
-          que conviene tener escrito antes de que salga: todo lo demás, si
-          falta, deja un papel a medias.
+          {tx(
+            "Falta qué hay que cuidar. El curso puede salir igual, y esto es lo que conviene tener escrito antes de que salga: todo lo demás, si falta, deja un papel a medias.",
+            "Falta o que é preciso cuidar. A turma pode sair assim mesmo, e isto é o que convém ter escrito antes: todo o resto, se faltar, deixa um documento pela metade."
+          )}
         </p>
       )}
     </Hoja>

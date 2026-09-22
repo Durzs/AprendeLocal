@@ -31,6 +31,8 @@
  */
 
 import type { Registro } from "../../../types";
+import type { Idioma } from "../../../shared/tx";
+import { ANTES_DE_SALIR_PT, TECNICAS_PT } from "./tecnicas.pt";
 
 export type Tecnica = {
   id: string;
@@ -228,8 +230,18 @@ export const TECNICAS: Tecnica[] = [
   },
 ];
 
-export function tecnicaPorId(id: string): Tecnica | undefined {
-  return TECNICAS.find((t) => t.id === id);
+/** Las técnicas en el idioma que toca. El portugués está en §tecnicas.pt.ts. */
+export function tecnicasEn(idioma: Idioma): Tecnica[] {
+  return idioma === "pt" ? TECNICAS_PT : TECNICAS;
+}
+
+export function tecnicaPorId(id: string, idioma: Idioma = "es"): Tecnica | undefined {
+  return tecnicasEn(idioma).find((t) => t.id === id);
+}
+
+/** Lo que el curso se lleva antes de salir, en el idioma que toca. */
+export function antesDeSalirEn(idioma: Idioma) {
+  return idioma === "pt" ? ANTES_DE_SALIR_PT : ANTES_DE_SALIR;
 }
 
 /**

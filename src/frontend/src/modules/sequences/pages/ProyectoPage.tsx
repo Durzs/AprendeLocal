@@ -33,11 +33,13 @@ import Bitacora from "../seguimiento/BitacoraEtapas";
 import Calendario from "../seguimiento/Calendario";
 import { useExpedicion } from "../crear/useExpedicion";
 import { problemaPorId } from "../metodo/problemas";
+import { useTx } from "../../../shared/tx";
 
 export default function ProyectoPage() {
   // El mismo enganche que usa el cuaderno, así que los dos leen y escriben el
   // mismo trabajo: lo que se marca aquí un martes está en `/crear` sin más.
   const { expedicion: e, avance, estado, cambiar, cambiarAvance } = useExpedicion();
+  const tx = useTx();
 
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = e.problemaPropioNombre || problema?.nombre || e.preguntaGuia || "";
@@ -57,10 +59,10 @@ export default function ProyectoPage() {
             esta página vivía fuera del sitio. */}
         <main className="flex-1 pt-2 pb-14">
           <p className="animar-hoja animar-hoja-1 rotulo text-[var(--tierra-600)]">
-            El proyecto en la sala
+            {tx("El proyecto en la sala", "O projeto em sala")}
           </p>
           <h1 className="animar-hoja animar-hoja-2 mt-2.5 max-w-3xl text-[1.85rem] font-semibold leading-[1.08] tracking-[-0.03em] text-[var(--crema-clara)] sm:text-[2.4rem]">
-            {titulo || "Por dónde va el proyecto"}
+            {titulo || tx("Por dónde va el proyecto", "Em que ponto está o projeto")}
           </h1>
 
           {/* La pregunta y el lugar, que es con lo que un docente reconoce su
@@ -71,10 +73,17 @@ export default function ProyectoPage() {
                 {e.preguntaGuia.trim() && titulo !== e.preguntaGuia ? (
                   <>«{e.preguntaGuia}» </>
                 ) : null}
-                {e.ubicacion.trim() ? <>En {e.ubicacion}.</> : null}
+                {e.ubicacion.trim() ? (
+                  <>
+                    {tx("En", "Em")} {e.ubicacion}.
+                  </>
+                ) : null}
               </>
             ) : (
-              "Aquí se sigue el proyecto semana a semana: en qué etapa va el curso, qué salió de la salida y cuántos entregaron el cierre."
+              tx(
+                "Aquí se sigue el proyecto semana a semana: en qué etapa va el curso, qué salió de la salida y cuántos entregaron el cierre.",
+                "Aqui se acompanha o projeto semana a semana: em que etapa a turma está, o que saiu da saída de campo e quantos entregaram o fechamento."
+              )
             )}
           </p>
 
@@ -101,13 +110,15 @@ export default function ProyectoPage() {
               {/* De vuelta a armar. Va abajo y en voz baja: se viene aquí a
                   seguir, y volver al cuaderno es la excepción. */}
               <p className="pt-2 text-sm leading-relaxed text-[var(--crema)]/55">
-                Si hay que cambiar algo de la ruta, de los objetivos o de los
-                papeles de la salida,{" "}
+                {tx(
+                  "Si hay que cambiar algo de la ruta, de los objetivos o de los papeles de la salida,",
+                  "Se for preciso mudar algo da rota, das habilidades ou dos documentos da saída,"
+                )}{" "}
                 <Link
                   to="/crear"
                   className="text-[var(--tierra-300)] underline underline-offset-4 transition hover:text-[var(--tierra-200)]"
                 >
-                  el cuaderno sigue ahí
+                  {tx("el cuaderno sigue ahí", "o caderno continua lá")}
                 </Link>
                 .
               </p>
@@ -129,19 +140,20 @@ export default function ProyectoPage() {
  * aquí sin proyecto lo que necesita es el camino de vuelta.
  */
 function SinProyecto() {
+  const tx = useTx();
   return (
     <div className="mt-9 rounded-2xl border border-[var(--crema)]/14 bg-[var(--crema)]/[0.035] p-6">
       <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Todavía no hay nada escrito en este computador. El seguimiento empieza
-        con lo mínimo: basta con haber elegido la problemática y dónde queda la
-        escuela para que las seis etapas aparezcan aquí. La ruta completa puede
-        venir después.
+        {tx(
+          "Todavía no hay nada escrito en este computador. El seguimiento empieza con lo mínimo: basta con haber elegido la problemática y dónde queda la escuela para que las seis etapas aparezcan aquí. La ruta completa puede venir después.",
+          "Ainda não há nada escrito neste computador. O acompanhamento começa com o mínimo: basta ter escolhido a problemática e onde fica a escola para que as seis etapas apareçam aqui. A rota completa pode vir depois."
+        )}
       </p>
       <Link
         to="/crear"
         className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
       >
-        Armar la ruta
+        {tx("Armar la ruta", "Montar a rota")}
         <span aria-hidden className="transition-transform group-hover:translate-x-1">
           →
         </span>

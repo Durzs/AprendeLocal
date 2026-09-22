@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause } from "lucide-react";
 
+import { useTx } from "../../../shared/tx";
+
 export default function HowItWorksSection() {
+  const tx = useTx();
   const [currentStep, setCurrentStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -14,10 +17,13 @@ export default function HowItWorksSection() {
   const stages = [
     {
       id: 0,
-      name: "Territorio",
+      name: tx("Territorio", "Território"),
       bgColor: "var(--tinta-950)", // el indigo de la marca
-      title: "La clase empieza en el estero que está detrás de la cancha",
-      desc: "Dices qué hay a distancia de caminata de tu escuela y qué pasa ahí que en otra parte no pasaría igual. De eso sale el proyecto, no de un tema general.",
+      title: tx("La clase empieza en el estero que está detrás de la cancha", "A aula começa no córrego que passa atrás da quadra"),
+      desc: tx(
+        "Dices qué hay a distancia de caminata de tu escuela y qué pasa ahí que en otra parte no pasaría igual. De eso sale el proyecto, no de un tema general.",
+        "Você diz o que existe a uma caminhada da escola e o que acontece ali que em outro lugar não aconteceria igual. O projeto sai disso, não de um tema genérico."
+      ),
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
@@ -42,10 +48,13 @@ export default function HowItWorksSection() {
     },
     {
       id: 1,
-      name: "Terreno",
+      name: tx("Terreno", "Campo"),
       bgColor: "#c9612a", // la terracota del logotipo, no el naranjo de botones
-      title: "Se mide con una huincha, un palo y un reloj",
-      desc: "El curso sale, anota en la hoja de terreno y vuelve con números. Nada que haya que comprar: lo que hace falta está en la escuela o en una casa.",
+      title: tx("Se mide con una huincha, un palo y un reloj", "Mede-se com uma trena, um cabo de vassoura e um relógio"),
+      desc: tx(
+        "El curso sale, anota en la hoja de terreno y vuelve con números. Nada que haya que comprar: lo que hace falta está en la escuela o en una casa.",
+        "A turma sai, anota na ficha de campo e volta com números. Nada que precise ser comprado: o que falta está na escola ou em casa."
+      ),
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,40 235,95 140,150 45,95" fill="#ffffff" stroke="#f1f5f9" strokeWidth="1.5" />
@@ -68,10 +77,13 @@ export default function HowItWorksSection() {
     },
     {
       id: 2,
-      name: "Currículum",
+      name: tx("Currículum", "Currículo"),
       bgColor: "var(--tinta-800)",
-      title: "Marcas los objetivos que te toca pasar y el proyecto sale de ahí",
-      desc: "Los de las seis asignaturas, de 5º a 8º, en una lista. Cada problemática te dice cuáles abre y desde qué asignatura, y de ahí salen los indicadores con que se evalúa.",
+      title: tx("Marcas los objetivos que te toca pasar y el proyecto sale de ahí", "Você marca as habilidades da BNCC que precisa trabalhar e o projeto sai daí"),
+      desc: tx(
+        "Los de las seis asignaturas, de 5º a 8º, en una lista. Cada problemática te dice cuáles abre y desde qué asignatura, y de ahí salen los indicadores con que se evalúa.",
+        "As de seis componentes, do 6º ao 9º ano, numa lista só. Cada problemática mostra quais ela abre e por qual componente, e daí saem os indicadores de avaliação."
+      ),
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,45 240,100 140,155 40,100" fill="var(--tinta-950)" stroke="var(--tinta-600)" strokeWidth="2" />
@@ -94,15 +106,18 @@ export default function HowItWorksSection() {
     },
     {
       id: 3,
-      name: "Comunidad",
+      name: tx("Comunidad", "Comunidade"),
       // El verde del logotipo, que es el color de esta etapa: la comunidad.
       // Antes valia ademas para entregarle el color a la seccion del
       // territorio, que iba en ese mismo verde a sangre; ahora esa seccion es
       // clara, asi que el verde se queda aqui por lo que significa y no por
       // lo que empalma.
       bgColor: "#1e2a24",
-      title: "El curso le entrega lo que averiguó a alguien que lo esperaba",
-      desc: "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
+      title: tx("El curso le entrega lo que averiguó a alguien que lo esperaba", "A turma entrega o que descobriu a alguém que estava esperando"),
+      desc: tx(
+        "A quién se lo entregan lo escribes tú, porque eres el único que sabe quién es. Sin alguien de afuera esperándolo, el trabajo se queda en la mochila.",
+        "Para quem vai a entrega, quem escreve é você, porque só você sabe quem é. Sem alguém de fora esperando, o trabalho fica na mochila."
+      ),
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,55 235,110 140,165 45,110" fill="var(--tinta-600)" stroke="var(--tinta-400)" strokeWidth="1.5" />
@@ -119,7 +134,7 @@ export default function HowItWorksSection() {
             {/* Decía «COMITÉ APR». Ese destinatario no lo pone la plataforma: lo
                 escribe el docente, porque es el único que sabe quién recibe el
                 trabajo en su comunidad. */}
-            <text x="65" y="19" fill="#ffffff" fontFamily="sans-serif" fontSize="11" fontWeight="800" textAnchor="middle">🤝 LO ESCRIBES TÚ</text>
+            <text x="65" y="19" fill="#ffffff" fontFamily="sans-serif" fontSize="11" fontWeight="800" textAnchor="middle">{tx("🤝 LO ESCRIBES TÚ", "🤝 VOCÊ ESCREVE")}</text>
           </g>
         </svg>
       )
@@ -184,7 +199,7 @@ export default function HowItWorksSection() {
             territorio. Es lo que hace que las cinco secciones se lean como un
             solo documento y no como cinco páginas pegadas. */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 pb-5">
-          <span className="rotulo text-amber-300">Cómo funciona</span>
+          <span className="rotulo text-amber-300">{tx("Cómo funciona", "Como funciona")}</span>
           <span className="rotulo text-white/40">
             Etapa {String(currentStep + 1).padStart(2, "0")} de{" "}
             {String(stages.length).padStart(2, "0")}
@@ -193,7 +208,7 @@ export default function HowItWorksSection() {
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
           <h2 className="display text-3xl sm:text-4xl md:text-5xl text-white">
-            ¿Cómo funciona AprendeLocal?
+            {tx("¿Cómo funciona AprendeLocal?", "Como funciona o AprendeLocal?")}
           </h2>
 
           {/* Timeline Minimalista con Círculos y Botón de Pausa Compacto */}
@@ -225,7 +240,7 @@ export default function HowItWorksSection() {
             {/* Botón Play / Pause solo icono */}
             <button
               onClick={() => setIsPaused(!isPaused)}
-              aria-label={isPaused ? "Reanudar" : "Pausar"}
+              aria-label={isPaused ? tx("Reanudar", "Retomar") : tx("Pausar", "Pausar")}
               className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer ml-1"
             >
               {isPaused ? <Play className="w-3.5 h-3.5 fill-current" /> : <Pause className="w-3.5 h-3.5 fill-current" />}

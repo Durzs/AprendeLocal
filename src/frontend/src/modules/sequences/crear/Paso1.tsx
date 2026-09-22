@@ -15,8 +15,8 @@ import { AntesDeSalir } from "../metodo/AntesDeSalir";
 import { DondeQueda } from "../metodo/DondeQueda";
 import { LaSalida } from "../metodo/LaSalida";
 import type { Expedicion } from "./expedicion";
-
-const CURSOS = ["5º", "6º", "7º", "8º"];
+import { useContenido } from "../contenido";
+import { useTx } from "../../../shared/tx";
 
 /**
  * Cuántas clases hay para esto.
@@ -32,14 +32,33 @@ const CURSOS = ["5º", "6º", "7º", "8º"];
  * proyecto de tres clases se puede hacer, pero hay que decir en voz alta a qué
  * se está renunciando, que es a la parte comunitaria y a la profundidad.
  */
-const SESIONES = [
-  { valor: "3", titulo: "3 clases o más" },
-  { valor: "6", titulo: "6 clases o más" },
-  { valor: "10", titulo: "10 clases o más" },
-  { valor: "16", titulo: "Un semestre" },
-];
+const SESIONES = {
+  es: [
+    { valor: "3", titulo: "3 clases o más" },
+    { valor: "6", titulo: "6 clases o más" },
+    { valor: "10", titulo: "10 clases o más" },
+    { valor: "16", titulo: "Un semestre" },
+  ],
+  pt: [
+    { valor: "3", titulo: "3 aulas ou mais" },
+    { valor: "6", titulo: "6 aulas ou mais" },
+    { valor: "10", titulo: "10 aulas ou mais" },
+    { valor: "16", titulo: "Um semestre" },
+  ],
+};
 
 /** Qué cabe de verdad con ese tiempo, dicho antes y no después. */
+const QUE_CABE_PT: Record<string, string> = {
+  "3":
+    "Dá para uma saída e uma entrega pequena. Com três aulas se abre mão da parte com a comunidade e da profundidade técnica: a turma sai, organiza o que trouxe e entrega algo breve. Serve como primeira vez, e convém dizer isso em sala.",
+  "6":
+    "Dá para as seis etapas sem apertar nenhuma. É o tamanho em que o projeto fecha bem: há aula de conceitos, saída, uma aula inteira para organizar o que se trouxe, e tempo para construir e corrigir.",
+  "10":
+    "Dá para a entrega sair da escola e chegar a alguém de fora, e para uma segunda versão depois da crítica dos colegas. Aqui começa a ser um projeto e não uma unidade com saída.",
+  "16":
+    "É o tamanho em que um projeto desse tipo dá tudo o que pode dar: há tempo para voltar ao campo uma segunda vez, para a comunidade responder, e para a turma fazer algo com essa resposta.",
+};
+
 const QUE_CABE: Record<string, string> = {
   "3":
     "Alcanza para una salida y una entrega chica. Con tres clases se renuncia a la parte comunitaria y a la profundidad técnica: el curso sale, ordena lo que trajo y entrega algo breve. Sirve como primera vez, y conviene decirlo así en la sala.",
@@ -66,22 +85,28 @@ type Props = {
 export function PasoPrograma({ e, onCambio }: Props) {
   const set = <K extends keyof Expedicion>(k: K, v: Expedicion[K]) =>
     onCambio({ ...e, [k]: v });
+  const tx = useTx();
+  const c = useContenido();
+  const queCabe = tx(QUE_CABE, QUE_CABE_PT);
 
   return (
     <div className="space-y-4">
-      <Hoja titulo="El curso y el tiempo disponible" orden={4}>
+      <Hoja titulo={tx("El curso y el tiempo disponible", "A turma e o tempo disponível")} orden={4}>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Campo etiqueta="Tu nombre" ayuda="Va firmado en la carta a las familias.">
+          <Campo
+            etiqueta={tx("Tu nombre", "Seu nome")}
+            ayuda={tx("Va firmado en la carta a las familias.", "Vai assinado na autorização para as famílias.")}
+          >
             <Texto
               value={e.docente}
               onChange={(ev) => set("docente", ev.target.value)}
-              placeholder="Rayen Millán"
+              placeholder={tx("Rayen Millán", "Ana Souza")}
             />
           </Campo>
 
           <Campo
-            etiqueta="Cuántos estudiantes"
-            ayuda="Sirve para calcular grupos y material."
+            etiqueta={tx("Cuántos estudiantes", "Quantos alunos")}
+            ayuda={tx("Sirve para calcular grupos y material.", "Serve para calcular grupos e material.")}
           >
             <Texto
               type="number"
@@ -91,22 +116,28 @@ export function PasoPrograma({ e, onCambio }: Props) {
               onChange={(ev) =>
                 set("estudiantes", ev.target.value ? Number(ev.target.value) : null)
               }
-              placeholder="14"
+              placeholder={tx("14", "30")}
             />
           </Campo>
 
           <Fichas
-            etiqueta="Cursos en la sala"
-            ayuda="En multigrado son varios a la vez. Marca todos los que tengas."
-            opciones={CURSOS.map((c) => ({ valor: c, titulo: c }))}
+            etiqueta={tx("Cursos en la sala", "Anos da turma")}
+            ayuda={tx(
+              "En multigrado son varios a la vez. Marca todos los que tengas.",
+              "Se o projeto junta mais de uma turma, marque todos os anos."
+            )}
+            opciones={c.cursos.map((x) => ({ valor: x, titulo: x }))}
             elegidas={e.cursos}
             onElegir={(v) => set("cursos", v)}
           />
 
           <Fichas
-            etiqueta="Cuántas clases tienes para esto"
-            ayuda="En clases y no en semanas: tres semanas en un ramo que se ve una vez por semana son tres clases. Son mínimos, no topes: si tienes más, mejor."
-            opciones={SESIONES}
+            etiqueta={tx("Cuántas clases tienes para esto", "Quantas aulas você tem para isto")}
+            ayuda={tx(
+              "En clases y no en semanas: tres semanas en un ramo que se ve una vez por semana son tres clases. Son mínimos, no topes: si tienes más, mejor.",
+              "Em aulas e não em semanas: três semanas num componente que tem uma aula por semana são três aulas. São mínimos, não limites: se tiver mais, melhor."
+            )}
+            opciones={tx.de(SESIONES)}
             elegidas={e.sesiones ? [String(e.sesiones)] : []}
             onElegir={(v) => set("sesiones", v[0] ? Number(v[0]) : null)}
             unica
@@ -115,15 +146,18 @@ export function PasoPrograma({ e, onCambio }: Props) {
           {/* Qué cabe con ese tiempo, dicho al elegirlo y no al final. Un
               proyecto de tres clases se puede hacer; lo que no se puede es
               hacerlo creyendo que va a llegar a la comunidad. */}
-          {e.sesiones && QUE_CABE[String(e.sesiones)] && (
+          {e.sesiones && queCabe[String(e.sesiones)] && (
             <p className="sm:col-span-2 rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-[15px] leading-relaxed text-[var(--crema)]/82">
-              {QUE_CABE[String(e.sesiones)]}
+              {queCabe[String(e.sesiones)]}
             </p>
           )}
 
           <Fichas
-            etiqueta="Cuánto dura cada clase"
-            ayuda="Con esto se sabe el tiempo real que tienes, que es lo que decide si el proyecto cabe."
+            etiqueta={tx("Cuánto dura cada clase", "Quanto dura cada aula")}
+            ayuda={tx(
+              "Con esto se sabe el tiempo real que tienes, que es lo que decide si el proyecto cabe.",
+              "Com isto se sabe o tempo real que você tem, que é o que decide se o projeto cabe."
+            )}
             opciones={DURACIONES}
             elegidas={e.duracionSesion ? [String(e.duracionSesion)] : []}
             onElegir={(v) => set("duracionSesion", v[0] ? Number(v[0]) : null)}

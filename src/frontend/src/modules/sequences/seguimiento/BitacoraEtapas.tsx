@@ -43,7 +43,8 @@ import { useState } from "react";
 import { Hoja, Parrafo } from "../crear/Campos";
 import type { Expedicion } from "../crear/expedicion";
 import type { EstadoNube } from "../crear/nube";
-import { ETAPAS } from "../metodo/etapas";
+import { etapasEn } from "../metodo/etapas";
+import { useTx, type Idioma } from "../../../shared/tx";
 import {
   InstrumentoAnalisis,
   InstrumentoAula,
@@ -67,10 +68,10 @@ import {
   type EstadoEtapa,
 } from "./bitacora";
 
-const ALCANCE: Record<string, string> = {
-  inmediato: "En la sala",
-  intermedio: "En el vecindario",
-  amplio: "Fuera de la escuela",
+const ALCANCE: Record<string, { es: string; pt: string }> = {
+  inmediato: { es: "En la sala", pt: "Na sala" },
+  intermedio: { es: "En el vecindario", pt: "No bairro" },
+  amplio: { es: "Fuera de la escuela", pt: "Fora da escola" },
 };
 
 /**
@@ -95,21 +96,24 @@ const INSTRUMENTOS: Record<
 };
 
 /** El nombre corto que cabe en el riel. El largo no cabe en seis columnas. */
-const CORTO: Record<string, string> = {
-  problematica: "Problemática",
-  aula: "Aula",
-  terreno: "Terreno",
-  analisis: "Análisis",
-  propuesta: "Propuesta",
-  difusion: "Difusión",
+const CORTO: Record<string, { es: string; pt: string }> = {
+  problematica: { es: "Problemática", pt: "Problemática" },
+  aula: { es: "Aula", pt: "Sala de aula" },
+  terreno: { es: "Terreno", pt: "Campo" },
+  analisis: { es: "Análisis", pt: "Análise" },
+  propuesta: { es: "Propuesta", pt: "Proposta" },
+  difusion: { es: "Difusión", pt: "Divulgação" },
 };
 
 /** Una fecha corta, dicha como se dice en voz alta. */
-function enPalabras(iso: string | null): string {
+function enPalabras(iso: string | null, idioma: Idioma): string {
   if (!iso) return "";
   const d = new Date(`${iso}T00:00:00`);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("es-CL", { day: "numeric", month: "long" });
+  return d.toLocaleDateString(idioma === "pt" ? "pt-BR" : "es-CL", {
+    day: "numeric",
+    month: "long",
+  });
 }
 
 export default function Bitacora({
@@ -128,22 +132,33 @@ export default function Bitacora({
   estado: EstadoNube;
   orden?: number;
 }) {
-  const enCurso = etapaEnCurso(hojas);
+  const tx = useTx();
+  const ETAPAS = etapasEn(tx.idioma);
+  const enCurso = etapaEnCurso(hojas, tx.idioma);
   const [abierta, ponerAbierta] = useState<string>(enCurso?.id ?? ETAPAS[0].id);
 
   const listos = cerradas(hojas);
-  const lista = avisos(e, hojas);
+  const lista = avisos(e, hojas, tx.idioma);
   const etapa = ETAPAS.find((x) => x.id === abierta) ?? ETAPAS[0];
   const n = ETAPAS.findIndex((x) => x.id === etapa.id) + 1;
 
   return (
-    <Hoja titulo="Por dónde va el proyecto" orden={orden}>
+    <Hoja titulo={tx("Por dónde va el proyecto", "Em que ponto está o projeto")} orden={orden}>
       <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
         {listos === 0
-          ? "El proyecto está armado y todavía no empieza en la sala. Abre la primera etapa el día que se dé."
+          ? tx(
+              "El proyecto está armado y todavía no empieza en la sala. Abre la primera etapa el día que se dé.",
+              "O projeto está montado e ainda não começou em sala. Abra a primeira etapa no dia em que ela acontecer."
+            )
           : listos === ETAPAS.length
-            ? "Las seis etapas cerradas. Lo que queda está todo escrito aquí abajo."
-            : `Van ${listos} de ${ETAPAS.length} etapas cerradas.`}
+            ? tx(
+                "Las seis etapas cerradas. Lo que queda está todo escrito aquí abajo.",
+                "As seis etapas fechadas. O que fica está tudo escrito aqui embaixo."
+              )
+            : tx(
+                `Van ${listos} de ${ETAPAS.length} etapas cerradas.`,
+                `${listos} de ${ETAPAS.length} etapas fechadas.`
+              )}
       </p>
 
       {/* ── Lo que conviene mirar ──────────────────────────────────────── */}
@@ -178,7 +193,7 @@ export default function Bitacora({
           <li key={x.id} className="min-w-[8.5rem] flex-1 snap-start">
             <PasoDelRiel
               n={i + 1}
-              nombre={CORTO[x.id] ?? x.nombre}
+              nombre={CORTO[x.id] ? tx.de(CORTO[x.id]) : x.nombre}
               estado={hojaDe(hojas, x.id).estado}
               puesta={x.id === abierta}
               onClick={() => ponerAbierta(x.id)}
@@ -192,7 +207,7 @@ export default function Bitacora({
         <Cabecera
           n={n}
           nombre={etapa.nombre}
-          alcance={ALCANCE[etapa.alcance] ?? ""}
+          alcance={ALCANCE[etapa.alcance] ? tx.de(ALCANCE[etapa.alcance]) : ""}
           hoja={hojaDe(hojas, etapa.id)}
           onAbrir={() => onCambio(abrir(hojas, etapa.id))}
           onCerrar={() => onCambio(cerrar(hojas, etapa.id))}
@@ -211,10 +226,14 @@ export default function Bitacora({
 
         {/* ── Las condiciones de término ──────────────────────────────── */}
         <div className="mt-6 border-t border-[var(--crema)]/12 pt-6">
-          <p className="rotulo text-[var(--tierra-600)]">Se puede cerrar cuando</p>
+          <p className="rotulo text-[var(--tierra-600)]">
+            {tx("Se puede cerrar cuando", "Pode ser fechada quando")}
+          </p>
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/70">
-            Las trae la etapa. Marcarlas es del docente y no las revisa nadie
-            más: sirven para no cerrar por calendario lo que todavía no ocurrió.
+            {tx(
+              "Las trae la etapa. Marcarlas es del docente y no las revisa nadie más: sirven para no cerrar por calendario lo que todavía no ocurrió.",
+              "Vêm com a etapa. Marcá-las é do professor e ninguém mais confere: servem para não fechar pelo calendário o que ainda não aconteceu."
+            )}
           </p>
           <ul className="mt-3 space-y-2">
             {etapa.estaListoCuando.map((c, i) => {
@@ -266,23 +285,29 @@ export default function Bitacora({
             primera vez no puede anticipar solo. */}
         {hojaDe(hojas, etapa.id).estado === "abierta" && (
           <p className="mt-6 rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3 text-[15px] leading-relaxed text-[var(--tierra-300)]">
-            <span className="font-medium">Se cae cuando:</span> {etapa.seCaeCuando}
+            <span className="font-medium">{tx("Se cae cuando", "Dá errado quando")}:</span>{" "}
+            {etapa.seCaeCuando}
           </p>
         )}
 
         {/* ── Lo que el docente quiera anotar ─────────────────────────── */}
         <label className="mt-6 block border-t border-[var(--crema)]/12 pt-6">
           <span className="rotulo block text-[var(--tierra-600)]">
-            Tu nota de esta etapa
+            {tx("Tu nota de esta etapa", "Sua anotação desta etapa")}
           </span>
           <span className="mt-1.5 mb-2 block text-sm leading-relaxed text-[var(--crema)]/70">
-            Lo que no cabe en ninguna casilla. Es lo que se agradece tener
-            escrito cuando, al final, hay que redactar el informe.
+            {tx(
+              "Lo que no cabe en ninguna casilla. Es lo que se agradece tener escrito cuando, al final, hay que redactar el informe.",
+              "O que não cabe em nenhuma caixa. É o que se agradece ter escrito quando, no fim, é preciso redigir o relatório."
+            )}
           </span>
           <Parrafo
             value={hojaDe(hojas, etapa.id).nota}
             onChange={(ev) => onCambio(ponerHoja(hojas, etapa.id, { nota: ev.target.value }))}
-            placeholder="Los de quinto se quedaron atrás con la escala. Repetirlo con el vaso de tierra."
+            placeholder={tx(
+              "Los de quinto se quedaron atrás con la escala. Repetirlo con el vaso de tierra.",
+              "O 6º ano ficou para trás com a escala. Repetir com o copo de terra."
+            )}
           />
         </label>
       </div>
@@ -309,6 +334,7 @@ function PasoDelRiel({
 }) {
   const cerrada = estado === "cerrada";
   const enCurso = estado === "abierta";
+  const tx = useTx();
 
   return (
     <button
@@ -346,7 +372,11 @@ function PasoDelRiel({
         </span>
       </span>
       <span className="rotulo text-[var(--crema)]/45">
-        {cerrada ? "Cerrada" : enCurso ? "Abierta" : "Sin abrir"}
+        {cerrada
+          ? tx("Cerrada", "Fechada")
+          : enCurso
+            ? tx("Abierta", "Aberta")
+            : tx("Sin abrir", "Não aberta")}
       </span>
     </button>
   );
@@ -374,12 +404,13 @@ function Cabecera({
   onFecha: (campo: "abierta" | "cerrada", valor: string) => void;
 }) {
   const dias = diasAbierta(hoja);
+  const tx = useTx();
 
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <span className="rotulo text-[var(--crema)]/45">
-          Etapa {String(n).padStart(2, "0")}
+          {tx("Etapa", "Etapa")} {String(n).padStart(2, "0")}
         </span>
         {alcance && <span className="rotulo text-[var(--crema)]/45">{alcance}</span>}
       </div>
@@ -393,7 +424,7 @@ function Cabecera({
             onClick={onAbrir}
             className="min-h-11 rounded-full border border-[var(--tierra-600)] bg-[var(--tierra-600)] px-5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
           >
-            Abrir esta etapa
+            {tx("Abrir esta etapa", "Abrir esta etapa")}
           </button>
         )}
 
@@ -404,10 +435,15 @@ function Cabecera({
               onClick={onCerrar}
               className="min-h-11 rounded-full border border-[var(--tierra-600)] px-5 text-sm font-medium text-[var(--tierra-300)] transition hover:bg-[var(--tierra-600)]/15"
             >
-              Darla por cerrada
+              {tx("Darla por cerrada", "Dar por fechada")}
             </button>
             <span className="text-sm text-[var(--crema)]/60">
-              Abierta {dias === 0 ? "hoy" : `hace ${dias} día${dias === 1 ? "" : "s"}`}.
+              {dias === 0
+                ? tx("Abierta hoy.", "Aberta hoje.")
+                : tx(
+                    `Abierta hace ${dias} día${dias === 1 ? "" : "s"}.`,
+                    `Aberta há ${dias} dia${dias === 1 ? "" : "s"}.`
+                  )}
             </span>
           </>
         )}
@@ -415,14 +451,14 @@ function Cabecera({
         {hoja.estado === "cerrada" && (
           <>
             <span className="rotulo rounded-full border border-[var(--tierra-600)]/45 bg-[var(--tierra-600)]/10 px-3 py-1.5 text-[var(--tierra-300)]">
-              Cerrada
+              {tx("Cerrada", "Fechada")}
             </span>
             <button
               type="button"
               onClick={onReabrir}
               className="min-h-11 text-sm text-[var(--crema)]/60 underline underline-offset-4 transition hover:text-[var(--crema-clara)]"
             >
-              Volver a abrirla
+              {tx("Volver a abrirla", "Abrir de novo")}
             </button>
           </>
         )}
@@ -433,7 +469,7 @@ function Cabecera({
       {hoja.estado !== "sin_abrir" && (
         <div className="mt-4 flex flex-wrap gap-4">
           <label className="flex items-center gap-2 text-sm text-[var(--crema)]/60">
-            <span>Se abrió el</span>
+            <span>{tx("Se abrió el", "Aberta em")}</span>
             <input
               type="date"
               value={hoja.abierta ?? ""}
@@ -443,7 +479,7 @@ function Cabecera({
           </label>
           {hoja.estado === "cerrada" && (
             <label className="flex items-center gap-2 text-sm text-[var(--crema)]/60">
-              <span>Se cerró el</span>
+              <span>{tx("Se cerró el", "Fechada em")}</span>
               <input
                 type="date"
                 value={hoja.cerrada ?? ""}
@@ -454,7 +490,8 @@ function Cabecera({
           )}
           {hoja.estado === "cerrada" && hoja.abierta && hoja.cerrada && (
             <span className="self-center text-sm text-[var(--crema)]/45">
-              {enPalabras(hoja.abierta)} al {enPalabras(hoja.cerrada)}
+              {enPalabras(hoja.abierta, tx.idioma)} {tx("al", "a")}{" "}
+              {enPalabras(hoja.cerrada, tx.idioma)}
             </span>
           )}
         </div>
@@ -494,6 +531,7 @@ function CierreEscrito({
   hoja: ReturnType<typeof hojaDe>;
   onCambio: (cambio: { entregaron?: number | null; faltan?: string }) => void;
 }) {
+  const tx = useTx();
   const total = e.estudiantes;
   const cuantos = hoja.entregaron ?? 0;
   const mover = (d: number) =>
@@ -501,7 +539,9 @@ function CierreEscrito({
 
   return (
     <div className="mt-6 border-t border-[var(--crema)]/12 pt-6">
-      <p className="rotulo text-[var(--tierra-600)]">El cierre, cada uno en su cuaderno</p>
+      <p className="rotulo text-[var(--tierra-600)]">
+        {tx("El cierre, cada uno en su cuaderno", "O fechamento, cada um no seu caderno")}
+      </p>
       <ul className="mt-2.5 space-y-1.5">
         {preguntas.map((q) => (
           <li key={q} className="text-[15px] leading-relaxed text-[var(--crema-clara)]">
@@ -510,7 +550,8 @@ function CierreEscrito({
         ))}
       </ul>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--crema)]/70">
-        <span className="text-[var(--crema-clara)]">Qué mirar:</span> {queMirar}
+        <span className="text-[var(--crema-clara)]">{tx("Qué mirar", "O que observar")}:</span>{" "}
+        {queMirar}
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-4">
@@ -521,7 +562,7 @@ function CierreEscrito({
             className="grid h-11 w-11 place-items-center rounded-full border border-[var(--crema)]/20 text-lg text-[var(--crema)]/80 transition hover:border-[var(--crema)]/45"
           >
             <span aria-hidden>−</span>
-            <span className="sr-only">Uno menos</span>
+            <span className="sr-only">{tx("Uno menos", "Um a menos")}</span>
           </button>
           <input
             type="number"
@@ -531,7 +572,7 @@ function CierreEscrito({
             onChange={(ev) =>
               onCambio({ entregaron: ev.target.value ? Number(ev.target.value) : null })
             }
-            aria-label="Cuántos entregaron el cierre"
+            aria-label={tx("Cuántos entregaron el cierre", "Quantos entregaram o fechamento")}
             className="w-20 rounded-lg border border-[var(--crema)]/20 bg-[var(--crema)]/[0.045] px-3 py-2.5 text-center text-[15px] text-[var(--crema-clara)] outline-none focus:border-[var(--tierra-600)]"
           />
           <button
@@ -540,10 +581,12 @@ function CierreEscrito({
             className="grid h-11 w-11 place-items-center rounded-full border border-[var(--crema)]/20 text-lg text-[var(--crema)]/80 transition hover:border-[var(--crema)]/45"
           >
             <span aria-hidden>+</span>
-            <span className="sr-only">Uno más</span>
+            <span className="sr-only">{tx("Uno más", "Um a mais")}</span>
           </button>
           <span className="ml-1 text-sm text-[var(--crema)]/70">
-            {total ? `de ${total} entregaron` : "entregaron"}
+            {total
+              ? tx(`de ${total} entregaron`, `de ${total} entregaram`)
+              : tx("entregaron", "entregaram")}
           </span>
         </div>
 
@@ -553,7 +596,7 @@ function CierreEscrito({
           <div
             className="h-2 min-w-[8rem] flex-1 overflow-hidden rounded-full bg-[var(--crema)]/10"
             role="img"
-            aria-label={`${cuantos} de ${total}.`}
+            aria-label={`${cuantos} / ${total}.`}
           >
             <span
               className="block h-full rounded-full bg-[var(--tierra-600)] transition-all duration-500"
@@ -565,15 +608,19 @@ function CierreEscrito({
 
       {total !== null && cuantos > 0 && cuantos < total && (
         <label className="mt-4 block">
-          <span className="rotulo block text-[var(--crema)]/70">Quiénes faltan</span>
+          <span className="rotulo block text-[var(--crema)]/70">
+            {tx("Quiénes faltan", "Quem falta")}
+          </span>
           <span className="mt-1.5 mb-2 block text-sm leading-relaxed text-[var(--crema)]/70">
-            Con nombre. Suelen ser los mismos de la etapa anterior, y esa
-            repetición es el dato.
+            {tx(
+              "Con nombre. Suelen ser los mismos de la etapa anterior, y esa repetición es el dato.",
+              "Com nome. Costumam ser os mesmos da etapa anterior, e essa repetição é o dado."
+            )}
           </span>
           <Parrafo
             value={hoja.faltan}
             onChange={(ev) => onCambio({ faltan: ev.target.value })}
-            placeholder="Nombres, o la fila del fondo."
+            placeholder={tx("Nombres, o la fila del fondo.", "Nomes, ou a fileira do fundo.")}
           />
         </label>
       )}
@@ -590,16 +637,29 @@ function CierreEscrito({
  * arregla solo, y sin tabla hay que cargar un SQL en el proyecto.
  */
 function EstadoGuardado({ estado }: { estado: EstadoNube }) {
-  const texto: Record<EstadoNube, string> = {
-    sin_cuenta:
-      "Guardado en este computador. Entra con tu cuenta y queda también ahí, para abrirlo desde otro equipo.",
-    guardando: "Guardando en tu cuenta…",
-    guardado: "Guardado en tu cuenta. Lo puedes abrir desde otro computador.",
-    sin_conexion:
-      "Guardado en este computador. No se pudo llegar a tu cuenta: cuando vuelva la señal se sube solo.",
-    sin_tabla:
-      "Guardado en este computador. El respaldo en la cuenta todavía no está activado en el servidor.",
-  };
+  const tx = useTx();
+  const texto: Record<EstadoNube, string> = tx(
+    {
+      sin_cuenta:
+        "Guardado en este computador. Entra con tu cuenta y queda también ahí, para abrirlo desde otro equipo.",
+      guardando: "Guardando en tu cuenta…",
+      guardado: "Guardado en tu cuenta. Lo puedes abrir desde otro computador.",
+      sin_conexion:
+        "Guardado en este computador. No se pudo llegar a tu cuenta: cuando vuelva la señal se sube solo.",
+      sin_tabla:
+        "Guardado en este computador. El respaldo en la cuenta todavía no está activado en el servidor.",
+    },
+    {
+      sin_cuenta:
+        "Salvo neste computador. Entre com a sua conta e fica salvo lá também, para abrir de outro computador.",
+      guardando: "Salvando na sua conta…",
+      guardado: "Salvo na sua conta. Dá para abrir de outro computador.",
+      sin_conexion:
+        "Salvo neste computador. Não foi possível chegar à sua conta: quando o sinal voltar, envia sozinho.",
+      sin_tabla:
+        "Salvo neste computador. O backup na conta ainda não está ativado no servidor.",
+    }
+  );
 
   return (
     <p

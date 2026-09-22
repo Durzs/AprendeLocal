@@ -17,36 +17,29 @@ import { useTranslation } from "react-i18next";
  * ese recorrido, a partir de los Objetivos de Aprendizaje que marcó.
  */
 
-/** Los tres pasos, y de quién es cada parte. */
-const PASOS = [
-  {
-    n: "01",
-    titulo: "Lo que ya está decidido",
-    cuerpo:
-      "Tus cursos, las semanas que tienes y los Objetivos de Aprendizaje que te toca pasar. Se marcan de una lista, no se escriben de memoria.",
-    pone: "Lo pone el programa",
-    color: "text-blue-800 bg-blue-50 border-blue-200",
-  },
-  {
-    n: "02",
-    titulo: "Lo que hay al otro lado de la puerta",
-    cuerpo:
-      "Qué se alcanza caminando, cómo se llama y qué pasa ahí que en otra escuela no pasaría igual. Esto no lo sabe nadie más que tú.",
-    pone: "Lo pones tú",
-    color: "text-orange-900 bg-orange-50 border-orange-200",
-  },
-  {
-    n: "03",
-    titulo: "La pregunta que aguanta tres semanas",
-    cuerpo:
-      "Llegan borradores armados con lo que escribiste. Los corriges hasta que la pregunta lleve tus palabras, y esa es la que sostiene el proyecto.",
-    pone: "Entre los dos",
-    color: "text-emerald-800 bg-emerald-50 border-emerald-200",
-  },
+/**
+ * Los tres pasos, y de quién es cada parte.
+ *
+ * El texto está en `home.build.pasos`, en los tres idiomas; aquí queda lo que
+ * no se traduce. El tercero decía que llegaban «borradores armados» de la
+ * pregunta: eso lo hacía el modelo que se retiró. Ahora la pregunta sale de
+ * leer la problemática con el curso y se anota en el seguimiento.
+ */
+const ESTILO_PASO = [
+  "text-blue-800 bg-blue-50 border-blue-200",
+  "text-orange-900 bg-orange-50 border-orange-200",
+  "text-emerald-800 bg-emerald-50 border-emerald-200",
 ];
+
+type Paso = { titulo: string; cuerpo: string; pone: string };
 
 export default function ProjectsSection() {
   const { t } = useTranslation();
+  const PASOS = (t("home.build.pasos", { returnObjects: true }) as Paso[]).map((p, i) => ({
+    ...p,
+    n: String(i + 1).padStart(2, "0"),
+    color: ESTILO_PASO[i],
+  }));
 
   return (
     <section

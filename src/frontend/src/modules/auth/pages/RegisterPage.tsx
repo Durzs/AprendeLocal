@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { fetchSchools } from "../../../api";
 import type { School } from "../../../types";
 import { mensajeDe } from "../../../shared/lib/errores";
+import { useSede } from "../../../shared/sede";
+import { useTx } from "../../../shared/tx";
 
 // La plataforma la usan estudiantes de enseñanza básica y media y sus
 // docentes; fuera de este rango el dato no es plausible.
@@ -16,6 +18,20 @@ const EDAD_MAX = 99;
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const tx = useTx();
+  /*
+   * La edición decide qué se pide.
+   *
+   * En Chile la cuenta docente se abre con el PIN de la escuela, y la de
+   * estudiante con el código de la escuela o del proyecto. En Brasil todavía
+   * no hay escuelas cargadas ni códigos que repartir, así que pedirlos era
+   * cerrarle la puerta a cualquier docente carioca: el formulario no dejaba
+   * terminar sin validar un código que no existe. Ahí la cuenta es docente y
+   * la escuela se elige después. La cuenta nace con su sede, que es lo que
+   * decide el currículum que va a ver.
+   */
+  const sede = useSede();
+  const pideCodigo = sede === "cl";
 
   const nomeRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -232,8 +248,8 @@ export default function RegisterPage() {
       return;
     }
 
-    // Obligatorio para ambos roles: deben haber validado un código
-    if (!validatedSchool && !validatedProject) {
+    // En Chile es obligatorio para ambos roles haber validado un código.
+    if (pideCodigo && !validatedSchool && !validatedProject) {
       setAviso({
         tipo: "error",
         texto:
@@ -267,6 +283,7 @@ export default function RegisterPage() {
         nome,
         idade: String(edad),
         role,
+        sede,
         school_id: validatedSchool?.id || null,
         project_code: validatedProject?.code || null,
         subject: role === "profesor" ? subject.trim() || null : null,
@@ -305,6 +322,7 @@ export default function RegisterPage() {
             nome,
             idade: edad,
             role,
+            sede,
             school_id: validatedSchool?.id || null,
             subject: role === "profesor" ? subject.trim() || null : null,
           },
@@ -364,7 +382,9 @@ export default function RegisterPage() {
               <p className="mt-2 text-sm text-slate-500">{t("register.subtitle")}</p>
             </div>
 
-            {/* Selector de Rol */}
+            {/* Selector de Rol. En Brasil las cuentas son de docente, por
+                ahora: ver `pideCodigo` arriba. */}
+            {pideCodigo && (
             <div className="mt-6">
               <p
                 id="registro-tipo"
@@ -418,6 +438,7 @@ export default function RegisterPage() {
                 </button>
               </div>
             </div>
+            )}
 
             {aviso && (
               <div
@@ -444,7 +465,8 @@ export default function RegisterPage() {
             )}
 
             <form className="mt-6 space-y-4" onSubmit={handleCadastro}>
-              {/* Sección de Validación de Código y Seguridad */}
+              {/* Sección de Validación de Código y Seguridad. Solo en Chile. */}
+              {pideCodigo ? (
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
                 <label
                   htmlFor="registro-codigo"
@@ -608,6 +630,28 @@ export default function RegisterPage() {
                   </div>
                 )}
               </div>
+              ) : (
+                <div>
+                  <label
+                    htmlFor="registro-asignatura"
+                    className="mb-1.5 block text-sm font-medium text-slate-700"
+                  >
+                    Componente curricular que você leciona (opcional)
+                  </label>
+                  <input
+                    id="registro-asignatura"
+                    type="text"
+                    placeholder="Ex.: Ciências, Geografia, Língua Portuguesa"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
+                  />
+                  <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+                    A escola você escolhe depois, no seu perfil. Por enquanto as
+                    contas da edição brasileira são de professores.
+                  </p>
+                </div>
+              )}
 
               <div>
                 <label
@@ -706,17 +750,21 @@ export default function RegisterPage() {
           <div className="flex flex-col items-center justify-center rounded-[2rem] border border-slate-200 bg-[#111217] p-10 text-center lg:text-left">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
               <Sparkles className="h-3.5 w-3.5" />
-              Educación STEM Geolocalizada
+              {tx("Ciencias con el lugar de tu escuela", "Ciências com o lugar da sua escola")}
             </div>
 
             <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl">
-              {role === "profesor"
+              {!pideCodigo
+                ? "Um projeto com a sua turma a partir do que acontece perto da escola"
+                : role === "profesor"
                 ? "Conecta tu escuela rural con el territorio de La Araucanía"
                 : "Aprende ciencia y tecnología con tu escuela"}
             </h1>
 
             <p className="mt-5 text-base leading-relaxed text-slate-400">
-              {role === "profesor"
+              {!pideCodigo
+                ? "O rio canalizado, a encosta, o manguezal, o lixo da rua: você escolhe a problemática, marca as habilidades da BNCC e sai com a turma. A plataforma prepara a autorização dos responsáveis e o acompanhamento de cada etapa."
+                : role === "profesor"
                 ? "Como docente registrado con el PIN de tu escuela, accederás directamente a los puntos de interés patrimoniales, biológicos y geológicos de tu territorio escolar."
                 : "Ingresa el código de tu escuela o el código que te compartió tu profesor/a para comenzar tus proyectos y actividades."}
             </p>

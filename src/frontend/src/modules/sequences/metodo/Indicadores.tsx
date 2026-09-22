@@ -1,10 +1,12 @@
 import { useState } from "react";
 
 import { Hoja } from "../crear/Campos";
-import { buscarOA } from "../crear/oa";
 import { indicadoresDe } from "../crear/indicadores";
 import type { Expedicion } from "../crear/expedicion";
-import { ETAPAS } from "./etapas";
+import { buscarObjetivo } from "../contenido/curriculo";
+import { useContenido } from "../contenido";
+import { useTx, type Idioma } from "../../../shared/tx";
+import { etapasEn } from "./etapas";
 import { tecnicaPorId } from "./tecnicas";
 
 /**
@@ -59,10 +61,10 @@ type Candidato = { texto: string; deDonde: string };
  * objetivos, y eso no es un indicador de nada: un indicador que sirve para
  * cualquier objetivo no distingue ninguno.
  */
-function candidatosDelObjetivo(codigo: string): Candidato[] {
+function candidatosDelObjetivo(codigo: string, idioma: Idioma): Candidato[] {
   return indicadoresDe(codigo).map((texto) => ({
     texto,
-    deDonde: "Escrito para este objetivo",
+    deDonde: idioma === "pt" ? "Escrito para esta habilidade" : "Escrito para este objetivo",
   }));
 }
 
@@ -74,24 +76,27 @@ function candidatosDelObjetivo(codigo: string): Candidato[] {
  * la clase. Ordenarlos por etapa sí ayuda, porque así se ve en qué momento del
  * proyecto se puede mirar cada cosa.
  */
-function candidatosDe(e: Expedicion): Candidato[] {
+function candidatosDe(e: Expedicion, idioma: Idioma): Candidato[] {
   const salida: Candidato[] = [];
+  const pt = idioma === "pt";
 
-  for (const etapa of ETAPAS) {
+  for (const etapa of etapasEn(idioma)) {
     for (const a of etapa.aprendizajes) {
       salida.push({
-        texto: `${a.nombre}: se nota en que ${a.seNotaEn}`,
+        texto: `${a.nombre}: ${pt ? "nota-se quando" : "se nota en que"} ${a.seNotaEn}`,
         deDonde: etapa.nombre,
       });
     }
   }
 
   for (const id of e.tecnicas) {
-    const t = tecnicaPorId(id);
+    const t = tecnicaPorId(id, idioma);
     if (!t) continue;
     salida.push({
-      texto: `Aplica ${t.nombre.toLowerCase()} y vuelve con el registro completo y legible.`,
-      deDonde: "La técnica que ensayaron",
+      texto: pt
+        ? `Aplica ${t.nombre.toLowerCase()} e volta com o registro completo e legível.`
+        : `Aplica ${t.nombre.toLowerCase()} y vuelve con el registro completo y legible.`,
+      deDonde: pt ? "A técnica que ensaiaram" : "La técnica que ensayaron",
     });
   }
 
@@ -107,29 +112,35 @@ export function Indicadores({
   onCambio: (e: Expedicion) => void;
   orden?: number;
 }) {
-  const marcados = e.oa.map((cod) => ({ cod, oa: buscarOA(cod) })).filter((x) => x.oa);
+  const tx = useTx();
+  const c = useContenido();
+  const marcados = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
+  const titulo = tx("Indicadores de evaluación", "Indicadores de avaliação");
 
   if (marcados.length === 0) {
     return (
-      <Hoja titulo="Indicadores de evaluación" orden={orden}>
+      <Hoja titulo={titulo} orden={orden}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
-          Esto aparece cuando marques objetivos de aprendizaje. Para cada uno
-          vas a poder dejar escrito qué se mira en la sala para saber si
-          ocurrió.
+          {tx(
+            "Esto aparece cuando marques objetivos de aprendizaje. Para cada uno vas a poder dejar escrito qué se mira en la sala para saber si ocurrió.",
+            "Isto aparece quando você marcar habilidades. Para cada uma vai poder deixar escrito o que se observa em sala para saber se aconteceu."
+          )}
         </p>
       </Hoja>
     );
   }
 
-  const candidatos = candidatosDe(e);
+  const candidatos = candidatosDe(e, tx.idioma);
 
   return (
-    <Hoja titulo="Indicadores de evaluación" orden={orden}>
+    <Hoja titulo={titulo} orden={orden}>
       {/* El aviso va arriba y no en letra chica: alguien va a copiar esta hoja
           en un documento que se firma y tiene que saber qué está copiando. */}
       <p className="mb-5 max-w-2xl rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-2.5 text-[15px] leading-relaxed text-[var(--tierra-300)]">
-        No son los indicadores oficiales del programa. Son los de este proyecto,
-        escritos para poder mirarlos en clase.
+        {tx(
+          "No son los indicadores oficiales del programa. Son los de este proyecto, escritos para poder mirarlos en clase.",
+          `Não são indicadores oficiais da ${c.palabras.fuente} nem da rede. São os deste projeto, escritos para poder observá-los em aula.`
+        )}
       </p>
 
       <div className="space-y-3">
@@ -139,7 +150,7 @@ export function Indicadores({
             codigo={cod}
             texto={oa!.texto}
             puestos={e.indicadores[cod] ?? []}
-            propios={candidatosDelObjetivo(cod)}
+            propios={candidatosDelObjetivo(cod, tx.idioma)}
             candidatos={candidatos}
             onCambio={(lista) =>
               onCambio({ ...e, indicadores: { ...e.indicadores, [cod]: lista } })
@@ -173,6 +184,7 @@ function PorObjetivo({
   /** Cuál se está editando, por su posición. */
   const [editando, ponerEditando] = useState<number | null>(null);
   const [borrador, ponerBorrador] = useState("");
+  const tx = useTx();
 
   function agregar(t: string) {
     const limpio = t.trim();
@@ -269,7 +281,7 @@ function PorObjetivo({
                     onClick={guardarEdicion}
                     className="min-h-11 rounded-full bg-[var(--tierra-600)] px-4 text-sm font-medium text-[#1e2a24]"
                   >
-                    Guardar
+                    {tx("Guardar", "Salvar")}
                   </button>
                 </div>
               ) : (
@@ -289,14 +301,14 @@ function PorObjetivo({
                     }}
                     className="min-h-11 shrink-0 px-2 text-sm text-[var(--crema)]/70 hover:text-[var(--crema-clara)]"
                   >
-                    Editar
+                    {tx("Editar", "Editar")}
                   </button>
                   <button
                     type="button"
                     onClick={() => onCambio(puestos.filter((_, j) => j !== i))}
                     className="min-h-11 shrink-0 px-2 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
                   >
-                    Quitar
+                    {tx("Quitar", "Remover")}
                   </button>
                 </div>
               )}
@@ -317,8 +329,11 @@ function PorObjetivo({
             agregar(escribiendo);
             ponerEscribiendo("");
           }}
-          placeholder="Escribe un indicador tuyo: qué vas a ver en la sala"
-          aria-label="Indicador propio"
+          placeholder={tx(
+            "Escribe un indicador tuyo: qué vas a ver en la sala",
+            "Escreva um indicador seu: o que você vai observar em aula"
+          )}
+          aria-label={tx("Indicador propio", "Indicador próprio")}
           className="min-h-11 min-w-0 flex-1 rounded-lg border border-[var(--crema)]/18 bg-transparent px-3 py-2 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
         />
         <button
@@ -329,7 +344,7 @@ function PorObjetivo({
           }}
           className="min-h-11 rounded-full border border-[var(--crema)]/25 px-4 text-sm text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
         >
-          Agregar
+          {tx("Agregar", "Adicionar")}
         </button>
       </div>
 
@@ -340,8 +355,11 @@ function PorObjetivo({
         className="mt-3 min-h-11 text-sm text-[var(--crema)]/78 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
       >
         {abierto
-          ? "Cerrar los del método"
-          : "Ver también los del método, que sirven para cualquier objetivo"}
+          ? tx("Cerrar los del método", "Fechar os do método")
+          : tx(
+              "Ver también los del método, que sirven para cualquier objetivo",
+              "Ver também os do método, que servem para qualquer habilidade"
+            )}
       </button>
 
       {abierto && (

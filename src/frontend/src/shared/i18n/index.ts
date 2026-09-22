@@ -1,56 +1,57 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
 
 import ptCommon from "./locales/pt/common.json";
 import enCommon from "./locales/en/common.json";
 import esCommon from "./locales/es/common.json";
+import { SEDES, idiomaDebido, sedeActual, suscribirSede } from "../sede";
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources: {
-      pt: { common: ptCommon },
-      en: { common: enCommon },
-      es: { common: esCommon }
-    },
-    // Español: el piloto es en La Araucanía. Con «pt» de respaldo, un
-    // computador de escuela mal configurado servía la plataforma en portugués
-    // a un docente chileno, que es el peor primer contacto posible.
-    fallbackLng: "es",
-    supportedLngs: ["pt", "en", "es"],
-    defaultNS: "common",
-    interpolation: { escapeValue: false },
+const LLAVE_IDIOMA = "app:lang";
 
-    /*
-     * El idioma sale de lo que la persona eligió, y de nada más.
-     *
-     * Antes la lista era ["localStorage", "navigator"]. El navegador decidía
-     * cuando no había elección guardada, y ahí aparecía el peor defecto del
-     * sitio: un visitante con Chrome en inglés —lo normal en un computador
-     * institucional— recibía la portada a medio traducir. El titular en
-     * inglés, «¿Qué es AprendeLocal?» en español, los pilares otra vez en
-     * inglés y la sección del territorio entera en español. No es que
-     * faltaran unas cadenas: `TerritorioSection` y `EtapasMetodo` no pasaron
-     * nunca por i18n y no tienen una sola llamada a `t()`.
-     *
-     * Quitando "navigator", quien llega sin haber elegido ve el sitio en
-     * español, que es el único idioma completo. El conmutador sigue estando
-     * para quien quiera cambiarlo, y esa sí es una decisión suya.
-     *
-     * Esto tapa el síntoma, no la causa. La causa es que hay tres idiomas
-     * declarados y uno solo mantenido, y se arregla de una de dos maneras:
-     * traduciendo lo que falta con una comprobación en el build que impida
-     * que vuelva a desincronizarse, o dejando solo español y quitando el
-     * conmutador. Las dos son decisión de Diego.
-     */
-    detection: {
-      order: ["localStorage"],
-      lookupLocalStorage: "app:lang",
-      caches: ["localStorage"]
-    }
-  });
+/*
+ * El idioma sale de la edición, y de la persona si eligió otro.
+ *
+ * Antes el detector miraba solo lo guardado y caía en español. Eso tapaba un
+ * defecto viejo —un Chrome en inglés recibía la portada a medio traducir—
+ * pero dejaba a un docente carioca en español hasta que encontrara el
+ * conmutador. Ahora cada edición trae su idioma (§sede.ts), y lo guardado solo
+ * cuenta si la persona lo eligió a mano y su edición lo ofrece.
+ */
+function idiomaInicial(): string {
+  const sede = sedeActual();
+  let guardado: string | null = null;
+  try {
+    guardado = localStorage.getItem(LLAVE_IDIOMA);
+  } catch {
+    /* Ventana privada. */
+  }
+  if (guardado && idiomaDebido(sede, guardado) === null) return guardado;
+  return SEDES[sede].idioma;
+}
+
+function guardarIdioma(idioma: string) {
+  try {
+    localStorage.setItem(LLAVE_IDIOMA, idioma);
+  } catch {
+    /* Ventana privada. */
+  }
+}
+
+i18n.use(initReactI18next).init({
+  resources: {
+    pt: { common: ptCommon },
+    en: { common: enCommon },
+    es: { common: esCommon },
+  },
+  lng: idiomaInicial(),
+  // Español: el piloto es en La Araucanía. Con «pt» de respaldo, un
+  // computador de escuela mal configurado servía la plataforma en portugués
+  // a un docente chileno, que es el peor primer contacto posible.
+  fallbackLng: "es",
+  supportedLngs: ["pt", "en", "es"],
+  defaultNS: "common",
+  interpolation: { escapeValue: false },
+});
 
 /*
  * El atributo `lang` del documento, al día.
@@ -62,11 +63,23 @@ i18n
  */
 function sincronizarLang(idioma: string) {
   if (typeof document !== "undefined" && idioma) {
-    document.documentElement.lang = idioma;
+    document.documentElement.lang = idioma === "pt" ? "pt-BR" : idioma;
   }
+  guardarIdioma(idioma);
 }
 
 sincronizarLang(i18n.resolvedLanguage ?? "es");
 i18n.on("languageChanged", sincronizarLang);
+
+/*
+ * Cuando cambia la edición, cambia el idioma.
+ *
+ * Pasa al elegir «Brasil» en el selector y al entrar con una cuenta de la
+ * otra sede. `idiomaDebido` respeta el inglés si la persona lo eligió.
+ */
+suscribirSede(() => {
+  const debido = idiomaDebido(sedeActual(), i18n.resolvedLanguage ?? "es");
+  if (debido) i18n.changeLanguage(debido);
+});
 
 export default i18n;

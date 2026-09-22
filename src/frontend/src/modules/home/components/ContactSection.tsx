@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Mail, MapPin, Send, CheckCircle2, Loader2 } from "lucide-react";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
+import { SEDES, useSede } from "../../../shared/sede";
 
 /** A donde llegan los mensajes que escribe la gente en este formulario. */
 const CORREO = "aprendelocal@gmail.com";
@@ -28,6 +29,7 @@ type Estado = "escribiendo" | "enviando" | "guardado" | "por_correo";
 
 export default function ContactSection() {
   const { t } = useTranslation();
+  const sede = useSede();
   const [estado, setEstado] = useState<Estado>("escribiendo");
   const [formData, setFormData] = useState({
     name: "",
@@ -38,7 +40,7 @@ export default function ContactSection() {
 
   /** Arma el correo de respaldo con lo que la persona ya escribio. */
   function abrirCorreo() {
-    const asunto = `AprendeLocal · ${formData.name || "mensaje desde el sitio"}`;
+    const asunto = `AprendeLocal ${sede.toUpperCase()} · ${formData.name || t("home.contact.asunto")}`;
     const cuerpo = [
       `Nombre: ${formData.name}`,
       `Correo: ${formData.email}`,
@@ -86,7 +88,7 @@ export default function ContactSection() {
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
         {/* La franja de anotación que abre las otras cuatro secciones. */}
         <div className="mb-12 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-200 pb-4">
-          <span className="rotulo text-orange-700">Contacto</span>
+          <span className="rotulo text-orange-700">{t("home.contact.badge")}</span>
           <span className="rotulo text-slate-400">{CORREO}</span>
         </div>
 
@@ -113,7 +115,7 @@ export default function ContactSection() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="rotulo text-slate-500">Correo directo</div>
+                  <div className="rotulo text-slate-500">{t("home.contact.correoDirecto")}</div>
                   <a
                     href="mailto:aprendelocal@gmail.com"
                     className="font-semibold text-slate-900 transition hover:text-orange-700"
@@ -128,10 +130,8 @@ export default function ContactSection() {
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="rotulo text-slate-500">Zona piloto</div>
-                  <div className="font-semibold text-slate-900">
-                    Temuco · La Araucanía, Chile
-                  </div>
+                  <div className="rotulo text-slate-500">{t("home.contact.zona")}</div>
+                  <div className="font-semibold text-slate-900">{SEDES[sede].zona}</div>
                 </div>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function ContactSection() {
                         onChange={(e) =>
                           setFormData({ ...formData, name: e.target.value })
                         }
-                        placeholder="Tu nombre"
+                        placeholder={t("home.contact.phNombre")}
                         className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                       />
                     </div>
@@ -222,7 +222,7 @@ export default function ContactSection() {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        placeholder="tu@escuela.org"
+                        placeholder={t("home.contact.phCorreo")}
                         className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                       />
                     </div>
@@ -241,7 +241,7 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setFormData({ ...formData, role: e.target.value })
                       }
-                      placeholder="Ej: Docente Rural, Directivo, Investigador"
+                      placeholder={t("home.contact.phRol")}
                       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                     />
                   </div>
@@ -259,7 +259,7 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      placeholder="Cuéntanos sobre tu escuela o qué proyecto STEM te gustaría impulsar..."
+                      placeholder={t("home.contact.phMensaje")}
                       className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-[var(--tinta-600)] focus:outline-none"
                     />
                   </div>

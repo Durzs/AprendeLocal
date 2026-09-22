@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { aQueDistancia, metrosEntre, type Coordenada, type Lugar } from "./lugar";
+import { useTx } from "../../../shared/tx";
 
 /**
  * El mapa de verdad.
@@ -100,6 +101,7 @@ export function Mapa({
   buscando: boolean;
 }) {
   const [tocado, ponerTocado] = useState<Coordenada | null>(null);
+  const tx = useTx();
 
   return (
     <div className="mt-4">
@@ -129,7 +131,7 @@ export function Mapa({
               position={[l.lat, l.lng]}
               icon={punto(elegido === l.nombre)}
               eventHandlers={{ click: () => onElegirLugar(l) }}
-              title={`${l.nombre} · ${aQueDistancia(metrosEntre(centro, l))}`}
+              title={`${l.nombre} · ${aQueDistancia(metrosEntre(centro, l), tx.idioma)}`}
             />
           ))}
 
@@ -140,15 +142,16 @@ export function Mapa({
 
         {buscando && (
           <p className="absolute left-3 top-3 z-[1000] rounded-full bg-[var(--fondo)]/90 px-3.5 py-1.5 text-sm text-[var(--crema-clara)]">
-            Viendo qué hay ahí…
+            {tx("Viendo qué hay ahí…", "Vendo o que há ali…")}
           </p>
         )}
       </div>
 
       <p className="mt-2 text-sm leading-relaxed text-[var(--crema)]/70">
-        Los puntos son los sitios que el mapa tiene con nombre. Si el lugar al
-        que iría el curso no está, tócalo igual: se toma esa coordenada y el
-        nombre lo pones tú abajo.
+        {tx(
+          "Los puntos son los sitios que el mapa tiene con nombre. Si el lugar al que iría el curso no está, tócalo igual: se toma esa coordenada y el nombre lo pones tú abajo.",
+          "Os pontos são os lugares que o mapa tem com nome. Se o lugar aonde a turma iria não está, toque nele assim mesmo: a coordenada fica marcada e o nome você escreve abaixo."
+        )}
       </p>
     </div>
   );

@@ -3,31 +3,15 @@ import { useState } from "react";
 import { Hoja, Parrafo, Texto } from "../crear/Campos";
 import type { ActividadPropia, Expedicion } from "../crear/expedicion";
 import {
-  ASIGNATURAS,
-  FAMILIAS_PROBLEMA,
-  PROBLEMAS,
-  QUE_SACAN_DE_LA_NOTICIA,
   angulosDe,
   nombreAsignatura,
-  problemaPorId,
   type Angulo,
   type Problema,
 } from "./problemas";
 import SelectorOA from "../crear/SelectorOA";
-import {
-  NOMBRE_ASIGNATURA_OA,
-  buscarOA,
-  type AsignaturaOA,
-  type NivelOA,
-} from "../crear/oa";
-
-/** «7º» es lo que marca el docente; `7mo_basico` es como se llama en el catálogo. */
-const NIVEL_DE_CURSO: Record<string, NivelOA> = {
-  "5º": "5to_basico",
-  "6º": "6to_basico",
-  "7º": "7mo_basico",
-  "8º": "8vo_basico",
-};
+import { useContenido } from "../contenido";
+import { buscarObjetivo } from "../contenido/curriculo";
+import { useTx } from "../../../shared/tx";
 
 /**
  * De dónde arranca el proyecto, en tres columnas.
@@ -71,11 +55,14 @@ export function ElegirProblema({
   /** La actividad en la que está puesta la atención, para filtrar la tercera columna. */
   const [enfocada, ponerEnfocada] = useState<string | null>(null);
   const [verTodos, ponerVerTodos] = useState(false);
+  const tx = useTx();
+  const c = useContenido();
 
   const set = <K extends keyof Expedicion>(k: K, v: Expedicion[K]) =>
     onCambio({ ...e, [k]: v });
 
-  const elegido = (e.problemaId ? problemaPorId(e.problemaId) : null) ?? null;
+  // Solo las de esta edición: un id guardado de la otra no se muestra.
+  const elegido = (e.problemaId ? c.problemas.find((p) => p.id === e.problemaId) : null) ?? null;
   const angulos = elegido ? angulosDe(elegido, e.asignaturas) : [];
   const activa = angulos.find((a) => a.asignatura === enfocada) ?? null;
 
@@ -100,7 +87,7 @@ export function ElegirProblema({
   // abrir uno de 5º y otro de 8º a la vez; a quien tiene séptimo y octavo no
   // le sirve que le ofrezcan el de quinto. Sin cursos marcados se muestran
   // todos, que es mejor que una columna vacía sin explicación.
-  const niveles = new Set(e.cursos.map((c) => NIVEL_DE_CURSO[c]).filter(Boolean));
+  const niveles = new Set(e.cursos.filter((x) => c.cursos.includes(x)));
   const codigos = [
     ...new Set(
       propiaActiva
@@ -113,17 +100,20 @@ export function ElegirProblema({
             ]
     ),
   ].filter((cod) => {
-    const oa = buscarOA(cod);
-    return oa && (niveles.size === 0 || niveles.has(oa.nivel));
+    const oa = buscarObjetivo(cod);
+    return oa && (niveles.size === 0 || oa.cursos.some((x) => niveles.has(x)));
   });
 
   return (
-    <Hoja titulo="La problemática y su anclaje curricular" orden={orden}>
+    <Hoja
+      titulo={tx("La problemática y su anclaje curricular", "A problemática e a sua ligação com o currículo")}
+      orden={orden}
+    >
       <p className="mb-5 max-w-3xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Un proyecto empieza por algo que está pasando, no por un tema. Las tres
-        columnas se leen de izquierda a derecha: el problema, lo que se puede
-        hacer con él desde cada asignatura, y los objetivos del programa que esa
-        actividad abre.
+        {tx(
+          "Un proyecto empieza por algo que está pasando, no por un tema. Las tres columnas se leen de izquierda a derecha: el problema, lo que se puede hacer con él desde cada asignatura, y los objetivos del programa que esa actividad abre.",
+          "Um projeto começa por algo que está acontecendo, não por um tema. As três colunas se leem da esquerda para a direita: o problema, o que dá para fazer com ele a partir de cada componente, e as habilidades da BNCC que essa atividade abre."
+        )}
       </p>
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -210,20 +200,25 @@ function ColumnaProblema({
   elegido: Problema | null;
 }) {
   const [familiaAbierta, ponerFamiliaAbierta] = useState<string | null>(null);
+  const tx = useTx();
+  const c = useContenido();
 
   return (
     <Columna
       n={1}
-      titulo="La problemática local"
-      bajada="Algo que está ocurriendo y de lo que ya se escribió."
+      titulo={tx("La problemática local", "A problemática local")}
+      bajada={tx(
+        "Algo que está ocurriendo y de lo que ya se escribió.",
+        "Algo que está acontecendo e sobre o que já se escreveu."
+      )}
     >
       {/* Agrupadas en cuatro familias. Diez botones seguidos son diez cosas
           que hay que leer enteras para elegir una, y a la décima ya nadie está
           leyendo. Cuatro se abarcan de una mirada, y la familia se abre sola
           cuando ya hay una problemática elegida dentro. */}
       <ul className="space-y-2">
-        {FAMILIAS_PROBLEMA.map((f) => {
-          const suyas = PROBLEMAS.filter((p) => p.familia === f.id);
+        {c.familias.map((f) => {
+          const suyas = c.problemas.filter((p) => p.familia === f.id);
           const tieneLaElegida = suyas.some(
             (p) => p.id === e.problemaId && !proponiendo
           );
@@ -305,7 +300,7 @@ function ColumnaProblema({
             : "border-dashed border-[var(--crema)]/25 text-[var(--crema)]/85 hover:border-[var(--crema)]/45"
         }`}
       >
-        Ninguna: la mía es otra
+        {tx("Ninguna: la mía es otra", "Nenhuma: a minha é outra")}
       </button>
 
       {proponiendo && (
@@ -316,28 +311,35 @@ function ColumnaProblema({
               un párrafo entero. */}
           <label className="block">
             <span className="text-sm text-[var(--crema)]/75">
-              Cómo se llama, en pocas palabras
+              {tx("Cómo se llama, en pocas palabras", "Como se chama, em poucas palavras")}
             </span>
             <Texto
               value={e.problemaPropioNombre}
               onChange={(ev) => set("problemaPropioNombre", ev.target.value)}
-              placeholder="Polvo de la planta de áridos"
+              placeholder={tx("Polvo de la planta de áridos", "Poeira da obra da avenida")}
             />
           </label>
 
           <label className="mt-3 block">
-            <span className="text-sm text-[var(--crema)]/75">Qué está pasando</span>
+            <span className="text-sm text-[var(--crema)]/75">
+              {tx("Qué está pasando", "O que está acontecendo")}
+            </span>
             <Parrafo
               value={e.problemaPropio}
               onChange={(ev) => set("problemaPropio", ev.target.value)}
-              placeholder="La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas."
+              placeholder={tx(
+                "La planta de áridos levanta polvo todo el verano y las casas de al lado no pueden abrir las ventanas.",
+                "A obra levanta poeira o verão inteiro e as casas vizinhas não conseguem abrir as janelas."
+              )}
               rows={3}
             />
           </label>
 
           <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/72">
-            Las actividades y los objetivos los escribes tú en las columnas de
-            al lado, con el mismo catálogo de objetivos que usan las demás.
+            {tx(
+              "Las actividades y los objetivos los escribes tú en las columnas de al lado, con el mismo catálogo de objetivos que usan las demás.",
+              "As atividades e as habilidades você escreve nas colunas ao lado, com a mesma lista de habilidades que as outras usam."
+            )}
           </p>
         </div>
       )}
@@ -353,9 +355,12 @@ function ColumnaProblema({
           {elegido.respaldo.length > 0 && (
             <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/72">
               {elegido.respaldo.length === 1
-                ? "1 noticia nacional respalda este problema."
-                : `${elegido.respaldo.length} noticias nacionales respaldan este problema.`}{" "}
-              Están más abajo, con su medio y su fecha.
+                ? tx("1 noticia respalda este problema.", "1 fonte sustenta este problema.")
+                : tx(
+                    `${elegido.respaldo.length} noticias respaldan este problema.`,
+                    `${elegido.respaldo.length} fontes sustentam este problema.`
+                  )}{" "}
+              {tx("Están más abajo, con su medio y su fecha.", "Estão mais abaixo, com o veículo e a data.")}
             </p>
           )}
         </>
@@ -384,6 +389,8 @@ function ColumnaActividades({
   ponerEnfocada: (v: string | null) => void;
 }) {
   const hayProblema = Boolean(elegido || e.problemaPropio.trim() || e.problemaPropioNombre.trim());
+  const tx = useTx();
+  const c = useContenido();
   const [editando, ponerEditando] = useState<string | null>(null);
   // El identificador de la actividad que se está escribiendo. Se saca al
   // tocar el botón y no al pintar el formulario, que se pinta muchas veces.
@@ -442,12 +449,17 @@ function ColumnaActividades({
     return (
       <Columna
         n={2}
-        titulo="Actividades por asignatura"
-        bajada="La misma problemática abre trabajos distintos según desde dónde se entre."
+        titulo={tx("Actividades por asignatura", "Atividades por componente")}
+        bajada={tx(
+          "La misma problemática abre trabajos distintos según desde dónde se entre.",
+          "A mesma problemática abre trabalhos diferentes conforme por onde se entra."
+        )}
       >
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
-          Elige una problemática en la columna de la izquierda y aquí aparecen
-          las actividades sugeridas para cada asignatura.
+          {tx(
+            "Elige una problemática en la columna de la izquierda y aquí aparecen las actividades sugeridas para cada asignatura.",
+            "Escolha uma problemática na coluna da esquerda e aqui aparecem as atividades sugeridas para cada componente."
+          )}
         </p>
       </Columna>
     );
@@ -456,14 +468,17 @@ function ColumnaActividades({
   return (
     <Columna
       n={2}
-      titulo="Actividades por asignatura"
-      bajada="Elige una actividad y a la derecha quedan sus objetivos de aprendizaje."
+      titulo={tx("Actividades por asignatura", "Atividades por componente")}
+      bajada={tx(
+        "Elige una actividad y a la derecha quedan sus objetivos de aprendizaje.",
+        "Escolha uma atividade e à direita ficam as habilidades que ela abre."
+      )}
     >
       {/* El filtro de asignaturas va aquí, pegado a lo que filtra, y no suelto
           arriba como estaba: así se entiende que lo que hace es recortar esta
           columna. */}
       <ul className="mb-3.5 flex flex-wrap gap-1.5">
-        {ASIGNATURAS.map((a) => {
+        {c.asignaturas.map((a) => {
           const marcada = e.asignaturas.includes(a.id);
           const hayAngulo =
             elegido?.angulos.some((x) => x.asignatura === a.id) ?? false;
@@ -532,7 +547,7 @@ function ColumnaActividades({
                       className="w-full text-left"
                     >
                       <span className="rotulo block text-[var(--crema)]/72">
-                        {nombreAsignatura(a.asignatura)} · tuya
+                        {nombreAsignatura(a.asignatura)} · {tx("tuya", "sua")}
                       </span>
                       <span
                         className={`mt-1.5 block text-[15px] leading-snug ${
@@ -541,7 +556,7 @@ function ColumnaActividades({
                             : "text-[var(--crema-clara)]"
                         }`}
                       >
-                        {a.enfoque || "Sin título todavía"}
+                        {a.enfoque || tx("Sin título todavía", "Ainda sem título")}
                       </span>
                       {a.queInvestigan && (
                         <span className="mt-2 block text-sm leading-relaxed text-[var(--crema)]/78">
@@ -554,7 +569,7 @@ function ColumnaActividades({
                       onClick={() => ponerEditando(a.id)}
                       className="mt-2 min-h-11 text-sm text-[var(--crema)]/75 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
                     >
-                      Editar
+                      {tx("Editar", "Editar")}
                     </button>
                   </div>
                 </li>
@@ -604,7 +619,7 @@ function ColumnaActividades({
                       </span>
                       {a.conceptosClave.length > 0 && (
                         <span className="mt-2.5 block text-sm leading-relaxed text-[var(--crema)]/72">
-                          Contenidos: {a.conceptosClave.join(", ")}.
+                          {tx("Contenidos", "Conteúdos")}: {a.conceptosClave.join(", ")}.
                         </span>
                       )}
                     </>
@@ -616,7 +631,7 @@ function ColumnaActividades({
                     onClick={() => ajustar(a)}
                     className="mb-3 ml-3.5 min-h-11 text-sm text-[var(--crema)]/75 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
                   >
-                    Ajustar esta actividad
+                    {tx("Ajustar esta actividad", "Ajustar esta atividade")}
                   </button>
                 )}
               </div>
@@ -630,7 +645,7 @@ function ColumnaActividades({
           <FormularioActividad
             inicial={{
               id: idNueva,
-              asignatura: e.asignaturas[0] ?? "biologia",
+              asignatura: e.asignaturas[0] ?? c.asignaturas[0]?.id ?? "",
               enfoque: "",
               queInvestigan: "",
               conceptos: [],
@@ -654,7 +669,7 @@ function ColumnaActividades({
           }}
           className="mt-3 min-h-11 w-full rounded-lg border border-dashed border-[var(--crema)]/25 px-3.5 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/45"
         >
-          Escribir una actividad mía
+          {tx("Escribir una actividad mía", "Escrever uma atividade minha")}
         </button>
       )}
     </Columna>
@@ -688,19 +703,21 @@ function FormularioActividad({
 }) {
   const [a, ponerA] = useState<ActividadPropia>(inicial);
   const [conceptos, ponerConceptos] = useState(inicial.conceptos.join(", "));
+  const tx = useTx();
+  const cont = useContenido();
 
   const listo = a.enfoque.trim().length > 0;
 
   return (
     <div className="space-y-3 rounded-lg border border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.06] p-3.5">
       <label className="block">
-        <span className="text-sm text-[var(--crema)]/75">Asignatura</span>
+        <span className="text-sm text-[var(--crema)]/75">{tx("Asignatura", "Componente")}</span>
         <select
           value={a.asignatura}
           onChange={(ev) => ponerA({ ...a, asignatura: ev.target.value })}
           className="mt-1.5 min-h-11 w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--fondo)] px-3 py-2.5 text-[15px] text-[var(--crema-clara)]"
         >
-          {ASIGNATURAS.map((x) => (
+          {cont.asignaturas.map((x) => (
             <option key={x.id} value={x.id}>
               {x.nombre}
             </option>
@@ -710,39 +727,50 @@ function FormularioActividad({
 
       <label className="block">
         <span className="text-sm text-[var(--crema)]/75">
-          Qué se persigue, en una frase
+          {tx("Qué se persigue, en una frase", "O que se busca, numa frase")}
         </span>
         <Texto
           value={a.enfoque}
           onChange={(ev) => ponerA({ ...a, enfoque: ev.target.value })}
-          placeholder="Medición del polvo depositado en las ventanas"
+          placeholder={tx(
+            "Medición del polvo depositado en las ventanas",
+            "Medição da poeira acumulada nas janelas"
+          )}
         />
       </label>
 
       <label className="block">
-        <span className="text-sm text-[var(--crema)]/75">Qué averiguan</span>
+        <span className="text-sm text-[var(--crema)]/75">
+          {tx("Qué averiguan", "O que investigam")}
+        </span>
         <Parrafo
           value={a.queInvestigan}
           onChange={(ev) => ponerA({ ...a, queInvestigan: ev.target.value })}
-          placeholder="Cuánto polvo se deposita en una semana, a tres distancias distintas de la planta."
+          placeholder={tx(
+            "Cuánto polvo se deposita en una semana, a tres distancias distintas de la planta.",
+            "Quanta poeira se acumula em uma semana, a três distâncias diferentes da obra."
+          )}
           rows={2}
         />
       </label>
 
       <label className="block">
         <span className="text-sm text-[var(--crema)]/75">
-          Contenidos, separados por coma
+          {tx("Contenidos, separados por coma", "Conteúdos, separados por vírgula")}
         </span>
         <Texto
           value={conceptos}
           onChange={(ev) => ponerConceptos(ev.target.value)}
-          placeholder="material particulado, muestra, promedio"
+          placeholder={tx(
+            "material particulado, muestra, promedio",
+            "material particulado, amostra, média"
+          )}
         />
       </label>
 
       <div>
         <span className="text-sm text-[var(--crema)]/75">
-          Objetivos de Aprendizaje que cubre
+          {tx("Objetivos de Aprendizaje que cubre", "Habilidades que ela abre")}
         </span>
         <div className="mt-1.5">
           <SelectorOA
@@ -768,14 +796,14 @@ function FormularioActividad({
           }
           className="min-h-11 rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
         >
-          Guardar
+          {tx("Guardar", "Salvar")}
         </button>
         <button
           type="button"
           onClick={onCancelar}
           className="min-h-11 text-sm text-[var(--crema)]/75 hover:text-[var(--crema-clara)]"
         >
-          Cancelar
+          {tx("Cancelar", "Cancelar")}
         </button>
         {onBorrar && (
           <button
@@ -783,7 +811,7 @@ function FormularioActividad({
             onClick={onBorrar}
             className="ml-auto min-h-11 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
           >
-            Borrar
+            {tx("Borrar", "Apagar")}
           </button>
         )}
       </div>
@@ -818,7 +846,9 @@ function ColumnaObjetivos({
    * desplegable; los marcados salen de él y pasan a la lista de abajo, para
    * que no aparezcan en los dos sitios a la vez.
    */
-  const porMarcar = codigos.filter((c) => !e.oa.includes(c));
+  const tx = useTx();
+  const cont = useContenido();
+  const porMarcar = codigos.filter((x) => !e.oa.includes(x));
 
   /**
    * Los sugeridos repartidos por asignatura, en el orden del catálogo.
@@ -829,35 +859,44 @@ function ColumnaObjetivos({
    * cuál, y el desplegable los separa.
    */
   const porAsignatura = (() => {
-    const grupos = new Map<AsignaturaOA, string[]>();
+    const grupos = new Map<string, string[]>();
     for (const cod of porMarcar) {
-      const oa = buscarOA(cod);
+      const oa = buscarObjetivo(cod);
       if (!oa) continue;
-      const lista = grupos.get(oa.asignatura) ?? [];
+      const lista = grupos.get(oa.nombreAsignatura) ?? [];
       lista.push(cod);
-      grupos.set(oa.asignatura, lista);
+      grupos.set(oa.nombreAsignatura, lista);
     }
-    return [...grupos.entries()].sort((a, b) =>
-      NOMBRE_ASIGNATURA_OA[a[0]].localeCompare(NOMBRE_ASIGNATURA_OA[b[0]])
-    );
+    return [...grupos.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   })();
 
   return (
     <Columna
       n={3}
-      titulo="Objetivos de Aprendizaje"
+      titulo={cont.palabras.Objetivos}
       bajada={
         nombrePropia
-          ? `Los que marcaste en tu actividad de ${nombrePropia.toLowerCase()}.`
+          ? tx(
+              `Los que marcaste en tu actividad de ${nombrePropia.toLowerCase()}.`,
+              `As que você marcou na sua atividade de ${nombrePropia}.`
+            )
           : actividad
-            ? `Los que cubre la actividad de ${nombreAsignatura(actividad.asignatura).toLowerCase()}.`
-            : "Primero la actividad y después el objetivo, que es como se planifica de verdad."
+            ? tx(
+                `Los que cubre la actividad de ${nombreAsignatura(actividad.asignatura).toLowerCase()}.`,
+                `As que a atividade de ${nombreAsignatura(actividad.asignatura)} abre.`
+              )
+            : tx(
+                "Primero la actividad y después el objetivo, que es como se planifica de verdad.",
+                "Primeiro a atividade e depois a habilidade, que é como se planeja de verdade."
+              )
       }
     >
       {!hayProblema ? (
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
-          Aquí aparecen los Objetivos de Aprendizaje que cubre cada actividad,
-          para marcarlos sin salir de esta pantalla.
+          {tx(
+            "Aquí aparecen los Objetivos de Aprendizaje que cubre cada actividad, para marcarlos sin salir de esta pantalla.",
+            "Aqui aparecem as habilidades que cada atividade abre, para marcá-las sem sair desta tela."
+          )}
         </p>
       ) : (
         <>
@@ -868,8 +907,8 @@ function ColumnaObjetivos({
             <label className="block">
               <span className="text-sm text-[var(--crema)]/75">
                 {actividad
-                  ? "Sugeridos para esta actividad"
-                  : "Sugeridos para las actividades a la vista"}
+                  ? tx("Sugeridos para esta actividad", "Sugeridas para esta atividade")
+                  : tx("Sugeridos para las actividades a la vista", "Sugeridas para as atividades à vista")}
               </span>
               <select
                 value=""
@@ -880,15 +919,15 @@ function ColumnaObjetivos({
                 className="mt-2 min-h-11 w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--fondo)] px-3 py-2.5 text-[15px] text-[var(--crema-clara)]"
               >
                 <option value="">
-                  Elegir uno de los {porMarcar.length}…
+                  {tx(`Elegir uno de los ${porMarcar.length}…`, `Escolher uma das ${porMarcar.length}…`)}
                 </option>
                 {/* Agrupados por asignatura. Una actividad puede abrir
                     objetivos de tres asignaturas a la vez, y en una lista
                     plana no se distingue cuál es de cuál. */}
                 {porAsignatura.map(([asig, cods]) => (
-                  <optgroup key={asig} label={NOMBRE_ASIGNATURA_OA[asig]}>
+                  <optgroup key={asig} label={asig}>
                     {cods.map((cod) => {
-                      const oa = buscarOA(cod);
+                      const oa = buscarObjetivo(cod);
                       return (
                         <option key={cod} value={cod}>
                           {cod} · {recortar(oa?.texto ?? "", 85)}
@@ -902,10 +941,16 @@ function ColumnaObjetivos({
           ) : (
             <p className="text-[15px] leading-relaxed text-[var(--crema)]/72">
               {codigos.length
-                ? "Ya marcaste todos los sugeridos para esto."
+                ? tx("Ya marcaste todos los sugeridos para esto.", "Você já marcou todas as sugeridas para isto.")
                 : nombrePropia
-                  ? "Tu actividad todavía no tiene objetivos. Búscalos abajo y quedan guardados en ella."
-                  : "Las actividades a la vista son de asignaturas o cursos sin objetivos cargados. Búscalos abajo o escríbelos en la planificación."}
+                  ? tx(
+                      "Tu actividad todavía no tiene objetivos. Búscalos abajo y quedan guardados en ella.",
+                      "Sua atividade ainda não tem habilidades. Busque abaixo e elas ficam salvas nela."
+                    )
+                  : tx(
+                      "Las actividades a la vista son de asignaturas o cursos sin objetivos cargados. Búscalos abajo o escríbelos en la planificación.",
+                      "As atividades à vista são de componentes ou anos sem habilidades sugeridas. Busque abaixo ou anote no planejamento."
+                    )}
             </p>
           )}
 
@@ -914,7 +959,7 @@ function ColumnaObjetivos({
           {e.oa.length > 0 && (
             <ul className="mt-3.5 space-y-2">
               {e.oa.map((cod) => {
-                const oa = buscarOA(cod);
+                const oa = buscarObjetivo(cod);
                 return (
                   <li
                     key={cod}
@@ -929,7 +974,7 @@ function ColumnaObjetivos({
                         onClick={() => set("oa", e.oa.filter((x) => x !== cod))}
                         className="ml-auto min-h-11 shrink-0 px-1 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
                       >
-                        Quitar
+                        {tx("Quitar", "Remover")}
                       </button>
                     </div>
                     <p className="text-[15px] leading-relaxed text-[var(--crema)]/85">
@@ -952,7 +997,9 @@ function ColumnaObjetivos({
         aria-expanded={verTodos}
         className="mt-3.5 min-h-11 text-sm text-[var(--crema)]/78 underline decoration-[var(--crema)]/30 underline-offset-4 hover:text-[var(--crema-clara)]"
       >
-        {verTodos ? "Cerrar el buscador" : "Buscar entre todos los objetivos"}
+        {verTodos
+          ? tx("Cerrar el buscador", "Fechar a busca")
+          : tx("Buscar entre todos los objetivos", "Buscar entre todas as habilidades")}
       </button>
 
       {verTodos && (
@@ -989,10 +1036,12 @@ function Noticias({
 }: {
   e: Expedicion;
   onCambio: (e: Expedicion) => void;
-  problema: NonNullable<ReturnType<typeof problemaPorId>>;
+  problema: Problema;
 }) {
   const [titular, ponerTitular] = useState("");
   const [url, ponerUrl] = useState("");
+  const tx = useTx();
+  const c = useContenido();
 
   function agregar() {
     if (!titular.trim()) return;
@@ -1012,13 +1061,13 @@ function Noticias({
       {problema.respaldo.length > 0 ? (
         <>
           <p className="rotulo text-[var(--crema)]/75">
-            Noticias nacionales sobre este problema
+            {tx("Noticias nacionales sobre este problema", "Fontes sobre este problema")}
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-[var(--crema)]/75">
-            Las noticias de aquí arriba son de alcance nacional y sirven para
-            plantear el asunto en la sala. Más abajo se pueden agregar noticias
-            de tu comuna, que suelen enganchar más a un curso porque hablan de
-            un lugar que conocen.
+            {tx(
+              "Las noticias de aquí arriba son de alcance nacional y sirven para plantear el asunto en la sala. Más abajo se pueden agregar noticias de tu comuna, que suelen enganchar más a un curso porque hablan de un lugar que conocen.",
+              "Estas fontes servem para apresentar o assunto na sala. Mais abaixo dá para acrescentar notícias do seu bairro, que costumam envolver mais a turma porque falam de um lugar que eles conhecem."
+            )}
           </p>
           <ul className="mt-3 space-y-3.5">
             {problema.respaldo.map((n) => (
@@ -1052,14 +1101,15 @@ function Noticias({
         </>
       ) : (
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
-          Esta es la única sin fuentes nacionales, y no es un descuido: lo que
-          se está dejando de saber en un pueblo no sale en ningún estudio, se
-          sabe preguntando ahí.
+          {tx(
+            "Esta es la única sin fuentes nacionales, y no es un descuido: lo que se está dejando de saber en un pueblo no sale en ningún estudio, se sabe preguntando ahí.",
+            "Esta não tem fontes publicadas, e não é descuido: há coisas que não saem em nenhum estudo e só se sabem perguntando no lugar."
+          )}
         </p>
       )}
 
       <p className="mt-5 border-t border-[var(--crema)]/12 pt-4 rotulo text-[var(--crema)]/75">
-        Noticias de tu comuna
+        {tx("Noticias de tu comuna", "Notícias do seu bairro")}
       </p>
 
       {e.noticias.length > 0 && (
@@ -1081,7 +1131,7 @@ function Noticias({
                 }
                 className="min-h-11 shrink-0 px-2 text-sm text-[var(--crema)]/72 hover:text-[var(--tierra-300)]"
               >
-                Quitar
+                {tx("Quitar", "Remover")}
               </button>
             </li>
           ))}
@@ -1093,14 +1143,14 @@ function Noticias({
           <Texto
             value={titular}
             onChange={(ev) => ponerTitular(ev.target.value)}
-            placeholder="El titular, tal como salió"
-            aria-label="Titular de la noticia"
+            placeholder={tx("El titular, tal como salió", "A manchete, como saiu")}
+            aria-label={tx("Titular de la noticia", "Manchete da notícia")}
           />
           <Texto
             value={url}
             onChange={(ev) => ponerUrl(ev.target.value)}
-            placeholder="El enlace, si lo tienes"
-            aria-label="Enlace de la noticia"
+            placeholder={tx("El enlace, si lo tienes", "O link, se tiver")}
+            aria-label={tx("Enlace de la noticia", "Link da notícia")}
             type="url"
             inputMode="url"
           />
@@ -1110,16 +1160,22 @@ function Noticias({
           onClick={agregar}
           className="min-h-11 self-start rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
         >
-          Agregar
+          {tx("Agregar", "Adicionar")}
         </button>
       </div>
 
       <div className="mt-4 border-t border-[var(--crema)]/12 pt-3.5">
         <p className="text-sm leading-relaxed text-[var(--crema)]/75">
-          Las noticias de cada comuna todavía no están cargadas en la
-          plataforma, así que esas las agrega el docente.
+          {tx(
+            "Las noticias de cada comuna todavía no están cargadas en la plataforma, así que esas las agrega el docente.",
+            "As notícias de cada bairro não estão na plataforma, então quem acrescenta é o professor."
+          )}
         </p>
-        <ConsejosDeBusqueda como={problema.comoSeBuscan} />
+        <ConsejosDeBusqueda
+          como={problema.comoSeBuscan}
+          localidad={c.localidad}
+          sitio={c.sitioEjemplo}
+        />
       </div>
     </div>
   );
@@ -1149,10 +1205,15 @@ function Noticias({
  */
 function ConsejosDeBusqueda({
   como,
+  localidad,
+  sitio,
 }: {
   como: { terminos: string[]; donde: string; queNotaSirve: string };
+  localidad: string;
+  sitio: string;
 }) {
   const [abierto, ponerAbierto] = useState(false);
+  const tx = useTx();
 
   return (
     <div className="mt-3">
@@ -1162,14 +1223,18 @@ function ConsejosDeBusqueda({
         aria-expanded={abierto}
         className="min-h-11 rounded-full border border-[var(--tierra-300)]/40 px-4 text-sm text-[var(--tierra-300)] transition hover:bg-[var(--tierra-300)]/[0.08]"
       >
-        {abierto ? "Cerrar los consejos" : "Consejos para buscar noticias"}
+        {abierto
+          ? tx("Cerrar los consejos", "Fechar as dicas")
+          : tx("Consejos para buscar noticias", "Dicas para buscar notícias")}
       </button>
 
       {abierto && (
         <div className="mt-3 rounded-xl border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-4 py-3.5 text-[var(--tierra-300)]">
           <p className="text-[15px] leading-relaxed">
-            Esto se busca en Google, no aquí arriba. Estos son ejemplos: cambia
-            «comuna» por el nombre de la tuya.
+            {tx(
+              `Esto se busca en Google, no aquí arriba. Estos son ejemplos: cambia «${localidad}» por el nombre de la tuya.`,
+              `Isto se busca no Google, não aqui em cima. São exemplos: troque «nome do ${localidad}» pelo nome do seu.`
+            )}
           </p>
 
           <ul className="mt-3 space-y-1.5">
@@ -1184,10 +1249,10 @@ function ConsejosDeBusqueda({
           </ul>
 
           <p className="mt-3.5 text-[15px] leading-relaxed">
-            <span className="font-medium">Dónde buscar:</span> {como.donde}
+            <span className="font-medium">{tx("Dónde buscar", "Onde buscar")}:</span> {como.donde}
           </p>
           <p className="mt-1.5 text-[15px] leading-relaxed">
-            <span className="font-medium">Qué noticia sirve:</span>{" "}
+            <span className="font-medium">{tx("Qué noticia sirve", "Que notícia serve")}:</span>{" "}
             {como.queNotaSirve}
           </p>
 
@@ -1196,22 +1261,31 @@ function ConsejosDeBusqueda({
               se ahogó en resultados. */}
           <div className="mt-3.5 border-t border-[var(--tierra-300)]/25 pt-3">
             <p className="text-[15px] font-medium">
-              Tres cosas que acotan mucho la búsqueda
+              {tx("Tres cosas que acotan mucho la búsqueda", "Três coisas que refinam muito a busca")}
             </p>
             <ul className="mt-2 space-y-2 text-[15px] leading-relaxed">
               <li>
-                <span className="font-mono text-[13px]">"entre comillas"</span>{" "}
-                busca esa frase exacta y no las palabras sueltas.
+                <span className="font-mono text-[13px]">
+                  {tx('"entre comillas"', '"entre aspas"')}
+                </span>{" "}
+                {tx(
+                  "busca esa frase exacta y no las palabras sueltas.",
+                  "busca essa frase exata e não as palavras soltas."
+                )}
               </li>
               <li>
-                <span className="font-mono text-[13px]">site:bcn.cl</span>{" "}
-                busca solo dentro de ese sitio. Sirve para municipios, diarios
-                regionales y servicios públicos.
+                <span className="font-mono text-[13px]">{sitio}</span>{" "}
+                {tx(
+                  "busca solo dentro de ese sitio. Sirve para municipios, diarios regionales y servicios públicos.",
+                  "busca só dentro desse site. Serve para a prefeitura, jornais locais e órgãos públicos."
+                )}
               </li>
               <li>
-                <span className="font-mono text-[13px]">-futbol</span> con guion
-                delante saca del resultado las noticias que traen esa palabra.
-                Útil cuando tu comuna se llama igual que otra cosa.
+                <span className="font-mono text-[13px]">{tx("-futbol", "-futebol")}</span>{" "}
+                {tx(
+                  "con guion delante saca del resultado las noticias que traen esa palabra. Útil cuando tu comuna se llama igual que otra cosa.",
+                  "com o hífen na frente tira do resultado as notícias com essa palavra. Útil quando o seu bairro tem o nome de outra coisa."
+                )}
               </li>
             </ul>
           </div>
@@ -1223,13 +1297,15 @@ function ConsejosDeBusqueda({
 
 /** Lo que el curso tiene que sacar en limpio antes de seguir. */
 function QueSacanDeAhi() {
+  const tx = useTx();
+  const c = useContenido();
   return (
     <div className="mt-6 border-t border-[var(--crema)]/12 pt-5">
       <p className="rotulo text-[var(--crema)]/75">
-        Qué tiene que pasar en esa primera clase
+        {tx("Qué tiene que pasar en esa primera clase", "O que precisa acontecer nessa primeira aula")}
       </p>
       <ul className="mt-3 space-y-3">
-        {QUE_SACAN_DE_LA_NOTICIA.map((q) => (
+        {c.queSacan.map((q) => (
           <li key={q.titulo}>
             <p className="text-[17px] leading-snug text-[var(--crema-clara)]">
               {q.titulo}
@@ -1238,7 +1314,7 @@ function QueSacanDeAhi() {
               {q.queEs}
             </p>
             <p className="mt-1 text-[15px] leading-relaxed text-[var(--crema)]/72">
-              Se nota en que {q.seNotaEn}
+              {tx("Se nota en que", "Nota-se quando")} {q.seNotaEn}
             </p>
           </li>
         ))}

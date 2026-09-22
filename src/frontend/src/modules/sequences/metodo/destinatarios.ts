@@ -1,3 +1,6 @@
+import type { Idioma } from "../../../shared/tx";
+import { FAMILIAS_PT, RASGOS_PT } from "./destinatarios.pt";
+
 /**
  * A quién le llega lo que el curso construye.
  *
@@ -162,8 +165,13 @@ export const FAMILIAS: Familia[] = [
   },
 ];
 
-export function familiaPorId(id: string): Familia | undefined {
-  return FAMILIAS.find((f) => f.id === id);
+/** Las familias en el idioma que toca. El portugués está en §destinatarios.pt.ts. */
+export function familiasEn(idioma: Idioma): Familia[] {
+  return idioma === "pt" ? FAMILIAS_PT : FAMILIAS;
+}
+
+export function familiaPorId(id: string, idioma: Idioma = "es"): Familia | undefined {
+  return familiasEn(idioma).find((f) => f.id === id);
 }
 
 /**
@@ -198,6 +206,10 @@ export const RASGOS: { id: keyof Rasgos; pregunta: string; ayuda: string; ejempl
     ejemplo: "Saber si el agua del pozo se puede tomar y a quién preguntarle",
   },
 ];
+
+export function rasgosEn(idioma: Idioma) {
+  return idioma === "pt" ? RASGOS_PT : RASGOS;
+}
 
 export type Rasgos = {
   edad: string;

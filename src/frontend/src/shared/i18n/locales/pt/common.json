@@ -34,7 +34,7 @@
   },
   "footer": {
     "brand": "AprendeLocal",
-    "tagline": "Educação STEM para todos",
+    "tagline": "Ciências com o lugar onde fica a sua escola.",
     "about": "Sobre",
     "support": "Suporte",
     "links": {
@@ -46,7 +46,9 @@
       "contact": "Contato",
       "terms": "Termos de Uso"
     },
-    "copyright": "© 2025 AprendeLocal. Plataforma dedicada à educação STEM."
+    "copyright": "© 2025 AprendeLocal. Plataforma dedicada à educação STEM.",
+    "derechos": "Todos os direitos reservados.",
+    "nuevaPestana": "(abre em uma nova aba)"
   },
   "header": {
     "brandName": "AprendeLocal",
@@ -298,7 +300,7 @@
   "home": {
     "hero": {
       "title": "Seu território é o seu melhor laboratório",
-      "subtitle": "Monte um projeto com sua turma a partir de algo que está acontecendo perto da escola: o rio, o morro, o lixo da rua. Com os objetivos do currículo marcados e os documentos da saída prontos para assinar.",
+      "subtitle": "Monte um projeto com a sua turma a partir de algo que está acontecendo perto da escola: o rio canalizado, a encosta, o manguezal, o lixo da rua. Com as habilidades da BNCC marcadas e a autorização da saída pronta para os responsáveis assinarem.",
       "ctaStart": "Montar minha primeira rota",
       "ctaExplore": "Veja como funciona",
       "ctaStartAria": "Abrir o caderno para montar uma rota",
@@ -366,10 +368,10 @@
       "level": "Nível"
     },
     "cta": {
-      "title": "Pronto para transformar seu aprendizado?",
-      "subtitle": "Junte-se a milhares de estudantes aplicando STEM em projetos reais através da cultura maker",
-      "button": "Começar Jornada Maker",
-      "buttonAria": "Começar Jornada Maker"
+      "title": "O que existe a uma caminhada da sua escola?",
+      "subtitle": "Comece por aí. O caderno acompanha você das habilidades da BNCC até o dia em que a turma entrega o trabalho a alguém da comunidade.",
+      "button": "Abrir o caderno",
+      "buttonAria": "Abrir o caderno para montar uma rota"
     },
     "puzzle": {
       "title": "Monte sua estação STEM",
@@ -494,18 +496,65 @@
       }
     },
     "contact": {
-      "badge": "Contato & Parcerias",
+      "badge": "Contato",
       "title": "Quer levar o AprendeLocal para sua escola ou comunidade?",
-      "subtitle": "Apoiamos professores, gestores e comunidades com ferramentas pedagógicas abertas, guias maker e acompanhamento em projetos de ciência territorial.",
+      "subtitle": "Acompanhamos professores, gestores e comunidades com aulas já escritas, documentos para imprimir e saídas de campo ao redor da escola.",
       "formTitle": "Envie-nos uma mensagem",
-      "formSubtitle": "Preencha o formulário e entraremos em contato com você.",
+      "formSubtitle": "Preencha o formulário e respondemos no seu e-mail.",
       "name": "Nome",
       "email": "E-mail",
       "role": "Função / Instituição",
       "message": "Mensagem ou Território de Interesse",
       "send": "Enviar Mensagem",
-      "successTitle": "Mensagem recebida!",
-      "successMessage": "Obrigado pelo contato. Responderemos em breve para conectar sua escola."
+      "successTitle": "Mensagem recebida",
+      "successMessage": "Recebemos. Respondemos neste mesmo e-mail.",
+      "mailTitle": "Abrimos o seu e-mail",
+      "mailBody": "A mensagem ficou escrita no seu programa de e-mail e falta você clicar em enviar. Se não abriu, escreva para:",
+      "sending": "Enviando…",
+      "privacidad": "Seu nome e seu e-mail ficam guardados só para responder esta mensagem. Não são compartilhados com ninguém e não vamos inscrever você em nenhuma lista. Se quiser que sejam apagados, escreva para",
+      "correoDirecto": "E-mail direto",
+      "zona": "Região do piloto",
+      "phNombre": "Seu nome",
+      "phCorreo": "voce@escola.rj.gov.br",
+      "phRol": "Ex.: professor de Ciências, coordenador pedagógico, pesquisador",
+      "phMensaje": "Conte sobre a sua escola ou o projeto que gostaria de montar…",
+      "asunto": "mensagem pelo site"
+    },
+    "whatIs": {
+      "title": "O que é o AprendeLocal?",
+      "p1": "O AprendeLocal é uma plataforma e uma metodologia para que professores e escolas transformem o próprio entorno —os rios, as encostas, o manguezal, a praça do bairro— em um laboratório vivo de ciências.",
+      "p2": "Com sequências didáticas completas e alinhadas à BNCC, os alunos investigam problemas socioambientais reais, fazem medições em campo com instrumentos simples e entregam o que descobriram à comunidade escolar e às famílias.",
+      "pilares": [
+        "Território vivo",
+        "Ciência",
+        "Rotas didáticas",
+        "Impacto na comunidade"
+      ]
+    },
+    "build": {
+      "title": "A rota se monta com o seu lugar, não se escolhe de uma lista",
+      "subtitle": "Três passos. Uma parte a plataforma traz e a outra você escreve, porque o córrego da sua escola ninguém mais conhece.",
+      "pasos": [
+        {
+          "titulo": "O que já está decidido",
+          "cuerpo": "Suas turmas, as aulas que você tem e as habilidades da BNCC que precisa trabalhar. Marcam-se numa lista, não se escrevem de memória.",
+          "pone": "Vem do currículo"
+        },
+        {
+          "titulo": "O que existe do outro lado do portão",
+          "cuerpo": "O que se alcança a pé, como se chama e o que acontece ali que em outra escola não aconteceria igual. Isso ninguém sabe além de você.",
+          "pone": "Vem de você"
+        },
+        {
+          "titulo": "A pergunta que sustenta o projeto",
+          "cuerpo": "Sai da leitura da problemática com a turma e fica registrada no acompanhamento. É a que se repete até o dia da entrega.",
+          "pone": "Vem da turma"
+        }
+      ],
+      "outEyebrow": "E sai daí",
+      "outTitle": "As aulas, os documentos para imprimir e o que vive ao redor da sua escola.",
+      "outBody": "Os documentos saem das habilidades que você marcou e do que escreveu sobre o lugar, sem pedir de novo. Os dados de espécies vêm do iNaturalist e do GBIF.",
+      "cta": "Começar a montar a minha"
     }
   },
   "platform": {
@@ -918,5 +967,12 @@
     "oscuro": "Caderno escuro",
     "oscuroAyuda": "O caderno e o acompanhamento em fundo verde escuro.",
     "guardado": "Fica salvo neste navegador."
+  },
+  "edicion": {
+    "titulo": "País e idioma",
+    "pais": "Edição",
+    "idioma": "Idioma",
+    "deCuenta": "É a edição da sua conta. Para mudar, escreva para nós.",
+    "ayuda": "Muda o currículo, as problemáticas e os documentos da saída de campo."
   }
 }

@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useTx } from "../../../shared/tx";
+
 // Las palabras que se escriben y se borran en el titulo.
-const actions = ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"];
+const ACCIONES = {
+  es: ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"],
+  pt: ["Identificar", "Monitorar", "Descobrir", "Contribuir", "Aprender"],
+};
 
 export default function PillarsSection() {
   const { t } = useTranslation();
+  const tx = useTx();
+  const actions = ACCIONES[tx.idioma];
 
   // Quien pidio menos movimiento ve la primera palabra quieta.
   const [quieto] = useState(
@@ -42,7 +49,7 @@ export default function PillarsSection() {
     }
 
     return () => window.clearTimeout(timer);
-  }, [quieto, typedAction, isDeleting, currentActionIndex]);
+  }, [quieto, typedAction, isDeleting, currentActionIndex, actions]);
 
   const pillars = [
     {
@@ -282,10 +289,13 @@ export default function PillarsSection() {
             {/* Un lector de pantalla leeria la palabra a medio escribir; se
                 le da la frase entera y la animacion queda solo a la vista. */}
             <span className="sr-only">
-              Con AprendeLocal, puedes identificar, monitorear, descubrir, contribuir y aprender.
+              {tx(
+                "Con AprendeLocal, puedes identificar, monitorear, descubrir, contribuir y aprender.",
+                "Com o AprendeLocal, você pode identificar, monitorar, descobrir, contribuir e aprender."
+              )}
             </span>
             <span aria-hidden>
-              Con AprendeLocal, puedes:{" "}
+              {tx("Con AprendeLocal, puedes:", "Com o AprendeLocal, você pode:")}{" "}
               <span className="text-blue-600 inline-block min-w-[170px] text-left">
                 {quieto ? actions[0] : typedAction}
                 {!quieto && (

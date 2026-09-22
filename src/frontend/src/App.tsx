@@ -7,6 +7,7 @@
  *   /preparar      Preparar una unidad
  *   /perfil        La cuenta y la escuela (con sesión)
  *   /comunidades   Otras escuelas (con sesión)
+ *   /br, /cl       La portada de cada edición (fija el país y vuelve a /)
  *   /entrar        Iniciar sesión
  *   /cadastrar     Crear cuenta (también /registro)
  *   /recuperar     Pedir el enlace para cambiar la contraseña
@@ -52,6 +53,8 @@ import NoExistePage from "./modules/errors/NoExistePage";
 import EstadoConexion from "./shared/components/ui/EstadoConexion";
 import Cargando from "./shared/components/ui/Cargando";
 import "./shared/i18n";
+import EntrarEdicion from "./shared/components/EntrarEdicion";
+import { sedeActual } from "./shared/sede";
 
 /**
  * Carga una pantalla en su propio bloque.
@@ -61,6 +64,20 @@ import "./shared/i18n";
  */
 function perezosa(cargar: () => Promise<{ default: React.ComponentType }>) {
   return async () => ({ Component: (await cargar()).default });
+}
+
+/**
+ * Pide el currículum de la edición a la vez que la pantalla, en paralelo.
+ *
+ * Sin esto llegaba primero el cuaderno, se pintaba, pedía el currículum y
+ * mostraba la barra de carga una segunda vez.
+ */
+async function conCurriculo<T>(pantalla: Promise<T>): Promise<T> {
+  const [m] = await Promise.all([
+    pantalla,
+    import("./modules/sequences/contenido").then((c) => c.cargarObjetivos(sedeActual())),
+  ]);
+  return m;
 }
 
 /** Lo mismo, envuelto en la puerta de las rutas que piden sesión. */
@@ -85,37 +102,42 @@ const router = createBrowserRouter([
     hydrateFallbackElement: <Cargando />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "entrar", element: <LoginPage />, handle: { titulo: "Iniciar sesión" } },
+      { path: "entrar", element: <LoginPage />, handle: { titulo: { es: "Iniciar sesión", pt: "Entrar" } } },
       { path: "admin", element: <Navigate to="/entrar" replace /> },
+
+      /* La puerta de cada edición: `/br` deja la portada brasileña puesta y
+         vuelve al inicio. Es el enlace para compartir. Ver §sede.ts. */
+      { path: "br", element: <EntrarEdicion sede="br" /> },
+      { path: "cl", element: <EntrarEdicion sede="cl" /> },
       {
         path: "cadastrar",
         lazy: perezosa(() => import("./modules/auth/pages/RegisterPage")),
-        handle: { titulo: "Crear cuenta" },
+        handle: { titulo: { es: "Crear cuenta", pt: "Criar conta" } },
       },
       {
         path: "registro",
         lazy: perezosa(() => import("./modules/auth/pages/RegisterPage")),
-        handle: { titulo: "Crear cuenta" },
+        handle: { titulo: { es: "Crear cuenta", pt: "Criar conta" } },
       },
       {
         path: "recuperar",
         lazy: perezosa(() => import("./modules/auth/pages/ForgotPasswordPage")),
-        handle: { titulo: "Recuperar la contraseña" },
+        handle: { titulo: { es: "Recuperar la contraseña", pt: "Recuperar a senha" } },
       },
       {
         path: "preparar",
         lazy: perezosa(() => import("./modules/sequences/pages/PrepararPage")),
-        handle: { titulo: "Preparar una unidad" },
+        handle: { titulo: { es: "Preparar una unidad", pt: "Preparar uma unidade" } },
       },
       {
         path: "perfil",
         lazy: protegida(() => import("./modules/profile/pages/ProfilePage")),
-        handle: { titulo: "Tu perfil" },
+        handle: { titulo: { es: "Tu perfil", pt: "Seu perfil" } },
       },
       {
         path: "comunidades",
         lazy: protegida(() => import("./modules/communities/pages/CommunitiesPage")),
-        handle: { titulo: "Comunidades" },
+        handle: { titulo: { es: "Comunidades", pt: "Comunidades" } },
       },
 
       /* Rutas retiradas. Se redirigen en vez de devolver un 404: un enlace que
@@ -130,18 +152,18 @@ const router = createBrowserRouter([
       /* Las dos pantallas de trabajo: misma cabecera, sin pie. */
       {
         path: "crear",
-        lazy: perezosa(() => import("./modules/sequences/pages/CrearPage")),
-        handle: { titulo: "Cuaderno", sinPie: true },
+        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/CrearPage"))),
+        handle: { titulo: { es: "Cuaderno", pt: "Caderno" }, sinPie: true },
       },
       {
         path: "proyecto",
-        lazy: perezosa(() => import("./modules/sequences/pages/ProyectoPage")),
-        handle: { titulo: "Seguimiento del proyecto", sinPie: true },
+        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/ProyectoPage"))),
+        handle: { titulo: { es: "Seguimiento del proyecto", pt: "Acompanhamento do projeto" }, sinPie: true },
       },
 
       /* Lo que no existe se dice. Mandarlo al inicio en silencio deja a la
          persona en la portada sin entender qué pasó. */
-      { path: "*", element: <NoExistePage />, handle: { titulo: "Página no encontrada" } },
+      { path: "*", element: <NoExistePage />, handle: { titulo: { es: "Página no encontrada", pt: "Página não encontrada" } } },
     ],
   },
   {

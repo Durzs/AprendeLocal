@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useMatches } from "react-router-dom";
 
 import Header from "./Header";
 import Footer from "./Footer";
+import { useTx, type Bi } from "../../tx";
+import { useSede } from "../../sede";
+import Cargando from "../ui/Cargando";
 
 /** Lo que una ruta puede declarar sobre sí misma en `handle`. */
 type Manejo = {
   /** El nombre de la pantalla, para la pestaña y el lector de pantalla. */
-  titulo?: string;
+  titulo?: Bi;
   /** Las pantallas de trabajo no llevan pie. */
   sinPie?: boolean;
 };
@@ -17,6 +20,9 @@ const NOMBRE = "AprendeLocal";
 export default function Layout() {
   const coincidencias = useMatches();
   const manejo = (coincidencias.at(-1)?.handle ?? {}) as Manejo;
+  const tx = useTx();
+  const sede = useSede();
+  const titulo = manejo.titulo ? tx.de(manejo.titulo) : "";
 
   /*
    * El título de la pestaña.
@@ -26,11 +32,13 @@ export default function Layout() {
    * ver cuál es cuál. La portada conserva su título largo, que es el que
    * indexan los buscadores.
    */
+  const lema = tx(
+    "Ciencias con el lugar donde está tu escuela",
+    "Ciências com o lugar onde fica a sua escola"
+  );
   useEffect(() => {
-    document.title = manejo.titulo
-      ? `${manejo.titulo} · ${NOMBRE}`
-      : `${NOMBRE} · Ciencias con el lugar donde está tu escuela`;
-  }, [manejo.titulo]);
+    document.title = titulo ? `${titulo} · ${NOMBRE}` : `${NOMBRE} · ${lema}`;
+  }, [titulo, lema]);
 
   return (
     <div className="flex min-h-screen flex-col bg-white text-[#111217]">
@@ -43,7 +51,7 @@ export default function Layout() {
         href="#contenido"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[#0a0047] focus:px-5 focus:py-3 focus:text-sm focus:font-bold focus:text-white"
       >
-        Saltar al contenido
+        {tx("Saltar al contenido", "Pular para o conteúdo")}
       </a>
 
       {/* La cabecera va en todas las pantallas. El inicio de sesión y el
@@ -51,8 +59,15 @@ export default function Layout() {
           al inicio ni otra salida que el botón de atrás del navegador. */}
       <Header />
 
-      <div id="contenido" className="flex flex-1 flex-col">
-        <Outlet />
+      {/* Se vuelve a montar al cambiar de edición: el cuaderno lee lo
+          guardado de su edición al abrirse, y sin esto seguiría mostrando el
+          proyecto de la otra hasta recargar. */}
+      <div key={sede} id="contenido" className="flex flex-1 flex-col">
+        {/* Lo que una página pide al abrirse, como el currículum del
+            cuaderno, se espera aquí y no deja la cabecera en blanco. */}
+        <Suspense fallback={<Cargando />}>
+          <Outlet />
+        </Suspense>
       </div>
 
       {!manejo.sinPie && <Footer />}

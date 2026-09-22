@@ -13,8 +13,12 @@ import type { ProfileData } from "../types";
 import type { School } from "../../../types";
 import { fetchSchools } from "../../../api";
 import { mensajeDe } from "../../../shared/lib/errores";
+import { useTx } from "../../../shared/tx";
+import { useSede } from "../../../shared/sede";
 
 export default function ProfilePage() {
+  const tx = useTx();
+  const sede = useSede();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const lang = (i18n.resolvedLanguage || "pt").split("-")[0];
@@ -186,7 +190,9 @@ export default function ProfilePage() {
     } catch (err) {
       // Iba en un `alert()` encima del diálogo. Ahora se dice dentro, junto
       // al botón que hay que volver a tocar.
-      setErrorEscuela(mensajeDe(err, "Revisa la conexión e inténtalo de nuevo."));
+      setErrorEscuela(
+        mensajeDe(err, tx("Revisa la conexión e inténtalo de nuevo.", "Verifique a conexão e tente de novo."))
+      );
     } finally {
       setSavingSchool(false);
     }
@@ -206,7 +212,10 @@ export default function ProfilePage() {
   const avatarText = pickLang(profile.avatarUrl, lang) || "";
   const ageText = profile.age ?? msg.profile.notInformed;
 
+  // Solo las escuelas de la edición de la cuenta. Hoy todas las cargadas son
+  // chilenas, y a una cuenta de Río le salían los liceos de La Araucanía.
   const filteredModalSchools = schools.filter((s) => {
+    if (((s as { sede?: string }).sede ?? "cl") !== sede) return false;
     if (!modalSchoolSearch.trim()) return true;
     const q = modalSchoolSearch.toLowerCase();
     return s.name.toLowerCase().includes(q) || s.commune.toLowerCase().includes(q);
@@ -253,13 +262,16 @@ export default function ProfilePage() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-[2rem] border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 shadow-sm">
                   <div>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
-                      📍 Proyectos Geolocalizados
+                      📍 {tx("Proyectos Geolocalizados", "Projetos no território")}
                     </span>
                     <h3 className="mt-2 text-lg font-semibold text-emerald-950">
-                      Lugares STEM para {profile.school_name}
+                      {tx("Lugares STEM para", "Lugares para")} {profile.school_name}
                     </h3>
                     <p className="mt-1 text-sm text-emerald-800/80">
-                      Explora el mapa y descubre los puntos de interés patrimoniales, biológicos y geológicos en el territorio de tu escuela en {profile.school_commune}.
+                      {tx(
+                        `Explora el mapa y descubre los puntos de interés patrimoniales, biológicos y geológicos en el territorio de tu escuela en ${profile.school_commune}.`,
+                        `Veja no mapa o que há ao redor da sua escola em ${profile.school_commune} e monte uma rota a partir daí.`
+                      )}
                     </p>
                   </div>
                   {/* Apuntaba a /plataforma?tab=map, que dejo de existir al
@@ -271,7 +283,7 @@ export default function ProfilePage() {
                     to="/crear"
                     className="shrink-0 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-800 transition"
                   >
-                    Armar una ruta aquí
+                    {tx("Armar una ruta aquí", "Montar uma rota aqui")}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
@@ -308,13 +320,13 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <SchoolIcon className="h-5 w-5 text-emerald-600" />
                 <h3 id="dialogo-escuela" className="text-lg font-semibold text-slate-900">
-                  Asignar Escuela Rural
+                  {tx("Asignar Escuela Rural", "Escolher a escola")}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowSchoolModal(false)}
-                aria-label="Cerrar"
+                aria-label={tx("Cerrar", "Fechar")}
                 className="grid h-10 w-10 place-items-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               >
                 <X aria-hidden className="h-5 w-5" />
@@ -322,19 +334,25 @@ export default function ProfilePage() {
             </div>
 
             <p className="mt-3 text-xs text-slate-600">
-              Selecciona tu escuela rural para que el sistema cargue automáticamente los lugares de aprendizaje geocontextualizados para tus estudiantes.
+              {tx(
+                "Selecciona tu escuela rural para que el sistema cargue automáticamente los lugares de aprendizaje geocontextualizados para tus estudiantes.",
+                "Escolha a sua escola. Ela aparece no perfil e nos documentos da saída."
+              )}
             </p>
 
             <div className="mt-4">
               <label htmlFor="buscar-escuela" className="sr-only">
-                Buscar la escuela
+                {tx("Buscar la escuela", "Buscar a escola")}
               </label>
               <input
                 id="buscar-escuela"
                 type="search"
                 autoFocus
                 autoComplete="off"
-                placeholder="Buscar por nombre o comuna (ej: Lonquimay, Melipeuco)..."
+                placeholder={tx(
+                  "Buscar por nombre o comuna (ej: Lonquimay, Melipeuco)...",
+                  "Buscar por nome ou bairro..."
+                )}
                 value={modalSchoolSearch}
                 onChange={(e) => setModalSchoolSearch(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
@@ -344,7 +362,9 @@ export default function ProfilePage() {
             <div className="mt-3 max-h-60 overflow-y-auto space-y-2 pr-1">
               {filteredModalSchools.length === 0 ? (
                 <p className="py-6 text-center text-xs text-slate-500">
-                  No se encontraron escuelas.
+                  {sede === "br"
+                    ? "As escolas da edição brasileira ainda não foram carregadas. Por enquanto, a escola se informa no caderno, buscando pelo nome no mapa."
+                    : "No se encontraron escuelas."}
                 </p>
               ) : (
                 filteredModalSchools.map((sch) => (
@@ -381,7 +401,7 @@ export default function ProfilePage() {
                 role="alert"
                 className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-800"
               >
-                No se pudo guardar la escuela. {errorEscuela}
+                {tx("No se pudo guardar la escuela.", "Não foi possível salvar a escola.")} {errorEscuela}
               </p>
             ) : null}
 
@@ -399,7 +419,7 @@ export default function ProfilePage() {
                 disabled={savingSchool}
                 className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:opacity-60"
               >
-                {savingSchool ? "Guardando..." : "Guardar Escuela"}
+                {savingSchool ? tx("Guardando...", "Salvando...") : tx("Guardar Escuela", "Salvar escola")}
               </button>
             </div>
           </div>

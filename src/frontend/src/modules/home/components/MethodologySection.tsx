@@ -4,28 +4,30 @@ import { useTranslation } from "react-i18next";
 export default function MethodologySection() {
   const { t } = useTranslation();
 
+  const etiquetas = t("home.whatIs.pilares", { returnObjects: true }) as string[];
+
   const visualPillars = [
     {
       icon: Trees,
-      label: "Territorio Vivo",
+      label: etiquetas[0],
       bgIcon: "bg-emerald-100 text-emerald-700",
       border: "hover:border-emerald-300",
     },
     {
       icon: Atom,
-      label: "Ciencia STEM",
+      label: etiquetas[1],
       bgIcon: "bg-blue-100 text-blue-700",
       border: "hover:border-blue-300",
     },
     {
       icon: Compass,
-      label: "Rutas Didácticas",
+      label: etiquetas[2],
       bgIcon: "bg-orange-100 text-[#ea580c]",
       border: "hover:border-orange-300",
     },
     {
       icon: Users2,
-      label: "Impacto Comunitario",
+      label: etiquetas[3],
       bgIcon: "bg-indigo-100 text-[#0a0047]",
       border: "hover:border-indigo-300",
     },
