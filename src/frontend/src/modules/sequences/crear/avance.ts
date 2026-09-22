@@ -174,17 +174,29 @@ export function corregirFecha(a: Avance, semana: string, fecha: string): Avance 
  * Se usa en el escritorio, que es donde el docente aterriza el lunes. No
  * devuelve un porcentaje: devuelve qué toca ahora, que es lo que resuelve el
  * minuto que tiene antes de entrar a la sala.
+ *
+ * Es una frase completa y lleva la cifra una sola vez. El escritorio le ponía
+ * delante «0 de 1 clases dadas» y esto agregaba «Son 1 clases»: el mismo
+ * número dos veces, y con el plural roto las dos.
  */
 export function resumen(e: Expedicion, a: Avance): string | null {
   const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
-  if (!semanas.length) return null;
+  const n = semanas.length;
+  if (!n) return null;
 
   const hechas = semanas.filter((s) => estaHecha(a, s.id)).length;
-  if (hechas === 0) return `Sin empezar en la sala. Son ${semanas.length} clases.`;
-  if (hechas === semanas.length) return "Se dieron todas. Queda el informe.";
+  const clases = (k: number) => (k === 1 ? "clase" : "clases");
+
+  if (hechas === 0) {
+    return n === 1
+      ? "Hay una clase anotada y todavía no se da."
+      : `Hay ${n} clases anotadas y todavía no se da ninguna.`;
+  }
+  if (hechas === n) {
+    return n === 1 ? "La clase anotada ya se dio. Queda el informe." : `Se dieron las ${n} clases. Queda el informe.`;
+  }
 
   const siguiente = semanas.find((s) => !estaHecha(a, s.id));
-  return siguiente && siguiente.titulo.trim()
-    ? `Van ${hechas} de ${semanas.length}. Sigue: ${siguiente.titulo}`
-    : `Van ${hechas} de ${semanas.length}.`;
+  const van = `Van ${hechas} de ${n} ${clases(n)}.`;
+  return siguiente && siguiente.titulo.trim() ? `${van} Sigue: ${siguiente.titulo}.` : van;
 }

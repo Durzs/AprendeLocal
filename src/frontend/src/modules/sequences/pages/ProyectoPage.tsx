@@ -27,7 +27,7 @@
  * el martes. Los dos son de seguir, así que los dos se mudaron.
  */
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Bitacora from "../seguimiento/BitacoraEtapas";
 import Calendario from "../seguimiento/Calendario";
@@ -35,8 +35,6 @@ import { useExpedicion } from "../crear/useExpedicion";
 import { problemaPorId } from "../metodo/problemas";
 
 export default function ProyectoPage() {
-  const navegar = useNavigate();
-
   // El mismo enganche que usa el cuaderno, así que los dos leen y escriben el
   // mismo trabajo: lo que se marca aquí un martes está en `/crear` sin más.
   const { expedicion: e, avance, estado, cambiar, cambiarAvance } = useExpedicion();
@@ -51,20 +49,13 @@ export default function ProyectoPage() {
   );
 
   return (
-    <div className="grano relative min-h-screen bg-[var(--fondo)] text-[var(--crema)]">
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col px-5 py-7 sm:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--crema)]/12 pb-5">
-          <p className="rotulo text-[var(--crema)]/55">Cuaderno de expedición</p>
-          <button
-            type="button"
-            onClick={() => navegar("/")}
-            className="rounded-full border border-[var(--crema)]/25 px-3.5 py-1 rotulo text-[var(--crema)]/70 transition hover:border-[var(--crema)]/50 hover:text-[var(--crema)]"
-          >
-            Salir
-          </button>
-        </header>
-
-        <main className="flex-1 pt-9 pb-14">
+    <div className="grano relative flex flex-1 flex-col bg-[var(--fondo)] text-[var(--crema)]">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 pt-5 sm:px-8">
+        {/* La cabecera del sitio ya lleva al inicio, al cuaderno y a la
+            cuenta, y marca que se está en el seguimiento. Aquí quedaba una
+            barra propia con «Salir», que era la única manera de irse cuando
+            esta página vivía fuera del sitio. */}
+        <main className="flex-1 pt-2 pb-14">
           <p className="animar-hoja animar-hoja-1 rotulo text-[var(--tierra-600)]">
             El proyecto en la sala
           </p>

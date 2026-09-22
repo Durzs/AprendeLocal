@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
+import { mensajeDe } from "../../../shared/lib/errores";
 
 type Avatar = {
   id: string | number;
@@ -54,8 +55,8 @@ export function AvatarPickerModal({
 
         if (error) throw error;
         if (alive) setAvatars((data as Avatar[]) || []);
-      } catch (e: any) {
-        if (alive) setErro(e?.message || t("avatarModal.errorLoad"));
+      } catch (e) {
+        if (alive) setErro(mensajeDe(e, t("avatarModal.errorLoad")));
       } finally {
         if (alive) setLoading(false);
       }
@@ -88,9 +89,9 @@ export function AvatarPickerModal({
 
       onSelected?.(avatar);
       onClose();
-    } catch (e: any) {
+    } catch (e) {
       if (aliveRef.current) {
-        setErro(e?.message || t("avatarModal.errorUpdate"));
+        setErro(mensajeDe(e, t("avatarModal.errorUpdate")));
       }
     } finally {
       if (aliveRef.current) setLoading(false);

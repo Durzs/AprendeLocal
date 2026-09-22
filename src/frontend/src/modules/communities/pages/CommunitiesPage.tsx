@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { pickLang } from "../utils";
 import type { Community } from "../types";
+import { mensajeDe } from "../../../shared/lib/errores";
 
 function normalize(text = ""): string {
   return String(text).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -124,8 +125,8 @@ export default function CommunitiesPage() {
 
       setCommunities((commsResp.data as Community[]) ?? []);
       setMemberIds(new Set((membersResp.data ?? []).map((m) => m.community_id)));
-    } catch (e: any) {
-      setErro(e?.message || t("communities.loadError"));
+    } catch (e) {
+      setErro(mensajeDe(e, t("communities.loadError")));
     } finally {
       setLoading(false);
     }
@@ -141,8 +142,8 @@ export default function CommunitiesPage() {
       if (error && error.code !== "23505") throw error;
       setMemberIds((prev) => new Set([...prev, communityId]));
       setCommunities((prev) => prev.map((c) => c.id === communityId ? { ...c, members_count: (c.members_count ?? 0) + 1 } : c));
-    } catch (e: any) {
-      setErro(e?.message || t("communities.loadError"));
+    } catch (e) {
+      setErro(mensajeDe(e, t("communities.loadError")));
     } finally {
       setLoadingId(null);
     }
@@ -156,8 +157,8 @@ export default function CommunitiesPage() {
       if (error) throw error;
       setMemberIds((prev) => { const next = new Set(prev); next.delete(communityId); return next; });
       setCommunities((prev) => prev.map((c) => c.id === communityId ? { ...c, members_count: Math.max(0, (c.members_count ?? 1) - 1) } : c));
-    } catch (e: any) {
-      setErro(e?.message || t("communities.loadError"));
+    } catch (e) {
+      setErro(mensajeDe(e, t("communities.loadError")));
     } finally {
       setLoadingId(null);
     }
@@ -207,9 +208,10 @@ export default function CommunitiesPage() {
             </div>
 
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search aria-hidden className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
-                type="text"
+                type="search"
+                aria-label={t("communities.searchLabel")}
                 placeholder={t("communities.searchPlaceholder")}
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
@@ -226,8 +228,13 @@ export default function CommunitiesPage() {
           {erro && (
             <div className="mb-8 flex items-center justify-between gap-3 rounded-2xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-600">
               <span>{erro}</span>
-              <button onClick={() => setErro("")} className="shrink-0">
-                <X className="h-4 w-4" />
+              <button
+                type="button"
+                onClick={() => setErro("")}
+                aria-label={t("communities.dismissError")}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full hover:bg-red-100"
+              >
+                <X aria-hidden className="h-4 w-4" />
               </button>
             </div>
           )}

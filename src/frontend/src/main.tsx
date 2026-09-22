@@ -7,6 +7,14 @@ import ConfigErrorScreen from './shared/components/ConfigErrorScreen'
 import ErrorBoundary from './shared/components/ErrorBoundary'
 import StartupErrorScreen from './shared/components/StartupErrorScreen'
 import { missingSupabaseEnvVars } from './shared/lib/supabaseClient'
+import { aplicarAjustes, leerAjustes } from './shared/lectura'
+
+// Los ajustes de lectura se aplican antes de pintar nada. El control vive en
+// la cabecera, y hay pantallas sin cabecera —fijar la contraseña, volver del
+// correo de confirmación— donde quien necesita letra grande la necesita igual.
+// Aplicarlos aquí, y no al montar un componente, evita además que la página
+// aparezca un instante con la letra chica y después salte.
+aplicarAjustes(leerAjustes())
 
 const raiz = createRoot(document.getElementById('root')!)
 

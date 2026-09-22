@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Mail } from "lucide-react";
 import { enviarEnlaceDeRecuperacion } from "../../../shared/lib/confirmacion";
-import AprendeLocalLogo, { TINTA } from "../../../shared/components/ui/AprendeLocalLogo";
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation();
@@ -47,17 +46,12 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex flex-1 items-center justify-center bg-[#f7f8fb] px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center">
-          <Link to="/">
-            <AprendeLocalLogo
-              variante="apilado"
-              className="h-16 w-auto transition-transform hover:scale-105"
-              color={TINTA}
-            />
-          </Link>
-        </div>
+        {/* Aquí iba el logo, grande, encima de la tarjeta. Esta pantalla
+            no tenía la cabecera del sitio y el logo era la única forma de
+            volver al inicio. Ahora la cabecera está, y dos logos seguidos
+            se leen como un error de maquetación. */}
 
         <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
           {enviado ? (

@@ -245,6 +245,7 @@ export default function SelectorObjetivo({
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder={t("preparar.objective.searchPlaceholder")}
+          aria-label={t("preparar.objective.searchLabel")}
           disabled={cargando}
           className="min-w-0 flex-1 rounded-full border border-slate-200 px-4 py-1.5 text-sm outline-none focus:border-slate-400"
         />

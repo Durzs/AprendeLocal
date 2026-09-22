@@ -385,6 +385,9 @@ function ColumnaActividades({
 }) {
   const hayProblema = Boolean(elegido || e.problemaPropio.trim() || e.problemaPropioNombre.trim());
   const [editando, ponerEditando] = useState<string | null>(null);
+  // El identificador de la actividad que se está escribiendo. Se saca al
+  // tocar el botón y no al pintar el formulario, que se pinta muchas veces.
+  const [idNueva, ponerIdNueva] = useState("");
 
   /**
    * Guarda la actividad, y sus objetivos con ella.
@@ -626,7 +629,7 @@ function ColumnaActividades({
         <div className="mt-3">
           <FormularioActividad
             inicial={{
-              id: `propia-${Date.now()}`,
+              id: idNueva,
               asignatura: e.asignaturas[0] ?? "biologia",
               enfoque: "",
               queInvestigan: "",
@@ -645,7 +648,10 @@ function ColumnaActividades({
       ) : (
         <button
           type="button"
-          onClick={() => ponerEditando("nueva")}
+          onClick={() => {
+            ponerIdNueva(`propia-${Date.now()}`);
+            ponerEditando("nueva");
+          }}
           className="mt-3 min-h-11 w-full rounded-lg border border-dashed border-[var(--crema)]/25 px-3.5 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/45"
         >
           Escribir una actividad mía
@@ -1088,11 +1094,15 @@ function Noticias({
             value={titular}
             onChange={(ev) => ponerTitular(ev.target.value)}
             placeholder="El titular, tal como salió"
+            aria-label="Titular de la noticia"
           />
           <Texto
             value={url}
             onChange={(ev) => ponerUrl(ev.target.value)}
             placeholder="El enlace, si lo tienes"
+            aria-label="Enlace de la noticia"
+            type="url"
+            inputMode="url"
           />
         </div>
         <button

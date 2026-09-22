@@ -7,7 +7,6 @@ import { supabase } from "../../../shared/lib/supabaseClient";
 import { completitud, leer, type Expedicion } from "../../sequences/crear/expedicion";
 import {
   AVANCE_VACIO,
-  estaHecha,
   normalizarAvance,
   resumen,
   semanasDe,
@@ -126,35 +125,44 @@ function laminaDe(e: Expedicion | null): number {
 
 export default function EscritorioPage() {
   const { user, sede } = useAuth();
-  const [expedicion, setExpedicion] = useState<Expedicion | null>(null);
   const [escuela, setEscuela] = useState<string | null>(null);
-  const [avance, setAvance] = useState<Avance>(AVANCE_VACIO);
 
-  useEffect(() => {
-    setExpedicion(leer());
-    // El avance se guarda al lado de la expedición, con su propia llave: lo
-    // escribe quien vuelve de la sala un martes, no quien planifica un
-    // domingo. Ver §avance.ts.
+  // Lo guardado se lee al crear el estado y no en un efecto. Leerlo en un
+  // efecto pintaba primero el escritorio vacío —«Empezar», «Armar una ruta»—
+  // y un instante después lo reemplazaba por el proyecto a medias, delante de
+  // la persona.
+  const [expedicion] = useState<Expedicion | null>(() => leer());
+  // El avance se guarda al lado de la expedición, con su propia llave: lo
+  // escribe quien vuelve de la sala un martes, no quien planifica un domingo.
+  const [avance] = useState<Avance>(() => {
     try {
       const crudo = localStorage.getItem("aprendelocal:expedicion:avance");
-      if (crudo) setAvance(normalizarAvance(JSON.parse(crudo)));
+      return crudo ? normalizarAvance(JSON.parse(crudo)) : AVANCE_VACIO;
     } catch {
-      /* Ventana privada. Se muestra sin avance, que es lo mismo que sin empezar. */
+      return AVANCE_VACIO; /* Ventana privada: lo mismo que sin empezar. */
     }
-  }, []);
+  });
 
-  // El nombre de la escuela es lo único que se pide a la base, y si falla no
-  // pasa nada: el saludo se arregla sin él.
+  /*
+   * El nombre de la escuela, para el saludo.
+   *
+   * Se pedía `profiles.school_name`, una columna que no existe: la consulta
+   * fallaba sin decir nada y el saludo decía siempre «Tu escuela». La escuela
+   * está en `schools`, y el perfil la apunta con `school_id`, que es como la
+   * lee también la pantalla del perfil. Se pide en una sola consulta siguiendo
+   * esa relación.
+   */
   useEffect(() => {
     if (!user) return;
     let vigente = true;
     supabase
       .from("profiles")
-      .select("school_name")
+      .select("schools(name)")
       .eq("id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (vigente && data?.school_name) setEscuela(data.school_name);
+        const nombre = (data?.schools as { name?: string } | null)?.name;
+        if (vigente && nombre) setEscuela(nombre);
       });
     return () => {
       vigente = false;
@@ -199,7 +207,6 @@ export default function EscritorioPage() {
   const etapas = expedicion ? cerradas(avance.bitacora) : 0;
   const enMetodo = empezada ? resumenBitacora(avance.bitacora) : null;
   const semanas = expedicion ? semanasDe(expedicion) : [];
-  const hechas = semanas.filter((s) => estaHecha(avance, s.id)).length;
   const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
 
   return (
@@ -310,7 +317,7 @@ export default function EscritorioPage() {
                     parte del proyecto está el curso. */}
                 {enSala && (
                   <p className="mt-2 text-sm text-slate-500">
-                    {hechas} de {semanas.length} clases dadas. {enSala}
+                    {enSala}
                   </p>
                 )}
 

@@ -56,7 +56,15 @@
       "courses": "Cursos",
       "profile": "Perfil",
       "prepare": "Preparar clase",
-      "routes": "Rutas"
+      "routes": "Rutas",
+      "home": "Inicio",
+      "notebook": "Cuaderno",
+      "tracking": "Seguimiento",
+      "create": "Crear ruta",
+      "about": "¿Qué es?",
+      "howItWorks": "Cómo funciona",
+      "contact": "Contacto",
+      "main": "Navegación principal"
     },
     "mobile": {
       "openMenu": "Abrir menú",
@@ -188,7 +196,9 @@
     "joinAction": "Unirse",
     "leave": "Salir",
     "memberBadge": "Miembro",
-    "noneFound": "Ninguna comunidad encontrada."
+    "noneFound": "Ninguna comunidad encontrada.",
+    "searchLabel": "Buscar una comunidad",
+    "dismissError": "Cerrar el aviso"
   },
   "badges": {
     "title": "Mis Logros",
@@ -274,7 +284,11 @@
       "required": "Completa correo y contraseña."
     },
     "notConfirmed": "Si acabas de registrarte, primero confirma tu correo con el enlace que te enviamos.",
-    "forgot": "¿Olvidaste tu contraseña?"
+    "forgot": "¿Olvidaste tu contraseña?",
+    "wrongCredentials": "El correo o la contraseña no coinciden. Revisa que no haya un espacio de más, o usa «¿Olvidaste tu contraseña?».",
+    "error": "No se pudo entrar. Revisa la conexión e inténtalo de nuevo.",
+    "noAccount": "¿Todavía no tienes cuenta?",
+    "createAccount": "Crear una cuenta"
   },
   "notFound": {
     "title": "Página no encontrada",
@@ -283,11 +297,11 @@
   },
   "home": {
     "hero": {
-      "title": "Tu territorio es tu mejor laboratorio STEM",
-      "subtitle": "Descubre cómo los ríos, bosques y comunidades de tu entorno se convierten en proyectos de ciencia, tecnología e ingeniería. Aprende creando soluciones reales para tu territorio.",
-      "ctaStart": "Explorar Cursos",
+      "title": "Tu territorio es tu mejor laboratorio",
+      "subtitle": "Arma un proyecto con tu curso a partir de algo que está pasando cerca de tu escuela: el estero, el cerro, la basura del camino. Con los objetivos del programa marcados y los papeles de la salida listos para firmar.",
+      "ctaStart": "Armar mi primera ruta",
       "ctaExplore": "Conoce cómo funciona",
-      "ctaStartAria": "Explorar cursos disponibles",
+      "ctaStartAria": "Abrir el cuaderno para armar una ruta",
       "ctaExploreAria": "Ver cómo funciona la plataforma",
       "ctaContact": "Contáctanos",
       "ctaSignup": "Crear cuenta gratis",
@@ -701,7 +715,8 @@
       "showUnrelated": "Ver también los {{count}} sin relación con este lugar",
       "counter": "{{shown}} de {{total}} objetivos",
       "chosen_one": "{{count}} elegido",
-      "chosen_other": "{{count}} elegidos"
+      "chosen_other": "{{count}} elegidos",
+      "searchLabel": "Buscar un objetivo"
     },
     "place": {
       "all": "Todas",
@@ -893,5 +908,15 @@
     "noMatch": "Ningún lugar coincide con esa búsqueda.",
     "noPlaces": "La consulta funcionó pero no devolvió ningún lugar. Puede que la tabla esté vacía o que sus coordenadas no se puedan leer.",
     "loadFailed": "No se pudieron cargar los lugares desde la base de datos. Detalle: {{detail}}"
+  },
+  "lectura": {
+    "titulo": "Ajustes de lectura",
+    "grande": "Letra más grande",
+    "grandeAyuda": "Todo el texto un paso más grande.",
+    "contraste": "Más contraste",
+    "contrasteAyuda": "Los grises pasan a negro, para leer con sol de frente.",
+    "oscuro": "Cuaderno en oscuro",
+    "oscuroAyuda": "El cuaderno y el seguimiento en fondo verde oscuro.",
+    "guardado": "Queda guardado en este navegador."
   }
 }

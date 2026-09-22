@@ -214,7 +214,7 @@ export default function VistaSecuencia({
   const nVuelta = vuelta ? ++n : 0;
   const nCritica = critica ? ++n : 0;
   const nRepaso = ++n;
-  const nTransfer = transferencia ? ++n : 0;
+  const nTransfer = transferencia ? n + 1 : 0;
 
   // El riel muestra cuántas piezas trae cada etapa, para que el docente juzgue
   // el conjunto antes de leerlo entero.
