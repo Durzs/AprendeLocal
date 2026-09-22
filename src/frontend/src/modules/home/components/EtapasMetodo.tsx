@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ETAPAS } from "../../sequences/metodo/etapas";
+import { etapasEn } from "../../sequences/metodo/etapas";
+import { useTx } from "../../../shared/tx";
 
 /**
  * Las seis etapas del método, con lo que pasa en cada una.
@@ -33,14 +34,11 @@ import { ETAPAS } from "../../sequences/metodo/etapas";
  * que usa el cuaderno. Si alguien edita una etapa, esto cambia con ella.
  */
 
-/** Los dos proyectos de ejemplo, leídos del propio método. */
-const PROYECTOS = [...new Set(ETAPAS.flatMap((e) => e.ejemplos.map((x) => x.proyecto)))];
-
 /** Hasta dónde llega cada etapa. Es el anillo que se va abriendo. */
-const ALCANCE: Record<string, string> = {
-  inmediato: "En la sala",
-  intermedio: "En el vecindario",
-  amplio: "Fuera de la escuela",
+const ALCANCE: Record<string, { es: string; pt: string }> = {
+  inmediato: { es: "En la sala", pt: "Na sala" },
+  intermedio: { es: "En el vecindario", pt: "No bairro" },
+  amplio: { es: "Fuera de la escuela", pt: "Fora da escola" },
 };
 
 const LIENZO = "h-full w-full max-w-[120px]";
@@ -58,7 +56,13 @@ const DIBUJOS: Record<string, () => React.ReactNode> = {
 };
 
 export default function EtapasMetodo() {
-  const [proyecto, ponerProyecto] = useState(PROYECTOS[0] ?? "");
+  const tx = useTx();
+  const ETAPAS = etapasEn(tx.idioma);
+  // Los dos proyectos de ejemplo, leídos del propio método. Se guarda cuál
+  // por su posición y no por su nombre: en portugués los proyectos son otros.
+  const PROYECTOS = [...new Set(ETAPAS.flatMap((e) => e.ejemplos.map((x) => x.proyecto)))];
+  const [elegido, ponerElegido] = useState(0);
+  const proyecto = PROYECTOS[elegido] ?? PROYECTOS[0] ?? "";
   const [enVista, ponerEnVista] = useState(false);
   const caja = useRef<HTMLDivElement>(null);
 
@@ -81,24 +85,30 @@ export default function EtapasMetodo() {
     <div ref={caja}>
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="max-w-xl">
-          <span className="rotulo block text-orange-700">Cómo se recorre</span>
+          <span className="rotulo block text-orange-700">
+            {tx("Cómo se recorre", "Como se percorre")}
+          </span>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">
-            Seis etapas, siempre en este orden. Escoge un proyecto y mira cómo
-            se ve cada etapa cuando el curso trabaja en él.
+            {tx(
+              "Seis etapas, siempre en este orden. Escoge un proyecto y mira cómo se ve cada etapa cuando el curso trabaja en él.",
+              "Seis etapas, sempre nesta ordem. Escolha um projeto e veja como fica cada etapa quando a turma trabalha nele."
+            )}
           </p>
         </div>
 
         {/* Los dos proyectos. Son el argumento de la sección: el mismo
             recorrido sirve para dos cosas que no se parecen. */}
         <fieldset className="flex flex-wrap gap-2">
-          <legend className="sr-only">Qué proyecto quieres ver</legend>
-          {PROYECTOS.map((p) => {
+          <legend className="sr-only">
+            {tx("Qué proyecto quieres ver", "Qual projeto você quer ver")}
+          </legend>
+          {PROYECTOS.map((p, i) => {
             const puesto = p === proyecto;
             return (
               <button
                 key={p}
                 type="button"
-                onClick={() => ponerProyecto(p)}
+                onClick={() => ponerElegido(i)}
                 aria-pressed={puesto}
                 className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition ${
                   puesto
@@ -123,7 +133,7 @@ export default function EtapasMetodo() {
             indice={i}
             nombre={etapa.nombre}
             enUnaLinea={etapa.enUnaLinea}
-            alcance={ALCANCE[etapa.alcance] ?? ""}
+            alcance={ALCANCE[etapa.alcance] ? tx.de(ALCANCE[etapa.alcance]) : ""}
             asiSeVe={
               etapa.ejemplos.find((x) => x.proyecto === proyecto)?.asiSeVe ?? ""
             }
@@ -156,6 +166,7 @@ function Etapa({
   // Volver a pasar el ratón vuelve a dibujar. Las animaciones son de CSS y no
   // se reinician solas, así que se cambia la llave del dibujo y React lo monta
   // de nuevo.
+  const tx = useTx();
   const [pase, ponerPase] = useState(0);
   const rebobinar = () => ponerPase((n) => n + 1);
 
@@ -176,7 +187,7 @@ function Etapa({
         {String(indice + 1).padStart(2, "0")}
       </span>
 
-      <span className="sr-only">Etapa {indice + 1} de 6.</span>
+      <span className="sr-only">Etapa {indice + 1} / 6.</span>
       {alcance && (
         <span className="rotulo relative block text-slate-500">{alcance}</span>
       )}
@@ -208,7 +219,7 @@ function Etapa({
           dentro no se parece en nada. */}
       {asiSeVe && (
         <div className="mt-5">
-          <span className="rotulo block text-orange-700">Así se ve</span>
+          <span className="rotulo block text-orange-700">{tx("Así se ve", "Assim fica")}</span>
           <p className="mt-2 text-sm leading-relaxed text-slate-700">{asiSeVe}</p>
         </div>
       )}

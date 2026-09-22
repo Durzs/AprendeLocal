@@ -14,10 +14,16 @@ export type Nativa = {
   comun: string;
   /** En mapuzugun, cuando se conoce. Sin validar. */
   mapuzugun?: string;
-  grupo: "arbol" | "planta" | "ave" | "mamifero" | "anfibio" | "pez" | "hongo";
+  grupo: "arbol" | "planta" | "ave" | "mamifero" | "anfibio" | "reptil" | "crustaceo" | "pez" | "hongo";
   /** Una frase que el docente pueda decir en voz alta. */
   porQue: string;
   estado?: Estado;
+  /**
+   * Quién da ese estado, cuando no es la lista chilena. En la edición
+   * brasileña se muestra junto al estado, porque no siempre coinciden la
+   * lista mundial y la nacional.
+   */
+  fuenteEstado?: string;
   /** Fotografía representativa oficial de la especie. */
   fotoUrl?: string;
 };

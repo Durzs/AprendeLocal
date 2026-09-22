@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Mail, MapPin, Linkedin } from "lucide-react";
 import AprendeLocalLogo from "../ui/AprendeLocalLogo";
+import { SEDES, useSede } from "../../sede";
 
 /**
  * La página de LinkedIn.
@@ -19,6 +20,7 @@ const LINKEDIN = "https://www.linkedin.com/company/144983955/";
 
 export default function Footer() {
   const { t } = useTranslation();
+  const sede = useSede();
 
   return (
     <footer className="border-t border-blue-950/80 bg-[#0a0047] px-4 py-12 text-slate-300">
@@ -28,7 +30,7 @@ export default function Footer() {
           <div className="space-y-3">
             <AprendeLocalLogo className="h-8 w-auto" color="#ffffff" />
             <p className="text-sm text-slate-300 max-w-md">
-              {t("footer.tagline", "Educación STEM contextualizada para docentes, escuelas y comunidades rurales.")}
+              {t("footer.tagline")}
             </p>
           </div>
 
@@ -46,7 +48,7 @@ export default function Footer() {
 
             <div className="flex items-center gap-2.5 text-slate-300">
               <MapPin className="h-4 w-4 text-blue-400" />
-              <span>La Araucanía, Chile</span>
+              <span>{SEDES[sede].zona}</span>
             </div>
 
             <a
@@ -57,7 +59,7 @@ export default function Footer() {
             >
               <Linkedin className="h-4 w-4 text-[#f97316]" />
               LinkedIn
-              <span className="sr-only">(se abre en una pestaña nueva)</span>
+              <span className="sr-only">{t("footer.nuevaPestana")}</span>
             </a>
           </div>
         </div>
@@ -65,11 +67,9 @@ export default function Footer() {
         {/* Divider & Copyright */}
         <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div>
-            © {new Date().getFullYear()} AprendeLocal. Todos los derechos reservados.
+            © {new Date().getFullYear()} AprendeLocal. {t("footer.derechos")}
           </div>
-          <div className="text-slate-400">
-            Educación STEM Territorial
-          </div>
+          <div className="text-slate-400">{SEDES[sede].donde}</div>
         </div>
       </div>
     </footer>

@@ -1,8 +1,9 @@
-import { llaveDeSede } from "../../../shared/sede";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
+import { llaveDeSede, useSede } from "../../../shared/sede";
+import { useTx } from "../../../shared/tx";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { completitud, leer, type Expedicion } from "../../sequences/crear/expedicion";
 import {
@@ -13,7 +14,7 @@ import {
   type Avance,
 } from "../../sequences/crear/avance";
 import { cerradas, resumenBitacora } from "../../sequences/seguimiento/bitacora";
-import { ETAPAS } from "../../sequences/metodo/etapas";
+import { etapasEn } from "../../sequences/metodo/etapas";
 import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 
 /**
@@ -82,26 +83,35 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 const LAMINAS = [
   {
     numero: 1,
-    nombre: "El programa",
+    nombre: { es: "El programa", pt: "O currículo" },
     fondo: "var(--tinta-950)",
     acento: "text-amber-300",
-    dice: "Los cursos que tienes y cuántas clases hay de verdad para esto.",
+    dice: {
+      es: "Los cursos que tienes y cuántas clases hay de verdad para esto.",
+      pt: "As turmas que você tem e quantas aulas existem de verdade para isto.",
+    },
   },
   {
     numero: 2,
-    nombre: "El lugar",
+    nombre: { es: "El lugar", pt: "O lugar" },
     fondo: "#c9612a",
     // Sobre el terracota, el ámbar no se despega del fondo: van los dos al
     // mismo matiz y a la misma luz. El blanco sí se lee.
     acento: "text-white/85",
-    dice: "Busca tu escuela, elige la problemática y marca los objetivos que abre.",
+    dice: {
+      es: "Busca tu escuela, elige la problemática y marca los objetivos que abre.",
+      pt: "Encontre sua escola, escolha a problemática e marque as habilidades que ela abre.",
+    },
   },
   {
     numero: 3,
-    nombre: "Lo que queda armado",
+    nombre: { es: "Lo que queda armado", pt: "O que fica pronto" },
     fondo: "#1e2a24",
     acento: "text-amber-300",
-    dice: "Qué van a construir y para quién, con qué se evalúa y los papeles de la salida.",
+    dice: {
+      es: "Qué van a construir y para quién, con qué se evalúa y los papeles de la salida.",
+      pt: "O que vão construir e para quem, como se avalia e os documentos da saída.",
+    },
   },
 ] as const;
 
@@ -125,6 +135,9 @@ function laminaDe(e: Expedicion | null): number {
 
 export default function EscritorioPage() {
   const { user } = useAuth();
+  const tx = useTx();
+  const sede = useSede();
+  const ETAPAS = etapasEn(tx.idioma);
   const [escuela, setEscuela] = useState<string | null>(null);
 
   // Lo guardado se lee al crear el estado y no en un efecto. Leerlo en un
@@ -193,10 +206,18 @@ export default function EscritorioPage() {
   // salida, así que faltan de verdad.
   const faltan = expedicion
     ? [
-        expedicion.destinatario.trim() ? null : "a quién le entregan",
-        expedicion.preguntarA.trim() ? null : "a quién le preguntan",
-        expedicion.puntoDeSalida.trim() ? null : "dónde se para el curso",
-        expedicion.queCuidar.trim() ? null : "qué hay que cuidar ahí",
+        expedicion.destinatario.trim()
+          ? null
+          : tx("Falta a quién le entregan", "Falta para quem entregam"),
+        expedicion.preguntarA.trim()
+          ? null
+          : tx("Falta a quién le preguntan", "Falta a quem perguntam"),
+        expedicion.puntoDeSalida.trim()
+          ? null
+          : tx("Falta dónde se para el curso", "Falta onde a turma fica"),
+        expedicion.queCuidar.trim()
+          ? null
+          : tx("Falta qué hay que cuidar ahí", "Falta o que é preciso cuidar ali"),
       ].filter(Boolean)
     : [];
 
@@ -205,9 +226,9 @@ export default function EscritorioPage() {
   // del calendario aparece cuando haya clases anotadas, y contesta qué toca el
   // martes.
   const etapas = expedicion ? cerradas(avance.bitacora) : 0;
-  const enMetodo = empezada ? resumenBitacora(avance.bitacora) : null;
+  const enMetodo = empezada ? resumenBitacora(avance.bitacora, tx.idioma) : null;
   const semanas = expedicion ? semanasDe(expedicion) : [];
-  const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
+  const enSala = expedicion && semanas.length ? resumen(expedicion, avance, tx.idioma) : null;
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
@@ -219,17 +240,18 @@ export default function EscritorioPage() {
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-white/12 pb-4">
-            <span className={`rotulo ${etapa.acento}`}>{escuela ?? "Tu escuela"}</span>
+            <span className={`rotulo ${etapa.acento}`}>{escuela ?? tx("Tu escuela", "Sua escola")}</span>
             <span className="rotulo text-white/70">
-              Lámina {etapa.numero} de {LAMINAS.length} · {etapa.nombre}
+              {tx("Lámina", "Lâmina")} {etapa.numero} {tx("de", "de")} {LAMINAS.length} ·{" "}
+              {tx.de(etapa.nombre)}
             </span>
           </div>
 
           <h1 className="display mt-8 text-3xl text-white sm:text-4xl md:text-5xl">
-            {nombre ? `Hola, ${nombre}` : "Hola"}
+            {nombre ? `${tx("Hola", "Olá")}, ${nombre}` : tx("Hola", "Olá")}
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
-            {etapa.dice}
+            {tx.de(etapa.dice)}
           </p>
 
           {/* Las láminas, para que el color no sea un misterio: se ve
@@ -257,7 +279,7 @@ export default function EscritorioPage() {
                       puesta ? "font-semibold text-white" : "text-white/50"
                     }`}
                   >
-                    {l.nombre}
+                    {tx.de(l.nombre)}
                   </span>
                 </li>
               );
@@ -270,7 +292,7 @@ export default function EscritorioPage() {
       <section className="border-b border-slate-200/70 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
           <span className="rotulo block text-orange-700">
-            {empezada ? "Donde la dejaste" : "Empezar"}
+            {empezada ? tx("Donde la dejaste", "Onde você parou") : tx("Empezar", "Começar")}
           </span>
 
           {empezada && expedicion ? (
@@ -280,7 +302,7 @@ export default function EscritorioPage() {
                   {expedicion.problemaPropioNombre ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
-                    "Una ruta sin nombre todavía"}
+                    tx("Una ruta sin nombre todavía", "Uma rota ainda sem nome")}
                 </h2>
 
                 {expedicion.problemaPropioNombre && expedicion.preguntaGuia && (
@@ -298,7 +320,7 @@ export default function EscritorioPage() {
                 {enMetodo && (
                   <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-700">
                     <span className="rotulo rounded-full bg-white px-2.5 py-1.5 text-orange-700 shadow-sm">
-                      {etapas} de {ETAPAS.length} etapas
+                      {etapas} {tx("de", "de")} {ETAPAS.length} etapas
                     </span>
                     {enMetodo}
                   </p>
@@ -316,19 +338,29 @@ export default function EscritorioPage() {
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {expedicion.oa.length > 0 && (
                     <Ficha listo>
-                      {expedicion.oa.length} objetivo{expedicion.oa.length === 1 ? "" : "s"}
+                      {expedicion.oa.length}{" "}
+                      {tx(
+                        expedicion.oa.length === 1 ? "objetivo" : "objetivos",
+                        expedicion.oa.length === 1 ? "habilidade" : "habilidades"
+                      )}
                     </Ficha>
                   )}
                   {expedicion.ubicacion.trim() && <Ficha listo>{expedicion.ubicacion}</Ficha>}
-                  {expedicion.preguntaGuia.trim() && <Ficha listo>La pregunta</Ficha>}
-                  {expedicion.oa.length === 0 && <Ficha>Faltan los objetivos</Ficha>}
-                  {!expedicion.ubicacion.trim() && <Ficha>Falta el lugar</Ficha>}
-                  {!expedicion.preguntaGuia.trim() && <Ficha>Falta la pregunta</Ficha>}
+                  {expedicion.preguntaGuia.trim() && (
+                    <Ficha listo>{tx("La pregunta", "A pergunta")}</Ficha>
+                  )}
+                  {expedicion.oa.length === 0 && (
+                    <Ficha>{tx("Faltan los objetivos", "Faltam as habilidades")}</Ficha>
+                  )}
+                  {!expedicion.ubicacion.trim() && <Ficha>{tx("Falta el lugar", "Falta o lugar")}</Ficha>}
+                  {!expedicion.preguntaGuia.trim() && (
+                    <Ficha>{tx("Falta la pregunta", "Falta a pergunta")}</Ficha>
+                  )}
                   {/* Con nombre y no contadas. «4 cosas que pones tú» obliga a
                       entrar a averiguar cuáles son; «falta dónde se para el
                       curso» se puede resolver o dejar pasar sin abrir nada. */}
                   {faltan.map((f) => (
-                    <Ficha key={f}>Falta {f}</Ficha>
+                    <Ficha key={f}>{f}</Ficha>
                   ))}
                 </ul>
               </div>
@@ -340,42 +372,47 @@ export default function EscritorioPage() {
               <div className="flex shrink-0 flex-col gap-3">
                 {etapas > 0 ? (
                   <>
-                    <Boton a="/proyecto">Ver por dónde va</Boton>
+                    <Boton a="/proyecto">{tx("Ver por dónde va", "Ver onde está")}</Boton>
                     <Link
                       to="/crear"
                       className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
                     >
-                      Abrir el cuaderno
+                      {tx("Abrir el cuaderno", "Abrir o caderno")}
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Boton a="/crear">Seguir con esta</Boton>
+                    <Boton a="/crear">{tx("Seguir con esta", "Continuar esta")}</Boton>
                     <Link
                       to="/proyecto"
                       className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
                     >
-                      Empezar el seguimiento
+                      {tx("Empezar el seguimiento", "Começar o acompanhamento")}
                     </Link>
                   </>
                 )}
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
-                  Va {lleno}% del cuaderno. Queda guardada en este computador, y
-                  también en tu cuenta si entraste con ella.
+                  {tx(
+                    `Va ${lleno}% del cuaderno. Queda guardada en este computador, y también en tu cuenta si entraste con ella.`,
+                    `${lleno}% do caderno preenchido. Fica salvo neste computador, e também na sua conta se você entrou com ela.`
+                  )}
                 </p>
               </div>
             </div>
           ) : (
             <div className="animar-asoma mt-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-xl">
-                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">Armar una ruta</h2>
+                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
+                  {tx("Armar una ruta", "Montar uma rota")}
+                </h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  Tres láminas: lo que te toca pasar, la problemática del lugar
-                  con los objetivos que abre, y lo que queda armado con sus
-                  documentos.
+                  {tx(
+                    "Tres láminas: lo que te toca pasar, la problemática del lugar con los objetivos que abre, y lo que queda armado con sus documentos.",
+                    "Três lâminas: o que você precisa trabalhar, a problemática do lugar com as habilidades que ela abre, e o que fica pronto com os documentos."
+                  )}
                 </p>
               </div>
-              <Boton a="/crear">Empezar</Boton>
+              <Boton a="/crear">{tx("Empezar", "Começar")}</Boton>
             </div>
           )}
         </div>
@@ -384,32 +421,49 @@ export default function EscritorioPage() {
       {/* ── Lo que hay, en blanco ──────────────────────────────────────── */}
       <section className="border-b border-slate-200/70 bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <span className="rotulo block text-orange-700">Lo que hay</span>
+          <span className="rotulo block text-orange-700">{tx("Lo que hay", "O que tem aqui")}</span>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Las rutas escritas son chilenas: Agua, bosque, suelo y calor
+                de La Araucanía, con los objetivos del Mineduc. En la edición
+                brasileña no se ofrecen. */}
+            {sede === "cl" && (
+              <Tarjeta
+                a="/crear"
+                titulo="Las cuatro rutas escritas"
+                cuerpo="Agua, bosque, suelo y calor. Se ajustan a tu escuela y se imprimen."
+              />
+            )}
             <Tarjeta
               a="/crear"
-              titulo="Las cuatro rutas escritas"
-              cuerpo="Agua, bosque, suelo y calor. Se ajustan a tu escuela y se imprimen."
-            />
-            <Tarjeta
-              a="/crear"
-              titulo="Qué vive junto a tu escuela"
-              cuerpo="Lo que se ha registrado alrededor del lugar donde vas a salir."
+              titulo={tx("Qué vive junto a tu escuela", "O que vive perto da sua escola")}
+              cuerpo={tx(
+                "Lo que se ha registrado alrededor del lugar donde vas a salir.",
+                "O que já foi registrado ao redor do lugar aonde você vai sair."
+              )}
             />
             <Tarjeta
               a="/#habilidades"
-              titulo="En qué se apoya"
-              cuerpo="La educación basada en el lugar, y la formación para llevarla a la sala."
+              titulo={tx("En qué se apoya", "Em que se apoia")}
+              cuerpo={tx(
+                "La educación basada en el lugar, y la formación para llevarla a la sala.",
+                "A educação baseada no lugar, e a formação para levá-la à sala de aula."
+              )}
             />
             <Tarjeta
               a="/comunidades"
-              titulo="Comunidades"
-              cuerpo="Otras escuelas y docentes trabajando lo mismo."
+              titulo={tx("Comunidades", "Comunidades")}
+              cuerpo={tx(
+                "Otras escuelas y docentes trabajando lo mismo.",
+                "Outras escolas e professores trabalhando no mesmo."
+              )}
             />
             <Tarjeta
               a="/perfil"
-              titulo="Tu perfil y tu escuela"
-              cuerpo="Los datos que salen firmados en la carta a las familias."
+              titulo={tx("Tu perfil y tu escuela", "Seu perfil e sua escola")}
+              cuerpo={tx(
+                "Los datos que salen firmados en la carta a las familias.",
+                "Os dados que saem assinados na autorização para as famílias."
+              )}
             />
           </ul>
         </div>
@@ -419,6 +473,7 @@ export default function EscritorioPage() {
           El mismo verde papel que la sección del territorio en la portada,
           por la misma razón: era un bloque oscuro entre tres claros, y se
           leía como algo de otro sitio. */}
+      {sede === "cl" && (
       <section
         className="relative overflow-hidden border-t border-slate-200/70 px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
         style={{ backgroundColor: "var(--verde-papel)" }}
@@ -451,6 +506,7 @@ export default function EscritorioPage() {
           </ul>
         </div>
       </section>
+      )}
     </main>
   );
 }

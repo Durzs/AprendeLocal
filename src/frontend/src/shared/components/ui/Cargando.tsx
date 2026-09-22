@@ -1,3 +1,5 @@
+import { useTx } from "../../tx";
+
 /**
  * Lo que se ve mientras llega una pantalla.
  *
@@ -7,12 +9,13 @@
  * comprobar la sesión, así que quien la vio una vez ya sabe qué significa.
  */
 export default function Cargando() {
+  const tx = useTx();
   return (
     <main className="grid min-h-[60vh] place-items-center bg-white" aria-busy="true">
       <div className="h-0.5 w-32 overflow-hidden rounded-full bg-slate-200">
         <div className="animar-esperando h-full w-1/4 rounded-full bg-[var(--tinta-600)]" />
       </div>
-      <span className="sr-only">Cargando la página</span>
+      <span className="sr-only">{tx("Cargando la página", "Carregando a página")}</span>
     </main>
   );
 }

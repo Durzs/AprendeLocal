@@ -33,7 +33,8 @@
  * incumplimiento, es el invierno en La Araucanía.
  */
 
-import { ETAPAS } from "../metodo/etapas";
+import { ETAPAS, etapasEn, type Etapa } from "../metodo/etapas";
+import type { Idioma } from "../../../shared/tx";
 import type { Expedicion } from "../crear/expedicion";
 
 /** En qué estado está una etapa. */
@@ -333,7 +334,8 @@ export function diasAbierta(h: HojaEtapa, desde = hoy()): number | null {
  * lee así y no al revés porque lo que el docente quiere ver al abrir esto un
  * lunes es dónde tiene el trabajo, no cuál es la siguiente casilla vacía.
  */
-export function etapaEnCurso(b: Bitacora): (typeof ETAPAS)[number] | null {
+export function etapaEnCurso(b: Bitacora, idioma: Idioma = "es"): Etapa | null {
+  const ETAPAS = etapasEn(idioma);
   const abierta = ETAPAS.find((e) => hojaDe(b, e.id).estado === "abierta");
   if (abierta) return abierta;
   const pendiente = ETAPAS.find((e) => hojaDe(b, e.id).estado !== "cerrada");
@@ -352,11 +354,14 @@ export function cerradas(b: Bitacora): number {
  * minuto antes de entrar a la sala. No devuelve un porcentaje: devuelve en qué
  * parte está, que es lo que resuelve ese minuto.
  */
-export function resumenBitacora(b: Bitacora): string | null {
+export function resumenBitacora(b: Bitacora, idioma: Idioma = "es"): string | null {
+  const ETAPAS = etapasEn(idioma);
+  const T = (es: string, pt: string) => (idioma === "pt" ? pt : es);
   const hechas = cerradas(b);
-  if (hechas === ETAPAS.length) return "Las seis etapas cerradas. Queda el informe.";
+  if (hechas === ETAPAS.length)
+    return T("Las seis etapas cerradas. Queda el informe.", "As seis etapas fechadas. Falta o relatório.");
 
-  const actual = etapaEnCurso(b);
+  const actual = etapaEnCurso(b, idioma);
   if (!actual) return null;
 
   const h = hojaDe(b, actual.id);
@@ -365,11 +370,25 @@ export function resumenBitacora(b: Bitacora): string | null {
   if (h.estado === "abierta") {
     const dias = diasAbierta(h);
     const cuanto =
-      dias === null ? "" : dias === 0 ? ", abierta hoy" : `, abierta hace ${dias} día${dias === 1 ? "" : "s"}`;
-    return `Etapa ${n} de ${ETAPAS.length}: ${actual.nombre}${cuanto}.`;
+      dias === null
+        ? ""
+        : dias === 0
+          ? T(", abierta hoy", ", aberta hoje")
+          : T(
+              `, abierta hace ${dias} día${dias === 1 ? "" : "s"}`,
+              `, aberta há ${dias} dia${dias === 1 ? "" : "s"}`
+            );
+    return `Etapa ${n} ${T("de", "de")} ${ETAPAS.length}: ${actual.nombre}${cuanto}.`;
   }
-  if (hechas === 0) return `Armado y sin empezar en la sala. Empieza la etapa 1: ${actual.nombre}.`;
-  return `Van ${hechas} de ${ETAPAS.length} etapas. Sigue: ${actual.nombre}.`;
+  if (hechas === 0)
+    return T(
+      `Armado y sin empezar en la sala. Empieza la etapa 1: ${actual.nombre}.`,
+      `Montado e ainda não começou em sala. Começa a etapa 1: ${actual.nombre}.`
+    );
+  return T(
+    `Van ${hechas} de ${ETAPAS.length} etapas. Sigue: ${actual.nombre}.`,
+    `${hechas} de ${ETAPAS.length} etapas feitas. Próxima: ${actual.nombre}.`
+  );
 }
 
 /* ── Lo que conviene mirar ─────────────────────────────────────────────── */
@@ -402,7 +421,9 @@ const DEMASIADO = 28;
  * una hora perdida en la orilla de un río con viento. Es lo que dice la propia
  * etapa 2, y es lo que más se salta.
  */
-export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
+export function avisos(e: Expedicion, b: Bitacora, idioma: Idioma = "es"): Aviso[] {
+  const ETAPAS = etapasEn(idioma);
+  const T = (es: string, pt: string) => (idioma === "pt" ? pt : es);
   const lista: Aviso[] = [];
   const hoja = (id: string) => hojaDe(b, id);
 
@@ -417,7 +438,10 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
         id: `larga-${etapa.id}`,
         tono: "nota",
         etapa: etapa.id,
-        texto: `«${etapa.nombre}» lleva ${dias} días abierta. Si ya pasó, ciérrala; si se atrasó, la fecha de apertura se puede corregir.`,
+        texto: T(
+          `«${etapa.nombre}» lleva ${dias} días abierta. Si ya pasó, ciérrala; si se atrasó, la fecha de apertura se puede corregir.`,
+          `«${etapa.nombre}» está aberta há ${dias} dias. Se já passou, feche; se atrasou, a data de abertura pode ser corrigida.`
+        ),
       });
     }
   }
@@ -437,8 +461,14 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
       etapa: "aula",
       texto:
         tecnicasPendientes.length === 1
-          ? "El terreno ya está abierto y queda una técnica sin marcar como ensayada en la sala. Aprender a usarla en la orilla cuesta una hora y devuelve un dato que no sirve."
-          : `El terreno ya está abierto y quedan ${tecnicasPendientes.length} técnicas sin marcar como ensayadas en la sala. Aprenderlas en la orilla cuesta una hora y devuelve un dato que no sirve.`,
+          ? T(
+              "El terreno ya está abierto y queda una técnica sin marcar como ensayada en la sala. Aprender a usarla en la orilla cuesta una hora y devuelve un dato que no sirve.",
+              "O campo já está aberto e falta uma técnica marcada como ensaiada em sala. Aprender a usá-la na margem do rio custa uma hora e devolve um dado que não serve."
+            )
+          : T(
+              `El terreno ya está abierto y quedan ${tecnicasPendientes.length} técnicas sin marcar como ensayadas en la sala. Aprenderlas en la orilla cuesta una hora y devuelve un dato que no sirve.`,
+              `O campo já está aberto e faltam ${tecnicasPendientes.length} técnicas marcadas como ensaiadas em sala. Aprendê-las na margem do rio custa uma hora e devolve um dado que não serve.`
+            ),
     });
   }
 
@@ -453,7 +483,10 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
           id: `cierre-${etapa.id}`,
           tono: "aviso",
           etapa: etapa.id,
-          texto: `En «${etapa.nombre}» entregaron el cierre ${h.entregaron} de ${e.estudiantes}. Los que no escriben suelen ser los mismos, y son los que no van a levantar la mano.`,
+          texto: T(
+            `En «${etapa.nombre}» entregaron el cierre ${h.entregaron} de ${e.estudiantes}. Los que no escriben suelen ser los mismos, y son los que no van a levantar la mano.`,
+            `Em «${etapa.nombre}» entregaram o fechamento ${h.entregaron} de ${e.estudiantes}. Quem não escreve costuma ser sempre o mesmo, e é quem não vai levantar a mão.`
+          ),
         });
       }
     }
@@ -466,8 +499,10 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
       id: "una-version",
       tono: "nota",
       etapa: "propuesta",
-      texto:
+      texto: T(
         "La propuesta va en una sola versión. La etapa pide una primera, que se la critiquen entre ellos, y rehacerla: la segunda versión es donde se aprende.",
+        "A proposta está numa versão só. A etapa pede uma primeira, que os colegas critiquem, e refazer: é na segunda versão que se aprende."
+      ),
     });
   }
 
@@ -479,9 +514,14 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
       id: "sin-respuesta",
       tono: "nota",
       etapa: "difusion",
-      texto: `Hay ${sinRespuesta.length} entrega${
-        sinRespuesta.length === 1 ? "" : "s"
-      } sin respuesta anotada. Que no contesten también es una respuesta, y el curso puede hacer algo con ella.`,
+      texto: T(
+        `Hay ${sinRespuesta.length} entrega${
+          sinRespuesta.length === 1 ? "" : "s"
+        } sin respuesta anotada. Que no contesten también es una respuesta, y el curso puede hacer algo con ella.`,
+        `Há ${sinRespuesta.length} entrega${
+          sinRespuesta.length === 1 ? "" : "s"
+        } sem resposta anotada. Não responder também é uma resposta, e a turma pode fazer algo com ela.`
+      ),
     });
   }
 
@@ -497,8 +537,10 @@ export function avisos(e: Expedicion, b: Bitacora): Aviso[] {
       id: "destapar",
       tono: "nota",
       etapa: analisis.estado !== "sin_abrir" ? "analisis" : "terreno",
-      texto:
+      texto: T(
         "El curso ya volvió del terreno y las razones que escribieron el primer día siguen tapadas. Ponerlas al lado de lo que trajeron es lo que hace que la salida haya servido para algo.",
+        "A turma já voltou do campo e as razões que escreveram no primeiro dia continuam cobertas. Colocá-las ao lado do que trouxeram é o que faz a saída ter servido para alguma coisa."
+      ),
     });
   }
 

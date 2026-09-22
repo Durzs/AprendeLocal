@@ -43,6 +43,8 @@
  */
 
 import type { Alcance } from "../../../types";
+import type { Idioma } from "../../../shared/tx";
+import { ETAPAS_PT } from "./etapas.pt";
 
 /** Quién toma las decisiones de esta etapa. */
 export type Decide = "docente" | "estudiantes" | "ambos";
@@ -537,8 +539,28 @@ export const ETAPAS: Etapa[] = [
   },
 ];
 
-export function etapaPorId(id: string): Etapa | undefined {
-  return ETAPAS.find((x) => x.id === id);
+/**
+ * Las etapas en el idioma que toca.
+ *
+ * El portugués está en §etapas.pt.ts, con los mismos `id` y en el mismo
+ * orden. Van en archivos aparte y no frase por frase porque cada etapa es un
+ * texto largo que se lee entero, y así cada versión se puede leer de corrido.
+ */
+export function etapasEn(idioma: Idioma): Etapa[] {
+  return idioma === "pt" ? ETAPAS_PT : ETAPAS;
+}
+
+// Si alguien agrega, quita o reordena una etapa en un idioma y no en el
+// otro, se avisa al abrir el sitio en desarrollo en vez de descubrirlo en
+// una sala de Río con una etapa de menos.
+if (import.meta.env.DEV) {
+  const a = ETAPAS.map((e) => e.id).join();
+  const b = ETAPAS_PT.map((e) => e.id).join();
+  if (a !== b) console.warn(`etapas.pt.ts no coincide con etapas.ts: ${b} ≠ ${a}`);
+}
+
+export function etapaPorId(id: string, idioma: Idioma = "es"): Etapa | undefined {
+  return etapasEn(idioma).find((x) => x.id === id);
 }
 
 /**

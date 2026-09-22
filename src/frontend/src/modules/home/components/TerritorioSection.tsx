@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { NATIVAS } from "../../biodiversidad/nativas";
+import { NATIVAS, type Nativa } from "../../biodiversidad/nativas";
+import { NATIVAS_BR } from "../../biodiversidad/nativas.br";
+import { SEDES, useSede, type Sede } from "../../../shared/sede";
+import { useTx } from "../../../shared/tx";
 import EtapasMetodo from "./EtapasMetodo";
 
 /**
@@ -83,7 +86,11 @@ const MUESTRA = PEDIDAS.map((c) => {
   return n;
 }).filter(Boolean) as typeof NATIVAS;
 
-const ESPECIES = [...MUESTRA, ...NATIVAS.filter((n) => !MUESTRA.includes(n))].slice(0, 12);
+/** Las doce fichas de cada edición. Las de Río están en §nativas.br.ts. */
+const ESPECIES: Record<Sede, Nativa[]> = {
+  cl: [...MUESTRA, ...NATIVAS.filter((n) => !MUESTRA.includes(n))].slice(0, 12),
+  br: NATIVAS_BR.slice(0, 12),
+};
 
 /**
  * El rótulo diminuto que anota cada pieza.
@@ -105,6 +112,9 @@ function Rotulo({ children, tono = "crema" }: { children: React.ReactNode; tono?
 }
 
 export default function TerritorioSection() {
+  const tx = useTx();
+  const sede = useSede();
+
   return (
     <section
       id="territorio"
@@ -114,21 +124,25 @@ export default function TerritorioSection() {
       <div className="relative z-10 mx-auto w-full max-w-7xl">
         {/* ── Franja de anotación ──────────────────────────────────────── */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-300/70 pb-4">
-          <Rotulo tono="naranjo">El territorio</Rotulo>
-          <Rotulo>Piloto en La Araucanía, Chile</Rotulo>
+          <Rotulo tono="naranjo">{tx("El territorio", "O território")}</Rotulo>
+          <Rotulo>
+            {tx("Piloto en", "Piloto em")} {SEDES[sede].donde}
+          </Rotulo>
         </div>
 
         {/* ── La invitación ────────────────────────────────────────────── */}
         <div className="mt-10 max-w-4xl">
           <h2 className="display text-[2.1rem] text-[#111217] sm:text-5xl md:text-6xl">
-            El lugar que hay detrás de tu escuela alcanza para tres semanas de
-            ciencia
+            {tx(
+              "El lugar que hay detrás de tu escuela alcanza para tres semanas de ciencia",
+              "O lugar atrás da sua escola dá para três semanas de ciência"
+            )}
           </h2>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
-            No hace falta llevar al curso a ninguna parte. El estero, el cerro
-            o el camino que se ve por la ventana tiene lo que el programa pide:
-            algo que medir, alguien a quien preguntarle y alguien que espera lo
-            que averigüen.
+            {tx(
+              "No hace falta llevar al curso a ninguna parte. El estero, el cerro o el camino que se ve por la ventana tiene lo que el programa pide: algo que medir, alguien a quien preguntarle y alguien que espera lo que averigüen.",
+              "Não é preciso levar a turma para longe. O rio canalizado, a encosta ou a rua que se vê da janela têm o que o currículo pede: algo para medir, alguém a quem perguntar e alguém esperando o que a turma descobrir."
+            )}
           </p>
         </div>
 
@@ -142,16 +156,17 @@ export default function TerritorioSection() {
           <EtapasMetodo />
 
           <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-600">
-            Los menores conocen el lugar y los mayores hacen algo por él: en
-            una sala con varios cursos a la vez, eso deja de ser un estorbo y
-            pasa a ser el reparto del trabajo.{" "}
+            {tx(
+              "Los menores conocen el lugar y los mayores hacen algo por él: en una sala con varios cursos a la vez, eso deja de ser un estorbo y pasa a ser el reparto del trabajo.",
+              "Os mais novos conhecem o lugar e os mais velhos fazem algo por ele: quando várias turmas trabalham no mesmo projeto, isso vira a divisão do trabalho."
+            )}{" "}
             {/* Llevaba a /metodologia, que ya no existe: sus pilares volvieron
                 a la portada, unas pantallas más arriba. */}
             <a
               href="#habilidades"
               className="text-orange-700 underline underline-offset-4 transition hover:text-orange-800"
             >
-              En qué se apoya
+              {tx("En qué se apoya", "Em que se apoia")}
             </a>
           </p>
         </div>
@@ -160,16 +175,19 @@ export default function TerritorioSection() {
         <div className="mt-20">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-2xl">
-              <Rotulo tono="naranjo">Qué vive ahí</Rotulo>
+              <Rotulo tono="naranjo">{tx("Qué vive ahí", "O que vive ali")}</Rotulo>
               <h3 className="titulo mt-3 text-2xl text-[#111217] sm:text-3xl">
-                Con el nombre que le da la gente de aquí
+                {tx(
+                  "Con el nombre que le da la gente de aquí",
+                  "Com o nome que o povo daqui dá"
+                )}
               </h3>
             </div>
             <Link
               to="/crear"
               className="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-[#111217]"
             >
-              Ver lo de tu escuela
+              {tx("Ver lo de tu escuela", "Ver o da sua escola")}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
                 →
               </span>
@@ -179,15 +197,15 @@ export default function TerritorioSection() {
           {/* Se desliza a lo ancho: doce fichas apiladas son doce pantallas, y
               aquí la gracia es pasarles el ojo por encima. */}
           <ul className="mt-7 -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0">
-            {ESPECIES.map((n, i) => (
+            {ESPECIES[sede].map((n, i) => (
               <Ficha key={n.cientifico} n={n} i={i} />
             ))}
           </ul>
 
           <p className="mt-3 text-xs leading-relaxed text-slate-500">
-            Las fotografías vienen de iNaturalist. Los nombres en mapuzugun no
-            los ha revisado un hablante todavía: antes de imprimirlos,
-            pregúntale al educador tradicional de tu escuela.
+            {sede === "br"
+              ? "As fotografias vêm do iNaturalist. O estado de conservação traz a fonte (UICN ou CNCFlora): antes de imprimir, confira na lista nacional de espécies ameaçadas do Ministério do Meio Ambiente."
+              : "Las fotografías vienen de iNaturalist. Los nombres en mapuzugun no los ha revisado un hablante todavía: antes de imprimirlos, pregúntale al educador tradicional de tu escuela."}
           </p>
         </div>
       </div>
@@ -195,13 +213,14 @@ export default function TerritorioSection() {
   );
 }
 
-const ESTADO: Record<string, string> = {
-  en_peligro: "En peligro",
-  vulnerable: "Vulnerable",
-  casi_amenazada: "Casi amenazada",
+const ESTADO: Record<string, { es: string; pt: string }> = {
+  en_peligro: { es: "En peligro", pt: "Em perigo" },
+  vulnerable: { es: "Vulnerable", pt: "Vulnerável" },
+  casi_amenazada: { es: "Casi amenazada", pt: "Quase ameaçada" },
 };
 
-function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
+function Ficha({ n, i }: { n: Nativa; i: number }) {
+  const tx = useTx();
   // Si la foto no carga —sin señal, o iNaturalist caído— la ficha se sostiene
   // sola con el nombre y la frase, que es lo que de verdad importa.
   const [sinFoto, setSinFoto] = useState(false);
@@ -235,7 +254,8 @@ function Ficha({ n, i }: { n: (typeof NATIVAS)[number]; i: number }) {
 
           {n.estado && (
             <span className="rotulo absolute left-3 top-3 rounded-full border border-orange-200 bg-white/90 px-2.5 py-1.5 text-orange-800 backdrop-blur">
-              {ESTADO[n.estado]}
+              {tx.de(ESTADO[n.estado])}
+              {n.fuenteEstado ? ` · ${n.fuenteEstado}` : ""}
             </span>
           )}
         </div>

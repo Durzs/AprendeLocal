@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import Cargando from "../../../shared/components/ui/Cargando";
+import { useTx } from "../../../shared/tx";
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
@@ -34,6 +35,7 @@ const EscritorioPage = lazy(() => import("./EscritorioPage"));
  */
 export default function HomePage() {
   const { user, loading } = useAuth();
+  const tx = useTx();
   const navigate = useNavigate();
 
   /**
@@ -75,7 +77,9 @@ export default function HomePage() {
         <div className="h-0.5 w-32 overflow-hidden rounded-full bg-slate-200">
           <div className="animar-esperando h-full w-1/4 rounded-full bg-[var(--tinta-600)]" />
         </div>
-        <span className="sr-only">Comprobando si tienes la sesión iniciada</span>
+        <span className="sr-only">
+          {tx("Comprobando si tienes la sesión iniciada", "Verificando se você está conectado")}
+        </span>
       </main>
     );
   }

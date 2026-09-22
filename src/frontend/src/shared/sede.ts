@@ -58,6 +58,8 @@ export type DatosSede = {
   locale: string;
   /** Dónde está el piloto, para decirlo en pantalla sin inventar alcance. */
   donde: string;
+  /** Lo mismo, con la ciudad: va en el contacto y en el pie. */
+  zona: string;
   /** Código ISO del país, para acotar la búsqueda de escuelas en el mapa. */
   pais: string;
   /**
@@ -73,6 +75,7 @@ export const SEDES: Record<Sede, DatosSede> = {
     idioma: "es",
     locale: "es-CL",
     donde: "La Araucanía, Chile",
+    zona: "Temuco · La Araucanía, Chile",
     pais: "cl",
     centro: [-38.74, -72.6, 8],
   },
@@ -81,6 +84,7 @@ export const SEDES: Record<Sede, DatosSede> = {
     idioma: "pt",
     locale: "pt-BR",
     donde: "Rio de Janeiro, Brasil",
+    zona: "Rio de Janeiro · RJ, Brasil",
     pais: "br",
     centro: [-22.91, -43.35, 10],
   },

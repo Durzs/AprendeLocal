@@ -46,7 +46,9 @@
       "contact": "Contacto",
       "terms": "Términos de uso"
     },
-    "copyright": "© 2025 AprendeLocal. Plataforma dedicada a la educación STEM."
+    "copyright": "© 2025 AprendeLocal. Plataforma dedicada a la educación STEM.",
+    "derechos": "Todos los derechos reservados.",
+    "nuevaPestana": "(se abre en una pestaña nueva)"
   },
   "header": {
     "brandName": "AprendeLocal",
@@ -366,10 +368,10 @@
       "level": "Nivel"
     },
     "cta": {
-      "title": "¿Listo para transformar tu aprendizaje?",
-      "subtitle": "Únete a miles de estudiantes aplicando STEM en proyectos reales a través de la cultura maker",
-      "button": "Comenzar Viaje Maker",
-      "buttonAria": "Comenzar Viaje Maker"
+      "title": "¿Qué hay a una caminata de tu escuela?",
+      "subtitle": "Parte por ahí. El cuaderno te acompaña desde los objetivos hasta el día en que el curso entrega su trabajo a alguien de la comunidad.",
+      "button": "Abrir el cuaderno",
+      "buttonAria": "Abrir el cuaderno para armar una ruta"
     },
     "puzzle": {
       "title": "Arma tu estación STEM",
@@ -494,18 +496,65 @@
       }
     },
     "contact": {
-      "badge": "Contacto & Alianzas",
+      "badge": "Contacto",
       "title": "¿Quieres llevar AprendeLocal a tu escuela o comunidad?",
-      "subtitle": "Acompañamos a docentes, directivos y comunidades con herramientas pedagógicas abiertas, guías maker y acompañamiento en proyectos de ciencia territorial.",
+      "subtitle": "Acompañamos a docentes, directivos y comunidades con clases ya escritas, papeles para imprimir y salidas a terreno alrededor de la escuela.",
       "formTitle": "Envíanos un mensaje",
-      "formSubtitle": "Completa el formulario y nos contactaremos contigo a la brevedad.",
+      "formSubtitle": "Completa el formulario y te respondemos a tu correo.",
       "name": "Nombre",
       "email": "Correo electrónico",
       "role": "Rol / Institución",
       "message": "Mensaje o Territorio de Interés",
       "send": "Enviar Mensaje",
-      "successTitle": "¡Mensaje recibido!",
-      "successMessage": "Gracias por contactarnos. Nos comunicaremos contigo a la brevedad para coordinar la vinculación."
+      "successTitle": "Mensaje recibido",
+      "successMessage": "Lo tenemos. Te respondemos a este mismo correo.",
+      "mailTitle": "Te abrimos el correo",
+      "mailBody": "El mensaje quedó escrito en tu programa de correo y falta que le des a enviar. Si no se abrió, escríbenos a:",
+      "sending": "Enviando…",
+      "privacidad": "Tu nombre y tu correo se guardan solo para responderte este mensaje. No se comparten con nadie y no te vamos a inscribir en ninguna lista. Si quieres que los borremos, escribe a",
+      "correoDirecto": "Correo directo",
+      "zona": "Zona piloto",
+      "phNombre": "Tu nombre",
+      "phCorreo": "tu@escuela.cl",
+      "phRol": "Ej: docente de escuela rural, directivo, investigador",
+      "phMensaje": "Cuéntanos de tu escuela o del proyecto que te gustaría armar…",
+      "asunto": "mensaje desde el sitio"
+    },
+    "whatIs": {
+      "title": "¿Qué es AprendeLocal?",
+      "p1": "AprendeLocal es una plataforma y metodología pedagógica diseñada para que docentes y escuelas transformen su propio entorno —sus ríos, bosques, cuencas y suelos— en un laboratorio vivo de aprendizaje científico y tecnológico.",
+      "p2": "A través de secuencias didácticas completas y alineadas a los objetivos de aprendizaje oficiales, los estudiantes exploran problemas socioambientales reales, realizan mediciones en terreno con instrumentos accesibles y entregan sus resultados a la comunidad escolar y familias.",
+      "pilares": [
+        "Territorio vivo",
+        "Ciencia",
+        "Rutas didácticas",
+        "Impacto en la comunidad"
+      ]
+    },
+    "build": {
+      "title": "La ruta se arma con tu lugar, no se escoge de una lista",
+      "subtitle": "Tres pasos. Una parte la trae la plataforma y la otra la escribes tú, porque el estero de tu escuela no lo conoce nadie más.",
+      "pasos": [
+        {
+          "titulo": "Lo que ya está decidido",
+          "cuerpo": "Tus cursos, las clases que tienes y los Objetivos de Aprendizaje que te toca pasar. Se marcan de una lista, no se escriben de memoria.",
+          "pone": "Lo pone el programa"
+        },
+        {
+          "titulo": "Lo que hay al otro lado de la puerta",
+          "cuerpo": "Qué se alcanza caminando, cómo se llama y qué pasa ahí que en otra escuela no pasaría igual. Esto no lo sabe nadie más que tú.",
+          "pone": "Lo pones tú"
+        },
+        {
+          "titulo": "La pregunta que sostiene el proyecto",
+          "cuerpo": "Sale de leer la problemática con el curso, y se anota en el seguimiento. Es la que se repite hasta el día de la entrega.",
+          "pone": "La pone el curso"
+        }
+      ],
+      "outEyebrow": "Y sale de ahí",
+      "outTitle": "Las clases, los papeles para imprimir y lo que vive alrededor de tu escuela.",
+      "outBody": "Los papeles salen de los objetivos que marcaste y de lo que escribiste del lugar, sin volver a pedírtelo. Los datos de especies vienen de iNaturalist y GBIF.",
+      "cta": "Empezar a armar la mía"
     }
   },
   "platform": {
