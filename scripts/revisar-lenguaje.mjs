@@ -231,3 +231,70 @@ console.log(
     console.log(`Objetivos: ${existen.size} cargados, todos los citados existen.`);
   }
 }
+
+// \u2500\u2500 Lo mismo para las habilidades de la BNCC \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+//
+// La edici\u00f3n brasile\u00f1a tiene el mismo riesgo y uno m\u00e1s: sus c\u00f3digos son
+// adivinables. `EF06CI01` se parece tanto a `EF06CI47` que escribir uno que no
+// existe es trivial y no se nota, porque la pantalla se limita a no mostrarlo.
+// Y el corpus est\u00e1 generado, as\u00ed que la \u00fanica manera de que entre un c\u00f3digo
+// falso es que alguien lo escriba a mano en una problem\u00e1tica.
+//
+// Se comprueban tambi\u00e9n los a\u00f1os: una habilidad existe, pero citarla para un
+// curso que no la tiene es el mismo papel mal firmado.
+{
+  const dir = resolve(RAIZ, "src/modules/sequences/crear/bncc");
+  const componentes = [
+    "ciencias.ts", "matematica.ts", "lingua_portuguesa.ts",
+    "historia.ts", "geografia.ts", "arte.ts",
+  ];
+
+  let cargadas = 0;
+  const existen = new Set();
+  for (const f of componentes) {
+    let texto;
+    try {
+      texto = readFileSync(resolve(dir, f), "utf8");
+    } catch {
+      // Todav\u00eda no generado. No es un fallo: el corpus brasile\u00f1o se carga con
+      // `scripts/generar-bncc.py` y puede no estar en un checkout cualquiera.
+      continue;
+    }
+    for (const m of texto.matchAll(/codigo: "([^"]+)"/g)) existen.add(m[1]);
+    cargadas++;
+  }
+
+  if (cargadas === 0) {
+    console.log("BNCC: sin generar en este checkout, no se revisa.");
+  } else {
+    // Cualquier archivo del cuaderno puede citar una habilidad. Se revisan los
+    // que no son el propio corpus, que es donde se define.
+    const aRevisar = [
+      "src/modules/sequences/metodo/problemas.ts",
+      "src/modules/sequences/rutas/catalogo.ts",
+    ];
+    const rotos = new Set();
+    for (const rel of aRevisar) {
+      let texto;
+      try {
+        texto = readFileSync(resolve(RAIZ, rel), "utf8");
+      } catch {
+        continue;
+      }
+      for (const m of texto.matchAll(/\bEF\d{2}[A-Z]{2}\d{2}\b/g)) {
+        if (!existen.has(m[0])) rotos.add(m[0]);
+      }
+    }
+
+    if (rotos.size) {
+      console.error(
+        `\n\u2717 Habilidades de la BNCC citadas que no existen: ${[...rotos].join(", ")}`
+      );
+      process.exitCode = 1;
+    } else {
+      console.log(
+        `BNCC: ${existen.size} habilidades cargadas, todas las citadas existen.`
+      );
+    }
+  }
+}

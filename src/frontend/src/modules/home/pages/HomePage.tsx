@@ -1,6 +1,8 @@
+import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
+import Cargando from "../../../shared/components/ui/Cargando";
 import HeroSection from "../components/HeroSection";
 import MethodologySection from "../components/MethodologySection";
 import HowItWorksSection from "../components/HowItWorksSection";
@@ -9,7 +11,13 @@ import ProjectsSection from "../components/ProjectsSection";
 import TerritorioSection from "../components/TerritorioSection";
 import ContactSection from "../components/ContactSection";
 import CallToAction from "../components/CallToAction";
-import EscritorioPage from "./EscritorioPage";
+
+/*
+ * El escritorio llega en su propio bloque. Trae el catálogo de rutas escritas,
+ * la bitácora y las etapas, y quien ve la portada —que es quien todavía no
+ * tiene cuenta, en una conexión que no conocemos— no necesita nada de eso.
+ */
+const EscritorioPage = lazy(() => import("./EscritorioPage"));
 
 /**
  * El inicio, que no es el mismo para todos.
@@ -72,7 +80,13 @@ export default function HomePage() {
     );
   }
 
-  if (user) return <EscritorioPage />;
+  if (user) {
+    return (
+      <Suspense fallback={<Cargando />}>
+        <EscritorioPage />
+      </Suspense>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">

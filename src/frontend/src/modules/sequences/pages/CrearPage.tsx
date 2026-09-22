@@ -12,16 +12,30 @@
  */
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import Diapositivas, { type Lamina } from "../crear/Diapositivas";
 import { PasoLugar, PasoPrograma } from "../crear/Paso1";
 import Paso3 from "../crear/Paso3";
-import { completitud } from "../crear/expedicion";
+import type { EstadoNube } from "../crear/nube";
 import { useExpedicion } from "../crear/useExpedicion";
 
+/**
+ * Dónde quedó lo escrito, en una línea.
+ *
+ * Reemplaza al botón «Guardar y salir», que decía dos cosas y solo una era
+ * cierta: salir sí, pero guardar no hacía nada que no hubiera pasado ya,
+ * porque el cuaderno se guarda en cada tecla. Lo que la persona necesitaba
+ * saber era eso, y ahora se dice todo el rato en vez de solo al irse.
+ */
+const GUARDADO: Record<EstadoNube, string> = {
+  sin_cuenta: "Guardado en este computador",
+  guardando: "Guardando…",
+  guardado: "Guardado en tu cuenta",
+  sin_conexion: "Guardado en este computador · sin señal para subirlo",
+  sin_tabla: "Guardado en este computador",
+};
+
 export default function CrearPage() {
-  const navegar = useNavigate();
   const [indice, setIndice] = useState(0);
 
   /*
@@ -33,9 +47,8 @@ export default function CrearPage() {
    * lo que se armó el viernes en la sala de profesores esté el lunes en la
    * casa. El hook lleva las dos y decide cuál gana al abrir.
    */
-  const { expedicion: e, cambiar: setE } = useExpedicion();
+  const { expedicion: e, cambiar: setE, estado } = useExpedicion();
 
-  const completo = completitud(e);
   const hayLugar = Boolean(e.entorno || e.ubicacion.trim());
 
   const laminas: Lamina[] = [
@@ -69,19 +82,12 @@ export default function CrearPage() {
   ];
 
   return (
-    <>
-      <Diapositivas
-        laminas={laminas}
-        indice={indice}
-        onIndice={setIndice}
-        onSalir={() => navegar("/")}
-      />
-      {/* Lo escrito no se pierde al salir: se lee de vuelta al entrar. Se dice
-          en voz baja, para que nadie tenga que averiguarlo probando. */}
-      <p className="sr-only">
-        Llevas {completo}% del cuaderno. Todo queda guardado en este
-        computador.
-      </p>
-    </>
+    <Diapositivas
+      laminas={laminas}
+      indice={indice}
+      onIndice={setIndice}
+      guardado={GUARDADO[estado]}
+      alTerminar={{ a: "/proyecto", texto: "Ir al seguimiento" }}
+    />
   );
 }

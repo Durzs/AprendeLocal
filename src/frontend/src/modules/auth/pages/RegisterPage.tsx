@@ -6,7 +6,7 @@ import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
 import { useTranslation } from "react-i18next";
 import { fetchSchools } from "../../../api";
 import type { School } from "../../../types";
-import AprendeLocalLogo, { TINTA } from "../../../shared/components/ui/AprendeLocalLogo";
+import { mensajeDe } from "../../../shared/lib/errores";
 
 // La plataforma la usan estudiantes de enseñanza básica y media y sus
 // docentes; fuera de este rango el dato no es plausible.
@@ -135,7 +135,7 @@ export default function RegisterPage() {
         const com = s.commune.substring(0, 3).toUpperCase();
         return (
           code.startsWith(`DOC-${com}`) ||
-          code === (s as any).teacher_access_code?.toUpperCase()
+          code === s.teacher_access_code?.toUpperCase()
         );
       });
 
@@ -155,7 +155,7 @@ export default function RegisterPage() {
           code === rbdStr ||
           code === `ALU-${rbdStr}` ||
           code === `ESC-${rbdStr}` ||
-          code === (s as any).student_access_code?.toUpperCase()
+          code === s.student_access_code?.toUpperCase()
         );
       });
 
@@ -176,7 +176,7 @@ export default function RegisterPage() {
             setValidatedProject({
               id: shareData.id,
               code: shareData.code,
-              title: (shareData.stem_projects as any)?.title || "Proyecto STEM Asignado",
+              title: (shareData.stem_projects as { title?: string } | null)?.title || "Proyecto STEM Asignado",
               school_id: shareData.school_id,
             });
             if (shareData.school_id) {
@@ -187,7 +187,10 @@ export default function RegisterPage() {
             setValidating(false);
             return;
           }
-        } catch {}
+        } catch {
+          // Sin la tabla de proyectos o sin señal se sigue con la validación
+          // de escuela que viene abajo, que no necesita la base.
+        }
 
         setValidatedSchool(null);
         setValidatedProject(null);
@@ -317,9 +320,14 @@ export default function RegisterPage() {
         return;
       }
 
-      navigate(role === "profesor" ? "/plataforma?tab=map" : "/plataforma", { replace: true });
-    } catch (err: any) {
-      setAviso({ tipo: "error", texto: err?.message || t("register.error") });
+      // Iba a `/plataforma`, que ya no existe y rebota al inicio. Se va
+      // directo: con la sesión recién abierta el inicio es el escritorio.
+      navigate("/", { replace: true });
+    } catch (err) {
+      setAviso({
+        tipo: "error",
+        texto: mensajeDe(err, t("register.error")),
+      });
     } finally {
       setLoading(false);
     }
@@ -339,18 +347,12 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex flex-1 items-center justify-center bg-[#f7f8fb] px-4 py-10">
       <div className="w-full max-w-5xl">
-        {/* Logo */}
-        <div className="mb-8 flex flex-col items-center">
-          <Link to="/">
-            <AprendeLocalLogo
-              variante="apilado"
-              className="h-16 w-auto transition-transform hover:scale-105"
-              color={TINTA}
-            />
-          </Link>
-        </div>
+        {/* Aquí iba el logo, grande, encima de la tarjeta. Esta pantalla
+            no tenía la cabecera del sitio y el logo era la única forma de
+            volver al inicio. Ahora la cabecera está, y dos logos seguidos
+            se leen como un error de maquetación. */}
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Form card */}
@@ -364,12 +366,16 @@ export default function RegisterPage() {
 
             {/* Selector de Rol */}
             <div className="mt-6">
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p
+                id="registro-tipo"
+                className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500"
+              >
                 Selecciona tu tipo de cuenta
-              </label>
-              <div className="grid grid-cols-2 gap-3">
+              </p>
+              <div role="group" aria-labelledby="registro-tipo" className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
+                  aria-pressed={role === "profesor"}
                   onClick={() => {
                     setRole("profesor");
                     setValidatedSchool(null);
@@ -391,6 +397,7 @@ export default function RegisterPage() {
 
                 <button
                   type="button"
+                  aria-pressed={role === "estudiante"}
                   onClick={() => {
                     setRole("estudiante");
                     setValidatedSchool(null);
@@ -439,15 +446,18 @@ export default function RegisterPage() {
             <form className="mt-6 space-y-4" onSubmit={handleCadastro}>
               {/* Sección de Validación de Código y Seguridad */}
               <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
-                <div className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-1.5">
-                  <KeyRound className="h-4 w-4 text-emerald-600" />
+                <label
+                  htmlFor="registro-codigo"
+                  className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-1.5"
+                >
+                  <KeyRound aria-hidden className="h-4 w-4 text-emerald-600" />
                   <span>
                     {role === "profesor"
                       ? "PIN Secreto Institucional de Docente"
                       : "Código de Escuela o de tu Profesor/a"}
                   </span>
-                </div>
-                <p className="text-xs text-slate-600 mb-3">
+                </label>
+                <p id="registro-codigo-ayuda" className="text-xs text-slate-600 mb-3">
                   {role === "profesor" ? (
                     <>
                       Ingresa la clave secreta entregada a tu establecimiento (ej: <code className="bg-emerald-100/80 px-1 py-0.5 rounded text-emerald-900 font-mono text-[11px]">DOC-LON-XXXX</code>). <em>El RBD público no autoriza acceso docente.</em>
@@ -461,7 +471,13 @@ export default function RegisterPage() {
 
                 <div className="flex gap-2">
                   <input
+                    id="registro-codigo"
                     type="text"
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck={false}
+                    aria-describedby="registro-codigo-ayuda"
+                    aria-invalid={codeError ? true : undefined}
                     placeholder={role === "profesor" ? "Ej: DOC-LON-8291" : "Ej: ALU-4205 o código de clase"}
                     value={schoolCodeInput}
                     onChange={(e) => {
@@ -487,7 +503,7 @@ export default function RegisterPage() {
                 </div>
 
                 {codeError && (
-                  <div className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-red-50 p-2 text-xs text-red-700 border border-red-200">
+                  <div role="alert" className="mt-2.5 flex items-start gap-1.5 rounded-lg bg-red-50 p-2 text-xs text-red-700 border border-red-200">
                     <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
                     <span>{codeError}</span>
                   </div>
@@ -575,10 +591,14 @@ export default function RegisterPage() {
 
                 {role === "profesor" && (
                   <div className="mt-3">
-                    <label className="mb-1 block text-xs font-medium text-slate-700">
+                    <label
+                      htmlFor="registro-asignatura"
+                      className="mb-1 block text-xs font-medium text-slate-700"
+                    >
                       Asignatura / Especialidad (Opcional)
                     </label>
                     <input
+                      id="registro-asignatura"
                       type="text"
                       placeholder="Ej: Ciencias Naturales, Matemáticas, Multidisciplinario"
                       value={subject}
@@ -590,36 +610,55 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label
+                  htmlFor="registro-nombre"
+                  className="mb-1.5 block text-sm font-medium text-slate-700"
+                >
                   {t("register.fields.name")}
                 </label>
                 <input
                   ref={nomeRef}
+                  id="registro-nombre"
+                  name="name"
                   type="text"
+                  autoComplete="name"
                   placeholder={t("register.placeholders.name")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label
+                  htmlFor="registro-correo"
+                  className="mb-1.5 block text-sm font-medium text-slate-700"
+                >
                   {t("register.fields.email")}
                 </label>
                 <input
                   ref={emailRef}
+                  id="registro-correo"
+                  name="email"
                   type="email"
+                  autoComplete="email"
+                  inputMode="email"
                   placeholder={t("register.placeholders.email")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label
+                  htmlFor="registro-clave"
+                  className="mb-1.5 block text-sm font-medium text-slate-700"
+                >
                   {t("register.fields.password")}
                 </label>
                 <input
                   ref={senhaRef}
+                  id="registro-clave"
+                  name="new-password"
                   type="password"
+                  autoComplete="new-password"
                   placeholder={t("register.placeholders.password")}
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
@@ -646,6 +685,7 @@ export default function RegisterPage() {
               </div>
 
               <button
+                type="submit"
                 disabled={loading}
                 className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
               >

@@ -56,7 +56,15 @@
       "courses": "Courses",
       "profile": "Profile",
       "prepare": "Prepare a lesson",
-      "routes": "Routes"
+      "routes": "Routes",
+      "home": "Home",
+      "notebook": "Notebook",
+      "tracking": "Progress",
+      "create": "Create a route",
+      "about": "What is it?",
+      "howItWorks": "How it works",
+      "contact": "Contact",
+      "main": "Main navigation"
     },
     "mobile": {
       "openMenu": "Open menu",
@@ -188,7 +196,9 @@
     "joinAction": "Join",
     "leave": "Leave",
     "memberBadge": "Member",
-    "noneFound": "No communities found."
+    "noneFound": "No communities found.",
+    "searchLabel": "Search communities",
+    "dismissError": "Dismiss"
   },
   "badges": {
     "title": "My Achievements",
@@ -274,7 +284,11 @@
       "required": "Please enter email and password."
     },
     "notConfirmed": "If you just signed up, confirm your email using the link we sent you first.",
-    "forgot": "Forgot your password?"
+    "forgot": "Forgot your password?",
+    "wrongCredentials": "That email and password don't match. Check for a stray space, or use “Forgot your password?”.",
+    "error": "Couldn't sign in. Check your connection and try again.",
+    "noAccount": "Don't have an account yet?",
+    "createAccount": "Create one"
   },
   "notFound": {
     "title": "Page not found",
@@ -283,11 +297,11 @@
   },
   "home": {
     "hero": {
-      "title": "Your territory is your best STEM lab",
-      "subtitle": "Discover how the rivers, forests and communities around you become science, technology and engineering projects. Learn by creating real solutions for your territory.",
-      "ctaStart": "Explore Courses",
+      "title": "Your territory is your best laboratory",
+      "subtitle": "Build a project with your class around something happening near your school: the stream, the hill, the litter by the road. With the curriculum objectives marked and the field-trip paperwork ready to sign.",
+      "ctaStart": "Build my first route",
       "ctaExplore": "See how it works",
-      "ctaStartAria": "Explore available courses",
+      "ctaStartAria": "Open the notebook to build a route",
       "ctaExploreAria": "See how the platform works",
       "ctaContact": "Contact Us",
       "ctaSignup": "Create free account",
@@ -701,7 +715,8 @@
       "showUnrelated": "Also show the {{count}} unrelated to this place",
       "counter": "{{shown}} of {{total}} objectives",
       "chosen_one": "{{count}} chosen",
-      "chosen_other": "{{count}} chosen"
+      "chosen_other": "{{count}} chosen",
+      "searchLabel": "Search objectives"
     },
     "place": {
       "all": "All",
@@ -893,5 +908,15 @@
     "noMatch": "No place matches that search.",
     "noPlaces": "The query worked but returned no places. The table may be empty, or their coordinates may be unreadable.",
     "loadFailed": "The places could not be loaded from the database. Detail: {{detail}}"
+  },
+  "lectura": {
+    "titulo": "Reading settings",
+    "grande": "Larger text",
+    "grandeAyuda": "All text one step larger.",
+    "contraste": "More contrast",
+    "contrasteAyuda": "Greys turn black, for reading in direct sunlight.",
+    "oscuro": "Dark notebook",
+    "oscuroAyuda": "The notebook and progress pages on a dark green background.",
+    "guardado": "Saved in this browser."
   }
 }

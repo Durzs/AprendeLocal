@@ -1,17 +1,41 @@
+import { useEffect } from "react";
+import { Outlet, useMatches } from "react-router-dom";
+
 import Header from "./Header";
 import Footer from "./Footer";
-import { Outlet, useLocation } from "react-router-dom";
+
+/** Lo que una ruta puede declarar sobre sí misma en `handle`. */
+type Manejo = {
+  /** El nombre de la pantalla, para la pestaña y el lector de pantalla. */
+  titulo?: string;
+  /** Las pantallas de trabajo no llevan pie. */
+  sinPie?: boolean;
+};
+
+const NOMBRE = "AprendeLocal";
 
 export default function Layout() {
-  const location = useLocation();
+  const coincidencias = useMatches();
+  const manejo = (coincidencias.at(-1)?.handle ?? {}) as Manejo;
 
-  const hideHeaderPages = ["/entrar", "/cadastrar"];
-  const hideHeader = hideHeaderPages.includes(location.pathname);
+  /*
+   * El título de la pestaña.
+   *
+   * La pantalla primero y la marca después: con varias pestañas abiertas se
+   * lee el comienzo, y «AprendeLocal · …» repetido en cinco pestañas no deja
+   * ver cuál es cuál. La portada conserva su título largo, que es el que
+   * indexan los buscadores.
+   */
+  useEffect(() => {
+    document.title = manejo.titulo
+      ? `${manejo.titulo} · ${NOMBRE}`
+      : `${NOMBRE} · Ciencias con el lugar donde está tu escuela`;
+  }, [manejo.titulo]);
 
   return (
-    <div className="min-h-screen bg-white text-[#111217]">
+    <div className="flex min-h-screen flex-col bg-white text-[#111217]">
       {/* Salto al contenido.
-          Quien navega con teclado tenía que pasar por el logotipo, los cinco
+          Quien navega con teclado tenía que pasar por el logotipo, los
           enlaces del menú, el selector de idioma y dos botones antes de llegar
           al texto, en cada página. Este enlace es invisible hasta que recibe
           el foco, que es la primera parada del tabulador. */}
@@ -22,11 +46,16 @@ export default function Layout() {
         Saltar al contenido
       </a>
 
-      {!hideHeader && <Header />}
-      <div id="contenido">
+      {/* La cabecera va en todas las pantallas. El inicio de sesión y el
+          registro la escondían, y dejaban a la persona sin logo que llevara
+          al inicio ni otra salida que el botón de atrás del navegador. */}
+      <Header />
+
+      <div id="contenido" className="flex flex-1 flex-col">
         <Outlet />
       </div>
-      <Footer />
+
+      {!manejo.sinPie && <Footer />}
     </div>
   );
 }

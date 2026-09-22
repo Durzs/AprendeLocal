@@ -166,6 +166,7 @@ export function DondeQueda({
             }
           }}
           placeholder="Escuela Antu Mawida, Curarrehue"
+          aria-label="Nombre de la escuela y comuna"
         />
         <button
           type="button"

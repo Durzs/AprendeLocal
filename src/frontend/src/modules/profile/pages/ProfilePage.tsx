@@ -12,6 +12,7 @@ import { pickLang } from "../utils";
 import type { ProfileData } from "../types";
 import type { School } from "../../../types";
 import { fetchSchools } from "../../../api";
+import { mensajeDe } from "../../../shared/lib/errores";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ export default function ProfilePage() {
   const [selectedModalSchoolId, setSelectedModalSchoolId] = useState<string>("");
   const [modalSchoolSearch, setModalSchoolSearch] = useState("");
   const [savingSchool, setSavingSchool] = useState(false);
+  const [errorEscuela, setErrorEscuela] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -150,6 +152,7 @@ export default function ProfilePage() {
   // Cargar catálogo de escuelas si se abre el modal
   const openSchoolModal = async () => {
     setSelectedModalSchoolId(profile.school_id || "");
+    setErrorEscuela("");
     setShowSchoolModal(true);
     if (schools.length === 0) {
       try {
@@ -180,8 +183,10 @@ export default function ProfilePage() {
         school_commune: schObj?.commune || null,
       }));
       setShowSchoolModal(false);
-    } catch (err: any) {
-      alert("Error al guardar la escuela: " + (err?.message || ""));
+    } catch (err) {
+      // Iba en un `alert()` encima del diálogo. Ahora se dice dentro, junto
+      // al botón que hay que volver a tocar.
+      setErrorEscuela(mensajeDe(err, "Revisa la conexión e inténtalo de nuevo."));
     } finally {
       setSavingSchool(false);
     }
@@ -287,21 +292,32 @@ export default function ProfilePage() {
 
       {/* Modal para asignar o cambiar escuela */}
       {showSchoolModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onKeyDown={(ev) => {
+            if (ev.key === "Escape") setShowSchoolModal(false);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogo-escuela"
+            className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl"
+          >
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2">
                 <SchoolIcon className="h-5 w-5 text-emerald-600" />
-                <h3 className="text-lg font-semibold text-slate-900">
+                <h3 id="dialogo-escuela" className="text-lg font-semibold text-slate-900">
                   Asignar Escuela Rural
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowSchoolModal(false)}
-                className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                aria-label="Cerrar"
+                className="grid h-10 w-10 place-items-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               >
-                <X className="h-5 w-5" />
+                <X aria-hidden className="h-5 w-5" />
               </button>
             </div>
 
@@ -310,8 +326,14 @@ export default function ProfilePage() {
             </p>
 
             <div className="mt-4">
+              <label htmlFor="buscar-escuela" className="sr-only">
+                Buscar la escuela
+              </label>
               <input
-                type="text"
+                id="buscar-escuela"
+                type="search"
+                autoFocus
+                autoComplete="off"
                 placeholder="Buscar por nombre o comuna (ej: Lonquimay, Melipeuco)..."
                 value={modalSchoolSearch}
                 onChange={(e) => setModalSchoolSearch(e.target.value)}
@@ -329,7 +351,11 @@ export default function ProfilePage() {
                   <button
                     key={sch.id}
                     type="button"
-                    onClick={() => setSelectedModalSchoolId(sch.id)}
+                    aria-pressed={selectedModalSchoolId === sch.id}
+                    onClick={() => {
+                      setSelectedModalSchoolId(sch.id);
+                      setErrorEscuela("");
+                    }}
                     className={`flex w-full items-center justify-between rounded-xl border p-3 text-left transition ${
                       selectedModalSchoolId === sch.id
                         ? "border-emerald-600 bg-emerald-50/80 text-emerald-950"
@@ -349,6 +375,15 @@ export default function ProfilePage() {
                 ))
               )}
             </div>
+
+            {errorEscuela ? (
+              <p
+                role="alert"
+                className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-800"
+              >
+                No se pudo guardar la escuela. {errorEscuela}
+              </p>
+            ) : null}
 
             <div className="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4">
               <button

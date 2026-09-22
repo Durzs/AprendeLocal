@@ -318,6 +318,7 @@ function PorObjetivo({
             ponerEscribiendo("");
           }}
           placeholder="Escribe un indicador tuyo: qué vas a ver en la sala"
+          aria-label="Indicador propio"
           className="min-h-11 min-w-0 flex-1 rounded-lg border border-[var(--crema)]/18 bg-transparent px-3 py-2 text-[15px] text-[var(--crema-clara)] placeholder:text-[var(--crema)]/30"
         />
         <button

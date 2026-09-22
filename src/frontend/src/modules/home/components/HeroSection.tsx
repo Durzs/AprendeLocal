@@ -18,24 +18,23 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
 
   // El titulo se escribe letra por letra.
   const fullText = t("home.hero.title", "Tu territorio es tu mejor laboratorio STEM");
-  const [letras, setLetras] = useState(0);
+  // El contador va pegado al texto que estaba escribiendo. Al cambiar de
+  // idioma el titulo cambia entero y tiene que volver a escribirse desde cero:
+  // sin esto, si el nuevo era mas corto que el anterior el contador ya lo
+  // pasaba y en pantalla quedaba el titulo viejo para siempre. Antes se
+  // reiniciaba con un efecto, que pintaba una vez el titulo a medias.
+  const [escrito, setEscrito] = useState({ de: fullText, letras: 0 });
 
-  // Al cambiar de idioma el titulo cambia entero, asi que se vuelve a escribir
-  // desde cero. Sin esto, si el titulo nuevo era mas corto que el anterior el
-  // contador ya lo pasaba y en pantalla quedaba el titulo viejo para siempre.
-  useEffect(() => {
-    setLetras(0);
-  }, [fullText]);
+  // Quien pidio menos movimiento en su sistema ve el titulo completo de una.
+  const [quieto] = useState(
+    () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+  );
+
+  const letras = quieto ? fullText.length : escrito.de === fullText ? escrito.letras : 0;
 
   useEffect(() => {
-    // Quien pidio menos movimiento en su sistema ve el titulo completo de una.
-    const quieto = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (quieto) {
-      setLetras(fullText.length);
-      return;
-    }
     if (letras >= fullText.length) return;
-    const t = setTimeout(() => setLetras((n) => n + 1), 35);
+    const t = setTimeout(() => setEscrito({ de: fullText, letras: letras + 1 }), 35);
     return () => clearTimeout(t);
   }, [letras, fullText]);
 

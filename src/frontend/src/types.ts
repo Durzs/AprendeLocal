@@ -79,6 +79,9 @@ export interface School {
   rural: boolean;
   levels: string[];
   student_count: number | null;
+  /** Los códigos de acceso vienen solo cuando la escuela los tiene cargados. */
+  teacher_access_code?: string | null;
+  student_access_code?: string | null;
 }
 
 // POI cercano con distancia

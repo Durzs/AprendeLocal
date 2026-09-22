@@ -1,18 +1,24 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+// Las palabras que se escriben y se borran en el titulo.
+const actions = ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"];
+
 export default function PillarsSection() {
   const { t } = useTranslation();
 
-  // Typewriter rotating actions for dynamic title effect
-  const actions = ["Identificar", "Monitorear", "Descubrir", "Contribuir", "Aprender"];
+  // Quien pidio menos movimiento ve la primera palabra quieta.
+  const [quieto] = useState(
+    () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false
+  );
   const [currentActionIndex, setCurrentActionIndex] = useState(0);
   const [typedAction, setTypedAction] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    if (quieto) return;
     const fullWord = actions[currentActionIndex];
-    let timer: number;
+    let timer: number | undefined;
 
     if (!isDeleting && typedAction.length < fullWord.length) {
       // Typing
@@ -28,13 +34,15 @@ export default function PillarsSection() {
         setTypedAction(fullWord.slice(0, typedAction.length - 1));
       }, 50);
     } else if (isDeleting && typedAction.length === 0) {
-      // Next word
-      setIsDeleting(false);
-      setCurrentActionIndex((prev) => (prev + 1) % actions.length);
+      // Next word, after a breath with the line empty
+      timer = window.setTimeout(() => {
+        setIsDeleting(false);
+        setCurrentActionIndex((prev) => (prev + 1) % actions.length);
+      }, 200);
     }
 
     return () => window.clearTimeout(timer);
-  }, [typedAction, isDeleting, currentActionIndex]);
+  }, [quieto, typedAction, isDeleting, currentActionIndex]);
 
   const pillars = [
     {
@@ -271,10 +279,19 @@ export default function PillarsSection() {
         {/* Dynamic Title */}
         <div className="mb-14 sm:mb-18">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.055em] text-[#111217] leading-[1.05]">
-            Con AprendeLocal, puedes:{" "}
-            <span className="text-blue-600 inline-block min-w-[170px] text-left">
-              {typedAction}
-              <span className="ml-0.5 inline-block animate-pulse text-orange-500">|</span>
+            {/* Un lector de pantalla leeria la palabra a medio escribir; se
+                le da la frase entera y la animacion queda solo a la vista. */}
+            <span className="sr-only">
+              Con AprendeLocal, puedes identificar, monitorear, descubrir, contribuir y aprender.
+            </span>
+            <span aria-hidden>
+              Con AprendeLocal, puedes:{" "}
+              <span className="text-blue-600 inline-block min-w-[170px] text-left">
+                {quieto ? actions[0] : typedAction}
+                {!quieto && (
+                  <span className="ml-0.5 inline-block animate-pulse text-orange-500">|</span>
+                )}
+              </span>
             </span>
           </h2>
         </div>

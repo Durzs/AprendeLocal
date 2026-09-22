@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { pickLang } from "../utils";
+import { mensajeDe } from "../../../shared/lib/errores";
 
 type CommunityItem = {
   id: string | number;
@@ -43,8 +44,8 @@ export function CommunitiesSection() {
       if (commErr) throw commErr;
 
       setItems((comms as CommunityItem[]) ?? []);
-    } catch (e: any) {
-      setErro(e?.message || t("communities.loadError"));
+    } catch (e) {
+      setErro(mensajeDe(e, t("communities.loadError")));
       setItems([]);
     } finally {
       setLoading(false);
