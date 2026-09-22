@@ -1,11 +1,18 @@
 ﻿import { useTranslation } from "react-i18next";
 
+import { recordarIdiomaElegido } from "../../sede";
+
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const current = (i18n.resolvedLanguage || "es").split("-")[0];
 
   function changeLanguage(lang: string) {
+    // Se deja constancia de que el idioma lo eligió la persona. Sin esa marca,
+    // la próxima vez que abra sesión el idioma de su sede le pisaría la
+    // elección, y nadie entendería por qué el conmutador «no se queda». Ver
+    // §sede.ts.
+    recordarIdiomaElegido();
     i18n.changeLanguage(lang);
   }
 
