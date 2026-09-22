@@ -11,7 +11,10 @@
  * dependa de que nada de eso pase es pedir demasiado.
  */
 
-const LLAVE = "aprendelocal:expedicion";
+import { llaveDeSede } from "../../../shared/sede";
+
+/** Cada edición guarda su expedición aparte. Ver `llaveDeSede`. */
+const llave = () => llaveDeSede("aprendelocal:expedicion");
 
 /**
  * Una clase del plan, con el título que le puso el docente.
@@ -297,7 +300,7 @@ export function normalizarExpedicion(crudo: unknown): Expedicion {
  */
 export function leer(): Expedicion {
   try {
-    const crudo = localStorage.getItem(LLAVE);
+    const crudo = localStorage.getItem(llave());
     if (!crudo) return { ...VACIA };
     const guardado = JSON.parse(crudo);
     return normalizarExpedicion(guardado);
@@ -308,7 +311,7 @@ export function leer(): Expedicion {
 
 export function guardar(e: Expedicion): void {
   try {
-    localStorage.setItem(LLAVE, JSON.stringify(e));
+    localStorage.setItem(llave(), JSON.stringify(e));
   } catch {
     /* Sin espacio o sin permiso. La expedición sigue en memoria. */
   }
@@ -316,7 +319,7 @@ export function guardar(e: Expedicion): void {
 
 export function borrar(): void {
   try {
-    localStorage.removeItem(LLAVE);
+    localStorage.removeItem(llave());
   } catch {
     /* Da igual: si no se pudo borrar, la próxima escritura la reemplaza. */
   }

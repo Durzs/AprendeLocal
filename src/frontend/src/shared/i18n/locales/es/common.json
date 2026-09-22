@@ -918,5 +918,12 @@
     "oscuro": "Cuaderno en oscuro",
     "oscuroAyuda": "El cuaderno y el seguimiento en fondo verde oscuro.",
     "guardado": "Queda guardado en este navegador."
+  },
+  "edicion": {
+    "titulo": "País e idioma",
+    "pais": "Edición",
+    "idioma": "Idioma",
+    "deCuenta": "Es la edición de tu cuenta. Para cambiarla, escríbenos.",
+    "ayuda": "Cambia el currículum, las problemáticas y los papeles de la salida."
   }
 }

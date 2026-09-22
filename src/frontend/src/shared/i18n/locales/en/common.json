@@ -918,5 +918,12 @@
     "oscuro": "Dark notebook",
     "oscuroAyuda": "The notebook and progress pages on a dark green background.",
     "guardado": "Saved in this browser."
+  },
+  "edicion": {
+    "titulo": "Country and language",
+    "pais": "Edition",
+    "idioma": "Language",
+    "deCuenta": "This is your account's edition. Write to us to change it.",
+    "ayuda": "Changes the curriculum, local issues and field-trip paperwork."
   }
 }

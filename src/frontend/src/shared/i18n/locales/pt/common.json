@@ -918,5 +918,12 @@
     "oscuro": "Caderno escuro",
     "oscuroAyuda": "O caderno e o acompanhamento em fundo verde escuro.",
     "guardado": "Fica salvo neste navegador."
+  },
+  "edicion": {
+    "titulo": "País e idioma",
+    "pais": "Edição",
+    "idioma": "Idioma",
+    "deCuenta": "É a edição da sua conta. Para mudar, escreva para nós.",
+    "ayuda": "Muda o currículo, as problemáticas e os documentos da saída de campo."
   }
 }

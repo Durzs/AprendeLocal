@@ -1,8 +1,8 @@
+import { llaveDeSede } from "../../../shared/sede";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
-import { SEDES } from "../../../shared/sede";
 import { supabase } from "../../../shared/lib/supabaseClient";
 import { completitud, leer, type Expedicion } from "../../sequences/crear/expedicion";
 import {
@@ -124,7 +124,7 @@ function laminaDe(e: Expedicion | null): number {
 }
 
 export default function EscritorioPage() {
-  const { user, sede } = useAuth();
+  const { user } = useAuth();
   const [escuela, setEscuela] = useState<string | null>(null);
 
   // Lo guardado se lee al crear el estado y no en un efecto. Leerlo en un
@@ -136,7 +136,7 @@ export default function EscritorioPage() {
   // escribe quien vuelve de la sala un martes, no quien planifica un domingo.
   const [avance] = useState<Avance>(() => {
     try {
-      const crudo = localStorage.getItem("aprendelocal:expedicion:avance");
+      const crudo = localStorage.getItem(llaveDeSede("aprendelocal:expedicion:avance"));
       return crudo ? normalizarAvance(JSON.parse(crudo)) : AVANCE_VACIO;
     } catch {
       return AVANCE_VACIO; /* Ventana privada: lo mismo que sin empezar. */
@@ -211,14 +211,6 @@ export default function EscritorioPage() {
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
-      {/* ── Cuando la sede todavía no tiene su contenido ────────────────
-          Se dice arriba de todo y sin rodeos. La interfaz ya está en
-          portugués, y eso hace que el cuaderno de abajo parezca la edición
-          brasileña cuando es la chilena traducida a medias: currículum del
-          Mineduc, problemáticas de La Araucanía y los formularios de la
-          Superintendencia de Educación. Dejar que alguien planifique media
-          unidad antes de darse cuenta es peor que decirlo al entrar. */}
-      {!SEDES[sede].conCorpus && <AvisoSede sede={sede} />}
 
       {/* ── Saludo, con el color de la lámina en la que va ─────────────── */}
       <header
@@ -460,39 +452,6 @@ export default function EscritorioPage() {
         </div>
       </section>
     </main>
-  );
-}
-
-/**
- * El aviso de que esta sede todavía no tiene contenido propio.
- *
- * Va en los dos idiomas a la vez, y eso es deliberado. Es lo único de esta
- * pantalla que no está traducido en `common.json`, porque no es una cadena de
- * interfaz: es un aviso sobre el estado del producto, que va a durar poco y
- * que quien lo lee necesita entender aunque el conmutador esté en el otro
- * idioma. Cuando exista el corpus brasileño, esto se borra entero.
- */
-function AvisoSede({ sede }: { sede: keyof typeof SEDES }) {
-  const s = SEDES[sede];
-  return (
-    <section className="border-b border-amber-200 bg-amber-50 px-4 py-4 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-6xl">
-        <p className="rotulo text-amber-900">
-          Edición {s.nombre} · {s.donde}
-        </p>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-amber-950">
-          A interface já está em português, mas o caderno ainda não: os
-          objetivos, as problemáticas e os documentos da saída são os do Chile.
-          Serve para conhecer o método; ainda não serve para planejar uma
-          unidade no Rio.
-        </p>
-        <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-amber-900/80">
-          La interfaz ya está en portugués; el cuaderno todavía no. Los
-          objetivos, las problemáticas y los papeles de la salida son los
-          chilenos.
-        </p>
-      </div>
-    </section>
   );
 }
 
