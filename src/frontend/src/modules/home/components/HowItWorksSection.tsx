@@ -70,8 +70,8 @@ export default function HowItWorksSection() {
       id: 2,
       name: "Currículum",
       bgColor: "var(--tinta-800)",
-      title: "Marcas los objetivos que te toca pasar y la ruta sale de ahí",
-      desc: "Los sesenta y dos de Ciencias Naturales de 5º a 8º, en una lista. La ruta que se arma te dice cuáles cubre y cuáles no, sin adornar la cuenta.",
+      title: "Marcas los objetivos que te toca pasar y el proyecto sale de ahí",
+      desc: "Los de las seis asignaturas, de 5º a 8º, en una lista. Cada problemática te dice cuáles abre y desde qué asignatura, y de ahí salen los indicadores con que se evalúa.",
       render3D: () => (
         <svg className="w-full h-full max-w-[420px] max-h-[380px] drop-shadow-2xl transition-transform duration-500 hover:scale-105" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="140,45 240,100 140,155 40,100" fill="var(--tinta-950)" stroke="var(--tinta-600)" strokeWidth="2" />

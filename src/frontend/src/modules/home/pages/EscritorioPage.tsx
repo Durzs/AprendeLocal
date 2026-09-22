@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
+import { SEDES } from "../../../shared/sede";
 import { supabase } from "../../../shared/lib/supabaseClient";
-import { completitudPaso1, leer, type Expedicion } from "../../sequences/crear/expedicion";
+import { completitud, leer, type Expedicion } from "../../sequences/crear/expedicion";
 import {
   AVANCE_VACIO,
   estaHecha,
@@ -14,7 +15,6 @@ import {
 } from "../../sequences/crear/avance";
 import { cerradas, resumenBitacora } from "../../sequences/seguimiento/bitacora";
 import { ETAPAS } from "../../sequences/metodo/etapas";
-import { huecosPendientes } from "../../sequences/crear/generar";
 import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
 
 /**
@@ -64,16 +64,21 @@ import { RUTAS, cursoCorto } from "../../sequences/rutas/catalogo";
  */
 
 /**
- * Las cuatro láminas del cuaderno, con el color de cada una.
+ * Las láminas del cuaderno, con el color de cada una.
  *
- * Los colores no son nuevos: son los mismos cuatro que la sección de los
- * dibujos usa en la portada, en el mismo orden. Un docente que vio el sitio
- * antes de tener cuenta ya los asoció a las cuatro etapas, y aquí los vuelve
- * a encontrar diciendo lo mismo.
+ * SON LAS QUE HAY, Y ANTES NO LO ERAN
  *
- * Lo que hace que esto no sea decoración es de dónde sale la lámina: de lo
- * que el docente tiene efectivamente escrito, no de un contador. El color
- * cambia cuando cambia su trabajo, y por eso significa algo.
+ * Aquí había cuatro y el cuaderno tiene tres, así que el escritorio anunciaba
+ * «Lámina 2 de 4» para un recorrido de tres. Peor todavía, la segunda decía
+ * «ya tienes los objetivos» cuando los objetivos se marcan justamente en la
+ * segunda, no antes: quien llegaba ahí leía que ya tenía hecho lo que estaba
+ * a punto de hacer. Ahora son las mismas tres, con el mismo nombre que les da
+ * el cuaderno.
+ *
+ * Los colores no son nuevos: vienen de la portada, en el mismo orden. Lo que
+ * hace que esto no sea decoración es de dónde sale la lámina: de lo que el
+ * docente tiene efectivamente escrito, no de un contador. El color cambia
+ * cuando cambia su trabajo, y por eso significa algo.
  */
 const LAMINAS = [
   {
@@ -81,7 +86,7 @@ const LAMINAS = [
     nombre: "El programa",
     fondo: "var(--tinta-950)",
     acento: "text-amber-300",
-    dice: "Arma la clase de esta unidad con el lugar donde está tu escuela.",
+    dice: "Los cursos que tienes y cuántas clases hay de verdad para esto.",
   },
   {
     numero: 2,
@@ -90,21 +95,14 @@ const LAMINAS = [
     // Sobre el terracota, el ámbar no se despega del fondo: van los dos al
     // mismo matiz y a la misma luz. El blanco sí se lee.
     acento: "text-white/85",
-    dice: "Ya tienes los objetivos. Falta contar qué hay al otro lado de la puerta.",
+    dice: "Busca tu escuela, elige la problemática y marca los objetivos que abre.",
   },
   {
     numero: 3,
-    nombre: "La pregunta",
-    fondo: "var(--tinta-800)",
-    acento: "text-amber-300",
-    dice: "Tienes el lugar. Ahora la pregunta que va a sostener las tres semanas.",
-  },
-  {
-    numero: 4,
-    nombre: "La ruta",
+    nombre: "Lo que queda armado",
     fondo: "#1e2a24",
     acento: "text-amber-300",
-    dice: "La ruta está armada. Queda ponerle lo que solo tú sabes de tu escuela.",
+    dice: "Qué van a construir y para quién, con qué se evalúa y los papeles de la salida.",
   },
 ] as const;
 
@@ -112,20 +110,22 @@ const LAMINAS = [
  * En qué lámina va, según lo que hay escrito.
  *
  * Se lee de atrás para adelante: la lámina es la última que alcanzó, no la
- * primera que le falta. Un docente que ya tiene la ruta armada pero borró el
- * lugar sigue estando en la cuatro, porque volver a mandarlo a la dos por un
- * campo vacío sería decirle que perdió el trabajo.
+ * primera que le falta. Un docente que ya decidió el producto pero borró el
+ * lugar sigue estando en la tercera, porque volver a mandarlo a la segunda por
+ * un campo vacío sería decirle que perdió el trabajo.
  */
 function laminaDe(e: Expedicion | null): number {
   if (!e) return 0;
-  if (e.rutaIA) return 3;
-  if (e.preguntaGuia.trim()) return 2;
-  if (e.ubicacion.trim() || e.entorno) return 1;
+  // La última era «hay ruta armada por el modelo». Al retirarse esa ruta, lo
+  // que marca haber llegado ahí es haber decidido lo que se decide ahí: qué
+  // van a construir y para quién.
+  if (e.formato || e.destinatario.trim() || e.semanas.length) return 2;
+  if (e.ubicacion.trim() || e.entorno || e.problemaId || e.oa.length) return 1;
   return 0;
 }
 
 export default function EscritorioPage() {
-  const { user } = useAuth();
+  const { user, sede } = useAuth();
   const [expedicion, setExpedicion] = useState<Expedicion | null>(null);
   const [escuela, setEscuela] = useState<string | null>(null);
   const [avance, setAvance] = useState<Avance>(AVANCE_VACIO);
@@ -169,29 +169,50 @@ export default function EscritorioPage() {
 
   // Una expedición cuenta como empezada cuando ya hay algo escrito, no por el
   // hecho de haber abierto la página una vez.
-  const porcentajePaso1 = expedicion ? completitudPaso1(expedicion) : 0;
+  const lleno = expedicion ? completitud(expedicion) : 0;
   const empezada = Boolean(
     expedicion &&
       (expedicion.oa.length > 0 ||
         expedicion.ubicacion.trim() ||
         expedicion.preguntaGuia.trim() ||
-        expedicion.rutaIA)
+        expedicion.problemaId)
   );
-  const faltan = expedicion?.rutaIA ? huecosPendientes(expedicion.rutaIA) : [];
   const etapa = LAMINAS[laminaDe(expedicion)];
 
+  // Lo que falta, con nombre. Eran los cuatro huecos de la ruta que armaba el
+  // modelo; ahora son tres campos del cuaderno y el destinatario, que se elige
+  // junto con el formato. Los cuatro salen impresos en los papeles de la
+  // salida, así que faltan de verdad.
+  const faltan = expedicion
+    ? [
+        expedicion.destinatario.trim() ? null : "a quién le entregan",
+        expedicion.preguntarA.trim() ? null : "a quién le preguntan",
+        expedicion.puntoDeSalida.trim() ? null : "dónde se para el curso",
+        expedicion.queCuidar.trim() ? null : "qué hay que cuidar ahí",
+      ].filter(Boolean)
+    : [];
+
   // Por dónde va en la sala, en dos escalas. La del método vale siempre y es
-  // la que va primero: contesta en qué parte del proyecto está el curso. La de
-  // las semanas solo tiene algo que decir cuando la ruta ya está armada, y
-  // contesta qué toca el martes.
+  // la que va primero: contesta en qué parte del proyecto está el curso. La
+  // del calendario aparece cuando haya clases anotadas, y contesta qué toca el
+  // martes.
   const etapas = expedicion ? cerradas(avance.bitacora) : 0;
   const enMetodo = empezada ? resumenBitacora(avance.bitacora) : null;
   const semanas = expedicion ? semanasDe(expedicion) : [];
-  const hechas = semanas.filter((s) => estaHecha(avance, s.semana)).length;
+  const hechas = semanas.filter((s) => estaHecha(avance, s.id)).length;
   const enSala = expedicion && semanas.length ? resumen(expedicion, avance) : null;
 
   return (
     <main className="min-h-screen bg-white text-[#111217]">
+      {/* ── Cuando la sede todavía no tiene su contenido ────────────────
+          Se dice arriba de todo y sin rodeos. La interfaz ya está en
+          portugués, y eso hace que el cuaderno de abajo parezca la edición
+          brasileña cuando es la chilena traducida a medias: currículum del
+          Mineduc, problemáticas de La Araucanía y los formularios de la
+          Superintendencia de Educación. Dejar que alguien planifique media
+          unidad antes de darse cuenta es peor que decirlo al entrar. */}
+      {!SEDES[sede].conCorpus && <AvisoSede sede={sede} />}
+
       {/* ── Saludo, con el color de la lámina en la que va ─────────────── */}
       <header
         className="grano relative overflow-hidden px-4 py-14 transition-colors duration-700 sm:px-6 sm:py-16 lg:px-8"
@@ -212,7 +233,7 @@ export default function EscritorioPage() {
             {etapa.dice}
           </p>
 
-          {/* Las cuatro láminas, para que el color no sea un misterio: se ve
+          {/* Las láminas, para que el color no sea un misterio: se ve
               cuál está encendida y cuántas quedan. Es la misma barra que la
               sección de los dibujos usa en la portada. */}
           <ol className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -257,13 +278,13 @@ export default function EscritorioPage() {
             <div className="animar-asoma mt-6 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 max-w-2xl">
                 <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
-                  {expedicion.rutaIA?.titulo ||
+                  {expedicion.problemaPropioNombre ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
                     "Una ruta sin nombre todavía"}
                 </h2>
 
-                {expedicion.rutaIA?.titulo && expedicion.preguntaGuia && (
+                {expedicion.problemaPropioNombre && expedicion.preguntaGuia && (
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {expedicion.preguntaGuia}
                   </p>
@@ -289,7 +310,7 @@ export default function EscritorioPage() {
                     parte del proyecto está el curso. */}
                 {enSala && (
                   <p className="mt-2 text-sm text-slate-500">
-                    {hechas} de {semanas.length} semanas de la ruta. {enSala}
+                    {hechas} de {semanas.length} clases dadas. {enSala}
                   </p>
                 )}
 
@@ -304,19 +325,44 @@ export default function EscritorioPage() {
                   {expedicion.oa.length === 0 && <Ficha>Faltan los objetivos</Ficha>}
                   {!expedicion.ubicacion.trim() && <Ficha>Falta el lugar</Ficha>}
                   {!expedicion.preguntaGuia.trim() && <Ficha>Falta la pregunta</Ficha>}
-                  {faltan.length > 0 && (
-                    <Ficha>
-                      {faltan.length} cosa{faltan.length === 1 ? "" : "s"} que pones tú
-                    </Ficha>
-                  )}
+                  {/* Con nombre y no contadas. «4 cosas que pones tú» obliga a
+                      entrar a averiguar cuáles son; «falta dónde se para el
+                      curso» se puede resolver o dejar pasar sin abrir nada. */}
+                  {faltan.map((f) => (
+                    <Ficha key={f}>Falta {f}</Ficha>
+                  ))}
                 </ul>
               </div>
 
+              {/* Dos puertas y no una, porque son dos momentos. El seguimiento
+                  va primero en cuanto el proyecto empezó en la sala: a partir
+                  de ahí, quien abre esto un martes viene a ver dónde quedó, no
+                  a seguir armando. */}
               <div className="flex shrink-0 flex-col gap-3">
-                <Boton a="/crear">Seguir con esta</Boton>
+                {etapas > 0 ? (
+                  <>
+                    <Boton a="/proyecto">Ver por dónde va</Boton>
+                    <Link
+                      to="/crear"
+                      className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
+                    >
+                      Abrir el cuaderno
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Boton a="/crear">Seguir con esta</Boton>
+                    <Link
+                      to="/proyecto"
+                      className="text-center text-sm text-slate-600 underline underline-offset-4 transition hover:text-slate-900"
+                    >
+                      Empezar el seguimiento
+                    </Link>
+                  </>
+                )}
                 <p className="max-w-[15rem] text-xs leading-relaxed text-slate-500">
-                  Va {porcentajePaso1}% del primer paso. Queda guardada en este
-                  computador, no en tu cuenta: en otro equipo no va a estar.
+                  Va {lleno}% del cuaderno. Queda guardada en este computador, y
+                  también en tu cuenta si entraste con ella.
                 </p>
               </div>
             </div>
@@ -325,9 +371,9 @@ export default function EscritorioPage() {
               <div className="max-w-xl">
                 <h2 className="titulo text-xl text-slate-900 sm:text-2xl">Armar una ruta</h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  Cuatro láminas: lo que te toca pasar, lo que hay al otro lado
-                  de la puerta, la pregunta que la sostiene, y la ruta armada
-                  con sus documentos.
+                  Tres láminas: lo que te toca pasar, la problemática del lugar
+                  con los objetivos que abre, y lo que queda armado con sus
+                  documentos.
                 </p>
               </div>
               <Boton a="/crear">Empezar</Boton>
@@ -407,6 +453,39 @@ export default function EscritorioPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * El aviso de que esta sede todavía no tiene contenido propio.
+ *
+ * Va en los dos idiomas a la vez, y eso es deliberado. Es lo único de esta
+ * pantalla que no está traducido en `common.json`, porque no es una cadena de
+ * interfaz: es un aviso sobre el estado del producto, que va a durar poco y
+ * que quien lo lee necesita entender aunque el conmutador esté en el otro
+ * idioma. Cuando exista el corpus brasileño, esto se borra entero.
+ */
+function AvisoSede({ sede }: { sede: keyof typeof SEDES }) {
+  const s = SEDES[sede];
+  return (
+    <section className="border-b border-amber-200 bg-amber-50 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-6xl">
+        <p className="rotulo text-amber-900">
+          Edición {s.nombre} · {s.donde}
+        </p>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-amber-950">
+          A interface já está em português, mas o caderno ainda não: os
+          objetivos, as problemáticas e os documentos da saída são os do Chile.
+          Serve para conhecer o método; ainda não serve para planejar uma
+          unidade no Rio.
+        </p>
+        <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-amber-900/80">
+          La interfaz ya está en portugués; el cuaderno todavía no. Los
+          objetivos, las problemáticas y los papeles de la salida son los
+          chilenos.
+        </p>
+      </div>
+    </section>
   );
 }
 

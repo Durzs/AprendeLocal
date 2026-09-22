@@ -11,41 +11,40 @@
  * sin relación con lo que acababa de elegir dos pantallas antes.
  *
  * Ahora solo aparece lo que es de ESTE proyecto: el método por el que se guía,
- * qué van a construir los estudiantes, la ruta que arma el modelo con sus
- * datos, la hoja que firma la dirección y el seguimiento semana a semana. Las
- * cuatro rutas escritas siguen en el repositorio y se pueden leer, pero dejaron
- * de empujarse encima de un proyecto que no es el suyo.
+ * qué van a construir los estudiantes, con qué se evalúa y la hoja que firma la
+ * dirección. Las cuatro rutas escritas siguen en el repositorio y se pueden
+ * leer, pero dejaron de empujarse encima de un proyecto que no es el suyo.
+ *
+ * DOS COSAS MÁS QUE SE FUERON DE AQUÍ
+ *
+ * La ruta que armaba el modelo, con su plan por semanas y sus cuatro huecos. El
+ * plan repetía lo que ya dicen las seis etapas, y los cuatro huecos, que eran
+ * lo que valía, pasaron a ser campos del cuaderno en la lámina anterior.
+ *
+ * Y el seguimiento. Esta lámina es de armar: se abre una vez, se llena en una
+ * tarde y se cierra. Seguir el proyecto se hace todos los martes, así que vive
+ * en su propia página y aquí solo queda la puerta.
  */
 
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 import { Hoja } from "./Campos";
 import { Copiar } from "./Copiar";
-import RutaGenerada from "./RutaGenerada";
 import { buscarOA } from "./oa";
 import type { Expedicion } from "./expedicion";
-import Seguimiento from "./Seguimiento";
-import Bitacora from "../seguimiento/Bitacora";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
 import { problemaPorId } from "../metodo/problemas";
 import { tecnicaPorId } from "../metodo/tecnicas";
 import { Permisos } from "../metodo/Permisos";
 import { Indicadores } from "../metodo/Indicadores";
-import type { Avance } from "./avance";
-import type { EstadoNube } from "./nube";
 
 export default function Paso3({
   e,
   onCambio,
-  avance,
-  onAvance,
-  estadoNube,
 }: {
   e: Expedicion;
   onCambio: (e: Expedicion) => void;
-  avance: Avance;
-  onAvance: (a: Avance) => void;
-  estadoNube: EstadoNube;
 }) {
   return (
     <div className="space-y-4">
@@ -53,10 +52,11 @@ export default function Paso3({
           así que ocupa cinco líneas hasta que alguien abra una etapa. */}
       <VistaMetodo orden={3} />
 
-      {/* La ruta armada con sus datos. Es lo único de esta lámina que se
-          fabrica para esta escuela y no sirve para ninguna otra. */}
-      <RutaGenerada e={e} onCambio={onCambio} />
-
+      {/* Aquí iba la ruta que armaba el modelo, con su plan por semanas y sus
+          cuatro huecos. Se retiró: el plan repetía lo que ya dicen las seis
+          etapas, y los cuatro huecos, que eran lo que valía, pasaron a ser
+          campos del cuaderno. El plan de clases lo escribe el docente, en el
+          calendario de la página de seguimiento. */}
       <ElegirFormato
         formato={e.formato}
         destinatario={e.destinatario}
@@ -77,24 +77,54 @@ export default function Paso3({
           campos que el docente ya escribió. */}
       <Permisos e={e} />
 
-      {/* Lo único a lo que se vuelve semana tras semana, y por eso va al final:
-          las hojas de arriba se llenan una vez, esta se abre cada martes.
-
-          Son dos hojas y no una porque miden cosas distintas. La bitácora sigue
-          el método y contesta «en qué parte del proyecto estoy»; el calendario
-          sigue las semanas de la ruta armada y contesta «qué toca el martes».
-          La bitácora va abierta; el calendario, plegado, porque es una lista de
-          casillas que se marcan de a una y no hay nada que leer en él. */}
-      <Bitacora
-        e={e}
-        hojas={avance.bitacora}
-        onCambio={(b) => onAvance({ ...avance, bitacora: b })}
-        estado={estadoNube}
-        orden={7}
-      />
-
-      <Seguimiento e={e} avance={avance} onCambio={onAvance} estado={estadoNube} />
+      {/* El seguimiento se mudó a su propia página. Esta lámina es de armar la
+          ruta: se abre una vez, se llena en una tarde y se cierra. Seguir el
+          proyecto es lo contrario, y se hace en el momento contrario, así que
+          aquí solo queda la puerta. */}
+      <Entrega e={e} />
     </div>
+  );
+}
+
+/**
+ * La puerta al seguimiento, y el final del cuaderno.
+ *
+ * Es la última hoja de la última lámina, y por eso hace dos cosas: cierra el
+ * armado y abre lo que viene después. Lo que viene después es otra pantalla y
+ * otro día, porque armar la ruta es de una tarde y seguirla es de todos los
+ * martes.
+ *
+ * No exige que la ruta esté completa para dejar pasar. Un proyecto se puede
+ * empezar en la sala con la mitad de los papeles sin imprimir, y un botón que
+ * se niegue hasta que todo esté lleno es una manera de decirle a alguien que
+ * su trabajo no cuenta hasta que el formulario lo apruebe.
+ */
+function Entrega({ e }: { e: Expedicion }) {
+  const armada = e.semanas.length > 0;
+
+  return (
+    <Hoja titulo="Cuando empiece en la sala" orden={7}>
+      <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
+        Esta lámina se llena una vez. Lo que cambia cada semana está en otra
+        página: en qué etapa va el curso, qué salió de la salida, cuántos
+        entregaron el cierre y qué contestaron los que recibieron el trabajo.
+      </p>
+      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/70">
+        {armada
+          ? "Ahí está también el calendario, con las clases que anotaste. Se abre el día de la primera y se vuelve a ella el martes siguiente."
+          : "Ahí se anotan también las clases del plan, una por una y con el título que les pongas. Se puede abrir desde ya: las seis etapas del método no dependen de que el resto esté listo."}
+      </p>
+
+      <Link
+        to="/proyecto"
+        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-3 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
+      >
+        Ir al seguimiento del proyecto
+        <span aria-hidden className="transition-transform group-hover:translate-x-1">
+          →
+        </span>
+      </Link>
+    </Hoja>
   );
 }
 

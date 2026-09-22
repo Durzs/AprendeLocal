@@ -26,6 +26,7 @@ import ForgotPasswordPage from "./modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./modules/auth/pages/ResetPasswordPage";
 import PrepararPage from "./modules/sequences/pages/PrepararPage";
 import CrearPage from "./modules/sequences/pages/CrearPage";
+import ProyectoPage from "./modules/sequences/pages/ProyectoPage";
 import ProfilePage from "./modules/profile/pages/ProfilePage";
 import CommunitiesPage from "./modules/communities/pages/CommunitiesPage";
 import NoExistePage from "./modules/errors/NoExistePage";
@@ -98,6 +99,18 @@ const router = createBrowserRouter([
     // Crear una ruta propia, por diapositivas.
     path: "/crear",
     element: <CrearPage />,
+  },
+  {
+    /*
+     * Seguir el proyecto, semana a semana.
+     *
+     * Va aparte de `/crear` y no dentro de él porque son dos momentos
+     * distintos: armar la ruta es de una tarde y seguirla es de todos los
+     * martes. Cuelga del router y no del Layout por lo mismo que el cuaderno:
+     * es la misma pantalla oscura a sangre, sin cabecera ni pie del sitio.
+     */
+    path: "/proyecto",
+    element: <ProyectoPage />,
   },
 ]);
 

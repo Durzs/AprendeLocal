@@ -60,7 +60,7 @@ function esTablaQueFalta(error: { code?: string; message?: string } | null): boo
 /** Un título con el que reconocerla en una lista, sin abrir el JSON. */
 function tituloDe(e: Expedicion): string {
   return (
-    e.rutaIA?.titulo ||
+    e.problemaPropioNombre ||
     e.preguntaGuia ||
     e.ubicacion ||
     "Una ruta sin nombre todavía"
@@ -169,7 +169,7 @@ export function masReciente(
     local.expedicion.oa.length ||
       local.expedicion.ubicacion.trim() ||
       local.expedicion.preguntaGuia.trim() ||
-      local.expedicion.rutaIA
+      local.expedicion.problemaId
   );
   if (!hayAlgoLocal) {
     return { ...remoto, vieneDeLaNube: true };

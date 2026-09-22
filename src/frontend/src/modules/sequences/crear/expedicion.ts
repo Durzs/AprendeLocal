@@ -11,31 +11,36 @@
  * dependa de que nada de eso pase es pedir demasiado.
  */
 
-import type { RutaIA } from "./generar";
-
 const LLAVE = "aprendelocal:expedicion";
 
-/** Cómo el curso va a mostrar lo que aprendió. */
-export type Evaluacion =
-  | "cuaderno"
-  | "presentacion"
-  | "producto"
-  | "rubrica"
-  | "observacion";
+/**
+ * Una clase del plan, con el título que le puso el docente.
+ *
+ * Antes las semanas venían de la ruta que armaba el modelo, así que un docente
+ * sin cuenta o sin señal no tenía calendario. Ahora las escribe él, que además
+ * es quien sabe si el 18 de septiembre le parte la unidad en dos.
+ */
+export type Semana = { id: string; titulo: string };
+
+/*
+ * Aquí estaban `Evaluacion`, `temasObligatorios` y `objetivos`. Los tres eran
+ * campos del formulario largo que el cuaderno reemplazó: ninguna pantalla los
+ * pedía ya, y `evaluacion` seguía contando para el porcentaje de avance, con
+ * lo que un cuaderno con todo lleno se quedaba en 90% para siempre sin decir
+ * qué faltaba. Cómo se evalúa se decide ahora con los indicadores y el formato
+ * del producto, que sí se piden.
+ */
 
 /** Dónde queda la escuela, en términos de lo que se puede caminar. */
 export type Entorno = "rio" | "bosque" | "campo" | "costa" | "cordillera" | "pueblo";
 
-export type PreguntaOrigen = "propuesta" | "docente";
-
-/** Una pregunta candidata a sostener la ruta. */
-export type Pregunta = {
-  id: string;
-  texto: string;
-  /** `propuesta` la escribió el sistema; `docente` la escribió o reescribió él. */
-  origen: PreguntaOrigen;
-  elegida: boolean;
-};
+/*
+ * Aquí estaban `Pregunta` y `PreguntaOrigen`, las candidatas que el sistema
+ * proponía para que el docente las corrigiera. La lámina que las mostraba se
+ * retiró y el arreglo se quedó guardándose vacío en cada expedición, sin que
+ * nadie lo escribiera ni lo leyera. La pregunta que sí importa es una sola y
+ * es `preguntaGuia`.
+ */
 
 /** Una actividad escrita por el docente, con sus objetivos. */
 export type ActividadPropia = {
@@ -72,15 +77,17 @@ export type Expedicion = {
   sesiones: number | null;
   /** Minutos de cada clase. 45 y 90 son los dos casos de siempre. */
   duracionSesion: number | null;
-  temasObligatorios: string;
   /**
-   * Los códigos que marcó en la lista: «OA12_CN_5». Es la parte sugerida.
-   * De aquí sale la ruta que se le arma, así que no es un dato de adorno.
+   * Los códigos que quedaron marcados: «OA12_CN_5».
+   *
+   * Se marcan en la segunda lámina, dentro de la problemática, y de dos
+   * maneras: eligiéndolos en la tercera columna, o marcándolos dentro de una
+   * actividad propia, que al guardarse los suma aquí. Este es el único sitio
+   * del que leen los indicadores, la hoja que firma la dirección y los dos
+   * permisos de la salida, así que un objetivo que no llegue aquí es un
+   * objetivo que el docente marcó y no existe para el resto del cuaderno.
    */
   oa: string[];
-  /** Lo que él agrega con sus palabras. Es la parte que pone la escuela. */
-  objetivos: string;
-  evaluacion: Evaluacion[];
 
   /* ── Paso 1, la problemática ─────────────────────────────────────────── */
   /**
@@ -137,18 +144,39 @@ export type Expedicion = {
   entorno: Entorno | null;
   ubicacion: string;
 
-  /* ── Paso 2, las preguntas ───────────────────────────────────────────── */
-  preguntas: Pregunta[];
-  /** La que quedó al centro. Es la que el curso repite tres semanas. */
+  /**
+   * La pregunta que sostiene el proyecto y que el curso repite hasta el final.
+   *
+   * Se escribe en la etapa 1 de la bitácora, que es donde ocurre: sale de leer
+   * la problemática con el curso, no de escribirla un domingo.
+   *
+   * Aquí al lado había un `preguntas: Pregunta[]`, con las candidatas que el
+   * sistema proponía y el docente corregía. Esa lámina se retiró y el arreglo
+   * se quedó: nadie lo escribía y nadie lo leía. Peor le fue a esta, que se
+   * leía en ocho sitios y no se escribía en ninguno, así que el escritorio
+   * decía «Falta la pregunta» para siempre y no había dónde ponerla.
+   */
   preguntaGuia: string;
 
-  /* ── Paso 3, la ruta y el curso ──────────────────────────────────────── */
+  /* ── Paso 2, lo que solo sabe quien ha estado ahí ────────────────────── */
   /**
-   * La ruta armada para esta escuela, con los huecos que el docente llena.
-   * Cuando está puesta, manda sobre `rutaId`: la escrita pasa a ser el plan B.
+   * A quién de la comunidad le preguntan, con nombre si se sabe.
+   *
+   * Estos tres venían como huecos dentro de la ruta que armaba el modelo, y
+   * eran la única parte de esa ruta que no se podía generar: son justamente lo
+   * que el modelo no puede saber. Al sacar la ruta armada se quedaron, porque
+   * son ellos los que valían, y pasaron a ser campos del cuaderno como
+   * cualquier otro. Los tres salen impresos en los papeles de la salida.
    */
-  rutaIA: RutaIA | null;
-  rutaId: string | null;
+  preguntarA: string;
+  /** El punto exacto donde se para el curso, y cómo se llega. */
+  puntoDeSalida: string;
+  /** Qué hay que cuidar ahí. Es lo único que, si falta, alguien se lastima. */
+  queCuidar: string;
+
+  /* ── Paso 3, el plan de clases ───────────────────────────────────────── */
+  /** Las clases del plan, en orden, tituladas por el docente. */
+  semanas: Semana[];
 
   /* ── Paso 3, lo que decide el curso ──────────────────────────────────── */
   /**
@@ -189,10 +217,7 @@ export const VACIA: Expedicion = {
   estudiantes: null,
   sesiones: null,
   duracionSesion: null,
-  temasObligatorios: "",
   oa: [],
-  objetivos: "",
-  evaluacion: [],
   problemaId: null,
   problemaPropioNombre: "",
   problemaPropio: "",
@@ -203,10 +228,11 @@ export const VACIA: Expedicion = {
   tecnicas: [],
   entorno: null,
   ubicacion: "",
-  preguntas: [],
   preguntaGuia: "",
-  rutaIA: null,
-  rutaId: null,
+  preguntarA: "",
+  puntoDeSalida: "",
+  queCuidar: "",
+  semanas: [],
   formato: null,
   destinatario: "",
   familiaDestinatario: null,
@@ -251,19 +277,44 @@ export function borrar(): void {
 }
 
 
-/** Cuánto lleva llenado el paso 1, para mostrarlo sin obligar a nada. */
-export function completitudPaso1(e: Expedicion): number {
+/**
+ * Cuánto lleva llenado el cuaderno, para mostrarlo sin obligar a nada.
+ *
+ * DOS COSAS QUE ESTABAN MAL
+ *
+ * Se llamaba `completitudPaso1` y contaba campos de las dos primeras láminas,
+ * así que en pantalla decía «va un 60% del primer paso» contando cosas que no
+ * están en el primer paso. De ahí salía el mensaje que mandaba a marcar los
+ * objetivos «en la primera lámina» cuando los objetivos se marcan en la
+ * segunda.
+ *
+ * Y contaba `evaluacion`, que ningún campo del cuaderno escribe desde hace
+ * varias versiones. El resultado era que un cuaderno con absolutamente todo
+ * lleno se quedaba en 90% para siempre, sin decir qué faltaba, porque lo que
+ * faltaba no se podía llenar.
+ *
+ * Se cuenta lo que el cuaderno pide de verdad, en el orden en que lo pide.
+ */
+export function completitud(e: Expedicion): number {
   const campos = [
+    /* Lámina 1 */
     e.docente,
     e.cursos.length ? "x" : "",
     e.estudiantes ? "x" : "",
     e.sesiones ? "x" : "",
-    e.oa.length ? "x" : "",
-    e.evaluacion.length ? "x" : "",
+    e.duracionSesion ? "x" : "",
+    /* Lámina 2 */
+    e.ubicacion,
+    e.entorno ?? "",
     e.problemaId || e.problemaPropioNombre || e.problemaPropio,
     e.asignaturas.length ? "x" : "",
-    e.entorno ?? "",
-    e.ubicacion,
+    e.oa.length ? "x" : "",
+    e.tecnicas.length ? "x" : "",
+    e.puntoDeSalida,
+    e.queCuidar,
+    /* Lámina 3 */
+    e.destinatario,
+    e.formato ?? "",
   ];
   const llenos = campos.filter((c) => String(c).trim().length > 0).length;
   return Math.round((llenos / campos.length) * 100);
