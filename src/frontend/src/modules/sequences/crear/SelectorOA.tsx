@@ -1,16 +1,20 @@
 /**
- * Elegir los Objetivos de Aprendizaje de una lista, no escribirlos.
+ * Elegir los objetivos del currículum de una lista, no escribirlos.
  *
  * El campo era un cuadro de texto vacío y decía «los códigos si los tienes a
  * mano». Eso obliga a acordarse del código o a ir a buscar el programa en otra
  * pestaña, que en un computador de escuela con una conexión mala es media
- * clase perdida. Aquí están los de las seis asignaturas, de 5º a 8º: se abre
- * el curso, se marca lo que va a pasar y listo.
+ * clase perdida. Aquí están todos los de la edición: se abre el curso, se
+ * marca lo que va a pasar y listo.
  *
- * La lista se despliega por curso y adentro se agrupa por asignatura y eje,
- * que es como están en el programa. Solo aparecen los cursos que el docente
- * dijo tener en la sala, porque nadie necesita ver los de 8º si su sala llega
- * a 6º.
+ * En Chile son los Objetivos de Aprendizaje de las Bases Curriculares; en
+ * Brasil, las habilidades de la BNCC. El selector no lo sabe: lee la lista de
+ * `useContenido()` ya traducida a la forma común (§contenido/curriculo.ts).
+ *
+ * La lista se despliega por curso y adentro se agrupa por asignatura y eje (o
+ * unidade temática), que es como están en el documento. Solo aparecen los
+ * cursos que el docente dijo tener en la sala, porque nadie necesita ver los
+ * de 8º si su sala llega a 6º.
  *
  * DÓNDE APARECE, Y POR QUÉ IMPORTA DÓNDE ESCRIBE
  *
@@ -24,23 +28,14 @@
 
 import { useMemo, useState } from "react";
 
+import { useTx } from "../../../shared/tx";
+import { useContenido } from "../contenido";
 import {
-  CURSO_CORTO,
-  EJES,
-  NOMBRE_ASIGNATURA_OA,
-  filtrarOA,
-  objetivosDe,
-  type NivelOA,
-  type OA,
-} from "./oa";
-
-/** Los cursos de la sala, traducidos al nombre que usa el catálogo de OA. */
-const NIVEL_DE_CURSO: Record<string, NivelOA> = {
-  "5º": "5to_basico",
-  "6º": "6to_basico",
-  "7º": "7mo_basico",
-  "8º": "8vo_basico",
-};
+  buscarObjetivo,
+  filtrarObjetivos,
+  objetivosDelCurso,
+  type Objetivo,
+} from "../contenido/curriculo";
 
 export default function SelectorOA({
   cursos,
@@ -53,15 +48,17 @@ export default function SelectorOA({
   elegidos: string[];
   onElegir: (codigos: string[]) => void;
 }) {
+  const tx = useTx();
+  const c = useContenido();
   const [busqueda, setBusqueda] = useState("");
-  const [abierto, setAbierto] = useState<NivelOA | null>(null);
+  const [abierto, setAbierto] = useState<string | null>(null);
 
-  // Sin cursos marcados se muestran los cuatro: es preferible a una pantalla
-  // vacía que no explica qué falta.
-  const niveles = useMemo<NivelOA[]>(() => {
-    const suyos = cursos.map((c) => NIVEL_DE_CURSO[c]).filter(Boolean) as NivelOA[];
-    return suyos.length ? suyos : (["5to_basico", "6to_basico", "7mo_basico", "8vo_basico"] as NivelOA[]);
-  }, [cursos]);
+  // Sin cursos marcados se muestran todos los de la edición: es preferible a
+  // una pantalla vacía que no explica qué falta.
+  const niveles = useMemo<string[]>(() => {
+    const suyos = cursos.filter((x) => c.cursos.includes(x));
+    return suyos.length ? suyos : c.cursos;
+  }, [cursos, c.cursos]);
 
   // Con una búsqueda escrita se abren todos los cursos: buscar y tener que
   // abrir carpetas para ver el resultado es buscar dos veces.
@@ -70,21 +67,24 @@ export default function SelectorOA({
   function alternar(codigo: string) {
     onElegir(
       elegidos.includes(codigo)
-        ? elegidos.filter((c) => c !== codigo)
+        ? elegidos.filter((x) => x !== codigo)
         : [...elegidos, codigo]
     );
   }
 
+  const plural = (n: number, uno: string, varios: string) => (n === 1 ? uno : varios);
+
   return (
     <div className="sm:col-span-2">
       <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="rotulo text-[var(--crema)]/60">
-          Objetivos de aprendizaje
-        </span>
+        <span className="rotulo text-[var(--crema)]/60">{c.palabras.Objetivos}</span>
         <span className="font-mono text-[11px] text-[var(--crema)]/40">
           {elegidos.length
-            ? `${elegidos.length} marcado${elegidos.length === 1 ? "" : "s"}`
-            : "ninguno todavía"}
+            ? `${elegidos.length} ${tx(
+                plural(elegidos.length, "marcado", "marcados"),
+                plural(elegidos.length, "marcada", "marcadas")
+              )}`
+            : tx("ninguno todavía", "nenhuma ainda")}
         </span>
       </div>
 
@@ -92,7 +92,8 @@ export default function SelectorOA({
         type="search"
         value={busqueda}
         onChange={(ev) => setBusqueda(ev.target.value)}
-        placeholder="Busca por palabra: agua, promedio, porcentaje, células…"
+        placeholder={`${tx("Busca por palabra", "Busque por palavra")}: ${c.palabras.ejemploBusqueda}`}
+        aria-label={tx("Buscar entre los objetivos", "Buscar entre as habilidades")}
         className="w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--crema)]/[0.045] px-3.5 py-2.5 text-[15px] text-[var(--crema-clara)] outline-none transition placeholder:text-[var(--crema)]/30 focus:border-[var(--tierra-600)] focus:bg-[var(--crema)]/[0.08]"
       />
 
@@ -101,18 +102,19 @@ export default function SelectorOA({
           lista venía a evitar. */}
       {elegidos.length > 0 && (
         <ul className="mt-3 flex flex-wrap gap-2">
-          {elegidos.map((c) => (
-            <li key={c}>
+          {elegidos.map((cod) => (
+            <li key={cod}>
               <button
                 type="button"
-                onClick={() => alternar(c)}
-                className="group inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
+                onClick={() => alternar(cod)}
+                title={buscarObjetivo(cod)?.texto}
+                className="group inline-flex min-h-8 items-center gap-2 rounded-full bg-[var(--tierra-600)] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
               >
-                {c.replace(/_[A-Z]+_/, " · ")}
+                {cod.replace(/_[A-Z]+_/, " · ")}
                 <span aria-hidden className="opacity-60 group-hover:opacity-100">
                   ×
                 </span>
-                <span className="sr-only">Quitar</span>
+                <span className="sr-only">{tx("Quitar", "Remover")}</span>
               </button>
             </li>
           ))}
@@ -121,8 +123,8 @@ export default function SelectorOA({
 
       <div className="mt-3 space-y-2">
         {niveles.map((nivel) => {
-          const todos = objetivosDe(nivel);
-          const vistos = filtrarOA(todos, busqueda);
+          const todos = objetivosDelCurso(c.objetivos, nivel);
+          const vistos = filtrarObjetivos(todos, busqueda);
           const abiertoAhora = buscando || abierto === nivel;
           const marcadosAqui = todos.filter((o) => elegidos.includes(o.codigo)).length;
 
@@ -137,15 +139,21 @@ export default function SelectorOA({
                 type="button"
                 onClick={() => setAbierto(abierto === nivel ? null : nivel)}
                 aria-expanded={abiertoAhora}
-                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[var(--crema)]/[0.04]"
+                className="flex min-h-11 w-full items-center justify-between gap-3 px-4 py-3 text-left transition hover:bg-[var(--crema)]/[0.04]"
               >
                 <span className="flex items-baseline gap-3">
                   <span className="font-mono text-[13px] font-semibold text-[var(--crema-clara)]">
-                    {CURSO_CORTO[nivel]} básico
+                    {c.nombreCurso(nivel)}
                   </span>
                   <span className="text-xs text-[var(--crema)]/45">
-                    {vistos.length} objetivo{vistos.length === 1 ? "" : "s"}
-                    {marcadosAqui > 0 ? ` · ${marcadosAqui} marcado${marcadosAqui === 1 ? "" : "s"}` : ""}
+                    {vistos.length}{" "}
+                    {plural(vistos.length, c.palabras.objetivo, c.palabras.objetivos)}
+                    {marcadosAqui > 0
+                      ? ` · ${marcadosAqui} ${tx(
+                          plural(marcadosAqui, "marcado", "marcados"),
+                          plural(marcadosAqui, "marcada", "marcadas")
+                        )}`
+                      : ""}
                   </span>
                 </span>
                 <span
@@ -159,11 +167,15 @@ export default function SelectorOA({
               {abiertoAhora && (
                 <ul className="animar-hoja border-t border-[var(--crema)]/12">
                   {vistos.map((o, i) => (
-                    <Objetivo
+                    <FilaObjetivo
                       key={o.codigo}
-                      oa={o}
+                      o={o}
                       marcado={elegidos.includes(o.codigo)}
-                      primeroDelEje={i === 0 || vistos[i - 1]?.eje !== o.eje}
+                      primeroDelGrupo={
+                        i === 0 ||
+                        vistos[i - 1]?.grupo !== o.grupo ||
+                        vistos[i - 1]?.asignatura !== o.asignatura
+                      }
                       onAlternar={() => alternar(o.codigo)}
                     />
                   ))}
@@ -175,30 +187,31 @@ export default function SelectorOA({
       </div>
 
       <p className="mt-2.5 text-xs leading-relaxed text-[var(--crema)]/45">
-        Son los de las Bases Curriculares, en las seis asignaturas. Marca los
-        que vas a pasar: de ahí salen los indicadores con que se evalúa y lo
-        que se cita en la hoja que firma la dirección.
+        {tx(
+          "Son los de las Bases Curriculares, en las seis asignaturas. Marca los que vas a pasar: de ahí salen los indicadores con que se evalúa y lo que se cita en la hoja que firma la dirección.",
+          "São as habilidades da BNCC, dos seis componentes. Marque as que vai trabalhar: delas saem os indicadores de avaliação e o que se cita no documento que a direção assina."
+        )}
       </p>
     </div>
   );
 }
 
-function Objetivo({
-  oa,
+function FilaObjetivo({
+  o,
   marcado,
-  primeroDelEje,
+  primeroDelGrupo,
   onAlternar,
 }: {
-  oa: OA;
+  o: Objetivo;
   marcado: boolean;
-  primeroDelEje: boolean;
+  primeroDelGrupo: boolean;
   onAlternar: () => void;
 }) {
   return (
     <li>
-      {primeroDelEje && (
+      {primeroDelGrupo && (
         <p className="border-t border-[var(--crema)]/8 bg-[var(--crema)]/[0.02] px-4 py-1.5 rotulo text-[var(--crema)]/40 first:border-t-0">
-          {NOMBRE_ASIGNATURA_OA[oa.asignatura]} · {EJES[oa.eje] ?? oa.eje}
+          {o.nombreAsignatura} · {o.grupo}
         </p>
       )}
       <button
@@ -222,11 +235,11 @@ function Objetivo({
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
             <span className="font-mono text-[11px] font-semibold text-[var(--tierra-600)]">
-              OA {oa.n}
+              {o.etiqueta}
             </span>
           </span>
           <span className="mt-1 block text-sm leading-relaxed text-[var(--crema)]/80">
-            {oa.texto}
+            {o.texto}
           </span>
         </span>
       </button>

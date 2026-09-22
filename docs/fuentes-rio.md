@@ -113,6 +113,33 @@ por la ventana. No hay que convencer a nadie de que le importa.
     proporções do país de áreas urbanizadas em cotas críticas — 43% até três
     metros».
 
+### 2.2 · Las sirenas: a quién llegó la alerta
+
+- **Titular:** «Rio precisa ampliar sistema de alerta de deslizamentos, diz instituto»
+- **Medio:** Agência Brasil (EBC), firmada por Vitor Abdala. Leída en la
+  reproducción íntegra del Diário de Petrópolis, porque el original está
+  desactivado durante el período electoral de 2026.
+- **Fecha:** 5 de abril de 2025 (el Diário de Petrópolis la publicó el 6)
+- **Enlace original:** https://agenciabrasil.ebc.com.br/geral/noticia/2025-04/rio-precisa-ampliar-sistema-de-alerta-de-deslizamentos
+- **Enlace que funciona hoy:** https://diariodepetropolis.com.br/integra/rio-precisa-ampliar-sistema-de-alerta-de-deslizamentos-diz-instituto-22080
+- **Quién da los números:** la prefectura (las sirenas), el Tribunal de Contas
+  do Município (el informe de 2022) y el proyecto Rio 60ºC, del Instituto de
+  Computação de la UFF (los domicilios en riesgo).
+- **Qué dice:**
+  - El sistema de sirenas de 2011 tiene 164 sirenas en 103 comunidades de las
+    zonas Sur y Norte, y no se amplió desde entonces.
+  - El informe del TCM de 2022 contó al menos 400 comunidades sin sirena ni
+    estudio de riesgo geológico, la mayoría en la Zona Oeste.
+  - Rio 60ºC estima 599 mil domicilios en alta vulnerabilidad (20% del total),
+    142 mil en muy alta; 60 mil expuestos a deslizamientos.
+
+> **Sobre el enlace de la EBC.** La nota de Agência Brasil está desactivada
+> mientras dure el período electoral de 2026 («Em respeito à legislação
+> eleitoral vigente, esta página está desativada temporariamente»). Vuelve
+> después de las elecciones; hasta entonces la pantalla lo dice. La fuente
+> 1.1, de Radioagência Nacional, sí abre: se comprobó el 22 de septiembre de
+> 2026.
+
 ### 2.1 · Con qué engancha del currículum
 
 - `EF06GE04` · Geografia · **Conexões e escalas** — el ciclo del agua y el
@@ -123,6 +150,15 @@ Faltan los demás ángulos. Matemática tiene aquí un enganche evidente con los
 datos de 1985 frente a 2024, que se pueden comparar sin trucos.
 
 ---
+
+## Dónde quedaron escritas
+
+Las dos problemáticas están completas en
+`src/frontend/src/modules/sequences/metodo/problemas.br.ts`, con un ángulo por
+componente (Ciências, Geografia, História, Matemática, Língua Portuguesa y
+Arte) y las habilidades que abre cada uno. Los indicadores de esas habilidades
+están en `crear/indicadores.br.ts`. El build comprueba que todos los códigos
+existan en la BNCC cargada.
 
 ## Lo que todavía no está
 

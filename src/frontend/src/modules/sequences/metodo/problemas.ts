@@ -38,6 +38,8 @@
  * ninguno es el mismo proyecto.
  */
 
+import { ASIGNATURAS_BR, PROBLEMAS_BR } from "./problemas.br";
+
 /** Las asignaturas desde las que se puede entrar. */
 export type Asignatura =
   | "biologia"
@@ -47,7 +49,13 @@ export type Asignatura =
   | "lenguaje"
   | "historia"
   | "artes"
-  | "tecnologia";
+  | "tecnologia"
+  // Los componentes de la BNCC que no tienen equivalente chileno con el
+  // mismo nombre. Ver §problemas.br.ts.
+  | "ciencias"
+  | "geografia"
+  | "lingua_portuguesa"
+  | "arte";
 
 export const ASIGNATURAS: { id: Asignatura; nombre: string }[] = [
   { id: "biologia", nombre: "Biología" },
@@ -1434,12 +1442,22 @@ export const PROBLEMAS: Problema[] = [
   },
 ];
 
+/**
+ * Una problemática por su id, de cualquier edición.
+ *
+ * Las de Río llevan el prefijo `br_`, así que las dos listas no se pisan y
+ * quien tiene guardado un id no necesita saber de qué país es.
+ */
 export function problemaPorId(id: string): Problema | undefined {
-  return PROBLEMAS.find((p) => p.id === id);
+  return PROBLEMAS.find((p) => p.id === id) ?? PROBLEMAS_BR.find((p) => p.id === id);
 }
 
 export function nombreAsignatura(id: string): string {
-  return ASIGNATURAS.find((a) => a.id === id)?.nombre ?? id;
+  return (
+    ASIGNATURAS.find((a) => a.id === id)?.nombre ??
+    ASIGNATURAS_BR.find((a) => a.id === id)?.nombre ??
+    id
+  );
 }
 
 /**

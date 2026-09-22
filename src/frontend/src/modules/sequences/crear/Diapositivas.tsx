@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTx } from "../../../shared/tx";
 
 /**
  * El armazón de diapositivas.
@@ -74,6 +75,7 @@ export default function Diapositivas({
   const [saliendo, setSaliendo] = useState(false);
   const [sentido, setSentido] = useState<"avanza" | "retrocede">("avanza");
   const reloj = useRef<number | undefined>(undefined);
+  const tx = useTx();
 
   useEffect(() => () => window.clearTimeout(reloj.current), []);
 
@@ -125,7 +127,7 @@ export default function Diapositivas({
         {/* ── Dónde va y si quedó guardado ─────────────────────────────── */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <p className="rotulo text-[var(--crema)]/55">
-            Cuaderno · lámina {indice + 1} de {laminas.length}
+            {tx("Cuaderno · lámina", "Caderno · lâmina")} {indice + 1} {tx("de", "de")} {laminas.length}
           </p>
           {guardado && (
             <p className="text-xs text-[var(--crema)]/55" aria-live="polite">
@@ -134,14 +136,17 @@ export default function Diapositivas({
           )}
         </div>
 
-        <ol className="mt-4 flex gap-1.5" aria-label="Láminas del cuaderno">
+        <ol
+          className="mt-4 flex gap-1.5"
+          aria-label={tx("Láminas del cuaderno", "Lâminas do caderno")}
+        >
           {laminas.map((l, i) => (
             <li key={l.id} className="flex-1">
               <button
                 type="button"
                 onClick={() => ir(i)}
                 aria-current={i === indice ? "step" : undefined}
-                aria-label={`${l.marca}${i < indice ? " (hecha)" : ""}`}
+                aria-label={`${l.marca}${i < indice ? tx(" (hecha)", " (feita)") : ""}`}
                 className="group block min-h-11 w-full py-2 text-left"
               >
                 <span
@@ -202,7 +207,7 @@ export default function Diapositivas({
               disabled={primera}
               className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema)]/85 transition hover:border-[var(--crema)]/55 hover:text-[var(--crema)] disabled:cursor-not-allowed disabled:opacity-25"
             >
-              Volver
+              {tx("Volver", "Voltar")}
             </button>
 
             <div className="flex items-center gap-4">
@@ -222,7 +227,7 @@ export default function Diapositivas({
                   disabled={!puede}
                   className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[var(--crema)]/15 disabled:text-[var(--crema)]/45"
                 >
-                  Seguir
+                  {tx("Seguir", "Seguir")}
                   <span aria-hidden className="transition-transform group-enabled:group-hover:translate-x-1">
                     →
                   </span>

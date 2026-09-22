@@ -1,7 +1,8 @@
 import { Hoja } from "../crear/Campos";
 import type { Expedicion } from "../crear/expedicion";
 import { angulosDe, nombreAsignatura, problemaPorId } from "./problemas";
-import { ANTES_DE_SALIR, TECNICAS, tecnicaPorId } from "./tecnicas";
+import { antesDeSalirEn, tecnicaPorId, tecnicasEn, type Tecnica } from "./tecnicas";
+import { useTx } from "../../../shared/tx";
 
 /**
  * La segunda etapa: lo que se enseña en la sala antes de salir.
@@ -32,16 +33,18 @@ export function AntesDeSalir({
   onCambio: (e: Expedicion) => void;
   orden?: number;
 }) {
+  const tx = useTx();
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
+  const titulo = tx("Lo que se enseña antes de salir", "O que se ensina antes de sair");
 
   if (!problema) {
     return (
-      <Hoja titulo="Lo que se enseña antes de salir" orden={orden}>
+      <Hoja titulo={titulo} orden={orden}>
         <p className="text-[15px] leading-relaxed text-[var(--crema)]/82">
-          Esto aparece cuando elijas de qué va a tratar: los conceptos y la
-          técnica que hay que ensayar dependen del problema y de la asignatura
-          desde la que entres, y sin eso solo podríamos ofrecerte un cuadro en
-          blanco.
+          {tx(
+            "Esto aparece cuando elijas de qué va a tratar: los conceptos y la técnica que hay que ensayar dependen del problema y de la asignatura desde la que entres, y sin eso solo podríamos ofrecerte un cuadro en blanco.",
+            "Isto aparece quando você escolher do que o projeto vai tratar: os conceitos e a técnica a ensaiar dependem do problema e do componente por onde você entra, e sem isso só daria para oferecer um quadro em branco."
+          )}
         </p>
       </Hoja>
     );
@@ -59,18 +62,18 @@ export function AntesDeSalir({
   }
 
   return (
-    <Hoja titulo="Lo que se enseña antes de salir" orden={orden}>
+    <Hoja titulo={titulo} orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Esta suele ser la parte que el docente prepara solo, y hay un motivo:
-        mandar a un curso a averiguar algo sin haberle enseñado a usar lo que va
-        a usar no es dejarlo crear, es dejarlo solo. Cabe en una o dos clases:
-        los conceptos que hacen falta para entender el problema, y un ensayo en
-        la sala de la técnica con la que van a levantar el dato, sobre algo que
-        no importe.
+        {tx(
+          "Esta suele ser la parte que el docente prepara solo, y hay un motivo: mandar a un curso a averiguar algo sin haberle enseñado a usar lo que va a usar no es dejarlo crear, es dejarlo solo. Cabe en una o dos clases: los conceptos que hacen falta para entender el problema, y un ensayo en la sala de la técnica con la que van a levantar el dato, sobre algo que no importe.",
+          "Esta costuma ser a parte que o professor prepara sozinho, e há um motivo: mandar uma turma investigar algo sem ter ensinado a usar o que vai usar não é deixá-la criar, é deixá-la sozinha. Cabe em uma ou duas aulas: os conceitos necessários para entender o problema, e um ensaio em sala da técnica com que vão coletar o dado, sobre algo que não importe."
+        )}
       </p>
 
       {/* ── Conceptos, por asignatura ──────────────────────────────────── */}
-      <p className="rotulo text-[var(--crema)]/75">Contenidos de esta problemática</p>
+      <p className="rotulo text-[var(--crema)]/75">
+        {tx("Contenidos de esta problemática", "Conteúdos desta problemática")}
+      </p>
       <div className="mt-3 space-y-3.5">
         {angulos.map((a) => (
           <div key={a.asignatura}>
@@ -102,16 +105,19 @@ export function AntesDeSalir({
         ))}
       </div>
       <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-        Salen del problema cruzado con la asignatura, así que son una propuesta
-        y no una lista cerrada. Marca los que vas a pasar de verdad: tres bien
-        entendidos sirven más que ocho nombrados.
+        {tx(
+          "Salen del problema cruzado con la asignatura, así que son una propuesta y no una lista cerrada. Marca los que vas a pasar de verdad: tres bien entendidos sirven más que ocho nombrados.",
+          "Saem do problema cruzado com o componente, então são uma proposta e não uma lista fechada. Marque os que vai trabalhar de verdade: três bem entendidos valem mais que oito só citados."
+        )}
       </p>
 
       {/* ── La técnica que se ensaya ───────────────────────────────────── */}
       <div className="mt-7 border-t border-[var(--crema)]/12 pt-5">
-        <p className="rotulo text-[var(--crema)]/75">Qué técnica se ensaya en la sala</p>
+        <p className="rotulo text-[var(--crema)]/75">
+          {tx("Qué técnica se ensaya en la sala", "Que técnica se ensaia em sala")}
+        </p>
         <ul className="mt-2.5 flex flex-wrap gap-2">
-          {TECNICAS.map((t) => {
+          {tecnicasEn(tx.idioma).map((t) => {
             const marcada = e.tecnicas.includes(t.id);
             const propuesta = sugeridas.includes(t.id);
             return (
@@ -135,24 +141,25 @@ export function AntesDeSalir({
           })}
         </ul>
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-          Las que llevan el borde marcado son las que pide el ángulo que
-          elegiste. Las demás se pueden usar igual. Con una bien ensayada basta:
-          dos técnicas nuevas en la misma salida es una de más.
+          {tx(
+            "Las que llevan el borde marcado son las que pide el ángulo que elegiste. Las demás se pueden usar igual. Con una bien ensayada basta: dos técnicas nuevas en la misma salida es una de más.",
+            "As que têm a borda marcada são as que a atividade escolhida pede. As outras podem ser usadas também. Uma bem ensaiada basta: duas técnicas novas na mesma saída é uma a mais."
+          )}
         </p>
       </div>
 
       {e.tecnicas.map((id) => {
-        const t = tecnicaPorId(id);
+        const t = tecnicaPorId(id, tx.idioma);
         return t ? <FichaTecnica key={id} t={t} /> : null;
       })}
 
       {/* ── Lo que tiene que quedar antes de subir a la micro ──────────── */}
       <div className="mt-7 border-t border-[var(--crema)]/12 pt-5">
         <p className="rotulo text-[var(--crema)]/75">
-          Qué tiene que estar listo antes de salir
+          {tx("Qué tiene que estar listo antes de salir", "O que precisa estar pronto antes de sair")}
         </p>
         <ul className="mt-3 space-y-3">
-          {ANTES_DE_SALIR.map((q) => (
+          {antesDeSalirEn(tx.idioma).map((q) => (
             <li key={q.titulo}>
               <p className="text-[17px] leading-snug text-[var(--crema-clara)]">
                 {q.titulo}
@@ -161,7 +168,7 @@ export function AntesDeSalir({
                 {q.queEs}
               </p>
               <p className="mt-1 text-[15px] leading-relaxed text-[var(--crema)]/70">
-                Se nota en que {q.seNotaEn}
+                {tx("Se nota en que", "Nota-se quando")} {q.seNotaEn}
               </p>
             </li>
           ))}
@@ -180,28 +187,30 @@ export function AntesDeSalir({
  * en ninguna parte y es la que decide si la comunidad vuelve a abrirle la
  * puerta a la escuela el año siguiente.
  */
-function FichaTecnica({ t }: { t: ReturnType<typeof tecnicaPorId> }) {
-  if (!t) return null;
+function FichaTecnica({ t }: { t: Tecnica }) {
+  const tx = useTx();
   return (
     <div className="mt-4 space-y-3.5 rounded-xl border border-[var(--crema)]/14 p-4">
       <p className="rotulo text-[var(--tierra-600)]">{t.nombre}</p>
       <p className="text-[15px] leading-relaxed text-[var(--crema-clara)]">{t.queEs}</p>
 
       <div>
-        <p className="text-sm text-[var(--crema)]/70">Cómo se ensaya en la sala</p>
+        <p className="text-sm text-[var(--crema)]/70">
+          {tx("Cómo se ensaya en la sala", "Como se ensaia em sala")}
+        </p>
         <p className="mt-1 text-[15px] leading-relaxed text-[var(--crema)]/85">
           {t.queSeEnsaya}
         </p>
       </div>
 
       <p className="text-[15px] leading-relaxed text-[var(--crema)]/75">
-        <span className="text-[var(--crema-clara)]">Hace falta:</span>{" "}
+        <span className="text-[var(--crema-clara)]">{tx("Hace falta", "É preciso")}:</span>{" "}
         {t.materiales.join(", ")}.
       </p>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-3">
-          <p className="rotulo text-[var(--tierra-300)]">Seguridad</p>
+          <p className="rotulo text-[var(--tierra-300)]">{tx("Seguridad", "Segurança")}</p>
           <ul className="mt-2 space-y-1.5">
             {t.seguridad.map((x) => (
               <li key={x} className="text-[15px] leading-relaxed text-[var(--tierra-300)]">
@@ -211,7 +220,9 @@ function FichaTecnica({ t }: { t: ReturnType<typeof tecnicaPorId> }) {
           </ul>
         </div>
         <div className="rounded-lg border border-[var(--crema)]/14 px-3.5 py-3">
-          <p className="rotulo text-[var(--crema)]/75">Con las personas y el lugar</p>
+          <p className="rotulo text-[var(--crema)]/75">
+            {tx("Con las personas y el lugar", "Com as pessoas e o lugar")}
+          </p>
           <ul className="mt-2 space-y-1.5">
             {t.etica.map((x) => (
               <li key={x} className="text-[15px] leading-relaxed text-[var(--crema)]/85">
@@ -223,7 +234,7 @@ function FichaTecnica({ t }: { t: ReturnType<typeof tecnicaPorId> }) {
       </div>
 
       <p className="text-[15px] leading-relaxed text-[var(--crema)]/75">
-        <span className="text-[var(--crema-clara)]">Se cae cuando:</span>{" "}
+        <span className="text-[var(--crema-clara)]">{tx("Se cae cuando", "Dá errado quando")}:</span>{" "}
         {t.seCaeCuando}
       </p>
     </div>

@@ -45,6 +45,7 @@ import {
   type Avance,
 } from "../crear/avance";
 import type { EstadoNube } from "../crear/nube";
+import { useTx } from "../../../shared/tx";
 
 export default function Calendario({
   e,
@@ -63,30 +64,49 @@ export default function Calendario({
   const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
   const hechas = semanas.filter((s) => estaHecha(avance, s.id)).length;
   const siguiente = semanas.find((s) => !estaHecha(avance, s.id));
+  const tx = useTx();
 
   return (
     <Hoja
-      titulo="El calendario de las clases"
+      titulo={tx("El calendario de las clases", "O calendário das aulas")}
       orden={orden}
       resumen={
         semanas.length === 0
-          ? "Todavía sin clases anotadas. Se escriben aquí, una por una."
+          ? tx(
+              "Todavía sin clases anotadas. Se escriben aquí, una por una.",
+              "Ainda sem aulas anotadas. Escrevem-se aqui, uma por uma."
+            )
           : hechas === 0
-            ? `${semanas.length} clases, ninguna dada todavía.`
-            : `Van ${hechas} de ${semanas.length}${
-                siguiente ? `. Sigue: ${siguiente.titulo || "sin título"}` : ""
-              }.`
+            ? tx(
+                `${semanas.length} clases, ninguna dada todavía.`,
+                `${semanas.length} aulas, nenhuma dada ainda.`
+              )
+            : tx(
+                `Van ${hechas} de ${semanas.length}${
+                  siguiente ? `. Sigue: ${siguiente.titulo || "sin título"}` : ""
+                }.`,
+                `${hechas} de ${semanas.length} dadas${
+                  siguiente ? `. Próxima: ${siguiente.titulo || "sem título"}` : ""
+                }.`
+              )
       }
     >
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Una fila por clase, con el título que le pongas tú. Se marcan a medida
-        que se dan y se desmarcan igual de fácil.
-        {e.sesiones ? ` Dijiste que tenías ${e.sesiones} clases o más.` : ""}
+        {tx(
+          "Una fila por clase, con el título que le pongas tú. Se marcan a medida que se dan y se desmarcan igual de fácil.",
+          "Uma linha por aula, com o título que você der. Marcam-se à medida que acontecem, e desmarcam-se com a mesma facilidade."
+        )}
+        {e.sesiones
+          ? tx(
+              ` Dijiste que tenías ${e.sesiones} clases o más.`,
+              ` Você disse que tinha ${e.sesiones} aulas ou mais.`
+            )
+          : ""}
       </p>
 
       {semanas.length === 0 ? (
         <p className="text-sm leading-relaxed text-[var(--crema)]/55">
-          Todavía no hay ninguna anotada.
+          {tx("Todavía no hay ninguna anotada.", "Ainda não há nenhuma anotada.")}
         </p>
       ) : (
         <ol className="space-y-2.5">
@@ -123,23 +143,26 @@ export default function Calendario({
                     ✓
                   </span>
                   <span className="sr-only">
-                    {hecha ? "Desmarcar" : "Marcar"} la clase {i + 1}
+                    {hecha ? tx("Desmarcar", "Desmarcar") : tx("Marcar", "Marcar")}{" "}
+                    {tx("la clase", "a aula")} {i + 1}
                   </span>
                 </button>
 
                 <span className="cifra shrink-0 text-xs text-[var(--crema)]/40">
                   {String(i + 1).padStart(2, "0")}
-                  {esSiguiente && !hecha ? " · la que viene" : ""}
+                  {esSiguiente && !hecha ? tx(" · la que viene", " · a próxima") : ""}
                 </span>
 
                 <label className="min-w-[12rem] flex-1">
-                  <span className="sr-only">Título de la clase {i + 1}</span>
+                  <span className="sr-only">
+                    {tx("Título de la clase", "Título da aula")} {i + 1}
+                  </span>
                   <Texto
                     value={s.titulo}
                     onChange={(ev) =>
                       onExpedicion(renombrarSemana(e, s.id, ev.target.value))
                     }
-                    placeholder="Salida al estero, tres puntos"
+                    placeholder={tx("Salida al estero, tres puntos", "Saída ao rio, três pontos")}
                   />
                 </label>
 
@@ -148,7 +171,7 @@ export default function Calendario({
                     se lee como una tarea pendiente más. */}
                 {hecha && (
                   <label className="flex shrink-0 items-center gap-2 text-xs text-[var(--crema)]/55">
-                    <span>Se dio el</span>
+                    <span>{tx("Se dio el", "Dada em")}</span>
                     <input
                       type="date"
                       value={marca?.fecha ?? hoy()}
@@ -168,10 +191,12 @@ export default function Calendario({
                     if (hecha) onAvance(alternar(avance, s.id));
                   }}
                   className="min-h-11 shrink-0 px-2 text-lg leading-none text-[var(--crema)]/35 transition hover:text-[var(--tierra-300)]"
-                  title={`Quitar la clase ${i + 1}`}
+                  title={tx(`Quitar la clase ${i + 1}`, `Remover a aula ${i + 1}`)}
                 >
                   <span aria-hidden>×</span>
-                  <span className="sr-only">Quitar la clase {i + 1}</span>
+                  <span className="sr-only">
+                    {tx(`Quitar la clase ${i + 1}`, `Remover a aula ${i + 1}`)}
+                  </span>
                 </button>
               </li>
             );
@@ -185,7 +210,9 @@ export default function Calendario({
         className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--crema)]/20 px-4 text-sm text-[var(--crema)]/85 transition hover:border-[var(--crema)]/45 hover:text-[var(--crema-clara)]"
       >
         <span aria-hidden>+</span>
-        {semanas.length === 0 ? "Anotar la primera clase" : "Anotar otra clase"}
+        {semanas.length === 0
+          ? tx("Anotar la primera clase", "Anotar a primeira aula")
+          : tx("Anotar otra clase", "Anotar outra aula")}
       </button>
     </Hoja>
   );

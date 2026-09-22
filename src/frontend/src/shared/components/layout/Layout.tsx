@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useMatches } from "react-router-dom";
 
 import Header from "./Header";
 import Footer from "./Footer";
 import { useTx, type Bi } from "../../tx";
 import { useSede } from "../../sede";
+import Cargando from "../ui/Cargando";
 
 /** Lo que una ruta puede declarar sobre sí misma en `handle`. */
 type Manejo = {
@@ -62,7 +63,11 @@ export default function Layout() {
           guardado de su edición al abrirse, y sin esto seguiría mostrando el
           proyecto de la otra hasta recargar. */}
       <div key={sede} id="contenido" className="flex flex-1 flex-col">
-        <Outlet />
+        {/* Lo que una página pide al abrirse, como el currículum del
+            cuaderno, se espera aquí y no deja la cabecera en blanco. */}
+        <Suspense fallback={<Cargando />}>
+          <Outlet />
+        </Suspense>
       </div>
 
       {!manejo.sinPie && <Footer />}

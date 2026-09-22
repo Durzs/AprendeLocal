@@ -463,11 +463,11 @@ export function avisos(e: Expedicion, b: Bitacora, idioma: Idioma = "es"): Aviso
         tecnicasPendientes.length === 1
           ? T(
               "El terreno ya está abierto y queda una técnica sin marcar como ensayada en la sala. Aprender a usarla en la orilla cuesta una hora y devuelve un dato que no sirve.",
-              "O campo já está aberto e falta uma técnica marcada como ensaiada em sala. Aprender a usá-la na margem do rio custa uma hora e devolve um dado que não serve."
+              "O campo já está aberto e há uma técnica ainda não marcada como ensaiada em sala. Aprender a usá-la na margem do rio custa uma hora e devolve um dado que não serve."
             )
           : T(
               `El terreno ya está abierto y quedan ${tecnicasPendientes.length} técnicas sin marcar como ensayadas en la sala. Aprenderlas en la orilla cuesta una hora y devuelve un dato que no sirve.`,
-              `O campo já está aberto e faltam ${tecnicasPendientes.length} técnicas marcadas como ensaiadas em sala. Aprendê-las na margem do rio custa uma hora e devolve um dado que não serve.`
+              `O campo já está aberto e há ${tecnicasPendientes.length} técnicas ainda não marcadas como ensaiadas em sala. Aprendê-las na margem do rio custa uma hora e devolve um dado que não serve.`
             ),
     });
   }

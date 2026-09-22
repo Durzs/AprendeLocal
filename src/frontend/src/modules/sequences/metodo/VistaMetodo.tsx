@@ -1,9 +1,10 @@
 import { useState } from "react";
 
-import { ETAPAS, type Decide, type Etapa } from "./etapas";
-import { COMO_SE_ELIGE, FORMATOS, type Formato } from "./formatos";
-import { FAMILIAS, RASGOS, familiaPorId, type Rasgos } from "./destinatarios";
+import { etapasEn, type Decide, type Etapa } from "./etapas";
+import { comoSeEligeEn, formatosEn, type Formato } from "./formatos";
+import { familiaPorId, familiasEn, rasgosEn, type Rasgos } from "./destinatarios";
 import { Hoja } from "../crear/Campos";
+import { useTx } from "../../../shared/tx";
 
 /**
  * El método, para leerlo y para trabajar con él.
@@ -33,16 +34,16 @@ import { Hoja } from "../crear/Campos";
  * necesita que una aplicación le reparta el trabajo. Ahora describe lo que
  * suele pasar y deja la decisión donde estaba: en quien conoce su curso.
  */
-const ETIQUETA_DECIDE: Record<Decide, string> = {
-  docente: "Suele salir de ti",
-  estudiantes: "Suele tomarla el curso",
-  ambos: "Suele armarse entre todos",
+const ETIQUETA_DECIDE: Record<Decide, { es: string; pt: string }> = {
+  docente: { es: "Suele salir de ti", pt: "Costuma sair de você" },
+  estudiantes: { es: "Suele tomarla el curso", pt: "Costuma ficar com a turma" },
+  ambos: { es: "Suele armarse entre todos", pt: "Costuma ser montada por todos" },
 };
 
-const ANILLO: Record<string, string> = {
-  inmediato: "La sala y el patio",
-  intermedio: "El vecindario",
-  amplio: "Más allá",
+const ANILLO: Record<string, { es: string; pt: string }> = {
+  inmediato: { es: "La sala y el patio", pt: "A sala e o pátio" },
+  intermedio: { es: "El vecindario", pt: "O bairro" },
+  amplio: { es: "Más allá", pt: "Mais além" },
 };
 
 export function VistaMetodo({ orden = 5 }: { orden?: number }) {
@@ -52,21 +53,26 @@ export function VistaMetodo({ orden = 5 }: { orden?: number }) {
   // importante, y la lista cerrada se lee entera de un vistazo, que es para lo
   // que está.
   const [abierto, ponerAbierto] = useState<string | null>(null);
+  const tx = useTx();
 
   return (
     <Hoja
-      titulo="El método, etapa por etapa"
+      titulo={tx("El método, etapa por etapa", "O método, etapa por etapa")}
       orden={orden}
-      resumen="Las seis etapas por las que pasa cualquier proyecto, con lo que aprende el curso en cada una y las preguntas para la sala."
+      resumen={tx(
+        "Las seis etapas por las que pasa cualquier proyecto, con lo que aprende el curso en cada una y las preguntas para la sala.",
+        "As seis etapas por que passa qualquer projeto, com o que a turma aprende em cada uma e as perguntas para a sala."
+      )}
     >
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        No dicen qué actividad hacer: describen qué suele estar pasando en cada
-        tramo. El orden es el que suele funcionar y el peso de cada etapa cambia
-        de un curso a otro; es una manera de repartirlo, no la única.
+        {tx(
+          "No dicen qué actividad hacer: describen qué suele estar pasando en cada tramo. El orden es el que suele funcionar y el peso de cada etapa cambia de un curso a otro; es una manera de repartirlo, no la única.",
+          "Não dizem que atividade fazer: descrevem o que costuma estar acontecendo em cada trecho. A ordem é a que costuma funcionar, e o peso de cada etapa muda de uma turma para outra; é um jeito de dividir, não o único."
+        )}
       </p>
 
       <ol className="space-y-2">
-        {ETAPAS.map((m, i) => (
+        {etapasEn(tx.idioma).map((m, i) => (
           <EtapaPlegada
             key={m.id}
             m={m}
@@ -92,6 +98,7 @@ function EtapaPlegada({
   onAbrir: () => void;
 }) {
   const deEllos = m.decide === "estudiantes";
+  const tx = useTx();
 
   return (
     <li
@@ -115,9 +122,9 @@ function EtapaPlegada({
             {m.nombre}
           </span>
           <span className="mt-1 block text-xs text-[var(--crema)]/70">
-            {ANILLO[m.alcance]} ·{" "}
+            {ANILLO[m.alcance] ? tx.de(ANILLO[m.alcance]) : ""} ·{" "}
             <span className={deEllos ? "text-[var(--tierra-300)]" : ""}>
-              {ETIQUETA_DECIDE[m.decide]}
+              {tx.de(ETIQUETA_DECIDE[m.decide])}
             </span>
           </span>
         </span>
@@ -134,20 +141,26 @@ function EtapaPlegada({
               se pide para el papeleo. Cada uno trae cómo se ve que ocurrió,
               que es lo que permite mirarlo en la sala en vez de suponerlo. */}
           <div>
-            <p className="rotulo text-[var(--crema)]/72">Qué aprende el curso</p>
+            <p className="rotulo text-[var(--crema)]/72">
+              {tx("Qué aprende el curso", "O que a turma aprende")}
+            </p>
             <ul className="mt-2 space-y-2.5">
               {m.aprendizajes.map((a) => (
                 <li key={a.nombre}>
                   <p className="text-[var(--crema-clara)]">{a.nombre}</p>
                   <p className="text-[var(--crema)]/85">{a.queEs}</p>
-                  <p className="text-[var(--crema)]/70">Se nota en que {a.seNotaEn}</p>
+                  <p className="text-[var(--crema)]/70">
+                    {tx("Se nota en que", "Nota-se quando")} {a.seNotaEn}
+                  </p>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <p className="rotulo text-[var(--tierra-600)]">Preguntas para la sala</p>
+            <p className="rotulo text-[var(--tierra-600)]">
+              {tx("Preguntas para la sala", "Perguntas para a sala")}
+            </p>
             <ul className="mt-2 space-y-1.5">
               {m.preguntasQueAbren.map((q) => (
                 <li key={q} className="text-[var(--crema-clara)]">
@@ -158,7 +171,9 @@ function EtapaPlegada({
           </div>
 
           <div>
-            <p className="rotulo text-[var(--crema)]/72">Puedes seguir cuando</p>
+            <p className="rotulo text-[var(--crema)]/72">
+              {tx("Puedes seguir cuando", "Dá para seguir quando")}
+            </p>
             <ul className="mt-2 space-y-1.5">
               {m.estaListoCuando.map((c) => (
                 <li key={c} className="flex gap-2.5 text-[var(--crema)]/82">
@@ -175,7 +190,8 @@ function EtapaPlegada({
               ninguna parte, y es lo que un docente que lo hace por primera
               vez no puede anticipar solo. */}
           <p className="rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-2.5 text-[var(--tierra-300)]">
-            <span className="font-medium">Se cae cuando:</span> {m.seCaeCuando}
+            <span className="font-medium">{tx("Se cae cuando", "Dá errado quando")}:</span>{" "}
+            {m.seCaeCuando}
           </p>
 
           {/* El cierre va después de «se cae cuando» y antes de los ejemplos:
@@ -185,7 +201,7 @@ function EtapaPlegada({
               quedando atrás es justamente el que no levanta la mano. */}
           <div className="rounded-lg border border-[var(--crema)]/14 px-3.5 py-3">
             <p className="rotulo text-[var(--crema)]/72">
-              Para cerrar: cada uno en su cuaderno
+              {tx("Para cerrar: cada uno en su cuaderno", "Para fechar: cada um no seu caderno")}
             </p>
             <ul className="mt-2 space-y-1.5">
               {m.cierre.preguntas.map((q) => (
@@ -195,7 +211,7 @@ function EtapaPlegada({
               ))}
             </ul>
             <p className="mt-2.5 text-[var(--crema)]/78">
-              <span className="text-[var(--crema-clara)]">Qué mirar:</span>{" "}
+              <span className="text-[var(--crema-clara)]">{tx("Qué mirar", "O que observar")}:</span>{" "}
               {m.cierre.queMirar}
             </p>
           </div>
@@ -265,8 +281,10 @@ export function ElegirFormato({
   }) => void;
   orden?: number;
 }) {
+  const tx = useTx();
+  const FORMATOS = formatosEn(tx.idioma);
   const elegido = FORMATOS.find((f) => f.id === formato) ?? null;
-  const suFamilia = familia ? familiaPorId(familia) : null;
+  const suFamilia = familia ? familiaPorId(familia, tx.idioma) : null;
 
   // Lo que no le llega a esta gente, con su motivo, para marcarlo sin
   // esconderlo. Sin familia elegida no se marca nada: sería inventarse un
@@ -276,22 +294,27 @@ export function ElegirFormato({
   );
 
   return (
-    <Hoja titulo="El producto y su destinatario" orden={orden}>
+    <Hoja titulo={tx("El producto y su destinatario", "O produto e o seu destinatário")} orden={orden}>
       <p className="mb-5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/82">
-        Lo decide el curso después de volver del terreno: hasta que no sepan qué
-        encontraron, no pueden saber qué hacer con ello.
+        {tx(
+          "Lo decide el curso después de volver del terreno: hasta que no sepan qué encontraron, no pueden saber qué hacer con ello.",
+          "Quem decide é a turma, depois de voltar do campo: enquanto não souberem o que encontraram, não podem saber o que fazer com isso."
+        )}
       </p>
 
       {/* ── 1 · De qué clase es el destinatario ───────────────────────── */}
       <p className="rotulo text-[var(--tierra-600)]">
-        1 · A quién le va a llegar
+        1 · {tx("A quién le va a llegar", "Para quem vai chegar")}
       </p>
       <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
-        Primero a quién y después qué, porque lo segundo depende de lo primero.
+        {tx(
+          "Primero a quién y después qué, porque lo segundo depende de lo primero.",
+          "Primeiro para quem e depois o quê, porque a segunda coisa depende da primeira."
+        )}
       </p>
 
       <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-        {FAMILIAS.map((f) => {
+        {familiasEn(tx.idioma).map((f) => {
           const activa = f.id === familia;
           return (
             <li key={f.id}>
@@ -328,7 +351,7 @@ export function ElegirFormato({
       {suFamilia && (
         <div className="mt-4 rounded-xl border border-[var(--crema)]/14 p-4">
           <p className="rotulo text-[var(--crema)]/72">
-            De esta clase, por ejemplo
+            {tx("De esta clase, por ejemplo", "Deste tipo, por exemplo")}
           </p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {suFamilia.ejemplos.map((x) => (
@@ -341,13 +364,13 @@ export function ElegirFormato({
             ))}
           </ul>
           <p className="mt-3.5 text-[15px] leading-relaxed text-[var(--crema)]/82">
-            <span className="text-[var(--crema-clara)]">Qué les mueve:</span>{" "}
+            <span className="text-[var(--crema-clara)]">{tx("Qué les mueve", "O que os move")}:</span>{" "}
             {suFamilia.queLesMueve}
           </p>
 
           <label className="mt-4 block">
             <span className="rotulo text-[var(--crema)]/75">
-              El de ustedes, con nombre propio
+              {tx("El de ustedes, con nombre propio", "O de vocês, com nome próprio")}
             </span>
             <input
               type="text"
@@ -365,22 +388,28 @@ export function ElegirFormato({
           paso 2 desaparecía, en pantalla se leía «1 · …» y enseguida «3 · …»,
           y el salto parecía un error. */}
       <div className="mt-6">
-        <p className="rotulo text-[var(--tierra-600)]">2 · Cómo es esa gente</p>
+        <p className="rotulo text-[var(--tierra-600)]">
+          2 · {tx("Cómo es esa gente", "Como são essas pessoas")}
+        </p>
         {!suFamilia && (
           <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/72">
-            Tres preguntas sobre el destinatario: qué edad tiene, dónde está y
-            qué necesita. Aparecen en cuanto elijas arriba de qué clase es.
+            {tx(
+              "Tres preguntas sobre el destinatario: qué edad tiene, dónde está y qué necesita. Aparecen en cuanto elijas arriba de qué clase es.",
+              "Três perguntas sobre o destinatário: que idade tem, onde está e do que precisa. Aparecem assim que você escolher acima de que tipo ele é."
+            )}
           </p>
         )}
       </div>
       {suFamilia && (
         <div className="mt-3">
           <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
-            Se contestan en la sala. De aquí sale la mitad de la decisión
-            siguiente.
+            {tx(
+              "Se contestan en la sala. De aquí sale la mitad de la decisión siguiente.",
+              "Respondem-se em sala. Daqui sai metade da próxima decisão."
+            )}
           </p>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            {RASGOS.map((r) => (
+            {rasgosEn(tx.idioma).map((r) => (
               <label key={r.id} className="block">
                 <span className="block text-[15px] text-[var(--crema-clara)]">
                   {r.pregunta}
@@ -406,12 +435,18 @@ export function ElegirFormato({
       {/* ── 3 · Recién ahora, con qué ─────────────────────────────────── */}
       <div className="mt-6">
         <p className="rotulo text-[var(--tierra-600)]">
-          3 · Con qué se lo van a entregar
+          3 · {tx("Con qué se lo van a entregar", "Com o que vão entregar")}
         </p>
         <p className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-[var(--crema)]/78">
           {suFamilia
-            ? `Lo que le llega a ${suFamilia.nombre.toLowerCase()} va primero. Lo tachado no es que esté prohibido: es que a esta gente no le llega, y conviene que el curso sepa por qué antes de insistir.`
-            : "Elige arriba a quién le va a llegar y esta lista se ordena sola, marcando lo que a esa gente no le sirve."}
+            ? tx(
+                `Lo que le llega a ${suFamilia.nombre.toLowerCase()} va primero. Lo tachado no es que esté prohibido: es que a esta gente no le llega, y conviene que el curso sepa por qué antes de insistir.`,
+                `O que chega a «${suFamilia.nombre.toLowerCase()}» vem primeiro. O riscado não é proibido: é que não chega a essas pessoas, e convém que a turma saiba por quê antes de insistir.`
+              )
+            : tx(
+                "Elige arriba a quién le va a llegar y esta lista se ordena sola, marcando lo que a esa gente no le sirve.",
+                "Escolha acima para quem vai chegar e esta lista se ordena sozinha, marcando o que não serve para essas pessoas."
+              )}
         </p>
 
         <ul className="mt-3 flex flex-wrap gap-2">
@@ -455,8 +490,10 @@ export function ElegirFormato({
           </p>
         )}
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-          Lo tachado no le llega a esa gente; pasa el cursor para ver por qué.
-          Si inventan uno que no está, mejor: la lista no está para cerrar.
+          {tx(
+            "Lo tachado no le llega a esa gente; pasa el cursor para ver por qué. Si inventan uno que no está, mejor: la lista no está para cerrar.",
+            "O riscado não chega a essas pessoas; passe o cursor para ver por quê. Se inventarem um que não está aqui, melhor: a lista não está para fechar."
+          )}
         </p>
       </div>
 
@@ -466,10 +503,10 @@ export function ElegirFormato({
           discutir una decisión que ya está tomada, no para tomarla a ciegas. */}
       <details className="mt-6 border-t border-[var(--crema)]/12 pt-5">
         <summary className="min-h-11 cursor-pointer text-sm text-[var(--crema)]/78 hover:text-[var(--crema-clara)]">
-          Seis preguntas para discutirlo en la sala
+          {tx("Seis preguntas para discutirlo en la sala", "Seis perguntas para discutir em sala")}
         </summary>
         <ul className="mt-2.5 space-y-1.5">
-          {COMO_SE_ELIGE.map((q) => (
+          {comoSeEligeEn(tx.idioma).map((q) => (
             <li
               key={q}
               className="text-[15px] leading-relaxed text-[var(--crema-clara)]"
@@ -483,14 +520,15 @@ export function ElegirFormato({
   );
 }
 function FichaFormato({ f }: { f: Formato }) {
+  const tx = useTx();
   return (
     <div className="mt-5 space-y-3 rounded-xl border border-[var(--crema)]/14 p-4 text-[15px] leading-relaxed">
       <p className="text-[var(--crema-clara)]">{f.queEs}</p>
       <p className="text-[var(--crema)]/82">
-        <span className="text-[var(--crema-clara)]">Llega a:</span> {f.llegaA}
+        <span className="text-[var(--crema-clara)]">{tx("Llega a", "Chega a")}:</span> {f.llegaA}
       </p>
       <div>
-        <p className="rotulo text-[var(--crema)]/72">Necesita</p>
+        <p className="rotulo text-[var(--crema)]/72">{tx("Necesita", "Precisa")}</p>
         <ul className="mt-2 space-y-1.5">
           {f.exige.map((x) => (
             <li key={x} className="flex gap-2.5 text-[var(--crema)]/82">
@@ -503,10 +541,10 @@ function FichaFormato({ f }: { f: Formato }) {
         </ul>
       </div>
       <p className="rounded-lg border border-[var(--tierra-300)]/30 bg-[var(--tierra-300)]/[0.06] px-3.5 py-2.5 text-[var(--tierra-300)]">
-        <span className="font-medium">Se cae cuando:</span> {f.seCaeCuando}
+        <span className="font-medium">{tx("Se cae cuando", "Dá errado quando")}:</span> {f.seCaeCuando}
       </p>
       <p className="text-[var(--crema)]/78">
-        <span className="text-[var(--crema-clara)]">Bueno para:</span>{" "}
+        <span className="text-[var(--crema-clara)]">{tx("Bueno para", "Bom para")}:</span>{" "}
         {f.buenoPara}
       </p>
     </div>

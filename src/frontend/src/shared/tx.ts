@@ -60,6 +60,14 @@ export function useIdioma(): Idioma {
   return idiomaDeContenido(i18n.resolvedLanguage, sede);
 }
 
+/** Arma el `tx` de un idioma. Va fuera del enganche para no mutar nada dentro de React. */
+export function crearTx(idioma: Idioma): Tx {
+  const tx = (<T,>(es: T, pt: T): T => (idioma === "pt" ? pt : es)) as Tx;
+  tx.de = <T,>(b: Bi<T>) => b[idioma];
+  tx.idioma = idioma;
+  return tx;
+}
+
 /**
  * `tx(español, portugués)`.
  *
@@ -68,10 +76,5 @@ export function useIdioma(): Idioma {
  */
 export function useTx(): Tx {
   const idioma = useIdioma();
-  return useMemo(() => {
-    const tx = (<T,>(es: T, pt: T): T => (idioma === "pt" ? pt : es)) as Tx;
-    tx.de = <T,>(b: Bi<T>) => b[idioma];
-    tx.idioma = idioma;
-    return tx;
-  }, [idioma]);
+  return useMemo(() => crearTx(idioma), [idioma]);
 }

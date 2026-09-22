@@ -54,6 +54,7 @@ import EstadoConexion from "./shared/components/ui/EstadoConexion";
 import Cargando from "./shared/components/ui/Cargando";
 import "./shared/i18n";
 import EntrarEdicion from "./shared/components/EntrarEdicion";
+import { sedeActual } from "./shared/sede";
 
 /**
  * Carga una pantalla en su propio bloque.
@@ -63,6 +64,20 @@ import EntrarEdicion from "./shared/components/EntrarEdicion";
  */
 function perezosa(cargar: () => Promise<{ default: React.ComponentType }>) {
   return async () => ({ Component: (await cargar()).default });
+}
+
+/**
+ * Pide el currículum de la edición a la vez que la pantalla, en paralelo.
+ *
+ * Sin esto llegaba primero el cuaderno, se pintaba, pedía el currículum y
+ * mostraba la barra de carga una segunda vez.
+ */
+async function conCurriculo<T>(pantalla: Promise<T>): Promise<T> {
+  const [m] = await Promise.all([
+    pantalla,
+    import("./modules/sequences/contenido").then((c) => c.cargarObjetivos(sedeActual())),
+  ]);
+  return m;
 }
 
 /** Lo mismo, envuelto en la puerta de las rutas que piden sesión. */
@@ -137,12 +152,12 @@ const router = createBrowserRouter([
       /* Las dos pantallas de trabajo: misma cabecera, sin pie. */
       {
         path: "crear",
-        lazy: perezosa(() => import("./modules/sequences/pages/CrearPage")),
+        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/CrearPage"))),
         handle: { titulo: { es: "Cuaderno", pt: "Caderno" }, sinPie: true },
       },
       {
         path: "proyecto",
-        lazy: perezosa(() => import("./modules/sequences/pages/ProyectoPage")),
+        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/ProyectoPage"))),
         handle: { titulo: { es: "Seguimiento del proyecto", pt: "Acompanhamento do projeto" }, sinPie: true },
       },
 

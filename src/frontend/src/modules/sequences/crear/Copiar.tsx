@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import { useTx } from "../../../shared/tx";
+
 /**
  * Llevarse un documento en un formato que se pueda editar.
  *
@@ -54,7 +56,7 @@ function textoDe(nodo: HTMLElement): string {
 
 export function Copiar({
   de,
-  que = "el documento",
+  que,
 }: {
   /** El contenedor del documento, tal como está en pantalla. */
   de: React.RefObject<HTMLDivElement | null>;
@@ -62,6 +64,8 @@ export function Copiar({
   que?: string;
 }) {
   const [copiado, ponerCopiado] = useState(false);
+  const tx = useTx();
+  const nombre = que ?? tx("el documento", "o documento");
   const reloj = useRef<number | null>(null);
 
   async function copiar() {
@@ -84,15 +88,21 @@ export function Copiar({
         onClick={copiar}
         className="min-h-11 rounded-full border border-[var(--crema)]/25 px-5 text-sm font-medium text-[var(--crema-clara)] transition hover:bg-[var(--crema)]/10"
       >
-        Copiar para editar
+        {tx("Copiar para editar", "Copiar para editar")}
       </button>
       <span
         aria-live="polite"
         className="text-sm text-[var(--crema)]/75"
       >
         {copiado
-          ? `Copiado. Pégalo en Word o en un documento y cámbialo.`
-          : `Se copia ${que} como texto, para pegarlo y adaptarlo.`}
+          ? tx(
+              "Copiado. Pégalo en Word o en un documento y cámbialo.",
+              "Copiado. Cole no Word ou num documento e ajuste."
+            )
+          : tx(
+              `Se copia ${nombre} como texto, para pegarlo y adaptarlo.`,
+              `Copia ${nombre} como texto, para colar e adaptar.`
+            )}
       </span>
     </span>
   );

@@ -30,6 +30,7 @@ import { Parrafo, Texto } from "../crear/Campos";
 import type { Expedicion } from "../crear/expedicion";
 import { formatoPorId } from "../metodo/formatos";
 import { tecnicaPorId } from "../metodo/tecnicas";
+import { useTx } from "../../../shared/tx";
 import {
   agregarEntrega,
   agregarPunto,
@@ -88,15 +89,18 @@ function Agregar({ onClick, children }: { onClick: () => void; children: React.R
 
 /** Quitar una fila. Va sin confirmación: lo que se borra se vuelve a escribir. */
 function Quitar({ onClick, que }: { onClick: () => void; que: string }) {
+  const tx = useTx();
   return (
     <button
       type="button"
       onClick={onClick}
       className="min-h-11 shrink-0 px-2 text-lg leading-none text-[var(--crema)]/35 transition hover:text-[var(--tierra-300)]"
-      title={`Quitar ${que}`}
+      title={`${tx("Quitar", "Remover")} ${que}`}
     >
       <span aria-hidden>×</span>
-      <span className="sr-only">Quitar {que}</span>
+      <span className="sr-only">
+        {tx("Quitar", "Remover")} {que}
+      </span>
     </button>
   );
 }
@@ -178,15 +182,16 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
   const c = r.cuantosB ?? 0;
   const total = a + c;
   const parejo = total > 0 && Math.abs(a - c) <= Math.max(2, Math.round(total * 0.25));
+  const tx = useTx();
 
   return (
     <div>
-      <Rotulo>La pregunta que los divide</Rotulo>
+      <Rotulo>{tx("La pregunta que los divide", "A pergunta que divide a turma")}</Rotulo>
       <Ayuda>
-        La que sale de leer la problemática con el curso, y la que van a
-        repetir hasta el final. Debajo, qué sostiene cada mitad de la sala y
-        cuántos hay en cada una: eso queda tapado hasta que vuelvan del
-        terreno, que es donde se compara con lo que encontraron.
+        {tx(
+          "La que sale de leer la problemática con el curso, y la que van a repetir hasta el final. Debajo, qué sostiene cada mitad de la sala y cuántos hay en cada una: eso queda tapado hasta que vuelvan del terreno, que es donde se compara con lo que encontraron.",
+          "A que sai da leitura da problemática com a turma, e a que vão repetir até o fim. Embaixo, o que sustenta cada metade da sala e quantos há em cada uma: isso fica coberto até a volta do campo, que é onde se compara com o que encontraram."
+        )}
       </Ayuda>
 
       {/* La pregunta se escribe aquí y en ningún otro sitio.
@@ -203,17 +208,22 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
           un domingo. Se puede cambiar después, que es lo que suele pasar la
           primera semana. */}
       <label className="mt-3 block">
-        <span className="sr-only">La pregunta que sostiene el proyecto</span>
+        <span className="sr-only">
+          {tx("La pregunta que sostiene el proyecto", "A pergunta que sustenta o projeto")}
+        </span>
         <Texto
           value={e.preguntaGuia}
           onChange={(ev) => onExpedicion({ ...e, preguntaGuia: ev.target.value })}
-          placeholder="¿Está contaminado el estero, o solo turbio porque arrastra tierra?"
+          placeholder={tx(
+            "¿Está contaminado el estero, o solo turbio porque arrastra tierra?",
+            "O rio está poluído, ou só barrento porque arrasta terra da encosta?"
+          )}
         />
       </label>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <Lado
-          titulo="Los que creen que sí"
+          titulo={tx("Los que creen que sí", "Os que acham que sim")}
           razon={r.ladoA}
           cuantos={r.cuantosA}
           tope={e.estudiantes}
@@ -221,7 +231,7 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
           onCuantos={(v) => poner({ cuantosA: v })}
         />
         <Lado
-          titulo="Los que creen que no"
+          titulo={tx("Los que creen que no", "Os que acham que não")}
           razon={r.ladoB}
           cuantos={r.cuantosB}
           tope={e.estudiantes}
@@ -237,7 +247,7 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
           <div
             className="flex h-3 w-full overflow-hidden rounded-full bg-[var(--crema)]/10"
             role="img"
-            aria-label={`${a} de un lado y ${c} del otro.`}
+            aria-label={tx(`${a} de un lado y ${c} del otro.`, `${a} de um lado e ${c} do outro.`)}
           >
             <span
               className="bg-[var(--tierra-600)] transition-all duration-500"
@@ -249,16 +259,17 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
             />
           </div>
           <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/70">
-            {a} contra {c}.{" "}
+            {a} {tx("contra", "contra")} {c}.{" "}
             {parejo ? (
               <span className="text-[var(--tierra-300)]">
-                Repartido: hay algo que averiguar.
+                {tx("Repartido: hay algo que averiguar.", "Dividido: há algo para descobrir.")}
               </span>
             ) : (
               <span>
-                Muy cargado a un lado. Cuando casi toda la sala cree lo mismo, la
-                pregunta se puede ganar conversando y el terreno sobra; vale la
-                pena buscar otra.
+                {tx(
+                  "Muy cargado a un lado. Cuando casi toda la sala cree lo mismo, la pregunta se puede ganar conversando y el terreno sobra; vale la pena buscar otra.",
+                  "Muito puxado para um lado. Quando quase toda a sala acha a mesma coisa, a pergunta se resolve no bate-papo e o campo sobra; vale a pena buscar outra."
+                )}
               </span>
             )}
           </p>
@@ -270,8 +281,11 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
       {(r.ladoA.trim() || r.ladoB.trim()) && (
         <p className="mt-4 rounded-xl border border-[var(--crema)]/14 px-4 py-3 text-sm leading-relaxed text-[var(--crema)]/70">
           {r.destapado
-            ? "Ya se abrió con el curso."
-            : "Guardado hasta la vuelta del terreno. Ahí se abre y se pone al lado de lo que encontraron."}
+            ? tx("Ya se abrió con el curso.", "Já foi aberto com a turma.")
+            : tx(
+                "Guardado hasta la vuelta del terreno. Ahí se abre y se pone al lado de lo que encontraron.",
+                "Guardado até a volta do campo. Lá se abre e se coloca ao lado do que encontraram."
+              )}
         </p>
       )}
     </div>
@@ -294,6 +308,7 @@ function Lado({
   onRazon: (v: string) => void;
   onCuantos: (v: number | null) => void;
 }) {
+  const tx = useTx();
   return (
     <div className="rounded-xl border border-[var(--crema)]/14 p-4">
       <label className="block">
@@ -301,11 +316,14 @@ function Lado({
         <Parrafo
           value={razon}
           onChange={(ev) => onRazon(ev.target.value)}
-          placeholder="Su razón, con las palabras que usaron ellos."
+          placeholder={tx(
+            "Su razón, con las palabras que usaron ellos.",
+            "A razão deles, com as palavras que usaram."
+          )}
         />
       </label>
       <label className="mt-3 flex items-center gap-3">
-        <span className="text-sm text-[var(--crema)]/70">Cuántos</span>
+        <span className="text-sm text-[var(--crema)]/70">{tx("Cuántos", "Quantos")}</span>
         <input
           type="number"
           min={0}
@@ -344,13 +362,15 @@ export function InstrumentoAula({ e, b, onCambio }: Props) {
   const listas = e.conceptos.length > 0 || e.tecnicas.length > 0;
   const tecnicasListas =
     e.tecnicas.length > 0 && e.tecnicas.every((t) => r.tecnicasEnsayadas.includes(t));
+  const tx = useTx();
 
   if (!listas) {
     return (
       <Falta>
-        Los conceptos y las técnicas salen de la segunda lámina del cuaderno.
-        Cuando estén elegidos ahí, aparecen aquí para ir marcándolos a medida
-        que se pasan.
+        {tx(
+          "Los conceptos y las técnicas salen de la segunda lámina del cuaderno. Cuando estén elegidos ahí, aparecen aquí para ir marcándolos a medida que se pasan.",
+          "Os conceitos e as técnicas saem da segunda lâmina do caderno. Quando estiverem escolhidos lá, aparecem aqui para ir marcando à medida que são trabalhados."
+        )}
       </Falta>
     );
   }
@@ -359,10 +379,12 @@ export function InstrumentoAula({ e, b, onCambio }: Props) {
     <div className="space-y-5">
       {e.conceptos.length > 0 && (
         <div>
-          <Rotulo>Conceptos pasados</Rotulo>
+          <Rotulo>{tx("Conceptos pasados", "Conceitos trabalhados")}</Rotulo>
           <Ayuda>
-            Los del programa que hacen falta para entender la problemática.
-            Marca cada uno cuando se haya dado.
+            {tx(
+              "Los del programa que hacen falta para entender la problemática. Marca cada uno cuando se haya dado.",
+              "Os do currículo necessários para entender a problemática. Marque cada um quando tiver sido trabalhado."
+            )}
           </Ayuda>
           <ul className="mt-3 flex flex-wrap gap-2">
             {e.conceptos.map((c) => (
@@ -381,11 +403,12 @@ export function InstrumentoAula({ e, b, onCambio }: Props) {
 
       {e.tecnicas.length > 0 && (
         <div>
-          <Rotulo>Técnicas ensayadas en la sala</Rotulo>
+          <Rotulo>{tx("Técnicas ensayadas en la sala", "Técnicas ensaiadas em sala")}</Rotulo>
           <Ayuda>
-            Ensayadas sobre algo que no importe, antes de usarlas donde sí
-            importa. Un vaso con tierra revuelta sirve igual que el río para
-            aprender a leer la escala.
+            {tx(
+              "Ensayadas sobre algo que no importe, antes de usarlas donde sí importa. Un vaso con tierra revuelta sirve igual que el río para aprender a leer la escala.",
+              "Ensaiadas sobre algo que não importe, antes de usá-las onde importa. Um copo com terra mexida serve tanto quanto o rio para aprender a ler a escala."
+            )}
           </Ayuda>
           <ul className="mt-3 flex flex-wrap gap-2">
             {e.tecnicas.map((t) => (
@@ -396,7 +419,7 @@ export function InstrumentoAula({ e, b, onCambio }: Props) {
                     poner({ tecnicasEnsayadas: alternar(r.tecnicasEnsayadas, t) })
                   }
                 >
-                  {tecnicaPorId(t)?.nombre ?? t}
+                  {tecnicaPorId(t, tx.idioma)?.nombre ?? t}
                 </Marca>
               </li>
             ))}
@@ -413,14 +436,19 @@ export function InstrumentoAula({ e, b, onCambio }: Props) {
             }`}
           >
             {tecnicasListas
-              ? "Todas ensayadas. El terreno puede abrirse."
+              ? tx("Todas ensayadas. El terreno puede abrirse.", "Todas ensaiadas. O campo pode ser aberto.")
               : (() => {
                   const faltan = e.tecnicas.filter(
                     (t) => !r.tecnicasEnsayadas.includes(t)
                   ).length;
-                  return `${
-                    faltan === 1 ? "Queda una técnica" : `Quedan ${faltan} técnicas`
-                  } por ensayar. El terreno se puede abrir igual, y conviene saber con qué se sale.`;
+                  return tx(
+                    `${
+                      faltan === 1 ? "Queda una técnica" : `Quedan ${faltan} técnicas`
+                    } por ensayar. El terreno se puede abrir igual, y conviene saber con qué se sale.`,
+                    `${
+                      faltan === 1 ? "Falta uma técnica" : `Faltam ${faltan} técnicas`
+                    } para ensaiar. O campo pode ser aberto assim mesmo, e convém saber com o que se sai.`
+                  );
                 })()}
           </p>
         </div>
@@ -450,19 +478,20 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
     onCambio(ponerRegistro(b, "terreno", cambio));
 
   const donde = e.puntoDeSalida.trim() || e.ubicacion.trim();
+  const tx = useTx();
 
   return (
     <div>
-      <Rotulo>La salida</Rotulo>
+      <Rotulo>{tx("La salida", "A saída")}</Rotulo>
       {donde && (
         <Ayuda>
-          El punto que escribiste en la ruta: {donde}
+          {tx("El punto que escribiste en la ruta", "O ponto que você escreveu na rota")}: {donde}
         </Ayuda>
       )}
 
       <div className="mt-3 flex flex-wrap items-end gap-4">
         <label className="block">
-          <span className="rotulo block text-[var(--crema)]/70">Se salió el</span>
+          <span className="rotulo block text-[var(--crema)]/70">{tx("Se salió el", "Saíram em")}</span>
           <input
             type="date"
             value={r.salida ?? ""}
@@ -474,26 +503,31 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
 
         <label className="block min-w-[14rem] flex-1">
           <span className="rotulo block text-[var(--crema)]/70">
-            Si se corrió de día, por qué
+            {tx("Si se corrió de día, por qué", "Se mudou de dia, por quê")}
           </span>
           <Texto
             value={r.suspension}
             onChange={(ev) => poner({ suspension: ev.target.value })}
-            placeholder="Llovió el martes. Se pasó al jueves."
+            placeholder={tx(
+              "Llovió el martes. Se pasó al jueves.",
+              "Choveu forte na terça. Passou para a quinta."
+            )}
           />
         </label>
       </div>
 
       <div className="mt-6">
-        <Rotulo>Los puntos, y qué salió de cada uno</Rotulo>
+        <Rotulo>{tx("Los puntos, y qué salió de cada uno", "Os pontos, e o que saiu de cada um")}</Rotulo>
         <Ayuda>
-          Los elige el curso. Anotar al lado lo que trajeron de cada punto es lo
-          que después permite compararlos, que es la etapa siguiente entera.
+          {tx(
+            "Los elige el curso. Anotar al lado lo que trajeron de cada punto es lo que después permite compararlos, que es la etapa siguiente entera.",
+            "Quem escolhe é a turma. Anotar ao lado o que trouxeram de cada ponto é o que depois permite compará-los, que é a etapa seguinte inteira."
+          )}
         </Ayuda>
 
         {r.puntos.length === 0 ? (
           <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/55">
-            Todavía no hay puntos anotados.
+            {tx("Todavía no hay puntos anotados.", "Ainda não há pontos anotados.")}
           </p>
         ) : (
           <ul className="mt-3 space-y-2.5">
@@ -510,29 +544,33 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
                 </span>
                 <div className="grid min-w-0 flex-1 gap-2.5 sm:grid-cols-2">
                   <label className="block">
-                    <span className="sr-only">Dónde queda el punto {i + 1}</span>
+                    <span className="sr-only">
+                      {tx("Dónde queda el punto", "Onde fica o ponto")} {i + 1}
+                    </span>
                     <Texto
                       value={p.donde}
                       onChange={(ev) =>
                         onCambio(cambiarPunto(b, "terreno", p.id, { donde: ev.target.value }))
                       }
-                      placeholder="Antes del pueblo, en el vado"
+                      placeholder={tx("Antes del pueblo, en el vado", "Antes do bairro, na ponte")}
                     />
                   </label>
                   <label className="block">
-                    <span className="sr-only">Qué se trajo del punto {i + 1}</span>
+                    <span className="sr-only">
+                      {tx("Qué se trajo del punto", "O que se trouxe do ponto")} {i + 1}
+                    </span>
                     <Texto
                       value={p.que}
                       onChange={(ev) =>
                         onCambio(cambiarPunto(b, "terreno", p.id, { que: ev.target.value }))
                       }
-                      placeholder="pH 7,2 y agua clara"
+                      placeholder={tx("pH 7,2 y agua clara", "pH 7,2 e água clara")}
                     />
                   </label>
                 </div>
                 <Quitar
                   onClick={() => onCambio(quitarPunto(b, "terreno", p.id))}
-                  que={`el punto ${i + 1}`}
+                  que={tx(`el punto ${i + 1}`, `o ponto ${i + 1}`)}
                 />
               </li>
             ))}
@@ -540,7 +578,7 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
         )}
 
         <Agregar onClick={() => onCambio(agregarPunto(b, "terreno"))}>
-          Anotar un punto
+          {tx("Anotar un punto", "Anotar um ponto")}
         </Agregar>
       </div>
 
@@ -563,22 +601,24 @@ export function InstrumentoTerreno({ e, b, onCambio }: Props) {
 function Sobre({ b, onCambio }: { b: Bitacora; onCambio: (b: Bitacora) => void }) {
   const primera = hojaDe(b, "problematica").registro;
   const hay = Boolean(primera.ladoA.trim() || primera.ladoB.trim());
+  const tx = useTx();
   if (!hay || primera.destapado) return null;
 
   return (
     <div className="mt-6 rounded-xl border border-[var(--tierra-600)]/35 bg-[var(--tierra-600)]/[0.06] p-4">
-      <Rotulo>Al volver: el sobre del primer día</Rotulo>
+      <Rotulo>{tx("Al volver: el sobre del primer día", "Na volta: o envelope do primeiro dia")}</Rotulo>
       <Ayuda>
-        Lo que creía cada mitad de la sala antes de salir quedó guardado y no se
-        ha abierto. Ponerlo al lado de lo que trajeron es lo que hace que la
-        salida haya servido para algo.
+        {tx(
+          "Lo que creía cada mitad de la sala antes de salir quedó guardado y no se ha abierto. Ponerlo al lado de lo que trajeron es lo que hace que la salida haya servido para algo.",
+          "O que cada metade da sala achava antes de sair ficou guardado e ainda não foi aberto. Colocá-lo ao lado do que trouxeram é o que faz a saída ter servido para alguma coisa."
+        )}
       </Ayuda>
       <button
         type="button"
         onClick={() => onCambio(ponerRegistro(b, "problematica", { destapado: true }))}
         className="mt-3 inline-flex min-h-11 items-center rounded-full border border-[var(--tierra-600)] bg-[var(--tierra-600)]/15 px-5 text-sm font-medium text-[var(--tierra-300)] transition hover:bg-[var(--tierra-600)]/25"
       >
-        Abrirlo con el curso
+        {tx("Abrirlo con el curso", "Abrir com a turma")}
       </button>
     </div>
   );
@@ -607,48 +647,60 @@ export function InstrumentoAnalisis({ b, onCambio }: Props) {
     onCambio(ponerRegistro(b, "analisis", cambio));
 
   const hayRazones = Boolean(primera.ladoA.trim() || primera.ladoB.trim());
+  const tx = useTx();
 
   return (
     <div>
-      <Rotulo>Lo que creían, y lo que encontraron</Rotulo>
+      <Rotulo>{tx("Lo que creían, y lo que encontraron", "O que achavam, e o que encontraram")}</Rotulo>
 
       <div className="mt-3 grid gap-4 lg:grid-cols-2">
         {/* El sobre del primer día. Cerrado se ve que hay algo dentro; abierto
             se lee al lado del hallazgo, que es para lo que se guardó. */}
         <div className="rounded-xl border border-[var(--crema)]/14 p-4">
-          <p className="rotulo text-[var(--crema)]/70">El primer día creían</p>
+          <p className="rotulo text-[var(--crema)]/70">
+            {tx("El primer día creían", "No primeiro dia achavam")}
+          </p>
 
           {!hayRazones ? (
             <p className="mt-2.5 text-sm leading-relaxed text-[var(--crema)]/55">
-              No quedó escrito en la etapa 1. Se puede volver y anotarlo: es lo
-              que hace que esta comparación tenga dos lados.
+              {tx(
+                "No quedó escrito en la etapa 1. Se puede volver y anotarlo: es lo que hace que esta comparación tenga dos lados.",
+                "Não ficou escrito na etapa 1. Dá para voltar e anotar: é o que faz esta comparação ter dois lados."
+              )}
             </p>
           ) : !primera.destapado ? (
             <div className="mt-3">
               <p className="text-sm leading-relaxed text-[var(--crema)]/70">
-                Está guardado desde la etapa 1 y no se ha abierto.
+                {tx(
+                  "Está guardado desde la etapa 1 y no se ha abierto.",
+                  "Está guardado desde a etapa 1 e ainda não foi aberto."
+                )}
               </p>
               <button
                 type="button"
                 onClick={() => onCambio(ponerRegistro(b, "problematica", { destapado: true }))}
                 className="mt-3 inline-flex min-h-11 items-center rounded-full border border-[var(--tierra-600)] bg-[var(--tierra-600)]/15 px-5 text-sm font-medium text-[var(--tierra-300)] transition hover:bg-[var(--tierra-600)]/25"
               >
-                Abrirlo con el curso
+                {tx("Abrirlo con el curso", "Abrir com a turma")}
               </button>
             </div>
           ) : (
             <dl className="mt-3 space-y-3 text-[15px] leading-relaxed">
               <div>
                 <dt className="text-[var(--crema)]/60">
-                  Una mitad {primera.cuantosA ? `(${primera.cuantosA})` : ""}
+                  {tx("Una mitad", "Uma metade")} {primera.cuantosA ? `(${primera.cuantosA})` : ""}
                 </dt>
-                <dd className="text-[var(--crema-clara)]">{primera.ladoA || "Sin anotar."}</dd>
+                <dd className="text-[var(--crema-clara)]">
+                  {primera.ladoA || tx("Sin anotar.", "Sem anotação.")}
+                </dd>
               </div>
               <div>
                 <dt className="text-[var(--crema)]/60">
-                  La otra {primera.cuantosB ? `(${primera.cuantosB})` : ""}
+                  {tx("La otra", "A outra")} {primera.cuantosB ? `(${primera.cuantosB})` : ""}
                 </dt>
-                <dd className="text-[var(--crema-clara)]">{primera.ladoB || "Sin anotar."}</dd>
+                <dd className="text-[var(--crema-clara)]">
+                  {primera.ladoB || tx("Sin anotar.", "Sem anotação.")}
+                </dd>
               </div>
             </dl>
           )}
@@ -656,35 +708,42 @@ export function InstrumentoAnalisis({ b, onCambio }: Props) {
 
         {/* El hallazgo. */}
         <div className="rounded-xl border border-[var(--tierra-600)]/35 bg-[var(--tierra-600)]/[0.06] p-4">
-          <p className="rotulo text-[var(--tierra-300)]">La frase que queda</p>
+          <p className="rotulo text-[var(--tierra-300)]">
+            {tx("La frase que queda", "A frase que fica")}
+          </p>
           <Ayuda>
-            Una sola frase, la que el curso puede defender delante de alguien
-            que no estuvo. Si hacen falta tres, todavía hay material y no hay
-            hallazgo.
+            {tx(
+              "Una sola frase, la que el curso puede defender delante de alguien que no estuvo. Si hacen falta tres, todavía hay material y no hay hallazgo.",
+              "Uma frase só, a que a turma consegue defender diante de alguém que não estava lá. Se forem precisas três, ainda há material e não há descoberta."
+            )}
           </Ayuda>
           <Parrafo
             value={r.hallazgo}
             onChange={(ev) => poner({ hallazgo: ev.target.value })}
-            placeholder="El problema entra después del pueblo y no antes."
+            placeholder={tx(
+              "El problema entra después del pueblo y no antes.",
+              "O problema entra depois do bairro, e não antes."
+            )}
           />
           <p className="mt-1.5 text-xs text-[var(--crema)]/45">
-            {r.hallazgo.trim().length} caracteres.
+            {r.hallazgo.trim().length} {tx("caracteres", "caracteres")}.
           </p>
         </div>
       </div>
 
       <div className="mt-5">
-        <Rotulo>¿Contradice lo que creían?</Rotulo>
+        <Rotulo>{tx("¿Contradice lo que creían?", "Contradiz o que achavam?")}</Rotulo>
         <Ayuda>
-          Las dos respuestas son buenas y dicen cosas distintas. Que contradiga
-          es la prueba de que el terreno sirvió para algo; que no, obliga a
-          mostrar con qué se comprobó, que es un trabajo igual de real.
+          {tx(
+            "Las dos respuestas son buenas y dicen cosas distintas. Que contradiga es la prueba de que el terreno sirvió para algo; que no, obliga a mostrar con qué se comprobó, que es un trabajo igual de real.",
+            "As duas respostas são boas e dizem coisas diferentes. Contradizer é a prova de que o campo serviu para algo; não contradizer obriga a mostrar com o que se comprovou, que é um trabalho igualmente real."
+          )}
         </Ayuda>
         <div className="mt-3 flex flex-wrap gap-2">
           {(
             [
-              ["si", "Sí, salió al revés"],
-              ["no", "No, se confirmó"],
+              ["si", tx("Sí, salió al revés", "Sim, deu o contrário")],
+              ["no", tx("No, se confirmó", "Não, confirmou-se")],
             ] as const
           ).map(([valor, titulo]) => (
             <Marca
@@ -719,25 +778,28 @@ export function InstrumentoAnalisis({ b, onCambio }: Props) {
  */
 export function InstrumentoPropuesta({ e, b, onCambio }: Props) {
   const r = hojaDe(b, "propuesta").registro;
+  const tx = useTx();
 
   return (
     <div>
-      <Rotulo>Las versiones de la propuesta</Rotulo>
+      <Rotulo>{tx("Las versiones de la propuesta", "As versões da proposta")}</Rotulo>
       <Ayuda>
-        Una fila por versión, con la crítica que llevó a la siguiente. Con una
-        sola fila, la propuesta no pasó por nadie todavía.
+        {tx(
+          "Una fila por versión, con la crítica que llevó a la siguiente. Con una sola fila, la propuesta no pasó por nadie todavía.",
+          "Uma linha por versão, com a crítica que levou à seguinte. Com uma linha só, a proposta ainda não passou por ninguém."
+        )}
       </Ayuda>
 
       {e.formato && (
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/70">
-          Lo que van a entregar quedó elegido como:{" "}
-          {formatoPorId(e.formato)?.nombre ?? e.formato}.
+          {tx("Lo que van a entregar quedó elegido como", "O que vão entregar ficou escolhido como")}:{" "}
+          {formatoPorId(e.formato, tx.idioma)?.nombre ?? e.formato}.
         </p>
       )}
 
       {r.versiones.length === 0 ? (
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/55">
-          Todavía no hay ninguna versión anotada.
+          {tx("Todavía no hay ninguna versión anotada.", "Ainda não há nenhuma versão anotada.")}
         </p>
       ) : (
         <ol className="mt-4 space-y-3">
@@ -757,7 +819,7 @@ export function InstrumentoPropuesta({ e, b, onCambio }: Props) {
               <div className="min-w-0 flex-1 rounded-xl border border-[var(--crema)]/14 p-3.5">
                 <div className="flex flex-wrap items-center gap-3">
                   <label className="flex items-center gap-2 text-sm text-[var(--crema)]/70">
-                    <span>Del</span>
+                    <span>{tx("Del", "De")}</span>
                     <input
                       type="date"
                       value={v.fecha}
@@ -773,15 +835,18 @@ export function InstrumentoPropuesta({ e, b, onCambio }: Props) {
                   <span className="flex-1" />
                   <Quitar
                     onClick={() => onCambio(quitarVersion(b, "propuesta", v.id))}
-                    que={`la versión ${i + 1}`}
+                    que={tx(`la versión ${i + 1}`, `a versão ${i + 1}`)}
                   />
                 </div>
 
                 <label className="mt-2.5 block">
                   <span className="rotulo block text-[var(--crema)]/70">
                     {i === r.versiones.length - 1
-                      ? "Qué le criticaron"
-                      : "Qué le criticaron, y por eso vino la siguiente"}
+                      ? tx("Qué le criticaron", "O que criticaram")
+                      : tx(
+                          "Qué le criticaron, y por eso vino la siguiente",
+                          "O que criticaram, e por isso veio a seguinte"
+                        )}
                   </span>
                   <Parrafo
                     value={v.critica}
@@ -790,7 +855,10 @@ export function InstrumentoPropuesta({ e, b, onCambio }: Props) {
                         cambiarVersion(b, "propuesta", v.id, { critica: ev.target.value })
                       )
                     }
-                    placeholder="Nos preguntaron cómo sabemos que es el desagüe y no la lluvia."
+                    placeholder={tx(
+                      "Nos preguntaron cómo sabemos que es el desagüe y no la lluvia.",
+                      "Perguntaram como sabemos que é o esgoto e não a chuva."
+                    )}
                   />
                 </label>
               </div>
@@ -800,7 +868,9 @@ export function InstrumentoPropuesta({ e, b, onCambio }: Props) {
       )}
 
       <Agregar onClick={() => onCambio(agregarVersion(b, "propuesta"))}>
-        {r.versiones.length === 0 ? "Anotar la primera versión" : "Anotar otra versión"}
+        {r.versiones.length === 0
+          ? tx("Anotar la primera versión", "Anotar a primeira versão")
+          : tx("Anotar otra versión", "Anotar outra versão")}
       </Agregar>
     </div>
   );
@@ -825,18 +895,21 @@ export function InstrumentoDifusion({ e, b, onCambio }: Props) {
   const r = hojaDe(b, "difusion").registro;
   const poner = (cambio: Partial<typeof r>) =>
     onCambio(ponerRegistro(b, "difusion", cambio));
+  const tx = useTx();
 
   return (
     <div>
-      <Rotulo>A quién le llegó</Rotulo>
+      <Rotulo>{tx("A quién le llegó", "Para quem chegou")}</Rotulo>
       <Ayuda>
-        Una fila por cada persona u organización a la que se le entregó, con lo
-        que contestó. La columna vacía también dice algo.
+        {tx(
+          "Una fila por cada persona u organización a la que se le entregó, con lo que contestó. La columna vacía también dice algo.",
+          "Uma linha para cada pessoa ou organização que recebeu, com o que respondeu. A coluna vazia também diz algo."
+        )}
       </Ayuda>
 
       {r.entregas.length === 0 ? (
         <p className="mt-3 text-sm leading-relaxed text-[var(--crema)]/55">
-          Todavía no se ha entregado a nadie.
+          {tx("Todavía no se ha entregado a nadie.", "Ainda não foi entregue a ninguém.")}
         </p>
       ) : (
         <ul className="mt-3 space-y-2.5">
@@ -847,17 +920,22 @@ export function InstrumentoDifusion({ e, b, onCambio }: Props) {
             >
               <div className="flex flex-wrap items-center gap-3">
                 <label className="min-w-[12rem] flex-1">
-                  <span className="sr-only">A quién, en la entrega {i + 1}</span>
+                  <span className="sr-only">
+                    {tx("A quién, en la entrega", "Para quem, na entrega")} {i + 1}
+                  </span>
                   <Texto
                     value={x.aQuien}
                     onChange={(ev) =>
                       onCambio(cambiarEntrega(b, "difusion", x.id, { aQuien: ev.target.value }))
                     }
-                    placeholder="Al comité de agua, en la reunión"
+                    placeholder={tx(
+                      "Al comité de agua, en la reunión",
+                      "À associação de moradores, na reunião"
+                    )}
                   />
                 </label>
                 <label className="flex items-center gap-2 text-sm text-[var(--crema)]/70">
-                  <span>El</span>
+                  <span>{tx("El", "Em")}</span>
                   <input
                     type="date"
                     value={x.fecha}
@@ -870,13 +948,15 @@ export function InstrumentoDifusion({ e, b, onCambio }: Props) {
                 </label>
                 <Quitar
                   onClick={() => onCambio(quitarEntrega(b, "difusion", x.id))}
-                  que={`la entrega ${i + 1}`}
+                  que={tx(`la entrega ${i + 1}`, `a entrega ${i + 1}`)}
                 />
               </div>
 
               <label className="mt-2.5 block">
                 <span className="rotulo block text-[var(--crema)]/70">
-                  {x.respuesta.trim() ? "Qué contestaron" : "Sin respuesta anotada"}
+                  {x.respuesta.trim()
+                    ? tx("Qué contestaron", "O que responderam")
+                    : tx("Sin respuesta anotada", "Sem resposta anotada")}
                 </span>
                 <Texto
                   value={x.respuesta}
@@ -885,7 +965,10 @@ export function InstrumentoDifusion({ e, b, onCambio }: Props) {
                       cambiarEntrega(b, "difusion", x.id, { respuesta: ev.target.value })
                     )
                   }
-                  placeholder="Pidieron el dato de los tres puntos por escrito."
+                  placeholder={tx(
+                    "Pidieron el dato de los tres puntos por escrito.",
+                    "Pediram os dados dos três pontos por escrito."
+                  )}
                 />
               </label>
             </li>
@@ -894,20 +977,24 @@ export function InstrumentoDifusion({ e, b, onCambio }: Props) {
       )}
 
       <Agregar onClick={() => onCambio(agregarEntrega(b, "difusion", e.destinatario))}>
-        Anotar una entrega
+        {tx("Anotar una entrega", "Anotar uma entrega")}
       </Agregar>
 
       <div className="mt-6">
-        <Rotulo>Y después, mirar atrás</Rotulo>
+        <Rotulo>{tx("Y después, mirar atrás", "E depois, olhar para trás")}</Rotulo>
         <Ayuda>
-          En qué cambió lo que el curso pensaba del lugar y de su propio papel
-          en él. Es la parte que no se salta, y la que suele quedarse fuera
-          cuando el timbre gana.
+          {tx(
+            "En qué cambió lo que el curso pensaba del lugar y de su propio papel en él. Es la parte que no se salta, y la que suele quedarse fuera cuando el timbre gana.",
+            "Em que mudou o que a turma pensava do lugar e do próprio papel nele. É a parte que não se pula, e a que costuma ficar de fora quando o sinal toca."
+          )}
         </Ayuda>
         <Parrafo
           value={r.queCambio}
           onChange={(ev) => poner({ queCambio: ev.target.value })}
-          placeholder="Compararon la lista que dibujaron en agosto con la de septiembre."
+          placeholder={tx(
+            "Compararon la lista que dibujaron en agosto con la de septiembre.",
+            "Compararam o mapa que desenharam em março com o de agora."
+          )}
         />
       </div>
     </div>

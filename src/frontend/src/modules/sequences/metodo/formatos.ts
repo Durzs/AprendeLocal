@@ -1,3 +1,6 @@
+import type { Idioma } from "../../../shared/tx";
+import { COMO_SE_ELIGE_PT, FORMATOS_PT } from "./formatos.pt";
+
 /**
  * Maneras de entregar lo que encontraron. Las elige el curso.
  *
@@ -223,8 +226,17 @@ export const FORMATOS: Formato[] = [
   },
 ];
 
-export function formatoPorId(id: string): Formato | undefined {
-  return FORMATOS.find((f) => f.id === id);
+/** Los formatos en el idioma que toca. El portugués está en §formatos.pt.ts. */
+export function formatosEn(idioma: Idioma): Formato[] {
+  return idioma === "pt" ? FORMATOS_PT : FORMATOS;
+}
+
+export function formatoPorId(id: string, idioma: Idioma = "es"): Formato | undefined {
+  return formatosEn(idioma).find((f) => f.id === id);
+}
+
+export function comoSeEligeEn(idioma: Idioma): string[] {
+  return idioma === "pt" ? COMO_SE_ELIGE_PT : COMO_SE_ELIGE;
 }
 
 /**

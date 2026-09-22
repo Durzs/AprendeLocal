@@ -42,6 +42,11 @@ const JERGA = [
   "dispositivo pedagógico",
   "se sugiere que",
   "el estudiante logre",
+  // Lo mismo en portugués, para la edición carioca.
+  "metacogni",
+  "sequência didática estruturada",
+  "o aluno seja capaz",
+  "espera-se que o aluno",
 ];
 
 /**
@@ -55,6 +60,8 @@ const ARCHIVOS = [
   "src/modules/sequences/metodo/formatos.ts",
   "src/modules/sequences/metodo/problemas.ts",
   "src/modules/sequences/metodo/tecnicas.ts",
+  "src/modules/sequences/metodo/etapas.pt.ts",
+  "src/modules/sequences/metodo/problemas.br.ts",
   "src/shared/lib/demo.ts",
   "src/shared/i18n/locales/es/common.json",
 ];
@@ -271,6 +278,8 @@ console.log(
     // que no son el propio corpus, que es donde se define.
     const aRevisar = [
       "src/modules/sequences/metodo/problemas.ts",
+      "src/modules/sequences/metodo/problemas.br.ts",
+      "src/modules/sequences/crear/indicadores.br.ts",
       "src/modules/sequences/rutas/catalogo.ts",
     ];
     const rotos = new Set();
