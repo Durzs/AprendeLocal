@@ -241,6 +241,54 @@ export const VACIA: Expedicion = {
 };
 
 /**
+ * Deja la expedición con todos sus campos presentes y del tipo que la interfaz espera.
+ *
+ * Si el docente tenía una expedición guardada de una versión anterior donde
+ * `semanas` era un número o faltaba algún arreglo nuevo, aquí se limpia en vez
+ * de dejar que la pantalla reviente con un `.filter is not a function`.
+ */
+export function normalizarExpedicion(crudo: unknown): Expedicion {
+  if (!crudo || typeof crudo !== "object") return { ...VACIA };
+  const g = crudo as Record<string, unknown>;
+
+  const listaStrings = (v: unknown): string[] =>
+    Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+
+  const listaSemanas = (v: unknown): Semana[] => {
+    if (!Array.isArray(v)) return [];
+    return v.filter(
+      (s): s is Semana =>
+        Boolean(s && typeof s === "object" && typeof (s as Semana).id === "string")
+    );
+  };
+
+  return {
+    ...VACIA,
+    ...g,
+    cursos: listaStrings(g.cursos),
+    oa: listaStrings(g.oa),
+    actividadesPropias: Array.isArray(g.actividadesPropias) ? (g.actividadesPropias as ActividadPropia[]) : [],
+    noticias: Array.isArray(g.noticias) ? (g.noticias as { titular: string; url: string }[]) : [],
+    asignaturas: listaStrings(g.asignaturas),
+    conceptos: listaStrings(g.conceptos),
+    tecnicas: listaStrings(g.tecnicas),
+    semanas: listaSemanas(g.semanas),
+    indicadores:
+      g.indicadores && typeof g.indicadores === "object" && !Array.isArray(g.indicadores)
+        ? (g.indicadores as Record<string, string[]>)
+        : {},
+    rasgosDestinatario:
+      g.rasgosDestinatario && typeof g.rasgosDestinatario === "object"
+        ? {
+            edad: String((g.rasgosDestinatario as Record<string, unknown>).edad ?? ""),
+            donde: String((g.rasgosDestinatario as Record<string, unknown>).donde ?? ""),
+            necesidad: String((g.rasgosDestinatario as Record<string, unknown>).necesidad ?? ""),
+          }
+        : { edad: "", donde: "", necesidad: "" },
+  };
+}
+
+/**
  * Lee lo guardado.
  *
  * En una ventana privada `localStorage` no falla al leer: lanza. Por eso todo
@@ -251,10 +299,8 @@ export function leer(): Expedicion {
   try {
     const crudo = localStorage.getItem(LLAVE);
     if (!crudo) return { ...VACIA };
-    const guardado = JSON.parse(crudo) as Partial<Expedicion>;
-    // Se mezcla contra VACIA para que una versión vieja del objeto, guardada
-    // antes de que existiera un campo, no deje ese campo en undefined.
-    return { ...VACIA, ...guardado };
+    const guardado = JSON.parse(crudo);
+    return normalizarExpedicion(guardado);
   } catch {
     return { ...VACIA };
   }

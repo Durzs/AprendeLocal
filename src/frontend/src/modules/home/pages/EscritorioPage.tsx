@@ -119,7 +119,7 @@ function laminaDe(e: Expedicion | null): number {
   // La última era «hay ruta armada por el modelo». Al retirarse esa ruta, lo
   // que marca haber llegado ahí es haber decidido lo que se decide ahí: qué
   // van a construir y para quién.
-  if (e.formato || e.destinatario.trim() || e.semanas.length) return 2;
+  if (e.formato || e.destinatario.trim() || (Array.isArray(e.semanas) && e.semanas.length)) return 2;
   if (e.ubicacion.trim() || e.entorno || e.problemaId || e.oa.length) return 1;
   return 0;
 }

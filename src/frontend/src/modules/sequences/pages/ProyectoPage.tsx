@@ -29,7 +29,7 @@
 
 import { Link, useNavigate } from "react-router-dom";
 
-import Bitacora from "../seguimiento/Bitacora";
+import Bitacora from "../seguimiento/BitacoraEtapas";
 import Calendario from "../seguimiento/Calendario";
 import { useExpedicion } from "../crear/useExpedicion";
 import { problemaPorId } from "../metodo/problemas";

@@ -60,7 +60,7 @@ export default function Calendario({
   estado?: EstadoNube;
   orden?: number;
 }) {
-  const semanas = e.semanas;
+  const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
   const hechas = semanas.filter((s) => estaHecha(avance, s.id)).length;
   const siguiente = semanas.find((s) => !estaHecha(avance, s.id));
 

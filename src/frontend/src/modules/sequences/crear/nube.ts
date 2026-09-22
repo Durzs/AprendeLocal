@@ -1,6 +1,6 @@
 import { supabase } from "../../../shared/lib/supabaseClient";
 import type { Expedicion } from "./expedicion";
-import { VACIA } from "./expedicion";
+import { normalizarExpedicion } from "./expedicion";
 import { normalizarAvance, type Avance } from "./avance";
 
 /**
@@ -136,9 +136,7 @@ export async function bajarUltima(): Promise<Respaldo | null> {
 
     return {
       id: data.id,
-      // Se mezcla contra VACIA por lo mismo que en `localStorage`: una fila
-      // guardada antes de que existiera un campo no debe dejarlo en undefined.
-      expedicion: { ...VACIA, ...(data.datos as Partial<Expedicion>) },
+      expedicion: normalizarExpedicion(data.datos),
       avance: normalizarAvance(data.avance),
       actualizada: data.actualizada_en ?? null,
     };

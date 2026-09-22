@@ -113,20 +113,23 @@ function nuevoId(): string {
 
 /** Agrega una clase al final del plan. */
 export function agregarSemana(e: Expedicion): Expedicion {
-  return { ...e, semanas: [...e.semanas, { id: nuevoId(), titulo: "" }] };
+  const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
+  return { ...e, semanas: [...semanas, { id: nuevoId(), titulo: "" }] };
 }
 
 /** Le cambia el título a una clase. */
 export function renombrarSemana(e: Expedicion, id: string, titulo: string): Expedicion {
+  const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
   return {
     ...e,
-    semanas: e.semanas.map((s) => (s.id === id ? { ...s, titulo } : s)),
+    semanas: semanas.map((s) => (s.id === id ? { ...s, titulo } : s)),
   };
 }
 
 /** Quita una clase del plan. Lo marcado se limpia aparte, en el avance. */
 export function quitarSemana(e: Expedicion, id: string): Expedicion {
-  return { ...e, semanas: e.semanas.filter((s) => s.id !== id) };
+  const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
+  return { ...e, semanas: semanas.filter((s) => s.id !== id) };
 }
 
 /**
@@ -136,7 +139,7 @@ export function quitarSemana(e: Expedicion, id: string): Expedicion {
  * vengan de otro sitio, o se filtren, se cambia aquí y en ninguna otra parte.
  */
 export function semanasDe(e: Expedicion): Semana[] {
-  return e.semanas;
+  return Array.isArray(e?.semanas) ? e.semanas : [];
 }
 
 /** Si esa clase ya está marcada. */
@@ -173,7 +176,7 @@ export function corregirFecha(a: Avance, semana: string, fecha: string): Avance 
  * minuto que tiene antes de entrar a la sala.
  */
 export function resumen(e: Expedicion, a: Avance): string | null {
-  const semanas = e.semanas;
+  const semanas = Array.isArray(e?.semanas) ? e.semanas : [];
   if (!semanas.length) return null;
 
   const hechas = semanas.filter((s) => estaHecha(a, s.id)).length;
