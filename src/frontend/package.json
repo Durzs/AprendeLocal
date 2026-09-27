@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && node ../../scripts/revisar-lenguaje.mjs && vite build",
+    "build": "tsc -b && node ../../scripts/revisar-lenguaje.mjs && node ../../scripts/catalogo-correo.mjs --comprobar && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "revisar-lenguaje": "node ../../scripts/revisar-lenguaje.mjs"
@@ -31,7 +31,8 @@
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.15.1",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "uqr": "^0.1.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

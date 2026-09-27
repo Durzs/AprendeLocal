@@ -4,6 +4,7 @@
  *   /              Portada, o el escritorio si hay sesión
  *   /crear         El cuaderno: armar la ruta
  *   /proyecto      El seguimiento: por dónde va el proyecto
+ *   /congreso      El demo del stand: una ruta en cuatro pasos (también /demo)
  *   /preparar      Preparar una unidad
  *   /perfil        La cuenta y la escuela (con sesión)
  *   /comunidades   Otras escuelas (con sesión)
@@ -160,6 +161,15 @@ const router = createBrowserRouter([
         lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/ProyectoPage"))),
         handle: { titulo: { es: "Seguimiento del proyecto", pt: "Acompanhamento do projeto" }, sinPie: true },
       },
+
+      /* El demo del stand. Lee el catálogo del cuaderno, así que también
+         necesita el currículum. Ver §modules/congreso/CongresoPage.tsx. */
+      {
+        path: "congreso",
+        lazy: perezosa(() => conCurriculo(import("./modules/congreso/CongresoPage"))),
+        handle: { titulo: { es: "Arma tu ruta", pt: "Monte sua rota" }, sinPie: true },
+      },
+      { path: "demo", element: <Navigate to="/congreso" replace /> },
 
       /* Lo que no existe se dice. Mandarlo al inicio en silencio deja a la
          persona en la portada sin entender qué pasó. */

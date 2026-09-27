@@ -19,3 +19,9 @@ verify_jwt = false
 # llenaba igual. Esos cuatro huecos eran lo único que valía y ahora son campos
 # del cuaderno. De paso, armar una ruta dejó de necesitar cuenta iniciada,
 # señal y una clave de Anthropic en los secretos del proyecto.
+
+[functions.enviar-ruta]
+# La llama el demo del stand (/congreso) sin sesión: quien arma la ruta en la
+# tablet todavía no tiene cuenta. Los límites de uso están dentro de la
+# función. Ver §functions/enviar-ruta/index.ts.
+verify_jwt = false
