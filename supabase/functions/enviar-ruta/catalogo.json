@@ -1,0 +1,715 @@
+{
+ "problemas": {
+  "rio_contaminado": {
+   "sede": "cl",
+   "nombre": "Contaminación de un río o estero",
+   "noticia": {
+    "titular": "Multan a sanitaria por contaminación de río en La Araucanía: empresa suma infracciones en cuatro regiones",
+    "medio": "El Desconcierto",
+    "fecha": "8 de septiembre de 2026"
+   },
+   "ods": [
+    6,
+    15
+   ],
+   "angulos": [
+    {
+     "asignatura": "biologia",
+     "enfoque": "Disminuir el impacto en la flora y la fauna del lugar."
+    },
+    {
+     "asignatura": "quimica",
+     "enfoque": "Detectar los niveles de pH para encontrar las zonas más contaminadas e intervenir."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Usos históricos del río y su registro digital."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Tratamiento y presentación de los datos medidos."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Redacción de un texto para un destinatario externo."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Lectura y evaluación de las fuentes sobre el caso."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Plano del cauce y cálculo de superficies."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Registro visual del cauce y su deterioro."
+    }
+   ]
+  },
+  "falta_agua": {
+   "sede": "cl",
+   "nombre": "Escasez de agua",
+   "noticia": {
+    "titular": "Sequía histórica: 53% de comunas están bajo decreto de escasez hídrica",
+    "medio": "La Tercera",
+    "fecha": null
+   },
+   "ods": [
+    6,
+    13
+   ],
+   "angulos": [
+    {
+     "asignatura": "matematica",
+     "enfoque": "Cálculo de la disponibilidad y el consumo de agua."
+    },
+    {
+     "asignatura": "biologia",
+     "enfoque": "Tolerancia de las especies a la falta de agua."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Historia del reparto del agua y de quién lo decidía."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Construcción de un dispositivo de ahorro de agua."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Redacción y edición del documento que se entrega."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Proporciones y porcentajes del consumo."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Organización comunitaria y toma de decisiones sobre el agua."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Probabilidad de un año seco según el registro histórico."
+    }
+   ]
+  },
+  "basura": {
+   "sede": "cl",
+   "nombre": "Microbasurales y manejo de residuos",
+   "noticia": {
+    "titular": "Presentan denuncia en Contraloría por deterioro de humedales ubicados en río Cautín debido a basurales",
+    "medio": "BioBioChile",
+    "fecha": "14 de octubre de 2024"
+   },
+   "ods": [
+    12,
+    11
+   ],
+   "angulos": [
+    {
+     "asignatura": "matematica",
+     "enfoque": "Caracterización y cuantificación de los residuos."
+    },
+    {
+     "asignatura": "biologia",
+     "enfoque": "Efectos de los residuos sobre el suelo y el agua cercana."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Origen histórico del microbasural y su localización."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Representación visual de un problema normalizado."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Análisis de mensajes y campañas sobre residuos."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Diseño de una solución de manejo de residuos."
+    }
+   ]
+  },
+  "aire_lena": {
+   "sede": "cl",
+   "nombre": "Contaminación del aire por leña",
+   "noticia": {
+    "titular": "Contaminación del aire por la quema de leña y pellets: un «ecocidio» escondido en Chile",
+    "medio": "CIPER Chile",
+    "fecha": "22 de diciembre de 2024"
+   },
+   "ods": [
+    3,
+    7,
+    11
+   ],
+   "angulos": [
+    {
+     "asignatura": "fisica",
+     "enfoque": "Pérdidas de calor en una vivienda o en la sala."
+    },
+    {
+     "asignatura": "quimica",
+     "enfoque": "Composición de la leña y productos de su combustión."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Costo de la calefacción y potencial de ahorro."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Historia de la calefacción doméstica en el sector."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Exposición de los resultados ante la comunidad."
+    },
+    {
+     "asignatura": "fisica",
+     "enfoque": "Calor, temperatura y transferencia de energía en la vivienda."
+    }
+   ]
+  },
+  "suelo_erosion": {
+   "sede": "cl",
+   "nombre": "Erosión del suelo",
+   "noticia": {
+    "titular": "El 49% del suelo nacional presenta algún grado de erosión",
+    "medio": "CIREN",
+    "fecha": null
+   },
+   "ods": [
+    15,
+    2
+   ],
+   "angulos": [
+    {
+     "asignatura": "biologia",
+     "enfoque": "Papel de la vegetación en la retención del suelo."
+    },
+    {
+     "asignatura": "quimica",
+     "enfoque": "Composición del suelo y su capacidad de retención."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Medición de la tasa de pérdida de suelo."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Obras de contención con materiales del lugar."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Geometría del terreno: pendiente, área y volumen."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Geografía física del sector y usos del suelo."
+    }
+   ]
+  },
+  "bosque_que_retrocede": {
+   "sede": "cl",
+   "nombre": "Pérdida de bosque nativo",
+   "noticia": {
+    "titular": "Estudio de la Universidad de Chile alerta que la amenaza a los bosques de araucaria ya se manifiesta y podría agravarse hacia 2060",
+    "medio": "Universidad de Chile",
+    "fecha": "2 de septiembre de 2026"
+   },
+   "ods": [
+    15,
+    13
+   ],
+   "angulos": [
+    {
+     "asignatura": "biologia",
+     "enfoque": "Estado del bosque: pérdida y regeneración."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Extensión histórica del bosque según la memoria local."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Superficie de bosque restante y ritmo de pérdida."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Diseño de una intervención para favorecer la regeneración."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Registro visual del bosque y sus especies."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Lectura de literatura y relatos sobre este territorio."
+    }
+   ]
+  },
+  "memoria_oficios": {
+   "sede": "cl",
+   "nombre": "Pérdida de oficios y saberes locales",
+   "noticia": null,
+   "ods": [
+    11,
+    8
+   ],
+   "angulos": [
+    {
+     "asignatura": "historia",
+     "enfoque": "Registro de oficios y saberes con sus portadores."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Variedades léxicas propias del sector."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Representación visual de un oficio en ejercicio."
+    },
+    {
+     "asignatura": "biologia",
+     "enfoque": "Conocimiento biológico asociado a un oficio local."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Exposición y diálogo con los portadores del oficio."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Registro digital y resguardo del material."
+    }
+   ]
+  },
+  "lengua_que_se_calla": {
+   "sede": "cl",
+   "nombre": "Pérdida de la lengua originaria",
+   "noticia": {
+    "titular": "Estudio confirma que la continuidad de la lengua mapuche está en riesgo",
+    "medio": "Diario Concepción",
+    "fecha": "2 de enero de 2025"
+   },
+   "ods": [
+    11,
+    10
+   ],
+   "angulos": [
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Registro sonoro y transcripción del habla local."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Causas históricas de la pérdida de transmisión."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Encuesta de hablantes por edad y sector."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Intervención visual con la lengua en espacio público."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Archivo, resguardo y publicación del registro sonoro."
+    },
+    {
+     "asignatura": "biologia",
+     "enfoque": "Nombres de especies locales en la lengua originaria."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Lectura de relatos y poesía en la lengua del lugar."
+    }
+   ]
+  },
+  "sin_conexion": {
+   "sede": "cl",
+   "nombre": "Falta de conectividad digital",
+   "noticia": {
+    "titular": "Gobierno lanza Plan Brecha Digital Cero con foco en zonas sin conectividad, robo de cables y trabajo con municipios",
+    "medio": "Subsecretaría de Telecomunicaciones",
+    "fecha": "17 de mayo de 2022"
+   },
+   "ods": [
+    9,
+    10
+   ],
+   "angulos": [
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Levantamiento de un mapa de cobertura móvil."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Medición del acceso a internet en el sector."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Institucionalidad responsable y vías de solicitud."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Redacción de una carta formal a la autoridad."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Serie fotográfica sobre el acceso a la señal."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Derechos, deberes y acceso a servicios."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Modelo del avance de la cobertura en el tiempo."
+    }
+   ]
+  },
+  "pueblo_que_se_vacia": {
+   "sede": "cl",
+   "nombre": "Despoblamiento rural",
+   "noticia": {
+    "titular": "Zonas rurales de la región en alerta por éxodo juvenil hacia las ciudades",
+    "medio": "Diario El Día",
+    "fecha": "10 de mayo de 2026"
+   },
+   "ods": [
+    11,
+    10
+   ],
+   "angulos": [
+    {
+     "asignatura": "historia",
+     "enfoque": "Evolución de la población del sector según el censo."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Serie histórica de la matrícula escolar."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Relatos de quienes migraron y quienes permanecieron."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Catastro visual de las viviendas desocupadas."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Producto tecnológico para una necesidad de quienes permanecen."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Escritura creativa a partir de los relatos recogidos."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Formas de decidir en común, antes y ahora."
+    }
+   ]
+  },
+  "alimentacion_escolar": {
+   "sede": "cl",
+   "nombre": "Alimentación escolar y producción local de alimentos",
+   "noticia": {
+    "titular": "Mapa Nutricional Junaeb registra leve alza en malnutrición por exceso y disminución de grupos con déficit alimentario",
+    "medio": "Ministerio de Educación",
+    "fecha": "3 de abril de 2025"
+   },
+   "ods": [
+    2,
+    3,
+    12
+   ],
+   "angulos": [
+    {
+     "asignatura": "biologia",
+     "enfoque": "Qué hace el cuerpo con lo que se come en la escuela."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Cuánto se sirve, cuánto se come y cuánto se bota."
+    },
+    {
+     "asignatura": "tecnologia",
+     "enfoque": "Diseño y construcción de un huerto en el terreno que hay."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "De dónde viene lo que se come y qué se producía aquí antes."
+    },
+    {
+     "asignatura": "lenguaje",
+     "enfoque": "Lectura de etiquetas, minutas y publicidad de alimentos."
+    },
+    {
+     "asignatura": "artes",
+     "enfoque": "Registro visual de la minuta y del huerto."
+    }
+   ]
+  },
+  "br_baia_guanabara": {
+   "sede": "br",
+   "nombre": "O esgoto que chega à Baía de Guanabara",
+   "noticia": {
+    "titular": "Baía de Guanabara tem toda sua água classificada como péssima ou ruim",
+    "medio": "Radioagência Nacional (EBC)",
+    "fecha": "28 de junho de 2022"
+   },
+   "ods": [
+    6,
+    14
+   ],
+   "angulos": [
+    {
+     "asignatura": "ciencias",
+     "enfoque": "Medir a qualidade da água em três pontos do mesmo rio."
+    },
+    {
+     "asignatura": "geografia",
+     "enfoque": "O caminho da água, da rua até a baía."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "O que o rio era antes de virar valão."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Os números do esgoto, lidos com cuidado."
+    },
+    {
+     "asignatura": "lingua_portuguesa",
+     "enfoque": "Quem diz o quê sobre a baía, e por quê."
+    },
+    {
+     "asignatura": "arte",
+     "enfoque": "O rio em fotografia, sempre do mesmo ponto."
+    }
+   ]
+  },
+  "br_encostas": {
+   "sede": "br",
+   "nombre": "Morar na encosta quando chove forte",
+   "noticia": {
+    "titular": "Moradias em áreas de risco de deslizamentos triplicaram em 40 anos, enquanto eventos extremos são mais frequentes: «É desesperador»",
+    "medio": "Brasil de Fato",
+    "fecha": "4 de março de 2026"
+   },
+   "ods": [
+    11,
+    13
+   ],
+   "angulos": [
+    {
+     "asignatura": "geografia",
+     "enfoque": "Onde é seguro construir, e quem decide."
+    },
+    {
+     "asignatura": "ciencias",
+     "enfoque": "Por que a terra desce."
+    },
+    {
+     "asignatura": "matematica",
+     "enfoque": "Quarenta anos em números."
+    },
+    {
+     "asignatura": "historia",
+     "enfoque": "Como o morro foi ocupado."
+    },
+    {
+     "asignatura": "lingua_portuguesa",
+     "enfoque": "Um aviso que a vizinhança leia."
+    },
+    {
+     "asignatura": "arte",
+     "enfoque": "A encosta desenhada de perto."
+    }
+   ]
+  }
+ },
+ "asignaturas": {
+  "cl": {
+   "biologia": "Biología",
+   "quimica": "Química",
+   "fisica": "Física",
+   "matematica": "Matemática",
+   "lenguaje": "Lenguaje",
+   "historia": "Historia y Geografía",
+   "artes": "Artes Visuales",
+   "tecnologia": "Tecnología"
+  },
+  "br": {
+   "ciencias": "Ciências",
+   "geografia": "Geografia",
+   "historia": "História",
+   "matematica": "Matemática",
+   "lingua_portuguesa": "Língua Portuguesa",
+   "arte": "Arte"
+  }
+ },
+ "lugares": {
+  "curarrehue": "Curarrehue, La Araucanía",
+  "temuco": "Temuco, río Cautín",
+  "valdivia": "Valdivia, humedales",
+  "concepcion": "Concepción, río Biobío",
+  "santiago": "Santiago, cerro San Cristóbal",
+  "valparaiso": "Valparaíso",
+  "tijuca": "Tijuca, Rio de Janeiro",
+  "botafogo": "Enseada de Botafogo, Baía de Guanabara",
+  "guaratiba": "Manguezais de Guaratiba",
+  "niteroi": "Niterói"
+ },
+ "etapas": {
+  "es": [
+   {
+    "id": "problematica",
+    "nombre": "Presentación de la problemática",
+    "enUnaLinea": "Se lee una problemática del lugar hasta que sale una pregunta que divide al curso."
+   },
+   {
+    "id": "aula",
+    "nombre": "Enseñanza en aula",
+    "enUnaLinea": "Los conceptos del programa que hacen falta, y la técnica ensayada antes de salir."
+   },
+   {
+    "id": "terreno",
+    "nombre": "Indagación en el terreno",
+    "enUnaLinea": "Salen a levantar el dato y vuelven con material que nadie tenía el primer día."
+   },
+   {
+    "id": "analisis",
+    "nombre": "Análisis de los datos recogidos",
+    "enUnaLinea": "Se ordena lo que trajeron hasta que aparece un hallazgo que se puede defender."
+   },
+   {
+    "id": "propuesta",
+    "nombre": "Creación de propuestas y acción comunitaria",
+    "enUnaLinea": "Diseñan algo que se pueda hacer aquí, se lo critican entre ellos y lo rehacen."
+   },
+   {
+    "id": "difusion",
+    "nombre": "Difusión y reflexión",
+    "enUnaLinea": "Lo presentan ante gente de fuera y después miran en qué cambiaron de idea."
+   }
+  ],
+  "pt": [
+   {
+    "id": "problematica",
+    "nombre": "Apresentação da problemática",
+    "enUnaLinea": "Lê-se uma problemática do lugar até surgir uma pergunta que divide a turma."
+   },
+   {
+    "id": "aula",
+    "nombre": "Ensino em sala de aula",
+    "enUnaLinea": "Os conceitos do currículo que fazem falta, e a técnica ensaiada antes de sair."
+   },
+   {
+    "id": "terreno",
+    "nombre": "Investigação em campo",
+    "enUnaLinea": "Saem para coletar o dado e voltam com material que ninguém tinha no primeiro dia."
+   },
+   {
+    "id": "analisis",
+    "nombre": "Análise dos dados coletados",
+    "enUnaLinea": "Organiza-se o que trouxeram até aparecer uma descoberta que se possa defender."
+   },
+   {
+    "id": "propuesta",
+    "nombre": "Criação de propostas e ação na comunidade",
+    "enUnaLinea": "Projetam algo que possa ser feito aqui, os colegas criticam e eles refazem."
+   },
+   {
+    "id": "difusion",
+    "nombre": "Divulgação e reflexão",
+    "enUnaLinea": "Apresentam para gente de fora e depois olham em que mudaram de ideia."
+   }
+  ]
+ },
+ "ods": {
+  "2": {
+   "color": "#DDA63A",
+   "claro": true,
+   "es": "Hambre cero",
+   "pt": "Fome zero"
+  },
+  "3": {
+   "color": "#4C9F38",
+   "claro": true,
+   "es": "Salud y bienestar",
+   "pt": "Saúde e bem-estar"
+  },
+  "4": {
+   "color": "#C5192D",
+   "claro": false,
+   "es": "Educación de calidad",
+   "pt": "Educação de qualidade"
+  },
+  "6": {
+   "color": "#26BDE2",
+   "claro": true,
+   "es": "Agua limpia y saneamiento",
+   "pt": "Água potável e saneamento"
+  },
+  "7": {
+   "color": "#FCC30B",
+   "claro": true,
+   "es": "Energía asequible y no contaminante",
+   "pt": "Energia limpa e acessível"
+  },
+  "8": {
+   "color": "#A21942",
+   "claro": false,
+   "es": "Trabajo decente",
+   "pt": "Trabalho decente"
+  },
+  "9": {
+   "color": "#FD6925",
+   "claro": true,
+   "es": "Industria, innovación e infraestructura",
+   "pt": "Indústria, inovação e infraestrutura"
+  },
+  "10": {
+   "color": "#DD1367",
+   "claro": false,
+   "es": "Reducción de las desigualdades",
+   "pt": "Redução das desigualdades"
+  },
+  "11": {
+   "color": "#FD9D24",
+   "claro": true,
+   "es": "Ciudades y comunidades sostenibles",
+   "pt": "Cidades e comunidades sustentáveis"
+  },
+  "12": {
+   "color": "#BF8B2E",
+   "claro": true,
+   "es": "Producción y consumo responsables",
+   "pt": "Consumo e produção responsáveis"
+  },
+  "13": {
+   "color": "#3F7E44",
+   "claro": false,
+   "es": "Acción por el clima",
+   "pt": "Ação contra a mudança do clima"
+  },
+  "14": {
+   "color": "#0A97D9",
+   "claro": true,
+   "es": "Vida submarina",
+   "pt": "Vida na água"
+  },
+  "15": {
+   "color": "#56C02B",
+   "claro": true,
+   "es": "Vida de ecosistemas terrestres",
+   "pt": "Vida terrestre"
+  }
+ }
+}

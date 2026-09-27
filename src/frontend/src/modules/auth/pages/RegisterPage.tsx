@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { UserPlus, Sparkles, KeyRound, CheckCircle2, ShieldAlert } from "lucide-react";
 import { supabase, urlDeRetorno } from "../../../shared/lib/supabaseClient";
 import { reenviarConfirmacion } from "../../../shared/lib/confirmacion";
@@ -32,6 +32,12 @@ export default function RegisterPage() {
    */
   const sede = useSede();
   const pideCodigo = sede === "cl";
+
+  // De dónde llegó: `?origen=congreso` desde el demo del stand. Va a los
+  // metadatos de la cuenta para saber cuántas se abrieron en cada evento.
+  const [params] = useSearchParams();
+  const origenCrudo = params.get("origen") ?? "";
+  const origen = /^[a-z0-9_-]{1,32}$/.test(origenCrudo) ? origenCrudo : null;
 
   const nomeRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -287,6 +293,7 @@ export default function RegisterPage() {
         school_id: validatedSchool?.id || null,
         project_code: validatedProject?.code || null,
         subject: role === "profesor" ? subject.trim() || null : null,
+        origen,
       };
 
       const { data, error } = await supabase.auth.signUp({
