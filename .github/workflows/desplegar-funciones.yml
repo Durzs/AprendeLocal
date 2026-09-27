@@ -24,7 +24,11 @@ jobs:
         with:
           version: latest
 
-      - name: Desplegar generar-secuencia
+      # Las funciones van nombradas una por una. `enviar-ruta` estuvo en main
+      # sin desplegarse porque aquí solo figuraba la primera: el demo del
+      # stand pedía el número a una función que no existía. Una función nueva
+      # se agrega a esta lista en el mismo PR que la crea.
+      - name: Desplegar las funciones
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
@@ -59,7 +63,9 @@ jobs:
               echo "Es la cadena que aparece en la URL del panel, después de /project/."
               exit 1 ;;
           esac
-          supabase functions deploy generar-secuencia --project-ref "$PROJECT_REF" --no-verify-jwt
+          for funcion in generar-secuencia enviar-ruta; do
+            supabase functions deploy "$funcion" --project-ref "$PROJECT_REF" --no-verify-jwt
+          done
 
       - name: Comprobar que responde
         env:
@@ -91,5 +97,33 @@ jobs:
             exit 1
           else
             echo "Respuesta inesperada: revisar."
+            exit 1
+          fi
+
+      - name: Comprobar enviar-ruta
+        env:
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          # Un cuerpo vacío no llega a tocar la base ni a mandar nada: la
+          # función lo rechaza con 400 por falta de correo. 404 es que no se
+          # desplegó, que es justo lo que pasó la primera vez.
+          if [ -z "$ANON_KEY" ]; then
+            echo "Sin SUPABASE_ANON_KEY no se puede comprobar; se omite."
+            exit 0
+          fi
+          codigo=$(curl -s -o /tmp/respuesta.json -w "%{http_code}" \
+            -X POST "https://$PROJECT_REF.supabase.co/functions/v1/enviar-ruta" \
+            -H "Authorization: Bearer $ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{}')
+          echo "HTTP $codigo"
+          cat /tmp/respuesta.json
+          echo
+          if [ "$codigo" = "400" ]; then
+            echo "enviar-ruta está desplegada y respondiendo."
+            echo "Para que salgan los correos faltan RESEND_API_KEY y CORREO_REMITENTE en los secretos del proyecto (ver docs/congreso.md)."
+          else
+            echo "Respuesta inesperada de enviar-ruta: revisar."
             exit 1
           fi

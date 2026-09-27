@@ -102,8 +102,16 @@ no salen los correos.
    - `CORREO_REMITENTE`: por ejemplo `AprendeLocal <hola@aprendelocal.com>`.
    - Opcionales: `CORREO_COPIA` (por defecto `aprendelocal@gmail.com`),
      `SITIO_URL` (por defecto `https://www.aprendelocal.com`) y `HASH_SAL`.
-4. **Desplegar la función:** `supabase functions deploy enviar-ruta`.
+4. **La función** se despliega sola al fusionar en `main`, con el flujo
+   `.github/workflows/desplegar-funciones.yml`, que al final comprueba que
+   responde. Si hace falta a mano: `supabase functions deploy enviar-ruta
+   --no-verify-jwt`.
 5. **Probar** con un correo propio desde `/congreso` antes del día.
+
+Mientras falte algo de esto, el demo no pierde a nadie: si la función no está
+desplegada o la tabla no existe, el pedido queda en la fila de la tablet y se
+reintenta cada minuto; si faltan los secretos de Resend, la persona recibe su
+número en pantalla y queda en la tabla con `enviado = false`.
 
 **La cuota.** La función deja de enviar después de 90 correos en 24 horas, para
 no agotar la cuota del plan gratuito de Resend en medio del congreso. Las
