@@ -108,7 +108,7 @@ export default function SelectorOA({
                 type="button"
                 onClick={() => alternar(cod)}
                 title={buscarObjetivo(cod)?.texto}
-                className="group inline-flex min-h-8 items-center gap-2 rounded-full bg-[var(--tierra-600)] px-3 py-1 font-mono text-[11px] font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
+                className="group inline-flex min-h-8 items-center gap-2 rounded-full bg-[var(--acento)] px-3 py-1 font-mono text-[11px] font-semibold text-white transition hover:bg-tierra-500"
               >
                 {cod.replace(/_[A-Z]+_/, " · ")}
                 <span aria-hidden className="opacity-60 group-hover:opacity-100">
@@ -226,7 +226,7 @@ function FilaObjetivo({
           aria-hidden
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[11px] font-bold transition ${
             marcado
-              ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+              ? "border-[var(--acento)] bg-[var(--acento)] text-white"
               : "border-[var(--crema)]/30 text-transparent"
           }`}
         >

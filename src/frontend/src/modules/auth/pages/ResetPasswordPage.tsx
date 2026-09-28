@@ -127,7 +127,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center">
           <Link to="/">
@@ -142,7 +142,7 @@ export default function ResetPasswordPage() {
         <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
           {estado.fase === "verificando" && (
             <>
-              <h1 className="text-xl font-semibold tracking-tight text-slate-950">
+              <h1 className="text-xl font-semibold tracking-tight text-texto">
                 {t("reset.verifying")}
               </h1>
               <p className="mt-3 text-sm text-slate-500">{t("auth.callback.wait")}</p>
@@ -151,7 +151,7 @@ export default function ResetPasswordPage() {
 
           {estado.fase === "error" && (
             <>
-              <h1 className="text-xl font-semibold tracking-tight text-slate-950">
+              <h1 className="text-xl font-semibold tracking-tight text-texto">
                 {t("reset.failed")}
               </h1>
               <p
@@ -162,7 +162,7 @@ export default function ResetPasswordPage() {
               </p>
               <Link
                 to="/recuperar"
-                className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white"
               >
                 {t("reset.askAgain")}
               </Link>
@@ -180,7 +180,7 @@ export default function ResetPasswordPage() {
 
           {estado.fase === "listo" && (
             <>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+              <h1 className="text-2xl font-semibold tracking-tight text-texto">
                 {t("reset.title")}
               </h1>
               <p className="mt-2 text-sm text-slate-500">{t("reset.subtitle")}</p>
@@ -234,7 +234,7 @@ export default function ResetPasswordPage() {
                 <button
                   type="submit"
                   disabled={guardando}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
                 >
                   <KeyRound className="h-4 w-4" />
                   {guardando ? t("reset.saving") : t("reset.submit")}

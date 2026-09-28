@@ -29,19 +29,19 @@ export default function HowItWorksSection() {
           <polygon points="140,40 240,95 140,150 40,95" fill="#34d399" stroke="#6ee7b7" strokeWidth="1.5" />
           <polygon points="40,95 140,150 140,225 40,170" fill="#10b981" />
           <polygon points="140,150 240,95 240,170 140,225" fill="#059669" />
-          <polygon points="105,62 160,92 140,150 110,133" fill="#a5b4fc" />
-          <polygon points="110,133 140,150 140,225 110,208" fill="#6366f1" />
-          <rect x="72" y="65" width="8" height="20" fill="#78350f" />
+          <polygon points="105,62 160,92 140,150 110,133" fill="#cfcaec" />
+          <polygon points="110,133 140,150 140,225 110,208" fill="#7a6cd0" />
+          <rect x="72" y="65" width="8" height="20" fill="#623218" />
           <polygon points="76,35 95,65 57,65" fill="#10b981" />
           <polygon points="76,48 91,72 61,72" fill="#059669" />
-          <rect x="187" y="90" width="8" height="20" fill="#78350f" />
+          <rect x="187" y="90" width="8" height="20" fill="#623218" />
           <polygon points="191,60 210,90 172,90" fill="#10b981" />
           <polygon points="191,73 206,97 176,97" fill="#059669" />
           <g transform="translate(150, 105)">
-            <rect x="0" y="0" width="22" height="22" fill="#f59e0b" stroke="#ea580c" strokeWidth="2.5" rx="3" />
-            <line x1="11" y1="0" x2="11" y2="-20" stroke="#f97316" strokeWidth="3.5" strokeLinecap="round" />
-            <circle cx="11" cy="-23" r="5.5" fill="#f97316" />
-            <circle cx="11" cy="-23" r="14" stroke="#f97316" strokeWidth="2" fill="none" opacity="0.6" className="animate-ping" />
+            <rect x="0" y="0" width="22" height="22" fill="#e2976f" stroke="#b8561f" strokeWidth="2.5" rx="3" />
+            <line x1="11" y1="0" x2="11" y2="-20" stroke="#c9612a" strokeWidth="3.5" strokeLinecap="round" />
+            <circle cx="11" cy="-23" r="5.5" fill="#c9612a" />
+            <circle cx="11" cy="-23" r="14" stroke="#c9612a" strokeWidth="2" fill="none" opacity="0.6" className="animate-ping" />
           </g>
         </svg>
       )
@@ -69,8 +69,8 @@ export default function HowItWorksSection() {
           <line x1="104" y1="93" x2="126" y2="105" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
           <line x1="152" y1="98" x2="174" y2="86" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
           <line x1="160" y1="105" x2="180" y2="94" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
-          <path d="M112,183 C150,203 175,215 214,231" stroke="#f59e0b" strokeWidth="9" fill="none" strokeLinecap="round" />
-          <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
+          <path d="M112,183 C150,203 175,215 214,231" stroke="#e2976f" strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M124,189 L124,196 M142,199 L142,206 M160,208 L160,215 M178,216 L178,223" stroke="#623218" strokeWidth="2" strokeLinecap="round" />
           <circle cx="106" cy="180" r="9" fill="var(--tinta-400)" stroke="var(--tinta-600)" strokeWidth="2" />
         </svg>
       )
@@ -92,14 +92,14 @@ export default function HowItWorksSection() {
           <polygon points="140,20 220,65 140,115 60,65" fill="#ffffff" stroke="var(--tinta-600)" strokeWidth="2.5" />
           <line x1="95" y1="62" x2="185" y2="62" stroke="#cbd5e1" strokeWidth="2.5" />
           <line x1="90" y1="75" x2="190" y2="75" stroke="#cbd5e1" strokeWidth="2.5" />
-          <line x1="90" y1="88" x2="165" y2="88" stroke="#f97316" strokeWidth="3.5" strokeLinecap="round" />
+          <line x1="90" y1="88" x2="165" y2="88" stroke="#c9612a" strokeWidth="3.5" strokeLinecap="round" />
           <g transform="translate(190, 40)">
             <circle cx="0" cy="0" r="16" fill="#10b981" stroke="#ffffff" strokeWidth="2.5" />
             <polyline points="-5,-1 -1,4 6,-5" stroke="#ffffff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </g>
           <g transform="translate(50, 115) rotate(-28)">
-            <rect x="0" y="0" width="10" height="52" rx="3" fill="#f97316" />
-            <polygon points="0,52 10,52 5,62" fill="#78350f" />
+            <rect x="0" y="0" width="10" height="52" rx="3" fill="#c9612a" />
+            <polygon points="0,52 10,52 5,62" fill="#623218" />
           </g>
         </svg>
       )
@@ -123,14 +123,14 @@ export default function HowItWorksSection() {
           <polygon points="140,55 235,110 140,165 45,110" fill="var(--tinta-600)" stroke="var(--tinta-400)" strokeWidth="1.5" />
           <polygon points="45,110 140,165 140,220 45,165" fill="var(--tinta-800)" />
           <polygon points="140,165 235,110 235,165 140,220" fill="var(--tinta-800)" />
-          <polygon points="140,20 185,45 140,70 95,45" fill="#fbbf24" stroke="#f59e0b" strokeWidth="2" />
-          <polygon points="95,45 140,70 140,115 95,90" fill="#f59e0b" />
-          <polygon points="140,70 185,45 185,90 140,115" fill="#ea580c" />
+          <polygon points="140,20 185,45 140,70 95,45" fill="#e7b59a" stroke="#e2976f" strokeWidth="2" />
+          <polygon points="95,45 140,70 140,115 95,90" fill="#e2976f" />
+          <polygon points="140,70 185,45 185,90 140,115" fill="#b8561f" />
           <circle cx="140" cy="45" r="8" fill="var(--tinta-400)" />
-          <circle cx="78" cy="90" r="13" fill="#f97316" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="78" cy="90" r="13" fill="#c9612a" stroke="#ffffff" strokeWidth="2" />
           <circle cx="202" cy="90" r="13" fill="#10b981" stroke="#ffffff" strokeWidth="2" />
           <g transform="translate(75, 170)">
-            <rect x="0" y="0" width="130" height="28" rx="8" fill="var(--tinta-950)" stroke="#f97316" strokeWidth="2" />
+            <rect x="0" y="0" width="130" height="28" rx="8" fill="var(--tinta-950)" stroke="#c9612a" strokeWidth="2" />
             {/* Decía «COMITÉ APR». Ese destinatario no lo pone la plataforma: lo
                 escribe el docente, porque es el único que sabe quién recibe el
                 trabajo en su comunidad. */}
@@ -199,7 +199,7 @@ export default function HowItWorksSection() {
             territorio. Es lo que hace que las cinco secciones se lean como un
             solo documento y no como cinco páginas pegadas. */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 pb-5">
-          <span className="rotulo text-amber-300">{tx("Cómo funciona", "Como funciona")}</span>
+          <span className="rotulo text-tierra-300">{tx("Cómo funciona", "Como funciona")}</span>
           <span className="rotulo text-white/40">
             Etapa {String(currentStep + 1).padStart(2, "0")} de{" "}
             {String(stages.length).padStart(2, "0")}
@@ -207,7 +207,7 @@ export default function HowItWorksSection() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
-          <h2 className="display text-3xl sm:text-4xl md:text-5xl text-white">
+          <h2 className="display text-3xl text-white sm:text-4xl md:text-5xl [text-wrap:balance]">
             {tx("¿Cómo funciona AprendeLocal?", "Como funciona o AprendeLocal?")}
           </h2>
 
@@ -227,7 +227,7 @@ export default function HowItWorksSection() {
                 >
                   <span className={`cifra w-7 h-7 rounded-full font-semibold flex items-center justify-center text-xs transition ${
                     idx === currentStep 
-                      ? "bg-white text-slate-950 shadow-md ring-4 ring-white/20 scale-105" 
+                      ? "bg-white text-texto shadow-md ring-4 ring-white/20 scale-105" 
                       : "bg-white/15 text-white"
                   }`}>
                     {`0${idx + 1}`}
@@ -251,7 +251,7 @@ export default function HowItWorksSection() {
         {/* Barra de Progreso Superior */}
         <div className="h-1.5 w-full bg-white/10 rounded-full mt-3 overflow-hidden">
           <div 
-            className="h-full bg-orange-400 rounded-full transition-all duration-75"
+            className="h-full bg-tierra-400 rounded-full transition-all duration-75"
             style={{ width: `${progress}%` }}
           />
         </div>

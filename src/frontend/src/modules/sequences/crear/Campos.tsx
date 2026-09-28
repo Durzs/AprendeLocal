@@ -25,7 +25,7 @@ export function Campo({
 }) {
   return (
     <label className={`block ${ancho === "entera" ? "sm:col-span-2" : ""}`}>
-      <span className="mb-1.5 block rotulo text-[var(--crema)]/60">
+      <span className="etiqueta mb-1.5 block text-[var(--crema)]/70">
         {etiqueta}
       </span>
       {children}
@@ -77,7 +77,7 @@ export function Fichas<T extends string>({
 
   return (
     <fieldset className="sm:col-span-2">
-      <legend className="mb-2 rotulo text-[var(--crema)]/60">
+      <legend className="etiqueta mb-2 text-[var(--crema)]/70">
         {etiqueta}
       </legend>
       <div className="flex flex-wrap gap-2">
@@ -92,7 +92,7 @@ export function Fichas<T extends string>({
               className={[
                 "rounded-full border px-4 py-2 text-sm transition",
                 puesta
-                  ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] font-semibold text-[#1e2a24]"
+                  ? "border-[var(--acento)] bg-[var(--acento)] font-semibold text-white"
                   : "border-[var(--crema)]/22 text-[var(--crema)]/80 hover:border-[var(--crema)]/45 hover:text-[var(--crema)]",
               ].join(" ")}
             >

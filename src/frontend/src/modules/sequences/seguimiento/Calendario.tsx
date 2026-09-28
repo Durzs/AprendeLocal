@@ -136,7 +136,7 @@ export default function Calendario({
                     aria-hidden
                     className={`grid h-6 w-6 place-items-center rounded-full border text-xs transition ${
                       hecha
-                        ? "border-transparent bg-[var(--crema-clara)] text-[#1e2a24]"
+                        ? "border-transparent bg-[var(--crema-clara)] text-bosque-950"
                         : "border-[var(--crema)]/35 text-transparent"
                     }`}
                   >

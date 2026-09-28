@@ -52,7 +52,7 @@ function CommunityCard({ community, isMember, lang, onJoin, onLeave, loadingId }
 
       <div className="p-5 space-y-3">
         <div>
-          <h3 className="text-lg font-semibold text-slate-950 truncate">{name}</h3>
+          <h3 className="text-lg font-semibold text-texto truncate">{name}</h3>
           <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-slate-600">{description}</p>
         </div>
 
@@ -70,7 +70,7 @@ function CommunityCard({ community, isMember, lang, onJoin, onLeave, loadingId }
               "inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-50",
               isMember
                 ? "border border-slate-200 bg-white text-slate-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-                : "bg-[#111217] text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg",
+                : "bg-tinta-950 text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg",
             ].join(" ")}
           >
             {isLoading ? (
@@ -177,11 +177,11 @@ export default function CommunitiesPage() {
   }, [communities, memberIds, tab, busca, lang]);
 
   return (
-    <main className="min-h-screen bg-white text-[#111217]">
+    <main className="min-h-screen bg-white text-texto">
       {/* Header */}
-      <section className="bg-[#f7f8fb] pb-12 pt-28 md:pt-32">
+      <section className="bg-slate-50 pb-12 pt-28 md:pt-32">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#111217] sm:text-4xl md:text-5xl">
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-texto sm:text-4xl md:text-5xl">
             {t("communities.pageTitle")}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-500">
@@ -198,7 +198,7 @@ export default function CommunitiesPage() {
                   className={[
                     "rounded-full px-5 py-2.5 text-sm font-semibold transition",
                     tab === t_
-                      ? "bg-[#111217] text-white shadow-sm"
+                      ? "bg-tinta-950 text-white shadow-sm"
                       : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
                   ].join(" ")}
                 >

@@ -117,7 +117,7 @@ export default function Naturaleza({
             type="button"
             onClick={ubicar}
             disabled={cargando}
-            className="rounded-full bg-[#111217] px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60"
+            className="rounded-full bg-tinta-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60"
           >
             {cargando ? t("natura.locating") : t("natura.useMyLocation")}
           </button>
@@ -127,7 +127,7 @@ export default function Naturaleza({
               type="button"
               onClick={buscar}
               disabled={cargando}
-              className="rounded-full bg-[#111217] px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60"
+              className="rounded-full bg-tinta-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60"
             >
               {cargando
                 ? t("natura.searching")
@@ -148,7 +148,7 @@ export default function Naturaleza({
 
       {cargando && (
         <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200">
-          <div className="animar-esperando h-full w-1/4 rounded-full bg-slate-900" />
+          <div className="animar-esperando h-full w-1/4 rounded-full bg-tinta-950" />
         </div>
       )}
 

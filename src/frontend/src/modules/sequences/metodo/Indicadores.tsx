@@ -238,7 +238,7 @@ function PorObjetivo({
                     aria-hidden
                     className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-[11px] font-bold ${
                       puesto
-                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                        ? "border-[var(--acento)] bg-[var(--acento)] text-white"
                         : "border-[var(--crema)]/30 text-transparent"
                     }`}
                   >
@@ -279,7 +279,7 @@ function PorObjetivo({
                   <button
                     type="button"
                     onClick={guardarEdicion}
-                    className="min-h-11 rounded-full bg-[var(--tierra-600)] px-4 text-sm font-medium text-[#1e2a24]"
+                    className="min-h-11 rounded-full bg-[var(--acento)] px-4 text-sm font-medium text-white"
                   >
                     {tx("Guardar", "Salvar")}
                   </button>
@@ -288,7 +288,7 @@ function PorObjetivo({
                 <div className="flex items-start gap-2.5">
                   <span
                     aria-hidden
-                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--tierra-600)]"
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--acento)]"
                   />
                   <span className="min-w-0 flex-1 text-[15px] leading-relaxed text-[var(--crema)]/85">
                     {x}

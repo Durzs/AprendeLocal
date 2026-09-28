@@ -108,13 +108,13 @@ export function AvatarPickerModal({
         <div className="flex items-center justify-between p-5 border-b">
           <div>
             <h2 className="text-xl font-bold">{t("avatarModal.title")}</h2>
-            <p className="text-sm text-gray-500">{t("avatarModal.subtitle")}</p>
+            <p className="text-sm text-slate-500">{t("avatarModal.subtitle")}</p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-gray-100 transition"
+            className="p-2 rounded-xl hover:bg-slate-100 transition"
             aria-label={t("avatarModal.closeAria")}
           >
             <X />
@@ -129,7 +129,7 @@ export function AvatarPickerModal({
           )}
 
           {loading && avatars.length === 0 ? (
-            <div className="text-gray-500">{t("avatarModal.loading")}</div>
+            <div className="text-slate-500">{t("avatarModal.loading")}</div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
               {avatars.map((a) => {
@@ -146,7 +146,7 @@ export function AvatarPickerModal({
                     className="group rounded-2xl border hover:shadow-md transition p-2 disabled:opacity-50"
                     title={titleText}
                   >
-                    <div className="aspect-square rounded-2xl overflow-hidden bg-gray-50">
+                    <div className="aspect-square rounded-2xl overflow-hidden bg-slate-50">
                       <img
                         src={a.url}
                         alt={altText}
@@ -154,7 +154,7 @@ export function AvatarPickerModal({
                         loading="lazy"
                       />
                     </div>
-                    <div className="mt-2 text-xs text-gray-500 truncate">
+                    <div className="mt-2 text-xs text-slate-500 truncate">
                       {titleText}
                     </div>
                   </button>
@@ -168,7 +168,7 @@ export function AvatarPickerModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border hover:bg-gray-50 transition"
+            className="px-4 py-2 rounded-xl border hover:bg-slate-50 transition"
           >
             {t("avatarModal.cancel")}
           </button>

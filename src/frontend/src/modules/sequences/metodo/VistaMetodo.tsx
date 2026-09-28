@@ -470,7 +470,7 @@ export function ElegirFormato({
                     title={motivo ?? undefined}
                     className={`min-h-11 rounded-full border px-4 text-sm transition ${
                       activo
-                        ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                        ? "border-[var(--acento)] bg-[var(--acento)] text-white"
                         : motivo
                           ? "border-[var(--crema)]/10 text-[var(--crema)]/45 line-through decoration-[var(--crema)]/25"
                           : llega

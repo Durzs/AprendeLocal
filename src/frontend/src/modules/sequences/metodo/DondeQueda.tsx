@@ -177,7 +177,7 @@ export function DondeQueda({
           type="button"
           onClick={() => void buscarPorNombre()}
           disabled={buscandoEscuela || texto.trim().length < 3}
-          className="min-h-11 self-start rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
+          className="min-h-11 self-start rounded-full bg-[var(--acento)] px-5 text-sm font-medium text-white transition hover:brightness-110 disabled:opacity-50"
         >
           {buscandoEscuela ? tx("Buscando…", "Buscando…") : tx("Buscar", "Buscar")}
         </button>

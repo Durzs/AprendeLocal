@@ -90,7 +90,7 @@ export default function Header() {
   const enlaceActivo = "bg-white/15 text-white";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-blue-950/80 bg-[#0a0047] text-white shadow-lg">
+    <header className="sticky top-0 z-50 w-full border-b border-tinta-950/80 bg-tinta-950 text-white shadow-lg">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <Link to="/" className="group flex shrink-0 items-center" aria-label="AprendeLocal, inicio">
@@ -122,7 +122,7 @@ export default function Header() {
             {!user && (
               <Link
                 to="/crear"
-                className="hidden rounded-full border border-amber-400/40 bg-amber-400/10 px-3.5 py-2 text-xs font-semibold text-amber-300 transition hover:bg-amber-400/20 sm:inline-block"
+                className="hidden rounded-full border border-tierra-300/40 bg-tierra-300/10 px-3.5 py-2 text-xs font-semibold text-tierra-300 transition hover:bg-tierra-300/20 sm:inline-block"
               >
                 {t("header.nav.create", "Crear ruta")}
               </Link>
@@ -154,7 +154,7 @@ export default function Header() {
                     aria-label={t("header.user.account", "Cuenta")}
                     className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2 text-white transition hover:bg-white/20 sm:px-3"
                   >
-                    <span className="grid h-7 w-7 place-items-center rounded-full bg-amber-400 font-bold text-slate-950">
+                    <span className="grid h-7 w-7 place-items-center rounded-full bg-tierra-300 font-bold text-tinta-950">
                       <User className="h-4 w-4" />
                     </span>
                     <span className="hidden max-w-[10rem] truncate text-sm font-semibold sm:inline">{nombre}</span>
@@ -200,7 +200,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => navigate("/entrar")}
-                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#f97316] px-5 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition hover:bg-orange-600"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full bg-acento px-5 text-sm font-bold text-white shadow-md shadow-tierra-600/20 transition hover:bg-tierra-600"
               >
                 <LogIn className="h-4 w-4" />
                 {t("header.actions.signIn", "Entrar")}
@@ -212,7 +212,7 @@ export default function Header() {
 
       {/* ── El menú del teléfono ─────────────────────────────────────────── */}
       {abierto && (
-        <div id="menu-movil" className="border-t border-blue-900/60 bg-[#0a0047] p-4 shadow-xl md:hidden">
+        <div id="menu-movil" className="border-t border-tinta-800/60 bg-tinta-950 p-4 shadow-xl md:hidden">
           <nav aria-label={t("header.nav.main", "Navegación principal")} className="flex flex-col gap-1.5">
             {user
               ? conSesion.map((e) => (
@@ -233,7 +233,7 @@ export default function Header() {
                 <>
                   <Link
                     to="/crear"
-                    className="flex min-h-11 items-center rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 text-sm font-semibold text-amber-300"
+                    className="flex min-h-11 items-center rounded-xl border border-tierra-300/40 bg-tierra-300/10 px-4 text-sm font-semibold text-tierra-300"
                   >
                     {t("header.nav.create", "Crear ruta")}
                   </Link>

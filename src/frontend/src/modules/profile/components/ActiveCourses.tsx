@@ -76,7 +76,7 @@ export function ActiveCourses({ userId: userIdProp = null }: ActiveCoursesProps)
       <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-slate-400" />
-          <h3 className="text-base font-semibold text-slate-950">{t("activeCourses.title")}</h3>
+          <h3 className="text-base font-semibold text-texto">{t("activeCourses.title")}</h3>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-slate-400">
           <TrendingUp className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export function ActiveCourses({ userId: userIdProp = null }: ActiveCoursesProps)
             >
               <BookOpen aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-semibold text-slate-950">{course.title}</div>
+                <div className="text-sm font-semibold text-texto">{course.title}</div>
                 {course.description ? (
                   <div className="mt-0.5 line-clamp-2 text-xs text-slate-500">{course.description}</div>
                 ) : null}

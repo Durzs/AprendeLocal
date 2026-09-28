@@ -296,7 +296,7 @@ function ColumnaProblema({
         aria-pressed={proponiendo}
         className={`mt-2.5 min-h-11 w-full rounded-lg border px-3.5 text-sm transition ${
           proponiendo
-            ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+            ? "border-[var(--acento)] bg-[var(--acento)] text-white"
             : "border-dashed border-[var(--crema)]/25 text-[var(--crema)]/85 hover:border-[var(--crema)]/45"
         }`}
       >
@@ -497,7 +497,7 @@ function ColumnaActividades({
                 aria-pressed={marcada}
                 className={`min-h-11 rounded-full border px-3 text-sm transition ${
                   marcada
-                    ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                    ? "border-[var(--acento)] bg-[var(--acento)] text-white"
                     : hayAngulo
                       ? "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
                       : "border-[var(--crema)]/10 text-[var(--crema)]/40"
@@ -794,7 +794,7 @@ function FormularioActividad({
                 .filter(Boolean),
             })
           }
-          className="min-h-11 rounded-full bg-[var(--tierra-600)] px-5 text-sm font-medium text-[#1e2a24] transition hover:brightness-110 disabled:opacity-50"
+          className="min-h-11 rounded-full bg-[var(--acento)] px-5 text-sm font-medium text-white transition hover:brightness-110 disabled:opacity-50"
         >
           {tx("Guardar", "Salvar")}
         </button>

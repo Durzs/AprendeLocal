@@ -77,7 +77,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex flex-1 items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md">
         {/* Aquí iba el logo, grande, encima de la tarjeta. Esta pantalla
             no tenía la cabecera del sitio y el logo era la única forma de
@@ -86,7 +86,7 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+          <h1 className="text-2xl font-semibold tracking-tight text-texto">
             {t("login.title")}
           </h1>
           <p className="mt-2 text-sm text-slate-500">{t("login.subtitle")}</p>
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 </label>
                 <Link
                   to="/recuperar"
-                  className="text-xs font-medium text-slate-500 transition hover:text-slate-950 hover:underline"
+                  className="text-xs font-medium text-slate-500 transition hover:text-texto hover:underline"
                 >
                   {t("login.forgot")}
                 </Link>
@@ -154,7 +154,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 cursor-pointer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60 cursor-pointer"
             >
               <LogIn className="h-4 w-4" />
               {loading ? t("login.loading") : t("login.submit")}
@@ -167,7 +167,7 @@ export default function LoginPage() {
             {t("login.noAccount")}{" "}
             <Link
               to="/cadastrar"
-              className="font-semibold text-slate-950 hover:underline"
+              className="font-semibold text-texto hover:underline"
             >
               {t("login.createAccount")}
             </Link>

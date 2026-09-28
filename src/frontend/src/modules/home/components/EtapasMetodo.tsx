@@ -42,8 +42,11 @@ const ALCANCE: Record<string, { es: string; pt: string }> = {
 };
 
 const LIENZO = "h-full w-full max-w-[120px]";
+/* Valores literales y no `var(...)`: van en atributos de SVG (`stroke`,
+   `fill`), donde no todos los navegadores resuelven variables. Son los de
+   slate-400 y del acento de §index.css; si cambian allá, cambian aquí. */
 const CREMA = "#94a3b8";
-const ACENTO = "#ea580c";
+const ACENTO = "#b8561f";
 
 /** Un dibujo por etapa, en el mismo trazo que ya usaba esta sección. */
 const DIBUJOS: Record<string, () => React.ReactNode> = {
@@ -85,7 +88,7 @@ export default function EtapasMetodo() {
     <div ref={caja}>
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="max-w-xl">
-          <span className="rotulo block text-orange-700">
+          <span className="rotulo block text-tierra-700">
             {tx("Cómo se recorre", "Como se percorre")}
           </span>
           <p className="mt-3 text-sm leading-relaxed text-slate-600">
@@ -112,8 +115,8 @@ export default function EtapasMetodo() {
                 aria-pressed={puesto}
                 className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm transition ${
                   puesto
-                    ? "border-orange-300 bg-orange-50 text-orange-800"
-                    : "border-slate-300 text-slate-600 hover:border-slate-400 hover:text-[#111217]"
+                    ? "border-tierra-300 bg-tierra-50 text-tierra-800"
+                    : "border-slate-300 text-slate-600 hover:border-slate-400 hover:text-texto"
                 }`}
               >
                 {p}
@@ -206,7 +209,7 @@ function Etapa({
           y la línea corta lo mismo, así que reservando dos en cada uno el
           rótulo cae siempre en el mismo sitio. Sin eso la fila se lee
           desordenada, que es lo que más se nota de un vistazo. */}
-      <h3 className="mt-5 min-h-[3.5rem] text-lg font-semibold leading-snug text-[#111217]">
+      <h3 className="mt-5 min-h-[3.5rem] text-lg font-semibold leading-snug text-texto">
         {nombre}
       </h3>
       <p className="mt-1 min-h-[2.75rem] text-sm leading-relaxed text-slate-600">
@@ -219,7 +222,7 @@ function Etapa({
           dentro no se parece en nada. */}
       {asiSeVe && (
         <div className="mt-5">
-          <span className="rotulo block text-orange-700">{tx("Así se ve", "Assim fica")}</span>
+          <span className="rotulo block text-tierra-700">{tx("Así se ve", "Assim fica")}</span>
           <p className="mt-2 text-sm leading-relaxed text-slate-700">{asiSeVe}</p>
         </div>
       )}

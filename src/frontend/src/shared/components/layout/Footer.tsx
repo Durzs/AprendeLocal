@@ -23,7 +23,7 @@ export default function Footer() {
   const sede = useSede();
 
   return (
-    <footer className="border-t border-blue-950/80 bg-[#0a0047] px-4 py-12 text-slate-300">
+    <footer className="border-t border-tinta-950/80 bg-tinta-950 px-4 py-12 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           {/* Logo & Tagline */}
@@ -37,17 +37,17 @@ export default function Footer() {
           {/* Información de Contacto */}
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 text-sm">
             <div className="flex items-center gap-2.5">
-              <Mail className="h-4 w-4 text-[#f97316]" />
+              <Mail className="h-4 w-4 text-acento" />
               <a
                 href="mailto:aprendelocal@gmail.com"
-                className="text-white hover:text-orange-400 font-medium transition"
+                className="text-white hover:text-tierra-400 font-medium transition"
               >
                 aprendelocal@gmail.com
               </a>
             </div>
 
             <div className="flex items-center gap-2.5 text-slate-300">
-              <MapPin className="h-4 w-4 text-blue-400" />
+              <MapPin className="h-4 w-4 text-tinta-400" />
               <span>{SEDES[sede].zona}</span>
             </div>
 
@@ -55,9 +55,9 @@ export default function Footer() {
               href={LINKEDIN}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2.5 font-medium text-white transition hover:text-orange-400"
+              className="inline-flex min-h-11 items-center gap-2.5 font-medium text-white transition hover:text-tierra-400"
             >
-              <Linkedin className="h-4 w-4 text-[#f97316]" />
+              <Linkedin className="h-4 w-4 text-acento" />
               LinkedIn
               <span className="sr-only">{t("footer.nuevaPestana")}</span>
             </a>

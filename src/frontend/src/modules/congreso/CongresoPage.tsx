@@ -344,7 +344,7 @@ export default function CongresoPage() {
 
       {kiosco && (
         <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-8">
-          <button type="button" onClick={reiniciar} className="text-xl font-bold tracking-tight text-[#0a0047]">
+          <button type="button" onClick={reiniciar} className="text-xl font-bold tracking-tight text-tinta-950">
             AprendeLocal
           </button>
           <div className="flex items-center gap-2">
@@ -374,7 +374,7 @@ export default function CongresoPage() {
                     style={{ background: actual ? (colorProblema ?? "#0a0047") : hecho ? "#0a0047" : "#e2e8f0" }}
                   />
                   <span
-                    className={`mt-1.5 hidden text-xs font-semibold sm:block ${actual ? "text-[#111217]" : "text-slate-400"}`}
+                    className={`mt-1.5 hidden text-xs font-semibold sm:block ${actual ? "text-texto" : "text-slate-400"}`}
                     aria-current={actual ? "step" : undefined}
                   >
                     {e}
@@ -450,11 +450,11 @@ export default function CongresoPage() {
           role="alertdialog"
           aria-modal="true"
           aria-labelledby="congreso-sigues"
-          className="fixed inset-0 z-[70] grid place-items-center bg-[#0a0047]/70 p-4"
+          className="fixed inset-0 z-[70] grid place-items-center bg-tinta-950/70 p-4"
           onPointerDown={() => setCuenta(null)}
         >
           <div className="w-full max-w-md rounded-[2rem] bg-white p-8 text-center shadow-2xl">
-            <p id="congreso-sigues" className="display text-4xl text-[#111217]">
+            <p id="congreso-sigues" className="display text-4xl text-texto">
               {tx("¿Sigues ahí?", "Ainda está aí?")}
             </p>
             <p className="mt-3 text-lg text-slate-600">

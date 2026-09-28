@@ -6,10 +6,10 @@ export default function NotFoundPage() {
   const { t } = useTranslation();
 
   return (
-    <main className="flex min-h-[70vh] flex-col items-center justify-center bg-[#f7f8fb] px-4 text-center">
+    <main className="flex min-h-[70vh] flex-col items-center justify-center bg-slate-50 px-4 text-center">
       <p className="text-8xl font-black text-slate-200">404</p>
 
-      <h1 className="mt-6 text-2xl font-semibold tracking-tight text-slate-950">
+      <h1 className="mt-6 text-2xl font-semibold tracking-tight text-texto">
         {t("notFound.title", "Page not found")}
       </h1>
 
@@ -19,7 +19,7 @@ export default function NotFoundPage() {
 
       <Link
         to="/"
-        className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#111217] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+        className="mt-8 inline-flex items-center gap-2 rounded-full bg-tinta-950 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
       >
         <ArrowLeft className="h-4 w-4" />
         {t("notFound.backHome", "Back to home")}

@@ -41,7 +41,7 @@ export default function Layout() {
   }, [titulo, lema]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-[#111217]">
+    <div className="flex min-h-screen flex-col bg-white text-texto">
       {/* Salto al contenido.
           Quien navega con teclado tenía que pasar por el logotipo, los
           enlaces del menú, el selector de idioma y dos botones antes de llegar
@@ -49,7 +49,7 @@ export default function Layout() {
           el foco, que es la primera parada del tabulador. */}
       <a
         href="#contenido"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-[#0a0047] focus:px-5 focus:py-3 focus:text-sm focus:font-bold focus:text-white"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-tinta-950 focus:px-5 focus:py-3 focus:text-sm focus:font-bold focus:text-white"
       >
         {tx("Saltar al contenido", "Pular para o conteúdo")}
       </a>

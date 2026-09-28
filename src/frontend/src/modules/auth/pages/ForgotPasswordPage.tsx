@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex flex-1 items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md">
         {/* Aquí iba el logo, grande, encima de la tarjeta. Esta pantalla
             no tenía la cabecera del sitio y el logo era la única forma de
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
         <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
           {enviado ? (
             <>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+              <h1 className="text-2xl font-semibold tracking-tight text-texto">
                 {t("forgot.sentTitle")}
               </h1>
               <p role="status" className="mt-3 text-sm text-slate-600">
@@ -65,14 +65,14 @@ export default function ForgotPasswordPage() {
               <p className="mt-4 text-sm text-slate-500">{t("forgot.sentHint")}</p>
               <Link
                 to="/entrar"
-                className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white"
+                className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white"
               >
                 {t("forgot.backToLogin")}
               </Link>
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+              <h1 className="text-2xl font-semibold tracking-tight text-texto">
                 {t("forgot.title")}
               </h1>
               <p className="mt-2 text-sm text-slate-500">{t("forgot.subtitle")}</p>
@@ -108,7 +108,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={enviando}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
                 >
                   <Mail className="h-4 w-4" />
                   {enviando ? t("forgot.sending") : t("forgot.submit")}
@@ -116,7 +116,7 @@ export default function ForgotPasswordPage() {
               </form>
 
               <p className="mt-6 text-center text-sm text-slate-500">
-                <Link to="/entrar" className="font-semibold text-slate-950 hover:underline">
+                <Link to="/entrar" className="font-semibold text-texto hover:underline">
                   {t("forgot.backToLogin")}
                 </Link>
               </p>

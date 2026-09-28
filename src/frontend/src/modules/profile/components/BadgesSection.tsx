@@ -75,7 +75,7 @@ export function BadgesSection() {
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-5 flex items-center gap-2">
         <Trophy className="h-5 w-5 text-slate-400" />
-        <h3 className="text-base font-semibold text-slate-950">{t("badges.title")}</h3>
+        <h3 className="text-base font-semibold text-texto">{t("badges.title")}</h3>
       </div>
 
       {erro && (

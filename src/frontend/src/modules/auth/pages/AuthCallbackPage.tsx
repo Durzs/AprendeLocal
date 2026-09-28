@@ -112,11 +112,11 @@ export default function AuthCallbackPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm md:p-10">
         {estado.fase === "verificando" && (
           <>
-            <h1 className="text-xl font-semibold tracking-tight text-slate-950">
+            <h1 className="text-xl font-semibold tracking-tight text-texto">
               {t("auth.callback.verifying")}
             </h1>
             <p className="mt-3 text-sm text-slate-500">{t("auth.callback.wait")}</p>
@@ -131,7 +131,7 @@ export default function AuthCallbackPage() {
             <p className="mt-3 text-sm text-slate-500">{t("auth.callback.redirecting")}</p>
             <Link
               to="/"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-[#111217] px-6 py-3 text-sm font-semibold text-white"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-tinta-950 px-6 py-3 text-sm font-semibold text-white"
             >
               {t("auth.callback.enterNow")}
             </Link>
@@ -140,7 +140,7 @@ export default function AuthCallbackPage() {
 
         {estado.fase === "error" && (
           <>
-            <h1 className="text-xl font-semibold tracking-tight text-slate-950">
+            <h1 className="text-xl font-semibold tracking-tight text-texto">
               {t("auth.callback.failed")}
             </h1>
             <p
@@ -170,7 +170,7 @@ export default function AuthCallbackPage() {
                   type="button"
                   onClick={handleReenviar}
                   disabled={reenviando || !email.trim()}
-                  className="mt-3 w-full rounded-full bg-[#111217] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                  className="mt-3 w-full rounded-full bg-tinta-950 px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
                 >
                   {reenviando ? t("auth.callback.resending") : t("auth.callback.resend")}
                 </button>
@@ -184,7 +184,7 @@ export default function AuthCallbackPage() {
 
             <Link
               to="/entrar"
-              className="mt-6 inline-block text-sm font-semibold text-slate-950 hover:underline"
+              className="mt-6 inline-block text-sm font-semibold text-texto hover:underline"
             >
               {t("auth.callback.backToLogin")}
             </Link>

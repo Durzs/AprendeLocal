@@ -66,7 +66,7 @@ export default function VideoIntro() {
   return (
     <figure className={`mx-auto w-full ${forma === "horizontal" ? "max-w-4xl" : "max-w-[22rem]"}`}>
       <div
-        className="relative overflow-hidden rounded-[1.75rem] bg-[#0a0047] shadow-2xl shadow-[#0a0047]/25 ring-1 ring-black/5"
+        className="relative overflow-hidden rounded-[1.75rem] bg-tinta-950 shadow-2xl shadow-tinta-950/25 ring-1 ring-black/5"
         style={{ aspectRatio: `${corte.ancho} / ${corte.alto}` }}
       >
         {enCurso ? (
@@ -77,7 +77,7 @@ export default function VideoIntro() {
             controls
             autoPlay
             playsInline
-            className="h-full w-full bg-[#0a0047]"
+            className="h-full w-full bg-tinta-950"
           >
             {tx(
               "Tu navegador no puede reproducir este video.",
@@ -88,7 +88,7 @@ export default function VideoIntro() {
           <button
             type="button"
             onClick={() => setEnCurso(forma)}
-            className="group absolute inset-0 cursor-pointer text-left focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#f97316]"
+            className="group absolute inset-0 cursor-pointer text-left focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-acento"
             aria-label={tx(
               "Ver el video de AprendeLocal, 1 minuto y 10 segundos, con sonido",
               "Ver o vídeo da AprendeLocal, 1 minuto e 10 segundos, com som"
@@ -101,12 +101,12 @@ export default function VideoIntro() {
               height={corte.alto}
               className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.02]"
             />
-            <span className="absolute inset-0 bg-gradient-to-t from-[#0a0047]/70 via-transparent to-transparent" aria-hidden />
+            <span className="absolute inset-0 bg-gradient-to-t from-tinta-950/70 via-transparent to-transparent" aria-hidden />
             <span
               className="absolute left-1/2 top-1/2 grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/95 shadow-xl transition group-hover:scale-110 sm:h-24 sm:w-24"
               aria-hidden
             >
-              <Play className="ml-1 h-9 w-9 fill-[#0a0047] text-[#0a0047] sm:h-10 sm:w-10" />
+              <Play className="ml-1 h-9 w-9 fill-tinta-950 text-tinta-950 sm:h-10 sm:w-10" />
             </span>
             <span className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 text-white sm:inset-x-7 sm:bottom-6" aria-hidden>
               <span className="text-base font-semibold leading-tight sm:text-lg">

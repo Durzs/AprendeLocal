@@ -250,7 +250,7 @@ export default function Bitacora({
                       aria-hidden
                       className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border text-[11px] transition ${
                         puesta
-                          ? "border-transparent bg-[var(--tierra-600)] text-[#1e2a24]"
+                          ? "border-transparent bg-[var(--acento)] text-white"
                           : "border-[var(--crema)]/30 text-transparent"
                       }`}
                     >
@@ -353,7 +353,7 @@ function PasoDelRiel({
         aria-hidden
         className={`block h-1 w-full rounded-full ${
           cerrada
-            ? "bg-[var(--tierra-600)]"
+            ? "bg-[var(--acento)]"
             : enCurso
               ? "bg-[var(--tierra-600)]/40"
               : "bg-[var(--crema)]/12"
@@ -422,7 +422,7 @@ function Cabecera({
           <button
             type="button"
             onClick={onAbrir}
-            className="min-h-11 rounded-full border border-[var(--tierra-600)] bg-[var(--tierra-600)] px-5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
+            className="min-h-11 rounded-full border border-[var(--acento)] bg-[var(--acento)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--acento-hover)]"
           >
             {tx("Abrir esta etapa", "Abrir esta etapa")}
           </button>
@@ -599,7 +599,7 @@ function CierreEscrito({
             aria-label={`${cuantos} / ${total}.`}
           >
             <span
-              className="block h-full rounded-full bg-[var(--tierra-600)] transition-all duration-500"
+              className="block h-full rounded-full bg-[var(--acento)] transition-all duration-500"
               style={{ width: `${Math.min(100, (cuantos / total) * 100)}%` }}
             />
           </div>

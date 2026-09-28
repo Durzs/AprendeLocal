@@ -103,7 +103,7 @@ function Rotulo({ children, tono = "crema" }: { children: React.ReactNode; tono?
   return (
     <span
       className={`rotulo block ${
-        tono === "naranjo" ? "text-orange-700" : "text-slate-500"
+        tono === "naranjo" ? "text-tierra-700" : "text-slate-500"
       }`}
     >
       {children}
@@ -132,7 +132,7 @@ export default function TerritorioSection() {
 
         {/* ── La invitación ────────────────────────────────────────────── */}
         <div className="mt-10 max-w-4xl">
-          <h2 className="display text-[2.1rem] text-[#111217] sm:text-5xl md:text-6xl">
+          <h2 className="display text-3xl text-texto sm:text-4xl md:text-5xl [text-wrap:balance]">
             {tx(
               "El lugar que hay detrás de tu escuela alcanza para tres semanas de ciencia",
               "O lugar atrás da sua escola dá para três semanas de ciência"
@@ -164,7 +164,7 @@ export default function TerritorioSection() {
                 a la portada, unas pantallas más arriba. */}
             <a
               href="#habilidades"
-              className="text-orange-700 underline underline-offset-4 transition hover:text-orange-800"
+              className="text-tierra-700 underline underline-offset-4 transition hover:text-tierra-800"
             >
               {tx("En qué se apoya", "Em que se apoia")}
             </a>
@@ -176,7 +176,7 @@ export default function TerritorioSection() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="max-w-2xl">
               <Rotulo tono="naranjo">{tx("Qué vive ahí", "O que vive ali")}</Rotulo>
-              <h3 className="titulo mt-3 text-2xl text-[#111217] sm:text-3xl">
+              <h3 className="titulo mt-3 text-2xl text-texto sm:text-3xl">
                 {tx(
                   "Con el nombre que le da la gente de aquí",
                   "Com o nome que o povo daqui dá"
@@ -185,7 +185,7 @@ export default function TerritorioSection() {
             </div>
             <Link
               to="/crear"
-              className="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-[#111217]"
+              className="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400 hover:text-texto"
             >
               {tx("Ver lo de tu escuela", "Ver o da sua escola")}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -253,7 +253,7 @@ function Ficha({ n, i }: { n: Nativa; i: number }) {
           </span>
 
           {n.estado && (
-            <span className="rotulo absolute left-3 top-3 rounded-full border border-orange-200 bg-white/90 px-2.5 py-1.5 text-orange-800 backdrop-blur">
+            <span className="rotulo absolute left-3 top-3 rounded-full border border-tierra-200 bg-white/90 px-2.5 py-1.5 text-tierra-800 backdrop-blur">
               {tx.de(ESTADO[n.estado])}
               {n.fuenteEstado ? ` · ${n.fuenteEstado}` : ""}
             </span>
@@ -273,7 +273,7 @@ function Ficha({ n, i }: { n: Nativa; i: number }) {
             primero, y eso sí tiene una razón: la sección se llama «con el
             nombre que le da la gente de aquí». */}
         <div className="flex flex-1 flex-col p-5">
-          <p className="nombre text-[#111217]">
+          <p className="nombre text-texto">
             {n.mapuzugun || n.comun}
           </p>
           {n.mapuzugun && (

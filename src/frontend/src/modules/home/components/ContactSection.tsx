@@ -80,22 +80,22 @@ export default function ContactSection() {
   const enviado = estado === "guardado" || estado === "por_correo";
 
   return (
-    <section id="contacto" className="relative overflow-hidden bg-white py-20 text-[#111217] md:py-28">
+    <section id="contacto" className="relative overflow-hidden bg-white py-20 text-texto md:py-28">
       {/* Background glow accents */}
       <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-[var(--tinta-100)] blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-50 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-96 w-96 rounded-full bg-tierra-50 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
         {/* La franja de anotación que abre las otras cuatro secciones. */}
         <div className="mb-12 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-200 pb-4">
-          <span className="rotulo text-orange-700">{t("home.contact.badge")}</span>
+          <span className="rotulo text-tierra-700">{t("home.contact.badge")}</span>
           <span className="rotulo text-slate-400">{CORREO}</span>
         </div>
 
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left information */}
           <div className="space-y-6 lg:col-span-6">
-            <h2 className="display text-3xl sm:text-4xl md:text-5xl text-[#111217]">
+            <h2 className="display text-3xl text-texto sm:text-4xl md:text-5xl [text-wrap:balance]">
               {t(
                 "home.contact.title",
                 "¿Quieres llevar AprendeLocal a tu escuela o comunidad?"
@@ -111,14 +111,14 @@ export default function ContactSection() {
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-200 bg-orange-50 text-orange-700">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-tierra-200 bg-tierra-50 text-tierra-700">
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="rotulo text-slate-500">{t("home.contact.correoDirecto")}</div>
                   <a
                     href="mailto:aprendelocal@gmail.com"
-                    className="font-semibold text-slate-900 transition hover:text-orange-700"
+                    className="font-semibold text-slate-900 transition hover:text-tierra-700"
                   >
                     aprendelocal@gmail.com
                   </a>
@@ -126,7 +126,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-tinta-200 bg-tinta-50 text-tinta-600">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
@@ -169,7 +169,7 @@ export default function ContactSection() {
                     </p>
                     <a
                       href={`mailto:${CORREO}`}
-                      className="mt-3 inline-block font-semibold text-orange-700 underline underline-offset-4"
+                      className="mt-3 inline-block font-semibold text-tierra-700 underline underline-offset-4"
                     >
                       {CORREO}
                     </a>
@@ -191,7 +191,7 @@ export default function ContactSection() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <label htmlFor="contacto-nombre" className="rotulo mb-2 block text-slate-500">
+                      <label htmlFor="contacto-nombre" className="etiqueta mb-2 block text-slate-600">
                         {t("home.contact.name", "Nombre")}
                       </label>
                       <input
@@ -209,7 +209,7 @@ export default function ContactSection() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="contacto-correo" className="rotulo mb-2 block text-slate-500">
+                      <label htmlFor="contacto-correo" className="etiqueta mb-2 block text-slate-600">
                         {t("home.contact.email", "Correo electrónico")}
                       </label>
                       <input
@@ -229,7 +229,7 @@ export default function ContactSection() {
                   </div>
 
                   <div>
-                    <label htmlFor="contacto-rol" className="rotulo mb-2 block text-slate-500">
+                    <label htmlFor="contacto-rol" className="etiqueta mb-2 block text-slate-600">
                       {t("home.contact.role", "Rol / Institución")}
                     </label>
                     <input
@@ -247,7 +247,7 @@ export default function ContactSection() {
                   </div>
 
                   <div>
-                    <label htmlFor="contacto-mensaje" className="rotulo mb-2 block text-slate-500">
+                    <label htmlFor="contacto-mensaje" className="etiqueta mb-2 block text-slate-600">
                       {t("home.contact.message", "Mensaje o Territorio de Interés")}
                     </label>
                     <textarea
@@ -267,12 +267,12 @@ export default function ContactSection() {
                   <button
                     type="submit"
                     disabled={estado === "enviando"}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a0047] hover:bg-[#140066] border border-blue-900/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-[#0a0047]/50 transition hover:-translate-y-0.5 cursor-pointer disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-tinta-950 hover:bg-tinta-800 border border-tinta-800/50 px-6 py-3.5 font-bold text-white shadow-lg shadow-tinta-950/50 transition hover:-translate-y-0.5 cursor-pointer disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     {estado === "enviando" ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-amber-300" />
+                      <Loader2 className="h-4 w-4 animate-spin text-tierra-300" />
                     ) : (
-                      <Send className="h-4 w-4 text-amber-300" />
+                      <Send className="h-4 w-4 text-tierra-300" />
                     )}
                     <span>
                       {estado === "enviando"
@@ -293,7 +293,7 @@ export default function ContactSection() {
                     )}{" "}
                     <a
                       href={`mailto:${CORREO}`}
-                      className="underline underline-offset-2 hover:text-orange-700"
+                      className="underline underline-offset-2 hover:text-tierra-700"
                     >
                       {CORREO}
                     </a>

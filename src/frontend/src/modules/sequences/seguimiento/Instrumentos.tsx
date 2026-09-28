@@ -136,7 +136,7 @@ function Marca({
         aria-hidden
         className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px] ${
           puesta
-            ? "border-transparent bg-[var(--tierra-600)] text-[#1e2a24]"
+            ? "border-transparent bg-[var(--acento)] text-white"
             : "border-[var(--crema)]/30 text-transparent"
         }`}
       >
@@ -250,7 +250,7 @@ export function InstrumentoProblematica({ e, b, onCambio, onExpedicion }: Props)
             aria-label={tx(`${a} de un lado y ${c} del otro.`, `${a} de um lado e ${c} do outro.`)}
           >
             <span
-              className="bg-[var(--tierra-600)] transition-all duration-500"
+              className="bg-[var(--acento)] transition-all duration-500"
               style={{ width: `${(a / total) * 100}%` }}
             />
             <span
