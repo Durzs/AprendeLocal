@@ -1,0 +1,22 @@
+-- Cerrar make_user_admin
+--
+-- QUÉ PROBLEMA RESUELVE
+--
+-- `make_user_admin(p_email)` es SECURITY DEFINER y convierte en administradora
+-- a la cuenta del correo que se le pase. No comprueba quién la llama, y
+-- Supabase la publicaba en `/rest/v1/rpc/make_user_admin` con permiso de
+-- ejecución para `anon` y `authenticated`. Con la clave anónima, que va dentro
+-- del sitio y cualquiera puede leer, se podía dar rol de administrador a
+-- cualquier cuenta, y de paso averiguar si un correo estaba registrado.
+--
+-- Lo detectó el informe de seguridad de Supabase al crear `rutas_demo`.
+--
+-- QUÉ HACE
+--
+-- Quita el permiso de ejecución a todos menos al dueño. Sigue funcionando
+-- desde el editor SQL del panel, que es para lo que existe (ver
+-- `infra/make_admin.sql`), y deja de estar al alcance del navegador.
+--
+-- Aplicada en el proyecto el 27 de septiembre de 2026.
+
+revoke execute on function public.make_user_admin(text) from public, anon, authenticated;

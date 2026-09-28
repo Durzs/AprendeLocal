@@ -145,8 +145,12 @@ async function llamar(p: Pedido): Promise<Crudo> {
       : { tipo: "rechazo", motivo: "otro" };
   }
   const respuesta = (error as { context?: Response }).context;
-  // Sin respuesta HTTP es la red (o la función caída): vale la pena reintentar.
-  if (!respuesta || typeof respuesta.status !== "number" || respuesta.status >= 500) return { tipo: "red" };
+  // Sin respuesta HTTP es la red; 5xx, la función caída; 404, la función
+  // todavía sin desplegar. En los tres casos el pedido se guarda y se
+  // reintenta: la persona ya se fue del stand y no va a volver a escribirlo.
+  if (!respuesta || typeof respuesta.status !== "number" || respuesta.status >= 500 || respuesta.status === 404) {
+    return { tipo: "red" };
+  }
   let motivo = "otro";
   try {
     motivo = String((await respuesta.json())?.error ?? "otro");

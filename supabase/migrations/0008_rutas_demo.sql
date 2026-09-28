@@ -62,6 +62,11 @@ create table if not exists public.rutas_demo (
 
 alter table public.rutas_demo enable row level security;
 
+-- Y además sin permisos: RLS sin políticas ya lo cierra, pero si alguien
+-- agrega una política por error, esto sigue impidiendo que el navegador la
+-- lea. Los correos de quienes pasaron por el stand no se exponen.
+revoke all on public.rutas_demo from anon, authenticated;
+
 -- Un número por persona y evento. El correo se guarda ya en minúsculas.
 create unique index if not exists rutas_demo_participante_idx on public.rutas_demo (evento, correo);
 

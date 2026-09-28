@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 // el presupuesto entero de la visita, y cargaba antes de que se viera nada.
 // El mismo dibujo en webp a 2000 px pesa 64 KB, un 96% menos.
 import homeBg from "../../../assets/images/home-bg.webp";
+import { useSede } from "../../../shared/sede";
+import VideoIntro from "./VideoIntro";
 
 interface HeroSectionProps {
   onStart: () => void;
@@ -15,6 +17,9 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const { t } = useTranslation();
+  // Con video, la portada ya no ocupa toda la pantalla: el video tiene que
+  // asomarse en la primera vista para que se note que está. Ver §VideoIntro.
+  const conVideo = useSede() === "cl";
 
   // El titulo se escribe letra por letra.
   const fullText = t("home.hero.title", "Tu territorio es tu mejor laboratorio STEM");
@@ -42,7 +47,14 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
   const escribiendo = letras < fullText.length;
 
   return (
-    <section id="hero" className="relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-28 min-h-[calc(100vh-4rem)] flex flex-col justify-center text-center bg-white border-b border-slate-100">
+    <section
+      id="hero"
+      className={`relative isolate overflow-hidden px-4 sm:px-6 lg:px-8 text-center bg-white border-b border-slate-100 ${
+        conVideo
+          ? "pt-10 pb-16 sm:pt-14 sm:pb-20"
+          : "py-16 sm:py-24 md:py-28 min-h-[calc(100vh-4rem)] flex flex-col justify-center"
+      }`}
+    >
       {/* Background with constellation line art */}
       <div
         className="absolute inset-0 -z-20 bg-no-repeat opacity-40 pointer-events-none"
@@ -58,7 +70,11 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         {/* El titulo completo va en el DOM para quien lo lee con lector de
             pantalla o buscador; lo que se escribe letra a letra es la copia
             visible, que por eso queda oculta a la lectura. */}
-        <h1 className="mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl lg:text-8xl">
+        <h1
+          className={`mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl ${
+            conVideo ? "" : "lg:text-8xl"
+          }`}
+        >
           <span className="sr-only">{fullText}</span>
           <span aria-hidden>
             {displayedText}
@@ -94,6 +110,14 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             <ArrowDown className="h-4 w-4 text-[#f97316]" />
           </button>
         </div>
+
+        {/* El video es la presentación del proyecto: va aquí, en la primera
+            vista, y no en una sección más abajo. */}
+        {conVideo && (
+          <div className="mt-10 w-full">
+            <VideoIntro />
+          </div>
+        )}
       </div>
     </section>
   );
