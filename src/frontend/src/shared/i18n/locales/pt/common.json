@@ -529,7 +529,26 @@
         "Ciência",
         "Rotas didáticas",
         "Impacto na comunidade"
-      ]
+      ],
+      "tarjetas": [
+        {
+          "etiqueta": "Território · o lugar é a sala de aula",
+          "texto": "Os rios, encostas, manguezais e praças do bairro são o ponto de partida."
+        },
+        {
+          "etiqueta": "Ciência · medir e comparar",
+          "texto": "A turma mede, compara e pergunta com instrumentos que ela mesma constrói."
+        },
+        {
+          "etiqueta": "Rotas · seis etapas",
+          "texto": "Cada rota parte de um problema real e está alinhada à BNCC."
+        },
+        {
+          "etiqueta": "Comunidade · divulgação",
+          "texto": "O que descobrem volta para a comunidade."
+        }
+      ],
+      "rotulo": "O que é"
     },
     "build": {
       "title": "A rota se monta com o seu lugar, não se escolhe de uma lista",

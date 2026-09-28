@@ -529,7 +529,26 @@
         "Ciencia",
         "Rutas didácticas",
         "Impacto en la comunidad"
-      ]
+      ],
+      "tarjetas": [
+        {
+          "etiqueta": "Territorio · el lugar es el aula",
+          "texto": "Los ríos, bosques, cuencas y suelos de la escuela son el punto de partida."
+        },
+        {
+          "etiqueta": "Ciencia · medir y comparar",
+          "texto": "El curso mide, compara y pregunta con instrumentos que construye."
+        },
+        {
+          "etiqueta": "Rutas · seis etapas",
+          "texto": "Cada ruta parte de un problema real y está alineada al currículum."
+        },
+        {
+          "etiqueta": "Comunidad · difusión",
+          "texto": "Lo que descubren vuelve a su comunidad."
+        }
+      ],
+      "rotulo": "Qué es"
     },
     "build": {
       "title": "La ruta se arma con tu lugar, no se escoge de una lista",
