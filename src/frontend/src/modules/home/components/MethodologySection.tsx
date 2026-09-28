@@ -63,11 +63,16 @@ export default function MethodologySection() {
             {t("home.whatIs.title", "¿Qué es AprendeLocal?")}
           </h2>
 
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90">
+          {/* El primero es la promesa y va más grande; los otros dos cuentan
+              cómo se cumple, en la serif de los rótulos del video. */}
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
             {t("home.whatIs.p1")}
           </p>
-          <p className="mt-4 max-w-xl font-serif text-base leading-relaxed text-white/70 sm:text-lg">
+          <p className="mt-5 max-w-xl font-serif text-base leading-relaxed text-white/75 sm:text-lg">
             {t("home.whatIs.p2")}
+          </p>
+          <p className="mt-4 max-w-xl font-serif text-base leading-relaxed text-white/75 sm:text-lg">
+            {t("home.whatIs.p3")}
           </p>
         </div>
 

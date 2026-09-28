@@ -522,8 +522,8 @@
     },
     "whatIs": {
       "title": "¿Qué es AprendeLocal?",
-      "p1": "AprendeLocal convierte el río, el cerro y el bosque que están a la vuelta de tu escuela en un laboratorio de ciencias. Sin viajes largos ni kits caros: el lugar ya trae las preguntas.",
-      "p2": "Tu curso parte de un problema real, sale a medirlo con instrumentos que construye, lee sus propios datos y termina contándole a su comunidad lo que descubrió. Tú eliges la pregunta y AprendeLocal arma el proyecto, alineado al currículum.",
+      "p1": "El río, el cerro y el bosque que están a la vuelta de tu escuela guardan más preguntas de las que caben en un año escolar. AprendeLocal te ayuda a convertirlas en proyectos de ciencias, sin viajes largos ni kits caros.",
+      "p2": "La pregunta no llega hecha. La construyen tú, tu curso y, si quieres, tu comunidad. Puede terminar en un monitoreo del agua del estero, en un registro de las plantas medicinales del sector o en una propuesta para el microbasural de la esquina. Tú decides cuánto se abre la conversación y cuánto la guías.",
       "pilares": [
         "Territorio vivo",
         "Ciencia",
@@ -548,7 +548,8 @@
           "texto": "Lo que descubren vuelve a su comunidad."
         }
       ],
-      "rotulo": "Qué es"
+      "rotulo": "Qué es",
+      "p3": "Lo difícil viene después, cuando hay que sostener el proyecto semana a semana. AprendeLocal lo ordena en sesiones reales de clase, vincula cada actividad con sus objetivos de aprendizaje y te acompaña en el seguimiento hasta el día en que tu curso le cuenta a su comunidad lo que descubrió."
     },
     "build": {
       "title": "La ruta se arma con tu lugar, no se escoge de una lista",
