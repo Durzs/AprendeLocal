@@ -529,7 +529,26 @@
         "Science",
         "Teaching routes",
         "Community impact"
-      ]
+      ],
+      "tarjetas": [
+        {
+          "etiqueta": "Territory · the place is the classroom",
+          "texto": "The school's rivers, forests, watersheds and soils are the starting point."
+        },
+        {
+          "etiqueta": "Science · measure and compare",
+          "texto": "Students measure, compare and ask questions with instruments they build."
+        },
+        {
+          "etiqueta": "Routes · six stages",
+          "texto": "Each route starts from a real problem and is aligned with the curriculum."
+        },
+        {
+          "etiqueta": "Community · sharing",
+          "texto": "What they discover goes back to their community."
+        }
+      ],
+      "rotulo": "What it is"
     },
     "build": {
       "title": "The route is built from your place, not picked from a list",
