@@ -522,8 +522,8 @@
     },
     "whatIs": {
       "title": "What is AprendeLocal?",
-      "p1": "AprendeLocal is a platform and a teaching method that lets teachers and schools turn their own surroundings (rivers, forests, watersheds, soils) into a living science lab.",
-      "p2": "Through complete teaching sequences aligned with the official curriculum, students investigate real social and environmental problems, take field measurements with simple tools and hand their findings to the school community and families.",
+      "p1": "The river, the hill and the forest just around the corner from your school hold more questions than fit in a school year. AprendeLocal helps you turn them into science projects, with no long trips and no pricey kits.",
+      "p2": "The question doesn't come ready-made. You build it with your class and, if you like, with your community. It might end up as water monitoring in the local stream, a record of the area's medicinal plants or a proposal for the dumping spot on the corner. You decide how far the conversation opens up and how much you steer it.",
       "pilares": [
         "Living territory",
         "Science",
@@ -548,7 +548,8 @@
           "texto": "What they discover goes back to their community."
         }
       ],
-      "rotulo": "What it is"
+      "rotulo": "What it is",
+      "p3": "The hard part comes later, when the project has to hold up week after week. AprendeLocal lays it out in real class sessions, links each activity to its learning objectives and stays with you through the follow-up, until the day your class tells its community what it found."
     },
     "build": {
       "title": "The route is built from your place, not picked from a list",

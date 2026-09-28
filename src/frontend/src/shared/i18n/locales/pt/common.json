@@ -522,8 +522,8 @@
     },
     "whatIs": {
       "title": "O que é o AprendeLocal?",
-      "p1": "O AprendeLocal é uma plataforma e uma metodologia para que professores e escolas transformem o próprio entorno —os rios, as encostas, o manguezal, a praça do bairro— em um laboratório vivo de ciências.",
-      "p2": "Com sequências didáticas completas e alinhadas à BNCC, os alunos investigam problemas socioambientais reais, fazem medições em campo com instrumentos simples e entregam o que descobriram à comunidade escolar e às famílias.",
+      "p1": "O rio, a encosta e a mata ao lado da sua escola guardam mais perguntas do que cabem em um ano letivo. A AprendeLocal ajuda você a transformá-las em projetos de ciências, sem viagens longas nem kits caros.",
+      "p2": "A pergunta não chega pronta. Quem a constrói é você, a sua turma e, se quiser, a sua comunidade. Ela pode terminar em um monitoramento da água do córrego, em um registro das plantas medicinais do bairro ou em uma proposta para o ponto de lixo da esquina. Você decide o quanto a conversa se abre e o quanto você a conduz.",
       "pilares": [
         "Território vivo",
         "Ciência",
@@ -548,7 +548,8 @@
           "texto": "O que descobrem volta para a comunidade."
         }
       ],
-      "rotulo": "O que é"
+      "rotulo": "O que é",
+      "p3": "O difícil vem depois, quando é preciso sustentar o projeto semana a semana. A AprendeLocal organiza tudo em aulas reais, liga cada atividade às habilidades da BNCC e acompanha você até o dia em que a sua turma conta para a comunidade o que descobriu."
     },
     "build": {
       "title": "A rota se monta com o seu lugar, não se escolhe de uma lista",
