@@ -21,9 +21,14 @@ import comunidad from "../../../assets/images/que-es/comunidad.webp";
  * como la ficha del proyecto que aparece en el video: una ruta es eso.
  */
 
-/** Los dos colores del video, medidos sobre el cuadro. */
-const AZUL = "#172a85";
-const CREMA = "#f2ece3";
+/**
+ * Los dos colores del video, llevados a la paleta del sitio: el azul es la
+ * tinta 800, el mismo matiz de la cabecera, y el papel es la crema clara. El
+ * video usa un azul un poco más cian; puesto al lado de la cabecera y de la
+ * sección siguiente, que son tinta, se leía como otro color.
+ */
+const AZUL = "var(--color-tinta-800)";
+const CREMA = "var(--color-crema-clara)";
 
 /** Cada tarjeta un poco torcida, distinta de la vecina. */
 const GIRO = ["-rotate-[1.5deg]", "rotate-[1.2deg]", "rotate-[1deg]", "-rotate-[1.2deg]"];
@@ -47,19 +52,19 @@ export default function MethodologySection() {
     >
       <CurvasDeNivel />
 
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
         <div className="text-left">
           {/* El indicador de etapas del video: seis puntos y un rótulo. */}
-          <p className="inline-flex items-center gap-2.5 rounded-full bg-[#0a1450] px-3.5 py-1.5 text-sm text-white/85">
+          <p className="inline-flex items-center gap-2.5 rounded-full bg-tinta-950 px-3.5 py-1.5 text-sm text-white/85">
             <span className="flex gap-1" aria-hidden>
               {Array.from({ length: 6 }, (_, i) => (
-                <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-[#f97316]" : "bg-white/40"}`} />
+                <span key={i} className={`h-1.5 w-1.5 rounded-full ${i === 0 ? "bg-acento" : "bg-white/40"}`} />
               ))}
             </span>
             <span className="font-serif">{t("home.whatIs.rotulo", "Qué es")}</span>
           </p>
 
-          <h2 className="mt-6 text-4xl font-bold leading-[0.95] tracking-[-0.045em] text-white sm:text-5xl md:text-6xl [text-wrap:balance]">
+          <h2 className="display mt-6 text-3xl text-white sm:text-4xl md:text-5xl [text-wrap:balance]">
             {t("home.whatIs.title", "¿Qué es AprendeLocal?")}
           </h2>
 
@@ -76,7 +81,10 @@ export default function MethodologySection() {
           </p>
         </div>
 
-        <ul className="grid gap-6 sm:grid-cols-2 sm:gap-5">
+        {/* Columnas que pueden encogerse: las etapas de la tarjeta de rutas no
+            se parten en dos líneas, y sin esto ensanchaban la grilla más allá
+            de la pantalla del teléfono, cortando los párrafos de al lado. */}
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5">
           {tarjetas.map((tarjeta, i) => {
             const foto = fotos[i];
             return (
@@ -96,10 +104,10 @@ export default function MethodologySection() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <ol className="flex h-full flex-col justify-center gap-[0.35rem] rounded-xl border border-[#172a85]/15 bg-white/60 px-4 py-3">
+                    <ol className="flex h-full flex-col justify-center gap-[0.35rem] rounded-xl border border-tinta-800/15 bg-white/60 px-4 py-3">
                       {etapas.map((e, n) => (
-                        <li key={e.id} className="flex items-center gap-2.5 font-serif text-sm leading-tight text-[#172a85] sm:text-[13px]">
-                          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border border-[#172a85]/40 text-[10px] tabular-nums">
+                        <li key={e.id} className="flex items-center gap-2.5 font-serif text-sm leading-tight text-tinta-800 sm:text-[13px]">
+                          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full border border-tinta-800/40 text-[10px] tabular-nums">
                             {String(n + 1).padStart(2, "0")}
                           </span>
                           <span className="truncate">{e.nombre}</span>
@@ -108,11 +116,11 @@ export default function MethodologySection() {
                     </ol>
                   )}
                 </div>
-                <p className="mt-4 flex items-center gap-2 px-1 font-serif text-sm text-[#172a85]/75">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-[#f97316]" aria-hidden />
+                <p className="mt-4 flex items-center gap-2 px-1 font-serif text-sm text-tinta-800/75">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-acento" aria-hidden />
                   {tarjeta.etiqueta}
                 </p>
-                <h3 className="mt-1.5 px-1 text-xl font-bold leading-tight tracking-[-0.03em] text-[#172a85]">
+                <h3 className="mt-1.5 px-1 text-xl font-bold leading-tight tracking-[-0.03em] text-tinta-800">
                   {nombres[i]}
                 </h3>
                 <p className="mt-1.5 px-1 text-[15px] leading-snug text-slate-700">{tarjeta.texto}</p>

@@ -75,7 +75,7 @@ function Hoja({
             {membrete}
           </p>
         )}
-        <h2 className="text-xl font-bold text-slate-950">{titulo}</h2>
+        <h2 className="text-xl font-bold text-texto">{titulo}</h2>
         {subtitulo && <p className="text-sm text-slate-700">{subtitulo}</p>}
       </header>
       <div className="mt-4 text-sm leading-relaxed text-slate-900">{children}</div>
@@ -175,7 +175,7 @@ export default function Documentos({
         <button
           type="button"
           onClick={() => window.print()}
-          className="mt-4 rounded-full bg-[#111217] px-6 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+          className="mt-4 rounded-full bg-tinta-950 px-6 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
         >
           {t("rutas.printButton")}
         </button>

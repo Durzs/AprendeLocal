@@ -85,7 +85,7 @@ const LAMINAS = [
     numero: 1,
     nombre: { es: "El programa", pt: "O currículo" },
     fondo: "var(--tinta-950)",
-    acento: "text-amber-300",
+    acento: "text-tierra-300",
     dice: {
       es: "Los cursos que tienes y cuántas clases hay de verdad para esto.",
       pt: "As turmas que você tem e quantas aulas existem de verdade para isto.",
@@ -107,7 +107,7 @@ const LAMINAS = [
     numero: 3,
     nombre: { es: "Lo que queda armado", pt: "O que fica pronto" },
     fondo: "#1e2a24",
-    acento: "text-amber-300",
+    acento: "text-tierra-300",
     dice: {
       es: "Qué van a construir y para quién, con qué se evalúa y los papeles de la salida.",
       pt: "O que vão construir e para quem, como se avalia e os documentos da saída.",
@@ -231,7 +231,7 @@ export default function EscritorioPage() {
   const enSala = expedicion && semanas.length ? resumen(expedicion, avance, tx.idioma) : null;
 
   return (
-    <main className="min-h-screen bg-white text-[#111217]">
+    <main className="min-h-screen bg-white text-texto">
 
       {/* ── Saludo, con el color de la lámina en la que va ─────────────── */}
       <header
@@ -266,7 +266,7 @@ export default function EscritorioPage() {
                   <span
                     className={`cifra grid h-7 w-7 place-items-center rounded-full text-xs font-semibold transition ${
                       puesta
-                        ? "bg-white text-slate-950 ring-4 ring-white/20"
+                        ? "bg-white text-texto ring-4 ring-white/20"
                         : pasada
                           ? "bg-white/35 text-white"
                           : "bg-white/12 text-white/70"
@@ -291,14 +291,14 @@ export default function EscritorioPage() {
       {/* ── La mesa de trabajo, en claro ───────────────────────────────── */}
       <section className="border-b border-slate-200/70 bg-[var(--tinta-50)] px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <span className="rotulo block text-orange-700">
+          <span className="rotulo block text-tierra-700">
             {empezada ? tx("Donde la dejaste", "Onde você parou") : tx("Empezar", "Começar")}
           </span>
 
           {empezada && expedicion ? (
             <div className="animar-asoma mt-6 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0 max-w-2xl">
-                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
+                <h2 className="titulo text-xl text-texto sm:text-2xl">
                   {expedicion.problemaPropioNombre ||
                     expedicion.preguntaGuia ||
                     expedicion.ubicacion ||
@@ -319,7 +319,7 @@ export default function EscritorioPage() {
                     sino qué toca el martes. */}
                 {enMetodo && (
                   <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-700">
-                    <span className="rotulo rounded-full bg-white px-2.5 py-1.5 text-orange-700 shadow-sm">
+                    <span className="rotulo rounded-full bg-white px-2.5 py-1.5 text-tierra-700 shadow-sm">
                       {etapas} {tx("de", "de")} {ETAPAS.length} etapas
                     </span>
                     {enMetodo}
@@ -402,7 +402,7 @@ export default function EscritorioPage() {
           ) : (
             <div className="animar-asoma mt-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-xl">
-                <h2 className="titulo text-xl text-slate-900 sm:text-2xl">
+                <h2 className="titulo text-xl text-texto sm:text-2xl">
                   {tx("Armar una ruta", "Montar uma rota")}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -421,7 +421,7 @@ export default function EscritorioPage() {
       {/* ── Lo que hay, en blanco ──────────────────────────────────────── */}
       <section className="border-b border-slate-200/70 bg-white px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <span className="rotulo block text-orange-700">{tx("Lo que hay", "O que tem aqui")}</span>
+          <span className="rotulo block text-tierra-700">{tx("Lo que hay", "O que tem aqui")}</span>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Las rutas escritas son chilenas: Agua, bosque, suelo y calor
                 de La Araucanía, con los objetivos del Mineduc. En la edición
@@ -480,7 +480,7 @@ export default function EscritorioPage() {
       >
         <div className="relative z-10 mx-auto w-full max-w-6xl">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-b border-slate-300/70 pb-4">
-            <span className="rotulo text-orange-700">Rutas escritas</span>
+            <span className="rotulo text-tierra-700">Rutas escritas</span>
             <span className="rotulo text-slate-500">
               {RUTAS.length} listas para ajustar
             </span>
@@ -493,7 +493,7 @@ export default function EscritorioPage() {
                   to="/crear"
                   className="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
                 >
-                  <span className="rotulo text-orange-700">{r.titulo}</span>
+                  <span className="rotulo text-tierra-700">{r.titulo}</span>
                   <span className="mt-3 text-[15px] leading-snug text-slate-900">
                     {r.preguntaGuia}
                   </span>
@@ -533,7 +533,7 @@ function Ficha({ children, listo = false }: { children: React.ReactNode; listo?:
       className={`rounded-full border px-3 py-1 text-xs ${
         listo
           ? "border-[var(--tinta-200)] bg-white text-slate-700"
-          : "border-orange-200 bg-orange-50 text-orange-900"
+          : "border-tierra-200 bg-tierra-50 text-tierra-900"
       }`}
     >
       {children}
@@ -552,7 +552,7 @@ function Tarjeta({ a, titulo, cuerpo }: { a: string; titulo: string; cuerpo: str
           <h3 className="titulo text-slate-900">{titulo}</h3>
           <span
             aria-hidden
-            className="shrink-0 text-orange-700 transition-transform group-hover:translate-x-1"
+            className="shrink-0 text-tierra-700 transition-transform group-hover:translate-x-1"
           >
             →
           </span>

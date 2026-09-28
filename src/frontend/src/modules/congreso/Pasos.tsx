@@ -68,8 +68,8 @@ export function ChipOds({ o, chico = false }: { o: Ods; chico?: boolean }) {
 function Encabezado({ rotulo, titulo, bajada }: { rotulo: string; titulo: ReactNode; bajada?: ReactNode }) {
   return (
     <header className="max-w-3xl">
-      <p className="rotulo text-[#3b29ae]">{rotulo}</p>
-      <h1 className="display mt-3 text-4xl text-[#111217] sm:text-5xl [text-wrap:balance]">{titulo}</h1>
+      <p className="rotulo text-tinta-600">{rotulo}</p>
+      <h1 className="display mt-3 text-4xl text-texto sm:text-5xl [text-wrap:balance]">{titulo}</h1>
       {bajada && <p className="mt-4 text-lg leading-relaxed text-slate-600">{bajada}</p>}
     </header>
   );
@@ -91,7 +91,7 @@ export function BotonPrincipal({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-[#0a0047] px-8 text-lg font-bold text-white shadow-lg shadow-[#0a0047]/25 transition hover:-translate-y-0.5 hover:bg-[#201372] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#FD6925] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+      className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-tinta-950 px-8 text-lg font-bold text-white shadow-lg shadow-tinta-950/25 transition hover:-translate-y-0.5 hover:bg-tinta-800 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#FD6925] disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
     >
       {children}
     </button>
@@ -147,7 +147,7 @@ export function Portada({ onEmpezar, kiosco }: { onEmpezar: () => void; kiosco: 
             {tx("Meta 4.7 · Educación para el desarrollo sostenible", "Meta 4.7 · Educação para o desenvolvimento sustentável")}
           </span>
         </div>
-        <h1 className="display mt-6 text-5xl text-[#111217] sm:text-6xl xl:text-7xl [text-wrap:balance]">
+        <h1 className="display mt-6 text-5xl text-texto sm:text-6xl xl:text-7xl [text-wrap:balance]">
           {tx("Arma un proyecto con tu territorio en ", "Monte um projeto com o seu território em ")}
           <span className="relative whitespace-nowrap text-[#DD1367]">{tx("2 minutos", "2 minutos")}</span>
         </h1>
@@ -219,7 +219,7 @@ function Mosaico() {
               onError={(ev) => (ev.currentTarget.style.visibility = "hidden")}
               className="h-full w-full object-cover"
             />
-            <span className="absolute inset-x-2 bottom-2 truncate rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-[#111217] first-letter:uppercase">
+            <span className="absolute inset-x-2 bottom-2 truncate rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-texto first-letter:uppercase">
               {e.comun.split(",")[0]}
             </span>
           </li>
@@ -265,7 +265,7 @@ export function PasoProblema({
                 type="button"
                 onClick={() => onElegir(p.id)}
                 aria-pressed={activo}
-                className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border-2 bg-white text-left transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#0a0047]"
+                className="group relative flex h-full w-full flex-col overflow-hidden rounded-3xl border-2 bg-white text-left transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-tinta-950"
                 style={{ borderColor: activo ? color : "#e2e8f0", boxShadow: activo ? `0 0 0 4px ${color}33` : undefined }}
               >
                 <span className="block h-3 w-full" style={{ background: color }} aria-hidden />
@@ -276,7 +276,7 @@ export function PasoProblema({
                     ))}
                   </span>
                   {familia && <span className="rotulo text-slate-500">{familia.nombre}</span>}
-                  <span className="titulo text-xl text-[#111217]">{p.nombre}</span>
+                  <span className="titulo text-xl text-texto">{p.nombre}</span>
                   <span className="line-clamp-3 text-slate-600">{p.queEs}</span>
                 </span>
                 {activo && (
@@ -303,7 +303,7 @@ export function Noticia({ p }: { p: Problema }) {
   if (!n) return null;
   return (
     <p className="text-sm leading-snug text-slate-700 sm:text-base">
-      <span className="font-semibold text-[#111217]">{tx("Salió en la prensa: ", "Saiu na imprensa: ")}</span>«{n.titular}»{" "}
+      <span className="font-semibold text-texto">{tx("Salió en la prensa: ", "Saiu na imprensa: ")}</span>«{n.titular}»{" "}
       <span className="text-slate-500">
         ({n.medio}
         {n.fecha ? `, ${n.fecha}` : ""})
@@ -385,23 +385,23 @@ export function PasoAsignaturas({
                   onClick={() => alternar(a.asignatura)}
                   aria-pressed={activo}
                   disabled={lleno}
-                  className={`flex h-full w-full flex-col gap-2 rounded-3xl border-2 p-5 text-left transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#0a0047] ${
+                  className={`flex h-full w-full flex-col gap-2 rounded-3xl border-2 p-5 text-left transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-tinta-950 ${
                     activo
-                      ? "border-[#3b29ae] bg-[#f3f2fc] shadow-md"
+                      ? "border-tinta-600 bg-tinta-50 shadow-md"
                       : lleno
                         ? "border-slate-100 bg-slate-50 opacity-60"
                         : "border-slate-200 bg-white hover:-translate-y-0.5 hover:shadow-lg"
                   }`}
                 >
                   <span className="flex items-center justify-between gap-3">
-                    <span className="titulo text-xl text-[#111217]">{nombre(a.asignatura)}</span>
+                    <span className="titulo text-xl text-texto">{nombre(a.asignatura)}</span>
                     <span className="flex items-center gap-2">
                       {esS && (
-                        <span className="rounded-full bg-[#26BDE2] px-2.5 py-1 text-xs font-bold text-[#111217]">STEM</span>
+                        <span className="rounded-full bg-[#26BDE2] px-2.5 py-1 text-xs font-bold text-texto">STEM</span>
                       )}
                       <span
                         className={`grid h-7 w-7 place-items-center rounded-full border-2 ${
-                          activo ? "border-[#3b29ae] bg-[#3b29ae] text-white" : "border-slate-300"
+                          activo ? "border-tinta-600 bg-tinta-600 text-white" : "border-slate-300"
                         }`}
                         aria-hidden
                       >
@@ -417,9 +417,9 @@ export function PasoAsignaturas({
         </ul>
       </div>
 
-      <aside className="h-fit rounded-3xl bg-[#0a0047] p-6 text-white lg:sticky lg:top-6" aria-live="polite">
-        <p className="rotulo text-[#cfcaec]">{tx("Tu proyecto", "Seu projeto")}</p>
-        <p className="mt-4 text-sm font-semibold text-[#cfcaec]">
+      <aside className="h-fit rounded-3xl bg-tinta-950 p-6 text-white lg:sticky lg:top-6" aria-live="polite">
+        <p className="rotulo text-tinta-200">{tx("Tu proyecto", "Seu projeto")}</p>
+        <p className="mt-4 text-sm font-semibold text-tinta-200">
           {tx("Disciplinas STEM", "Disciplinas STEM")}
         </p>
         <div className="mt-2 flex gap-2" aria-hidden>
@@ -438,15 +438,15 @@ export function PasoAsignaturas({
               ? tx("Un proyecto de una asignatura", "Um projeto de um componente")
               : tx(`Interdisciplinario: ${elegidas.length} asignaturas`, `Interdisciplinar: ${elegidas.length} componentes`)}
           {stem > 0 && (
-            <span className="block text-base font-normal text-[#cfcaec]">
+            <span className="block text-base font-normal text-tinta-200">
               {tx(`${stem} de ellas STEM`, `${stem} delas STEM`)}
             </span>
           )}
         </p>
 
-        <p className="mt-6 text-sm font-semibold text-[#cfcaec]">{c.palabras.Objetivos}</p>
+        <p className="mt-6 text-sm font-semibold text-tinta-200">{c.palabras.Objetivos}</p>
         <p className="cifra mt-1 text-5xl font-bold">{objetivos.length}</p>
-        <p className="text-sm text-[#cfcaec]">
+        <p className="text-sm text-tinta-200">
           {tx(`de las ${c.palabras.fuente}, de ${tramo}`, `da ${c.palabras.fuente}, do ${tramo}`)}
         </p>
         {/* Por asignatura: «OA 14» de Ciencias y «OA 14» de Historia son dos
@@ -455,14 +455,14 @@ export function PasoAsignaturas({
           <div className="mt-3 flex flex-col gap-3">
             {porAsignatura(objetivos).map(([asig, lista]) => (
               <div key={asig}>
-                <p className="text-xs font-semibold text-[#cfcaec]">{asig}</p>
+                <p className="text-xs font-semibold text-tinta-200">{asig}</p>
                 <ul className="mt-1 flex flex-wrap gap-1.5">
                   {lista.slice(0, 8).map((o) => (
                     <li key={o.codigo} className="cifra rounded-md bg-white/10 px-2 py-1 text-xs" title={o.texto}>
                       {o.etiqueta}
                     </li>
                   ))}
-                  {lista.length > 8 && <li className="px-1 py-1 text-xs text-[#cfcaec]">+{lista.length - 8}</li>}
+                  {lista.length > 8 && <li className="px-1 py-1 text-xs text-tinta-200">+{lista.length - 8}</li>}
                 </ul>
               </div>
             ))}
@@ -530,7 +530,7 @@ export function PasoEspecies({
             onClick={() => onLugar(l)}
             aria-pressed={lugar?.id === l.id}
             className={`min-h-12 rounded-full border-2 px-5 font-semibold transition ${
-              lugar?.id === l.id ? "border-[#0a0047] bg-[#0a0047] text-white" : "border-slate-200 text-slate-700 hover:border-slate-400"
+              lugar?.id === l.id ? "border-tinta-950 bg-tinta-950 text-white" : "border-slate-200 text-slate-700 hover:border-slate-400"
             }`}
           >
             {l.nombre}
@@ -610,7 +610,7 @@ function FichaEspecie({ e, enlace }: { e: Especie; enlace: boolean }) {
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <span className="grid h-full w-full place-items-center p-3 text-center text-lg font-semibold text-[#111217]/80">
+          <span className="grid h-full w-full place-items-center p-3 text-center text-lg font-semibold text-texto/80">
             {e.comun || e.cientifico}
           </span>
         )}
@@ -626,7 +626,7 @@ function FichaEspecie({ e, enlace }: { e: Especie; enlace: boolean }) {
           </span>
         )}
       </div>
-      <p className="mt-2 font-semibold leading-tight text-[#111217] first-letter:uppercase">{e.comun || e.cientifico}</p>
+      <p className="mt-2 font-semibold leading-tight text-texto first-letter:uppercase">{e.comun || e.cientifico}</p>
       <p className="text-sm italic text-slate-500">{e.cientifico}</p>
       {e.observaciones > 0 && (
         <p className="cifra text-xs text-slate-500">
@@ -706,7 +706,7 @@ export function PasoRuta({
     ),
     terreno: (
       <>
-        {lugar && lugar.id !== "aqui" && <strong className="text-[#111217]">{lugar.nombre}. </strong>}
+        {lugar && lugar.id !== "aqui" && <strong className="text-texto">{lugar.nombre}. </strong>}
         {primeros[0]?.queInvestigan}
         {nombresEspecies.length > 0 && (
           <span className="mt-2 flex items-start gap-2 text-slate-600">
@@ -727,7 +727,7 @@ export function PasoRuta({
       <section className="overflow-hidden rounded-[2rem] text-white" style={{ background: "#0a0047" }}>
         <span className="block h-3" style={{ background: color }} aria-hidden />
         <div className="flex flex-col gap-4 p-6 sm:p-8">
-          <p className="rotulo text-[#cfcaec]">{tx("Paso 4 de 4 · Tu ruta", "Passo 4 de 4 · Sua rota")}</p>
+          <p className="rotulo text-tinta-200">{tx("Paso 4 de 4 · Tu ruta", "Passo 4 de 4 · Sua rota")}</p>
           <h1 className="display text-4xl sm:text-5xl [text-wrap:balance]">{p.nombre}</h1>
           <div className="flex flex-wrap gap-2">
             {asignaturas.map((a) => (
@@ -761,7 +761,7 @@ export function PasoRuta({
                 <span className="cifra block text-4xl font-bold" style={{ color: x.color }}>
                   {x.valor}
                 </span>
-                <span className="text-sm text-[#cfcaec]">{x.rotulo}</span>
+                <span className="text-sm text-tinta-200">{x.rotulo}</span>
               </dd>
             </div>
           ))}
@@ -769,7 +769,7 @@ export function PasoRuta({
       </section>
 
       <section>
-        <h2 className="titulo text-2xl text-[#111217]">
+        <h2 className="titulo text-2xl text-texto">
           {tx("El proyecto, etapa por etapa", "O projeto, etapa por etapa")}
         </h2>
         <ol className="mt-5 flex flex-col gap-3">
@@ -785,7 +785,7 @@ export function PasoRuta({
                   {i + 1}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="titulo text-lg text-[#111217]">{e.nombre}</h3>
+                  <h3 className="titulo text-lg text-texto">{e.nombre}</h3>
                   <p className="text-slate-600">{e.enUnaLinea}</p>
                   {detalle[e.id] && <div className="mt-2 leading-relaxed text-slate-700">{detalle[e.id]}</div>}
                 </div>
@@ -845,17 +845,17 @@ export function PasoLlevar({
   return (
     <div className="flex flex-col gap-10">
       <div className="grid gap-6 lg:grid-cols-[1fr_auto]">
-        <section className="rounded-[2rem] bg-[#f3f2fc] p-6 sm:p-8">
+        <section className="rounded-[2rem] bg-tinta-50 p-6 sm:p-8">
           {correo.estado === "ok" ? (
             <div className="flex flex-col gap-3" aria-live="polite">
-              <p className="rotulo text-[#3b29ae]">
+              <p className="rotulo text-tinta-600">
                 {HAY_SORTEO ? tx("Tu número para el sorteo", "Seu número para o sorteio") : tx("Tu ruta", "Sua rota")}
               </p>
-              <p className="display text-7xl tabular-nums text-[#0a0047] sm:text-8xl">
+              <p className="display text-7xl tabular-nums text-tinta-950 sm:text-8xl">
                 Nº {String(correo.numero).padStart(4, "0")}
               </p>
               {HAY_SORTEO && (
-                <p className="max-w-xl text-xl font-semibold text-[#111217]">
+                <p className="max-w-xl text-xl font-semibold text-texto">
                   {correo.repetido
                     ? tx(
                         "Este correo ya tenía número y lo conserva: es uno por persona.",
@@ -885,7 +885,7 @@ export function PasoLlevar({
           ) : correo.estado === "fila" ? (
             <div className="flex flex-col gap-3" aria-live="polite">
               <WifiOff className="h-10 w-10 text-[#FD6925]" aria-hidden />
-              <p className="titulo text-2xl text-[#111217]">{tx("Sin señal en este momento", "Sem sinal neste momento")}</p>
+              <p className="titulo text-2xl text-texto">{tx("Sin señal en este momento", "Sem sinal neste momento")}</p>
               <p className="max-w-xl text-lg text-slate-700">
                 {tx(
                   `Tu pedido quedó guardado en este equipo y sale apenas vuelva la conexión. El correo a ${direccion} llega con tu número${HAY_SORTEO ? " para el sorteo" : ""}.`,
@@ -902,7 +902,7 @@ export function PasoLlevar({
               }}
             >
               <Mail className="h-10 w-10 text-[#DD1367]" aria-hidden />
-              <h1 className="display text-4xl text-[#111217] [text-wrap:balance]">
+              <h1 className="display text-4xl text-texto [text-wrap:balance]">
                 {HAY_SORTEO
                   ? tx("Llévate tu ruta y participa en el sorteo", "Leve a sua rota e participe do sorteio")
                   : tx("Llévate tu ruta con su número", "Leve a sua rota com o número dela")}
@@ -918,7 +918,7 @@ export function PasoLlevar({
                       "Enviamos por e-mail, com as seis etapas e o link para continuar na sua conta."
                     )}
               </p>
-              <label htmlFor="congreso-correo" className="font-semibold text-[#111217]">
+              <label htmlFor="congreso-correo" className="font-semibold text-texto">
                 {tx("Tu correo", "Seu e-mail")}
               </label>
               <input
@@ -930,7 +930,7 @@ export function PasoLlevar({
                 value={direccion}
                 onChange={(e) => setDireccion(e.target.value)}
                 placeholder={tx("nombre@escuela.cl", "nome@escola.com.br")}
-                className="min-h-14 w-full max-w-md rounded-2xl border-2 border-slate-300 bg-white px-4 text-lg focus:border-[#3b29ae] focus:outline-none"
+                className="min-h-14 w-full max-w-md rounded-2xl border-2 border-slate-300 bg-white px-4 text-lg focus:border-tinta-600 focus:outline-none"
               />
               {/* Campo trampa: fuera de la vista y del tabulador. Una persona no lo ve. */}
               <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden>
@@ -943,7 +943,7 @@ export function PasoLlevar({
                   type="checkbox"
                   checked={acepta}
                   onChange={(e) => setAcepta(e.target.checked)}
-                  className="mt-1 h-5 w-5 shrink-0 accent-[#3b29ae]"
+                  className="mt-1 h-5 w-5 shrink-0 accent-tinta-600"
                 />
                 <span>
                   {tx(
@@ -984,7 +984,7 @@ export function PasoLlevar({
             etiqueta={tx("Código QR para abrir esta ruta en el teléfono", "Código QR para abrir esta rota no celular")}
             className="h-52 w-52"
           />
-          <p className="font-semibold text-[#111217]">
+          <p className="font-semibold text-texto">
             {tx("Escanéala y sigue en tu teléfono", "Escaneie e continue no celular")}
           </p>
           <p className="text-sm text-slate-500">{tx("Sin cuenta, sin instalar nada.", "Sem conta, sem instalar nada.")}</p>
@@ -995,14 +995,14 @@ export function PasoLlevar({
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="rotulo text-[#DD1367]">{tx("Con tu cuenta gratis", "Com a sua conta grátis")}</p>
-            <h2 className="titulo mt-2 text-3xl text-[#111217] [text-wrap:balance]">
+            <h2 className="titulo mt-2 text-3xl text-texto [text-wrap:balance]">
               {tx("Esto fue la primera página del cuaderno", "Esta foi a primeira página do caderno")}
             </h2>
           </div>
           {!kiosco && (
             <Link
               to="/cadastrar?origen=congreso"
-              className="inline-flex min-h-14 items-center gap-2 rounded-full bg-[#f97316] px-8 text-lg font-bold text-white shadow-lg shadow-orange-500/25 transition hover:-translate-y-0.5 hover:bg-[#ea580c]"
+              className="inline-flex min-h-14 items-center gap-2 rounded-full bg-acento px-8 text-lg font-bold text-white shadow-lg shadow-tierra-600/25 transition hover:-translate-y-0.5 hover:bg-acento-hover"
             >
               {tx("Crear mi cuenta", "Criar minha conta")} <ArrowRight className="h-5 w-5" aria-hidden />
             </Link>
@@ -1017,7 +1017,7 @@ export function PasoLlevar({
                   <Icono className="h-6 w-6" aria-hidden />
                 </span>
                 <Lock className="absolute right-4 top-4 h-4 w-4 text-slate-300" aria-label={tx("Con cuenta", "Com conta")} />
-                <p className="mt-3 font-semibold text-[#111217]">{titulo}</p>
+                <p className="mt-3 font-semibold text-texto">{titulo}</p>
                 <p className="mt-1 text-sm text-slate-600">{texto}</p>
               </li>
             );
@@ -1030,7 +1030,7 @@ export function PasoLlevar({
           <button
             type="button"
             onClick={onCuaderno}
-            className="inline-flex min-h-12 items-center gap-2 rounded-full border-2 border-[#0a0047] px-6 font-bold text-[#0a0047] transition hover:bg-[#f3f2fc]"
+            className="inline-flex min-h-12 items-center gap-2 rounded-full border-2 border-tinta-950 px-6 font-bold text-tinta-950 transition hover:bg-tinta-50"
           >
             <NotebookPen className="h-5 w-5" aria-hidden /> {tx("Seguir en el cuaderno", "Continuar no caderno")}
           </button>
@@ -1039,7 +1039,7 @@ export function PasoLlevar({
           type="button"
           onClick={onOtra}
           className={`inline-flex min-h-12 items-center gap-2 rounded-full px-6 font-bold transition ${
-            listo && kiosco ? "bg-[#0a0047] text-white" : "border-2 border-slate-200 text-slate-700 hover:border-slate-400"
+            listo && kiosco ? "bg-tinta-950 text-white" : "border-2 border-slate-200 text-slate-700 hover:border-slate-400"
           }`}
         >
           <RotateCcw className="h-5 w-5" aria-hidden /> {tx("Armar otra ruta", "Montar outra rota")}

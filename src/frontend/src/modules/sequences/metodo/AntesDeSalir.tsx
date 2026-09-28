@@ -91,7 +91,7 @@ export function AntesDeSalir({
                       aria-pressed={marcado}
                       className={`min-h-11 rounded-full border px-4 text-sm transition ${
                         marcado
-                          ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                          ? "border-[var(--acento)] bg-[var(--acento)] text-white"
                           : "border-[var(--crema)]/18 text-[var(--crema)]/85 hover:border-[var(--crema)]/35"
                       }`}
                     >
@@ -128,7 +128,7 @@ export function AntesDeSalir({
                   aria-pressed={marcada}
                   className={`min-h-11 rounded-full border px-4 text-sm transition ${
                     marcada
-                      ? "border-[var(--tierra-600)] bg-[var(--tierra-600)] text-[#1e2a24]"
+                      ? "border-[var(--acento)] bg-[var(--acento)] text-white"
                       : propuesta
                         ? "border-[var(--tierra-600)]/45 text-[var(--crema)]/85 hover:border-[var(--crema)]/40"
                         : "border-[var(--crema)]/12 text-[var(--crema)]/45 hover:border-[var(--crema)]/30"

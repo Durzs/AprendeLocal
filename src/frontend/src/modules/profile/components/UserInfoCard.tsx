@@ -55,22 +55,22 @@ export function UserInfoCard({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-xl font-semibold text-slate-950">
+            <h2 className="text-xl font-semibold text-texto">
               {name || t("profileCard.notInformed")}
             </h2>
 
             {/* Badge de Rol */}
             {isAdmin ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-semibold text-purple-800">
+              <span className="inline-flex items-center gap-1 rounded-full bg-tinta-100 px-2.5 py-0.5 text-xs font-semibold text-tinta-800">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 👑 Administrador
               </span>
             ) : isTeacher ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+              <span className="inline-flex items-center gap-1 rounded-full bg-tinta-100 px-2.5 py-0.5 text-xs font-semibold text-tinta-800">
                 👩‍🏫 Docente / Profesor
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
+              <span className="inline-flex items-center gap-1 rounded-full bg-tinta-100 px-2.5 py-0.5 text-xs font-semibold text-tinta-800">
                 🧑‍🎓 Estudiante
               </span>
             )}
@@ -92,7 +92,7 @@ export function UserInfoCard({
           {(isTeacher || isAdmin) && (
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-50 p-2.5 border border-slate-200/80 text-xs">
               <div className="flex items-center gap-2 min-w-0">
-                <School className="h-4 w-4 shrink-0 text-emerald-600" />
+                <School className="h-4 w-4 shrink-0 text-tinta-600" />
                 <span className="text-slate-600">{isAdmin ? "Escuela activa:" : "Escuela:"}</span>
                 <span className="font-semibold text-slate-900 truncate">
                   {schoolName || (isAdmin ? "Todas las escuelas (Acceso total)" : "Sin escuela asignada")}
@@ -114,7 +114,7 @@ export function UserInfoCard({
                 <button
                   type="button"
                   onClick={onEditSchool}
-                  className="shrink-0 font-medium text-emerald-700 hover:text-emerald-800 underline underline-offset-2 text-xs"
+                  className="shrink-0 font-medium text-tinta-600 hover:text-tinta-800 underline underline-offset-2 text-xs"
                 >
                   {schoolName ? "Cambiar escuela" : "Seleccionar escuela"}
                 </button>

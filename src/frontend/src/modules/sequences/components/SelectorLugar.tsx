@@ -84,7 +84,7 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
           className={[
             "rounded-full border px-3 py-1 text-xs font-semibold transition",
             comuna === ""
-              ? "border-slate-900 bg-slate-900 text-white"
+              ? "border-slate-900 bg-tinta-950 text-white"
               : "border-slate-300 text-slate-600 hover:bg-slate-50",
           ].join(" ")}
         >
@@ -98,7 +98,7 @@ export default function SelectorLugar({ objetivos, lugares, valor, onElegir }: P
             className={[
               "rounded-full border px-3 py-1 text-xs font-semibold transition",
               comuna === c
-                ? "border-slate-900 bg-slate-900 text-white"
+                ? "border-slate-900 bg-tinta-950 text-white"
                 : "border-slate-300 text-slate-600 hover:bg-slate-50",
             ].join(" ")}
           >

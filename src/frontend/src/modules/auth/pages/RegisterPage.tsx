@@ -372,7 +372,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-[#f7f8fb] px-4 py-10">
+    <div className="flex flex-1 items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-5xl">
         {/* Aquí iba el logo, grande, encima de la tarjeta. Esta pantalla
             no tenía la cabecera del sitio y el logo era la única forma de
@@ -383,7 +383,7 @@ export default function RegisterPage() {
           {/* Form card */}
           <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
             <div className="text-center">
-              <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
+              <h2 className="text-2xl font-semibold tracking-tight text-texto">
                 {t("register.title")}
               </h2>
               <p className="mt-2 text-sm text-slate-500">{t("register.subtitle")}</p>
@@ -413,7 +413,7 @@ export default function RegisterPage() {
                   }}
                   className={`flex flex-col items-center justify-center rounded-2xl border-2 p-3 text-center transition ${
                     role === "profesor"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-950 shadow-sm"
+                      ? "border-tinta-600 bg-tinta-50 text-tinta-950 shadow-sm"
                       : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}
                 >
@@ -435,7 +435,7 @@ export default function RegisterPage() {
                   }}
                   className={`flex flex-col items-center justify-center rounded-2xl border-2 p-3 text-center transition ${
                     role === "estudiante"
-                      ? "border-emerald-600 bg-emerald-50 text-emerald-950 shadow-sm"
+                      ? "border-tinta-600 bg-tinta-50 text-tinta-950 shadow-sm"
                       : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}
                 >
@@ -474,12 +474,12 @@ export default function RegisterPage() {
             <form className="mt-6 space-y-4" onSubmit={handleCadastro}>
               {/* Sección de Validación de Código y Seguridad. Solo en Chile. */}
               {pideCodigo ? (
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
+              <div className="rounded-2xl border border-tinta-200 bg-tinta-50/50 p-4">
                 <label
                   htmlFor="registro-codigo"
-                  className="flex items-center gap-2 text-emerald-900 font-semibold text-sm mb-1.5"
+                  className="flex items-center gap-2 text-tinta-950 font-semibold text-sm mb-1.5"
                 >
-                  <KeyRound aria-hidden className="h-4 w-4 text-emerald-600" />
+                  <KeyRound aria-hidden className="h-4 w-4 text-tinta-600" />
                   <span>
                     {role === "profesor"
                       ? "PIN Secreto Institucional de Docente"
@@ -489,11 +489,11 @@ export default function RegisterPage() {
                 <p id="registro-codigo-ayuda" className="text-xs text-slate-600 mb-3">
                   {role === "profesor" ? (
                     <>
-                      Ingresa la clave secreta entregada a tu establecimiento (ej: <code className="bg-emerald-100/80 px-1 py-0.5 rounded text-emerald-900 font-mono text-[11px]">DOC-LON-XXXX</code>). <em>El RBD público no autoriza acceso docente.</em>
+                      Ingresa la clave secreta entregada a tu establecimiento (ej: <code className="bg-tinta-100/80 px-1 py-0.5 rounded text-tinta-950 font-mono text-[11px]">DOC-LON-XXXX</code>). <em>El RBD público no autoriza acceso docente.</em>
                     </>
                   ) : (
                     <>
-                      Ingresa el código institucional de tu escuela (ej: <code className="bg-emerald-100/80 px-1 py-0.5 rounded text-emerald-900 font-mono text-[11px]">ALU-4205</code>) o el código que te dio tu profesor.
+                      Ingresa el código institucional de tu escuela (ej: <code className="bg-tinta-100/80 px-1 py-0.5 rounded text-tinta-950 font-mono text-[11px]">ALU-4205</code>) o el código que te dio tu profesor.
                     </>
                   )}
                 </p>
@@ -519,13 +519,13 @@ export default function RegisterPage() {
                         handleValidateCode();
                       }
                     }}
-                    className="flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 outline-none uppercase font-mono tracking-wider focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+                    className="flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm text-slate-900 outline-none uppercase font-mono tracking-wider focus:border-tinta-600 focus:ring-1 focus:ring-tinta-600"
                   />
                   <button
                     type="button"
                     disabled={validating}
                     onClick={() => handleValidateCode()}
-                    className="rounded-xl bg-emerald-700 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-emerald-800 transition disabled:opacity-60"
+                    className="rounded-xl bg-tinta-950 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-tinta-800 transition disabled:opacity-60"
                   >
                     {validating ? "Validando..." : "Validar"}
                   </button>
@@ -558,16 +558,16 @@ export default function RegisterPage() {
 
                 {/* Confirmación de proyecto validado para estudiantes */}
                 {validatedProject && (
-                  <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-blue-300 bg-white p-3 shadow-sm">
-                    <CheckCircle2 className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                  <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-tinta-200 bg-white p-3 shadow-sm">
+                    <CheckCircle2 className="h-5 w-5 text-tinta-600 shrink-0 mt-0.5" />
                     <div className="min-w-0 flex-1 text-xs">
                       <div className="font-semibold text-slate-900 text-sm">
                         {validatedProject.title}
                       </div>
                       <div className="text-slate-500 mt-0.5">
-                        Código de clase: <span className="font-mono font-bold text-blue-800">{validatedProject.code}</span>
+                        Código de clase: <span className="font-mono font-bold text-tinta-800">{validatedProject.code}</span>
                       </div>
-                      <div className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 font-medium text-blue-800 text-[10px]">
+                      <div className="mt-1 inline-block rounded-full bg-tinta-100 px-2 py-0.5 font-medium text-tinta-800 text-[10px]">
                         ✓ Proyecto de Profesor Conectado
                       </div>
                     </div>
@@ -579,14 +579,14 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => setShowCodeHelp(!showCodeHelp)}
-                    className="text-[11px] text-emerald-800 hover:text-emerald-950 underline underline-offset-2"
+                    className="text-[11px] text-tinta-800 hover:text-tinta-950 underline underline-offset-2"
                   >
                     {showCodeHelp ? "Ocultar PINs piloto" : "¿Modo de prueba? Ver PINs del piloto"}
                   </button>
                 </div>
 
                 {showCodeHelp && (
-                  <div className="mt-2 rounded-xl bg-white p-2.5 border border-emerald-200 text-[11px] space-y-2 max-h-40 overflow-y-auto">
+                  <div className="mt-2 rounded-xl bg-white p-2.5 border border-tinta-200 text-[11px] space-y-2 max-h-40 overflow-y-auto">
                     <p className="font-semibold text-slate-700">PINs de escuelas piloto:</p>
                     {pilotSamplePins.map((c) => (
                       <div key={c.rbd} className="flex flex-col border-b border-slate-100 pb-1.5 last:border-b-0">
@@ -598,7 +598,7 @@ export default function RegisterPage() {
                               setSchoolCodeInput(c.teacherPin);
                               handleValidateCode(c.teacherPin);
                             }}
-                            className="font-mono font-semibold text-emerald-700 hover:underline"
+                            className="font-mono font-semibold text-tinta-600 hover:underline"
                           >
                             Profe: {c.teacherPin}
                           </button>
@@ -608,7 +608,7 @@ export default function RegisterPage() {
                               setSchoolCodeInput(c.studentCode);
                               handleValidateCode(c.studentCode);
                             }}
-                            className="font-mono text-blue-700 hover:underline"
+                            className="font-mono text-tinta-600 hover:underline"
                           >
                             Alumno: {c.studentCode}
                           </button>
@@ -738,7 +738,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-60"
               >
                 <UserPlus className="h-4 w-4" />
                 {loading ? t("register.button.loading") : t("register.button.register")}
@@ -747,15 +747,15 @@ export default function RegisterPage() {
 
             <p className="mt-6 text-center text-sm text-slate-500">
               {t("register.loginText")}{" "}
-              <Link to="/entrar" className="font-semibold text-slate-950 hover:underline">
+              <Link to="/entrar" className="font-semibold text-texto hover:underline">
                 {t("register.loginAction")}
               </Link>
             </p>
           </div>
 
           {/* Hero side */}
-          <div className="flex flex-col items-center justify-center rounded-[2rem] border border-slate-200 bg-[#111217] p-10 text-center lg:text-left">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+          <div className="flex flex-col items-center justify-center rounded-[2rem] border border-slate-200 bg-tinta-950 p-10 text-center lg:text-left">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-tierra-300/10 px-3 py-1 text-xs font-semibold text-tierra-300">
               <Sparkles className="h-3.5 w-3.5" />
               {tx("Ciencias con el lugar de tu escuela", "Ciências com o lugar da sua escola")}
             </div>
@@ -779,7 +779,7 @@ export default function RegisterPage() {
             <div className="mt-8">
               <Link
                 to="/"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-white px-6 py-3 text-sm font-semibold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-white px-6 py-3 text-sm font-semibold text-texto shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
               >
                 {t("register.backHome")}
               </Link>

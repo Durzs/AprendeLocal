@@ -153,7 +153,7 @@ export default function Diapositivas({
                   className={[
                     "block h-[3px] w-full rounded-full transition-all duration-500",
                     i < indice
-                      ? "bg-[var(--tierra-600)]"
+                      ? "bg-[var(--acento)]"
                       : i === indice
                         ? "bg-[var(--crema)]"
                         : "bg-[var(--crema)]/18 group-hover:bg-[var(--crema)]/35",
@@ -225,7 +225,7 @@ export default function Diapositivas({
                   type="button"
                   onClick={() => ir(indice + 1)}
                   disabled={!puede}
-                  className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038] disabled:cursor-not-allowed disabled:bg-[var(--crema)]/15 disabled:text-[var(--crema)]/45"
+                  className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--acento)] px-6 text-sm font-semibold text-white transition hover:bg-tierra-500 disabled:cursor-not-allowed disabled:bg-[var(--crema)]/15 disabled:text-[var(--crema)]/45"
                 >
                   {tx("Seguir", "Seguir")}
                   <span aria-hidden className="transition-transform group-enabled:group-hover:translate-x-1">
@@ -239,7 +239,7 @@ export default function Diapositivas({
                 alTerminar && (
                   <Link
                     to={alTerminar.a}
-                    className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 text-sm font-semibold text-[#1e2a24] transition hover:bg-[#d97038]"
+                    className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--acento)] px-6 text-sm font-semibold text-white transition hover:bg-tierra-500"
                   >
                     {alTerminar.texto}
                     <span aria-hidden className="transition-transform group-hover:translate-x-1">

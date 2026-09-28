@@ -69,7 +69,7 @@ function Esperando() {
       className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5"
     >
       <div className="h-1 w-full overflow-hidden rounded-full bg-slate-200">
-        <div className="animar-esperando h-full w-1/4 rounded-full bg-slate-900" />
+        <div className="animar-esperando h-full w-1/4 rounded-full bg-tinta-950" />
       </div>
       <p className="mt-2.5 text-sm text-slate-700">
         {segundos < 25 ? t("preparar.waitNormal") : t("preparar.waitLong")}
@@ -184,7 +184,7 @@ export default function PrepararPage() {
         <p className="rotulo text-slate-500">
           {t("preparar.eyebrow")}
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-texto">
           {entrada === "objetivo"
             ? t("preparar.titleByObjective")
             : t("preparar.titleByPlace")}
@@ -278,7 +278,7 @@ export default function PrepararPage() {
               className={[
                 "rounded-full border px-3.5 py-1.5 text-xs font-semibold transition",
                 entrada === clave
-                  ? "border-slate-900 bg-slate-900 text-white"
+                  ? "border-slate-900 bg-tinta-950 text-white"
                   : "border-slate-300 text-slate-600 hover:bg-slate-50",
               ].join(" ")}
             >
@@ -289,7 +289,7 @@ export default function PrepararPage() {
 
         <div>
           <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
-            <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+            <span className="rounded-full bg-tinta-950 px-1.5 text-[10px] font-bold text-white">
               1
             </span>
             {entrada === "objetivo"
@@ -328,7 +328,7 @@ export default function PrepararPage() {
         {entrada === "objetivo" && objetivoCodes.length > 0 && (
           <div>
             <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
-              <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+              <span className="rounded-full bg-tinta-950 px-1.5 text-[10px] font-bold text-white">
                 2
               </span>
               {t("preparar.step2Place")}
@@ -345,7 +345,7 @@ export default function PrepararPage() {
         {entrada === "lugar" && pointId && (
           <div>
             <p className="mb-2 flex items-baseline gap-2 text-sm font-medium text-slate-700">
-              <span className="rounded-full bg-slate-900 px-1.5 text-[10px] font-bold text-white">
+              <span className="rounded-full bg-tinta-950 px-1.5 text-[10px] font-bold text-white">
                 2
               </span>
               {t("preparar.step2Objective")}
@@ -400,7 +400,7 @@ export default function PrepararPage() {
           type="button"
           onClick={handleGenerar}
           disabled={!listo}
-          className="w-full rounded-full bg-[#111217] px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:shadow-none"
+          className="w-full rounded-full bg-tinta-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:shadow-none"
         >
           {generando ? t("preparar.generating") : t("preparar.generate")}
         </button>

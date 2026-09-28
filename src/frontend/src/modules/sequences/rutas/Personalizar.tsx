@@ -130,7 +130,7 @@ export default function Personalizar({
                     className={[
                       "rounded-full border px-3.5 py-1.5 text-sm font-semibold transition",
                       activo
-                        ? "border-slate-900 bg-slate-900 text-white"
+                        ? "border-slate-900 bg-tinta-950 text-white"
                         : "border-slate-300 text-slate-500 hover:bg-slate-50",
                     ].join(" ")}
                   >

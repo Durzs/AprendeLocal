@@ -71,7 +71,7 @@ function PorNivel({
           className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)}`}
         >
           <p className="flex items-baseline gap-2 text-sm font-semibold text-slate-800">
-            <span className="rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
+            <span className="rounded bg-tinta-950 px-1.5 py-0.5 font-mono text-[10px] text-white">
               {nivelCorto(b.nivel, t("preparar.gradeBadge"))}
             </span>
             {b.objetivo_descripcion ? (
@@ -251,7 +251,7 @@ export default function VistaSecuencia({
   return (
       <article className="mt-8">
         <header className="rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
+          <h2 className="text-2xl font-semibold tracking-tight text-texto">
             {s.titulo}
           </h2>
           <p className="mt-2 text-sm text-slate-600">
@@ -515,7 +515,7 @@ export default function VistaSecuencia({
                   .filter((b) => b.rol_en_terreno)
                   .map((b) => (
                     <li key={`rol-${b.nivel}-${b.objetivo_codigo}`} className="flex gap-2">
-                      <span className="mt-0.5 h-fit shrink-0 rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] text-white">
+                      <span className="mt-0.5 h-fit shrink-0 rounded bg-tinta-950 px-1.5 py-0.5 font-mono text-[10px] text-white">
                         {nivelCorto(b.nivel, t("preparar.gradeBadge"))}
                       </span>
                       <span className="text-slate-800">{b.rol_en_terreno}</span>
@@ -728,7 +728,7 @@ export default function VistaSecuencia({
                 type="button"
                 onClick={() => irA(Math.min(etapas.length, etapaActiva + 1))}
                 disabled={etapaActiva === etapas.length}
-                className="rounded-full bg-[#111217] px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
+                className="rounded-full bg-tinta-950 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40"
               >
                 {t("preparar.next")}
               </button>

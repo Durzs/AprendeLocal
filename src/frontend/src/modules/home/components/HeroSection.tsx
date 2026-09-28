@@ -71,7 +71,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             pantalla o buscador; lo que se escribe letra a letra es la copia
             visible, que por eso queda oculta a la lectura. */}
         <h1
-          className={`mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-[#111217] sm:text-5xl md:text-7xl ${
+          className={`mx-auto max-w-6xl text-3xl font-semibold leading-[0.92] tracking-[-0.07em] text-texto sm:text-5xl md:text-7xl ${
             conVideo ? "" : "lg:text-8xl"
           }`}
         >
@@ -79,7 +79,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
           <span aria-hidden>
             {displayedText}
             {escribiendo && (
-              <span className="ml-1 inline-block animate-pulse text-[#f97316]">|</span>
+              <span className="ml-1 inline-block animate-pulse text-acento">|</span>
             )}
           </span>
         </h1>
@@ -96,9 +96,9 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <button
             onClick={onStart}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0a0047] hover:bg-[#140066] px-8 py-4 text-sm font-bold text-white shadow-lg shadow-[#0a0047]/25 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-tinta-950 hover:bg-tinta-800 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-tinta-950/25 transition hover:-translate-y-0.5 hover:shadow-xl cursor-pointer"
           >
-            <Compass className="h-4 w-4 text-amber-300" />
+            <Compass className="h-4 w-4 text-tierra-300" />
             <span>{t("home.hero.ctaStart", "Comenzar a Planificar")}</span>
           </button>
 
@@ -107,7 +107,7 @@ export default function HeroSection({ onStart, onExplore }: HeroSectionProps) {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 px-8 py-4 text-sm font-bold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
           >
             <span>{t("home.hero.ctaExplore", "Conoce cómo funciona")}</span>
-            <ArrowDown className="h-4 w-4 text-[#f97316]" />
+            <ArrowDown className="h-4 w-4 text-acento" />
           </button>
         </div>
 

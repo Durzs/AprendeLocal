@@ -108,7 +108,7 @@ export default function EstadoConexion() {
           <button
             type="button"
             onClick={() => updateServiceWorker(true)}
-            className="shrink-0 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white"
+            className="shrink-0 rounded-full bg-tinta-950 px-3 py-1 text-xs font-semibold text-white"
           >
             {tx("Actualizar", "Atualizar")}
           </button>
@@ -134,7 +134,7 @@ export default function EstadoConexion() {
           <button
             type="button"
             onClick={instalar}
-            className="shrink-0 rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white"
+            className="shrink-0 rounded-full bg-tinta-950 px-3 py-1 text-xs font-semibold text-white"
           >
             {tx("Instalar", "Instalar")}
           </button>

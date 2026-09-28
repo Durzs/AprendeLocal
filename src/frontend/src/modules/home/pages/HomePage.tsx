@@ -93,7 +93,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#111217]">
+    <main className="min-h-screen bg-white text-texto">
       <HeroSection onStart={goStart} onExplore={goExplore} />
 
       {/* Qué es esto */}

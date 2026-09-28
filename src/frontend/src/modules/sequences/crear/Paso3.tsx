@@ -127,7 +127,7 @@ function Entrega({ e }: { e: Expedicion }) {
 
       <Link
         to="/proyecto"
-        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-3 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
+        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--acento)] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--acento-hover)]"
       >
         {tx("Ir al seguimiento del proyecto", "Ir para o acompanhamento do projeto")}
         <span aria-hidden className="transition-transform group-hover:translate-x-1">

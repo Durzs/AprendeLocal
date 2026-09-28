@@ -156,7 +156,7 @@ export default function SelectorObjetivo({
             className={[
               "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[10px] font-bold",
               marcado
-                ? "border-slate-900 bg-slate-900 text-white"
+                ? "border-slate-900 bg-tinta-950 text-white"
                 : "border-slate-300 bg-white text-transparent",
             ].join(" ")}
           >
@@ -198,7 +198,7 @@ export default function SelectorObjetivo({
               key={o.code}
               className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5"
             >
-              <span className="mt-0.5 shrink-0 rounded bg-slate-900 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white">
+              <span className="mt-0.5 shrink-0 rounded bg-tinta-950 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-white">
                 {nivelCorto(o.level, patronNivel)}
               </span>
               <p className="min-w-0 flex-1 text-sm text-slate-800">{o.description}</p>
@@ -232,7 +232,7 @@ export default function SelectorObjetivo({
               className={[
                 "rounded-full border px-3 py-1 text-xs font-semibold transition",
                 nivelesActivos.includes(n)
-                  ? "border-slate-900 bg-slate-900 text-white"
+                  ? "border-slate-900 bg-tinta-950 text-white"
                   : "border-slate-300 text-slate-600 hover:bg-slate-50",
               ].join(" ")}
             >

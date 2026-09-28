@@ -41,7 +41,7 @@ export default function Recorrido({
                 aria-hidden
                 className={[
                   "absolute left-[11px] top-0 h-4 w-0.5 sm:left-0 sm:top-[11px] sm:h-0.5 sm:w-full",
-                  anterior || esActiva ? "bg-slate-900" : "bg-slate-200",
+                  anterior || esActiva ? "bg-tinta-950" : "bg-slate-200",
                   "transition-colors duration-500",
                 ].join(" ")}
               />
@@ -58,7 +58,7 @@ export default function Recorrido({
                 className={[
                   "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 font-mono text-[11px] font-bold transition-all duration-300",
                   esActiva
-                    ? "scale-110 border-slate-900 bg-slate-900 text-white"
+                    ? "scale-110 border-slate-900 bg-tinta-950 text-white"
                     : anterior
                       ? "border-slate-900 bg-white text-slate-900"
                       : "border-slate-300 bg-white text-slate-400 group-hover:border-slate-500",
@@ -71,7 +71,7 @@ export default function Recorrido({
                 <span
                   className={[
                     "block text-sm font-semibold transition-colors",
-                    esActiva ? "text-slate-950" : "text-slate-600",
+                    esActiva ? "text-texto" : "text-slate-600",
                   ].join(" ")}
                 >
                   {f.titulo}

@@ -71,7 +71,7 @@ export default function RielEtapas({ etapas, activa, onCambiar }: Props) {
                 className={[
                   "w-full rounded-xl border px-3 py-2.5 text-left transition",
                   esActiva
-                    ? "border-slate-900 bg-slate-900 text-white"
+                    ? "border-slate-900 bg-tinta-950 text-white"
                     : "border-transparent text-slate-700 hover:border-slate-200 hover:bg-slate-50",
                 ].join(" ")}
               >

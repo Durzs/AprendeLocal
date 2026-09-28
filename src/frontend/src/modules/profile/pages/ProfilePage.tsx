@@ -200,7 +200,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#f7f8fb] pt-24">
+      <main className="min-h-screen bg-slate-50 pt-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <p className="text-slate-500">{msg.profile.loading}</p>
         </div>
@@ -222,11 +222,11 @@ export default function ProfilePage() {
   });
 
   return (
-    <main className="min-h-screen bg-white text-[#111217]">
+    <main className="min-h-screen bg-white text-texto">
       {/* Header */}
-      <section className="bg-[#f7f8fb] pb-12 pt-28 md:pt-32">
+      <section className="bg-slate-50 pb-12 pt-28 md:pt-32">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-[#111217] sm:text-4xl md:text-5xl">
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-texto sm:text-4xl md:text-5xl">
             {msg.profile.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-slate-500">
@@ -259,15 +259,15 @@ export default function ProfilePage() {
 
               {/* Banner de acceso rápido a los lugares para proyectos de su escuela */}
               {profile.role === "profesor" && profile.school_id && (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-[2rem] border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-[2rem] border border-tinta-200 bg-gradient-to-r from-tinta-50 to-tinta-50 p-6 shadow-sm">
                   <div>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-tinta-100 px-3 py-1 text-xs font-semibold text-tinta-800">
                       📍 {tx("Proyectos Geolocalizados", "Projetos no território")}
                     </span>
-                    <h3 className="mt-2 text-lg font-semibold text-emerald-950">
+                    <h3 className="mt-2 text-lg font-semibold text-tinta-950">
                       {tx("Lugares STEM para", "Lugares para")} {profile.school_name}
                     </h3>
-                    <p className="mt-1 text-sm text-emerald-800/80">
+                    <p className="mt-1 text-sm text-tinta-800/80">
                       {tx(
                         `Explora el mapa y descubre los puntos de interés patrimoniales, biológicos y geológicos en el territorio de tu escuela en ${profile.school_commune}.`,
                         `Veja no mapa o que há ao redor da sua escola em ${profile.school_commune} e monte uma rota a partir daí.`
@@ -281,7 +281,7 @@ export default function ProfilePage() {
                       ruta, asi que lleva ahi. */}
                   <Link
                     to="/crear"
-                    className="shrink-0 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-emerald-800 transition"
+                    className="shrink-0 inline-flex items-center gap-2 rounded-full bg-tinta-950 px-5 py-2.5 text-sm font-semibold text-white shadow hover:bg-tinta-800 transition"
                   >
                     {tx("Armar una ruta aquí", "Montar uma rota aqui")}
                     <ArrowRight className="h-4 w-4" />
@@ -318,7 +318,7 @@ export default function ProfilePage() {
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2">
-                <SchoolIcon className="h-5 w-5 text-emerald-600" />
+                <SchoolIcon className="h-5 w-5 text-tinta-600" />
                 <h3 id="dialogo-escuela" className="text-lg font-semibold text-slate-900">
                   {tx("Asignar Escuela Rural", "Escolher a escola")}
                 </h3>
@@ -355,7 +355,7 @@ export default function ProfilePage() {
                 )}
                 value={modalSchoolSearch}
                 onChange={(e) => setModalSchoolSearch(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm text-slate-900 outline-none focus:border-tinta-600 focus:ring-1 focus:ring-tinta-600"
               />
             </div>
 
@@ -378,7 +378,7 @@ export default function ProfilePage() {
                     }}
                     className={`flex w-full items-center justify-between rounded-xl border p-3 text-left transition ${
                       selectedModalSchoolId === sch.id
-                        ? "border-emerald-600 bg-emerald-50/80 text-emerald-950"
+                        ? "border-tinta-600 bg-tinta-50/80 text-tinta-950"
                         : "border-slate-200 bg-white hover:border-slate-300"
                     }`}
                   >
@@ -389,7 +389,7 @@ export default function ProfilePage() {
                       </div>
                     </div>
                     {selectedModalSchoolId === sch.id && (
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <Check className="h-4 w-4 text-tinta-600 shrink-0" />
                     )}
                   </button>
                 ))
@@ -417,7 +417,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={handleSaveSchool}
                 disabled={savingSchool}
-                className="rounded-full bg-emerald-600 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-700 disabled:opacity-60"
+                className="rounded-full bg-tinta-950 px-5 py-2 text-sm font-semibold text-white shadow hover:bg-tinta-950 disabled:opacity-60"
               >
                 {savingSchool ? tx("Guardando...", "Salvando...") : tx("Guardar Escuela", "Salvar escola")}
               </button>

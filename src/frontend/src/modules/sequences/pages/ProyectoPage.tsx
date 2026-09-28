@@ -151,7 +151,7 @@ function SinProyecto() {
       </p>
       <Link
         to="/crear"
-        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--tierra-600)] px-6 py-2.5 text-sm font-semibold text-[#1e2a24] transition hover:bg-[var(--tierra-500)]"
+        className="group mt-5 inline-flex items-center gap-2 rounded-full bg-[var(--acento)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--acento-hover)]"
       >
         {tx("Armar la ruta", "Montar a rota")}
         <span aria-hidden className="transition-transform group-hover:translate-x-1">

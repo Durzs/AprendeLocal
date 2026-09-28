@@ -63,7 +63,7 @@ export default function EtapaSecuencia({
       ].join(" ")}
     >
       <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h3 className="text-lg font-semibold tracking-tight text-slate-950">{titulo}</h3>
+        <h3 className="text-lg font-semibold tracking-tight text-texto">{titulo}</h3>
         <span className="ml-auto rotulo text-slate-500">
           {t(CLAVE_ACTOR[actor])}
         </span>

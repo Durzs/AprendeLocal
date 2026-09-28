@@ -26,8 +26,8 @@ import { useTranslation } from "react-i18next";
  * leer la problemática con el curso y se anota en el seguimiento.
  */
 const ESTILO_PASO = [
-  "text-blue-800 bg-blue-50 border-blue-200",
-  "text-orange-900 bg-orange-50 border-orange-200",
+  "text-tinta-800 bg-tinta-50 border-tinta-200",
+  "text-tierra-900 bg-tierra-50 border-tierra-200",
   "text-emerald-800 bg-emerald-50 border-emerald-200",
 ];
 
@@ -48,7 +48,7 @@ export default function ProjectsSection() {
     >
       <div className="mx-auto w-full max-w-7xl">
         <div className="mx-auto mb-12 max-w-3xl text-center">
-          <h2 className="mb-3 text-3xl font-semibold leading-[0.95] tracking-[-0.055em] text-[#111217] sm:text-4xl md:text-5xl">
+          <h2 className="display mb-3 text-3xl text-texto sm:text-4xl md:text-5xl [text-wrap:balance]">
             {t(
               "home.build.title",
               "La ruta se arma con tu lugar, no se escoge de una lista"
@@ -69,7 +69,7 @@ export default function ProjectsSection() {
               className={`animar-asoma animar-asoma-${Math.min(i + 1, 4)} flex flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-md`}
             >
               <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-3xl font-semibold tracking-tight text-slate-300">
+                <span className="cifra text-3xl font-semibold tracking-tight text-slate-300">
                   {p.n}
                 </span>
                 <span
@@ -88,7 +88,7 @@ export default function ProjectsSection() {
 
         {/* Lo que sale al final. Va aparte y no como un cuarto paso, porque no
             es algo que el docente haga: es lo que se lleva impreso. */}
-        <div className="mt-6 rounded-3xl border border-slate-200 bg-[#f8fafc] p-7 sm:p-9">
+        <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-7 sm:p-9">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="max-w-xl">
               <span className="rotulo text-slate-500">
@@ -109,7 +109,7 @@ export default function ProjectsSection() {
             </div>
             <Link
               to="/crear"
-              className="group inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#0a0047] px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-[#0a0047]/20 transition hover:bg-[#140066]"
+              className="group inline-flex shrink-0 items-center gap-2 rounded-xl bg-tinta-950 px-7 py-3.5 text-sm font-bold text-white shadow-md shadow-tinta-950/20 transition hover:bg-tinta-800"
             >
               {t("home.build.cta", "Empezar a armar la mía")}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
