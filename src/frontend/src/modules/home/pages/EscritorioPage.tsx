@@ -200,24 +200,14 @@ export default function EscritorioPage() {
   );
   const etapa = LAMINAS[laminaDe(expedicion)];
 
-  // Lo que falta, con nombre. Eran los cuatro huecos de la ruta que armaba el
-  // modelo; ahora son tres campos del cuaderno y el destinatario, que se elige
-  // junto con el formato. Los cuatro salen impresos en los papeles de la
-  // salida, así que faltan de verdad.
+  // Lo que falta, con nombre. Eran cuatro: el destinatario y los tres campos
+  // de «Lo que solo sabes tú del lugar». Esa lámina se retiró del cuaderno, y
+  // avisar de algo que ya no se puede llenar es un aviso que no se apaga nunca.
   const faltan = expedicion
     ? [
         expedicion.destinatario.trim()
           ? null
           : tx("Falta a quién le entregan", "Falta para quem entregam"),
-        expedicion.preguntarA.trim()
-          ? null
-          : tx("Falta a quién le preguntan", "Falta a quem perguntam"),
-        expedicion.puntoDeSalida.trim()
-          ? null
-          : tx("Falta dónde se para el curso", "Falta onde a turma fica"),
-        expedicion.queCuidar.trim()
-          ? null
-          : tx("Falta qué hay que cuidar ahí", "Falta o que é preciso cuidar ali"),
       ].filter(Boolean)
     : [];
 

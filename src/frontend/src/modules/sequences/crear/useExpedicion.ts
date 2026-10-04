@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { guardar, leer, type Expedicion } from "./expedicion";
 import { AVANCE_VACIO, normalizarAvance, type Avance } from "./avance";
 import { llaveDeSede } from "../../../shared/sede";
-import { bajarUltima, masReciente, subir, type EstadoNube } from "./nube";
+import { bajarUltima, masReciente, subir, tieneContenido, type EstadoNube } from "./nube";
 
 /**
  * La expedición viva: la del navegador y la de la cuenta, en un solo sitio.
@@ -68,6 +68,45 @@ export function useExpedicion() {
 
   const id = useRef<string | null>(leerLocal(LLAVE_ID(), null));
   const reloj = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /**
+   * Lo último escrito que todavía no subió a la cuenta.
+   *
+   * La subida espera unos segundos a que se deje de escribir. Si en ese rato
+   * se cerraba la pestaña o se pasaba a otra página, la espera se cancelaba y
+   * lo último —los objetivos recién marcados, típicamente— quedaba solo en
+   * este navegador. En otro computador la cuenta mostraba la versión vieja.
+   */
+  const pendiente = useRef<{ expedicion: Expedicion; avance: Avance } | null>(null);
+  const enCurso = useRef<Promise<void> | null>(null);
+
+  /**
+   * Sube lo pendiente, si hay. Toma lo pendiente antes de esperar a la red,
+   * para que dos llamadas seguidas (la espera que vence y la pestaña que se
+   * oculta) no suban lo mismo dos veces ni creen dos filas.
+   */
+  const vaciar = useCallback(async () => {
+    // Si hay una subida en curso se espera a que termine: la primera de una
+    // expedición nueva crea la fila y trae su id, y la siguiente tiene que
+    // actualizar esa fila, no crear otra.
+    while (enCurso.current) await enCurso.current;
+    const p = pendiente.current;
+    if (!p) return;
+    pendiente.current = null;
+    if (reloj.current) clearTimeout(reloj.current);
+    ponerEstado("guardando");
+    enCurso.current = (async () => {
+      const r = await subir(p.expedicion, p.avance, id.current);
+      id.current = r.id;
+      escribirLocal(LLAVE_ID(), r.id);
+      ponerEstado(r.estado);
+    })();
+    try {
+      await enCurso.current;
+    } finally {
+      enCurso.current = null;
+    }
+  }, []);
+
   // El primer render no debe subir nada: no ha cambiado nada todavía, y
   // subir al abrir crearía una fila por cada visita a la página.
   const montado = useRef(false);
@@ -94,15 +133,37 @@ export function useExpedicion() {
           ponerAvance(gana.avance);
           guardar(gana.expedicion);
           escribirLocal(LLAVE_AVANCE(), gana.avance);
+          ponerEstado("guardado");
+        } else {
+          // Ganó la de este computador. Si es más nueva que la de la cuenta,
+          // se sube ahora: antes quedaba esperando a la próxima edición, y
+          // mientras tanto la cuenta seguía con la versión vieja.
+          const tocada = leerLocal<string | null>(LLAVE_TOCADA(), null);
+          const masNueva = !remoto.actualizada || !tocada || new Date(tocada) > new Date(remoto.actualizada);
+          if (masNueva && tieneContenido(gana.expedicion)) {
+            pendiente.current = { expedicion: gana.expedicion, avance: gana.avance };
+            void vaciar();
+          } else {
+            ponerEstado("guardado");
+          }
         }
-        ponerEstado("guardado");
+      } else {
+        // Nada en la cuenta todavía, pero sí en este computador: se sube.
+        const local = leer();
+        if (tieneContenido(local)) {
+          pendiente.current = {
+            expedicion: local,
+            avance: normalizarAvance(leerLocal(LLAVE_AVANCE(), AVANCE_VACIO)),
+          };
+          void vaciar();
+        }
       }
       ponerBajada(true);
     })();
     return () => {
       vigente = false;
     };
-  }, []);
+  }, [vaciar]);
 
   /* ── Al escribir: local ya, cuenta después ─────────────────────────── */
   useEffect(() => {
@@ -114,19 +175,30 @@ export function useExpedicion() {
     escribirLocal(LLAVE_AVANCE(), avance);
     escribirLocal(LLAVE_TOCADA(), new Date().toISOString());
 
+    pendiente.current = { expedicion, avance };
     if (reloj.current) clearTimeout(reloj.current);
-    reloj.current = setTimeout(async () => {
-      ponerEstado("guardando");
-      const r = await subir(expedicion, avance, id.current);
-      id.current = r.id;
-      escribirLocal(LLAVE_ID(), r.id);
-      ponerEstado(r.estado);
-    }, ESPERA_MS);
+    reloj.current = setTimeout(() => void vaciar(), ESPERA_MS);
 
     return () => {
       if (reloj.current) clearTimeout(reloj.current);
     };
-  }, [expedicion, avance]);
+  }, [expedicion, avance, vaciar]);
+
+  /* ── Al irse: subir lo que haya quedado esperando ──────────────────── */
+  useEffect(() => {
+    const alOcultar = () => {
+      if (document.visibilityState === "hidden") void vaciar();
+    };
+    document.addEventListener("visibilitychange", alOcultar);
+    window.addEventListener("pagehide", alOcultar);
+    return () => {
+      document.removeEventListener("visibilitychange", alOcultar);
+      window.removeEventListener("pagehide", alOcultar);
+      // Salir del cuaderno a otra página del sitio desmonta esto sin cerrar
+      // la pestaña: ahí todavía hay tiempo de subir.
+      void vaciar();
+    };
+  }, [vaciar]);
 
   const cambiar = useCallback((e: Expedicion) => ponerExpedicion(e), []);
   const cambiarAvance = useCallback((a: Avance) => ponerAvance(a), []);

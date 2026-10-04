@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Hoja } from "../crear/Campos";
 import { indicadoresDe } from "../crear/indicadores";
 import type { Expedicion } from "../crear/expedicion";
-import { buscarObjetivo } from "../contenido/curriculo";
+import { objetivosVigentes } from "../contenido/curriculo";
 import { useContenido } from "../contenido";
 import { useTx, type Idioma } from "../../../shared/tx";
 import { etapasEn } from "./etapas";
@@ -114,7 +114,10 @@ export function Indicadores({
 }) {
   const tx = useTx();
   const c = useContenido();
-  const marcados = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
+  const marcados = objetivosVigentes(e.oa, e.cursos.filter((x) => c.cursos.includes(x))).map((oa) => ({
+    cod: oa.codigo,
+    oa,
+  }));
   const titulo = tx("Indicadores de evaluación", "Indicadores de avaliação");
 
   if (marcados.length === 0) {

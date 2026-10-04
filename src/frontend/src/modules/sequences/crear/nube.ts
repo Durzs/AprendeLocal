@@ -146,6 +146,29 @@ export async function bajarUltima(): Promise<Respaldo | null> {
 }
 
 /**
+ * Si el cuaderno tiene algo escrito que valga la pena conservar.
+ *
+ * Miraba solo objetivos, lugar, pregunta y problemática. Un cuaderno con los
+ * cursos marcados, las asignaturas elegidas y una actividad propia escrita
+ * contaba como vacío, y al abrirlo en ese mismo computador la versión de la
+ * cuenta lo pisaba entero.
+ */
+export function tieneContenido(e: Expedicion): boolean {
+  return Boolean(
+    e.oa.length ||
+      e.ubicacion.trim() ||
+      e.preguntaGuia.trim() ||
+      e.problemaId ||
+      e.problemaPropioNombre.trim() ||
+      e.problemaPropio.trim() ||
+      e.actividadesPropias.length ||
+      e.asignaturas.length ||
+      e.cursos.length ||
+      e.docente.trim()
+  );
+}
+
+/**
  * Cuál de las dos versiones gana cuando hay una en cada sitio.
  *
  * Pasa de verdad: el docente escribió en el computador de la escuela sin
@@ -163,13 +186,7 @@ export function masReciente(
   if (!remoto) {
     return { ...local, id: null, vieneDeLaNube: false };
   }
-  const hayAlgoLocal = Boolean(
-    local.expedicion.oa.length ||
-      local.expedicion.ubicacion.trim() ||
-      local.expedicion.preguntaGuia.trim() ||
-      local.expedicion.problemaId
-  );
-  if (!hayAlgoLocal) {
+  if (!tieneContenido(local.expedicion)) {
     return { ...remoto, vieneDeLaNube: true };
   }
   if (!local.tocada || !remoto.actualizada) {

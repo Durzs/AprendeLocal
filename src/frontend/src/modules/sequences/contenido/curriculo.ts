@@ -39,13 +39,68 @@ export type Objetivo = {
  * Aquí queda el índice por código, que se va llenando a medida que llegan.
  */
 const INDICE = new Map<string, Objetivo>();
+/** El lugar de cada objetivo en su catálogo, para ordenar igual en todas partes. */
+const POSICION = new Map<string, number>();
 
 export function registrarObjetivos(lista: Objetivo[]): void {
-  for (const o of lista) INDICE.set(o.codigo, o);
+  for (const o of lista) {
+    if (!POSICION.has(o.codigo)) POSICION.set(o.codigo, POSICION.size);
+    INDICE.set(o.codigo, o);
+  }
+}
+
+/**
+ * Los códigos en el orden del catálogo: asignatura, curso, número.
+ *
+ * La lista marcada guardaba el orden en que se fueron marcando, y cada
+ * pantalla la mostraba así. La columna, los indicadores y la hoja de la
+ * dirección salían cada uno en otro orden, y en la hoja se mezclaban
+ * asignaturas. Los que no están en el catálogo cargado van al final.
+ */
+export function ordenarObjetivos(codigos: string[]): string[] {
+  const lugar = (c: string) => POSICION.get(c) ?? Number.MAX_SAFE_INTEGER;
+  return [...codigos].sort((a, b) => lugar(a) - lugar(b));
+}
+
+/**
+ * Qué objetivos marcados ya no calzan con la sala.
+ *
+ * `fueraDeCurso`: existen, pero ninguno de sus cursos es de los que el docente
+ * marcó (pasa al cambiar los cursos después de elegir objetivos).
+ * `desconocidos`: el código no está en el currículum cargado (un código
+ * antiguo, o de la otra edición). No salen en los papeles, pero se contaban.
+ */
+export function objetivosQueNoCalzan(
+  codigos: string[],
+  cursos: string[]
+): { fueraDeCurso: string[]; desconocidos: string[] } {
+  const niveles = new Set(cursos);
+  const fueraDeCurso: string[] = [];
+  const desconocidos: string[] = [];
+  for (const c of codigos) {
+    const o = INDICE.get(c);
+    if (!o) desconocidos.push(c);
+    else if (niveles.size && !o.cursos.some((x) => niveles.has(x))) fueraDeCurso.push(c);
+  }
+  return { fueraDeCurso, desconocidos };
 }
 
 export function buscarObjetivo(codigo: string): Objetivo | undefined {
   return INDICE.get(codigo);
+}
+
+/**
+ * Los objetivos marcados que van a los papeles: los que existen en el
+ * currículum cargado y son de algún curso de la sala, en el orden del
+ * catálogo. Lo mismo para la planificación, los indicadores, la hoja de la
+ * dirección y la autorización, para que las cuatro digan lo mismo.
+ */
+export function objetivosVigentes(codigos: string[], cursos: string[]): Objetivo[] {
+  const { fueraDeCurso } = objetivosQueNoCalzan(codigos, cursos);
+  return ordenarObjetivos(codigos)
+    .filter((c) => !fueraDeCurso.includes(c))
+    .map((c) => INDICE.get(c))
+    .filter((o): o is Objetivo => o !== undefined);
 }
 
 /** Los de un curso de la sala, en el orden del catálogo. */

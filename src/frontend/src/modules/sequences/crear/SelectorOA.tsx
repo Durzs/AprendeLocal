@@ -20,10 +20,9 @@
  *
  * En dos sitios de la misma lámina: en la tercera columna de la problemática,
  * donde escribe en `Expedicion.oa`, y dentro del formulario de una actividad
- * propia, donde escribe en la actividad. Lo segundo no llegaba a lo primero, y
- * el docente marcaba objetivos en su actividad que el resto del cuaderno no
- * veía; ahora la actividad los suma al guardarse. Ver `guardar` en
- * §ElegirProblema.tsx.
+ * propia, donde escribe en la actividad. Las dos se mantienen en sincronía
+ * con las operaciones de §expedicion.ts (`guardarActividad`, `fijarObjetivos`
+ * y compañía): este selector solo devuelve la lista nueva.
  */
 
 import { useMemo, useState } from "react";
@@ -34,8 +33,21 @@ import {
   buscarObjetivo,
   filtrarObjetivos,
   objetivosDelCurso,
+  ordenarObjetivos,
   type Objetivo,
 } from "../contenido/curriculo";
+
+/**
+ * Cómo se lee un objetivo marcado en una pastilla: «OA 12 · Ciencias 5º».
+ * Antes era el código interno recortado («OA12 · 5»), sin la asignatura, y
+ * dos objetivos de asignaturas distintas se veían iguales.
+ */
+function chip(cod: string): string {
+  const o = buscarObjetivo(cod);
+  if (!o) return cod;
+  const asignatura = o.nombreAsignatura.split(/\s+/)[0];
+  return `${o.etiqueta} · ${asignatura} ${o.cursos.length === 1 ? o.cursos[0] : ""}`.trim();
+}
 
 export default function SelectorOA({
   cursos,
@@ -102,15 +114,15 @@ export default function SelectorOA({
           lista venía a evitar. */}
       {elegidos.length > 0 && (
         <ul className="mt-3 flex flex-wrap gap-2">
-          {elegidos.map((cod) => (
+          {ordenarObjetivos(elegidos).map((cod) => (
             <li key={cod}>
               <button
                 type="button"
                 onClick={() => alternar(cod)}
                 title={buscarObjetivo(cod)?.texto}
-                className="group inline-flex min-h-8 items-center gap-2 rounded-full bg-[var(--acento)] px-3 py-1 font-mono text-[11px] font-semibold text-white transition hover:bg-tierra-500"
+                className="group inline-flex min-h-8 items-center gap-2 rounded-full bg-[var(--acento)] px-3 py-1 text-xs font-semibold text-white transition hover:bg-[var(--acento-hover)]"
               >
-                {cod.replace(/_[A-Z]+_/, " · ")}
+                {chip(cod)}
                 <span aria-hidden className="opacity-60 group-hover:opacity-100">
                   ×
                 </span>

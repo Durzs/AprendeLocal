@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { Hoja } from "../crear/Campos";
 import { Copiar } from "../crear/Copiar";
 import type { Expedicion } from "../crear/expedicion";
-import { buscarObjetivo } from "../contenido/curriculo";
+import { objetivosVigentes } from "../contenido/curriculo";
 import { useContenido } from "../contenido";
 import { useTx } from "../../../shared/tx";
 import { problemaPorId } from "./problemas";
@@ -160,11 +160,15 @@ export function Permisos({ e, orden = 7 }: { e: Expedicion; orden?: number }) {
 }
 
 function PermisosCL({ e, orden }: { e: Expedicion; orden: number }) {
+  const c = useContenido();
   const papeles = useRef<HTMLDivElement>(null);
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropioNombre.trim() || e.problemaPropio.trim();
   const tecnicas = e.tecnicas.map((t) => tecnicaPorId(t, "es")).filter(Boolean);
-  const oas = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
+  const oas = objetivosVigentes(e.oa, e.cursos.filter((x) => c.cursos.includes(x))).map((oa) => ({
+    cod: oa.codigo,
+    oa,
+  }));
   const sale = Boolean(e.ubicacion.trim());
 
   if (!sale) {
@@ -389,7 +393,10 @@ function PermisosBR({ e, orden }: { e: Expedicion; orden: number }) {
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropioNombre.trim() || e.problemaPropio.trim();
   const tecnicas = e.tecnicas.map((t) => tecnicaPorId(t, "pt")).filter(Boolean);
-  const oas = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
+  const oas = objetivosVigentes(e.oa, e.cursos.filter((x) => c.cursos.includes(x))).map((oa) => ({
+    cod: oa.codigo,
+    oa,
+  }));
   const sale = Boolean(e.ubicacion.trim());
   const turmas = e.cursos.length ? e.cursos.map(c.nombreCurso).join(", ") : "";
 

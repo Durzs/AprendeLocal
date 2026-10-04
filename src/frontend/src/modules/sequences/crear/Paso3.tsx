@@ -32,7 +32,7 @@ import { Link } from "react-router-dom";
 import { Hoja } from "./Campos";
 import { Copiar } from "./Copiar";
 import type { Expedicion } from "./expedicion";
-import { buscarObjetivo } from "../contenido/curriculo";
+import { objetivosVigentes } from "../contenido/curriculo";
 import { useContenido } from "../contenido";
 import { useTx } from "../../../shared/tx";
 import { ElegirFormato, VistaMetodo } from "../metodo/VistaMetodo";
@@ -157,7 +157,10 @@ function Justificacion({ e }: { e: Expedicion }) {
   const hoja = useRef<HTMLDivElement>(null);
   const tx = useTx();
   const c = useContenido();
-  const oas = e.oa.map((cod) => ({ cod, oa: buscarObjetivo(cod) })).filter((x) => x.oa);
+  const oas = objetivosVigentes(e.oa, e.cursos.filter((x) => c.cursos.includes(x))).map((oa) => ({
+    cod: oa.codigo,
+    oa,
+  }));
   const problema = e.problemaId ? problemaPorId(e.problemaId) : null;
   const titulo = problema?.nombre || e.problemaPropioNombre.trim() || e.problemaPropio.trim();
   const tecnicas = e.tecnicas.map((t) => tecnicaPorId(t, tx.idioma)).filter(Boolean);

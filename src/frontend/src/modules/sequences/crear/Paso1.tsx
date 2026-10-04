@@ -13,7 +13,6 @@ import { Campo, Fichas, Hoja, Texto } from "./Campos";
 import { ElegirProblema } from "../metodo/ElegirProblema";
 import { AntesDeSalir } from "../metodo/AntesDeSalir";
 import { DondeQueda } from "../metodo/DondeQueda";
-import { LaSalida } from "../metodo/LaSalida";
 import type { Expedicion } from "./expedicion";
 import { useContenido } from "../contenido";
 import { useTx } from "../../../shared/tx";
@@ -179,10 +178,9 @@ export function PasoLugar({ e, onCambio }: Props) {
 
       <AntesDeSalir e={e} onCambio={onCambio} orden={6} />
 
-      {/* Va al final de la lámina del lugar porque los tres campos son del
-          lugar, y porque se contestan mirando por la ventana o acordándose del
-          camino, no con la planificación al lado. */}
-      <LaSalida e={e} onCambio={onCambio} orden={7} />
+      {/* Aquí iba «Lo que solo sabes tú del lugar» (a quién preguntar, dónde
+          se para el curso, qué cuidar). Se retiró del cuaderno; lo que alguien
+          ya había escrito se conserva. Ver `preguntarA` en §expedicion.ts. */}
     </div>
   );
 }
