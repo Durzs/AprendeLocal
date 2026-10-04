@@ -29,6 +29,12 @@
  *   RESEND_API_KEY     la clave de Resend (también se acepta RESEND_KEY).
  *   CORREO_REMITENTE   opcional; por defecto «AprendeLocal <hola@aprendelocal.com>».
  *                      El dominio tiene que estar verificado en Resend.
+ *   SMTP_USER          opcional, el respaldo: una casilla que manda por SMTP,
+ *   SMTP_PASS          por ejemplo aprendelocal@gmail.com con una contraseña
+ *                      de aplicación de Google. Ver «Dos caminos» más abajo.
+ *   SMTP_HOST          opcional; por defecto smtp.gmail.com.
+ *   SMTP_PORT          opcional; por defecto 465. Supabase no deja salir por
+ *                      los puertos 25 ni 587, así que tiene que ser 465.
  *   CORREO_COPIA       opcional; por defecto aprendelocal@gmail.com.
  *   SITIO_URL          opcional; por defecto https://www.aprendelocal.com.
  *   HASH_SAL           opcional; para el resumen de la conexión.
@@ -37,6 +43,7 @@
  */
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import nodemailer from "npm:nodemailer@6.9.16";
 import catalogo from "./catalogo.json" with { type: "json" };
 
 type Idioma = "es" | "pt";
@@ -84,26 +91,108 @@ function configCorreo(): { clave?: string; remitente: string } {
 }
 
 /**
+ * La casilla de respaldo por SMTP, si está configurada.
+ *
+ * Google muestra la contraseña de aplicación en cuatro grupos separados por
+ * espacios; se aceptan con o sin ellos.
+ */
+function configSmtp(): { usuario: string; clave: string; host: string; puerto: number } | null {
+  const usuario = secreto(["SMTP_USER", "GMAIL_USER", "SMTP_USUARIO"]);
+  const clave = secreto(["SMTP_PASS", "SMTP_PASSWORD", "GMAIL_APP_PASSWORD", "GMAIL_PASS"])?.replace(/\s+/g, "");
+  if (!usuario || !clave) return null;
+  return {
+    usuario,
+    clave,
+    host: secreto(["SMTP_HOST"]) || "smtp.gmail.com",
+    puerto: Number(secreto(["SMTP_PORT"])) || 465,
+  };
+}
+
+/**
  * Qué secretos de correo ve la función, solo por nombre y nunca su valor,
  * para que `error_envio` diga qué falta en vez de un genérico.
  */
 function diagnosticoCorreo(): string {
   let vistos: string[] = [];
   try {
-    vistos = Object.keys(Deno.env.toObject()).filter((k) => /RESEND|CORREO|MAIL|REMITENTE/i.test(k));
+    vistos = Object.keys(Deno.env.toObject()).filter((k) => /RESEND|CORREO|MAIL|REMITENTE|SMTP/i.test(k));
   } catch {
     /* Sin permiso para listar: se dice lo que falta y nada más. */
   }
   return (
-    "falta RESEND_API_KEY en los secretos de las Edge Functions" +
+    "falta RESEND_API_KEY o SMTP_USER y SMTP_PASS en los secretos de las Edge Functions" +
     (vistos.length ? ` (la función ve: ${vistos.join(", ")})` : " (la función no ve ningún secreto de correo)")
   );
 }
 
-/** Manda un correo por Resend. Devuelve null si salió, o el motivo si no. */
-async function mandar(correo: string, armado: { asunto: string; html: string; texto: string }): Promise<string | null> {
-  const { clave, remitente } = configCorreo();
-  if (!clave) return diagnosticoCorreo();
+type Armado = { asunto: string; html: string; texto: string };
+
+/**
+ * Manda un correo. Devuelve null si salió, o el motivo si no.
+ *
+ * DOS CAMINOS
+ *
+ * El principal es Resend, con remitente del dominio del sitio. Pero Resend
+ * solo manda si el dominio está verificado, y eso pide agregar registros en el
+ * DNS, que no siempre se puede hacer a tiempo (pasó la semana del congreso).
+ * El respaldo es una casilla común por SMTP, típicamente la de Gmail del
+ * equipo: llega bien porque sale desde los servidores de Google con su propia
+ * firma, y no necesita tocar el DNS.
+ *
+ * Se intenta Resend primero y, si falla por lo que sea, el respaldo. Así,
+ * cuando el dominio quede verificado, los correos vuelven a salir por Resend
+ * sin cambiar nada; los secretos SMTP se pueden dejar como respaldo.
+ */
+async function mandar(correo: string, armado: Armado): Promise<string | null> {
+  const smtp = configSmtp();
+  const { clave } = configCorreo();
+  if (!clave && !smtp) return diagnosticoCorreo();
+
+  const porResend = clave ? await mandarPorResend(clave, correo, armado) : "sin RESEND_API_KEY";
+  if (porResend === null || !smtp) return porResend;
+
+  const porSmtp = await mandarPorSmtp(smtp, correo, armado);
+  if (porSmtp !== null) console.error("enviar-ruta: falló Resend y el respaldo", porResend);
+  return porSmtp === null ? null : `${porSmtp} | antes, ${porResend}`.slice(0, 400);
+}
+
+// deno-lint-ignore no-explicit-any
+let transporte: any = null;
+
+async function mandarPorSmtp(
+  smtp: NonNullable<ReturnType<typeof configSmtp>>,
+  correo: string,
+  armado: Armado
+): Promise<string | null> {
+  try {
+    transporte ??= nodemailer.createTransport({
+      host: smtp.host,
+      port: smtp.puerto,
+      secure: smtp.puerto === 465,
+      auth: { user: smtp.usuario, pass: smtp.clave },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
+    });
+    await transporte.sendMail({
+      // Gmail exige que el remitente sea la misma casilla que inicia sesión.
+      from: { name: "AprendeLocal", address: smtp.usuario },
+      to: correo,
+      cc: COPIA,
+      replyTo: COPIA,
+      subject: armado.asunto,
+      html: armado.html,
+      text: armado.texto,
+    });
+    return null;
+  } catch (e) {
+    transporte = null; // la próxima vez se reconecta desde cero
+    return `smtp: ${String((e as Error)?.message ?? e).slice(0, 200)}`;
+  }
+}
+
+async function mandarPorResend(clave: string, correo: string, armado: Armado): Promise<string | null> {
+  const { remitente } = configCorreo();
   try {
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
