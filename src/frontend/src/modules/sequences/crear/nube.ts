@@ -16,9 +16,10 @@ import { normalizarAvance, type Avance } from "./avance";
  * CÓMO SE REPARTEN LOS DOS SITIOS
  *
  * `localStorage` sigue siendo el que manda mientras se escribe. Es instantáneo,
- * funciona sin señal y funciona sin cuenta, y las tres cosas importan en una
- * escuela rural: armar una ruta sin registrarse tiene que seguir siendo
- * posible, porque el primer día nadie se registra.
+ * funciona sin señal y no espera a ningún servidor, que en una escuela rural
+ * importa. (El cuaderno se abría también sin cuenta; desde octubre de 2026
+ * pide sesión, ver §SoloConCuenta.tsx. Lo que el demo del stand deja en
+ * `localStorage` sube a la cuenta apenas la persona entra.)
  *
  * Supabase es el respaldo. Cuando hay sesión iniciada, lo que se escribe sube;
  * cuando se abre el cuaderno en otro computador, baja. Si no hay red, si la
@@ -146,6 +147,29 @@ export async function bajarUltima(): Promise<Respaldo | null> {
 }
 
 /**
+ * Si el cuaderno tiene algo escrito que valga la pena conservar.
+ *
+ * Miraba solo objetivos, lugar, pregunta y problemática. Un cuaderno con los
+ * cursos marcados, las asignaturas elegidas y una actividad propia escrita
+ * contaba como vacío, y al abrirlo en ese mismo computador la versión de la
+ * cuenta lo pisaba entero.
+ */
+export function tieneContenido(e: Expedicion): boolean {
+  return Boolean(
+    e.oa.length ||
+      e.ubicacion.trim() ||
+      e.preguntaGuia.trim() ||
+      e.problemaId ||
+      e.problemaPropioNombre.trim() ||
+      e.problemaPropio.trim() ||
+      e.actividadesPropias.length ||
+      e.asignaturas.length ||
+      e.cursos.length ||
+      e.docente.trim()
+  );
+}
+
+/**
  * Cuál de las dos versiones gana cuando hay una en cada sitio.
  *
  * Pasa de verdad: el docente escribió en el computador de la escuela sin
@@ -163,13 +187,7 @@ export function masReciente(
   if (!remoto) {
     return { ...local, id: null, vieneDeLaNube: false };
   }
-  const hayAlgoLocal = Boolean(
-    local.expedicion.oa.length ||
-      local.expedicion.ubicacion.trim() ||
-      local.expedicion.preguntaGuia.trim() ||
-      local.expedicion.problemaId
-  );
-  if (!hayAlgoLocal) {
+  if (!tieneContenido(local.expedicion)) {
     return { ...remoto, vieneDeLaNube: true };
   }
   if (!local.tocada || !remoto.actualizada) {

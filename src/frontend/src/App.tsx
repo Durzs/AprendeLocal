@@ -2,8 +2,8 @@
  * Las rutas de AprendeLocal.
  *
  *   /              Portada, o el escritorio si hay sesión
- *   /crear         El cuaderno: armar la ruta
- *   /proyecto      El seguimiento: por dónde va el proyecto
+ *   /crear         El cuaderno: armar la ruta (con cuenta)
+ *   /proyecto      El seguimiento: por dónde va el proyecto (con cuenta)
  *   /congreso      El demo del stand: una ruta en cuatro pasos (también /demo)
  *   /preparar      Preparar una unidad
  *   /perfil        La cuenta y la escuela (con sesión)
@@ -48,6 +48,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 
 import Layout from "./shared/components/layout/Layout";
 import ProtectedRoute from "./shared/components/auth/ProtectedRoute";
+import SoloConCuenta from "./shared/components/auth/SoloConCuenta";
 import HomePage from "./modules/home/pages/HomePage";
 import LoginPage from "./modules/auth/pages/LoginPage";
 import NoExistePage from "./modules/errors/NoExistePage";
@@ -79,6 +80,23 @@ async function conCurriculo<T>(pantalla: Promise<T>): Promise<T> {
     import("./modules/sequences/contenido").then((c) => c.cargarObjetivos(sedeActual())),
   ]);
   return m;
+}
+
+/**
+ * El cuaderno y el seguimiento: sin sesión muestran cómo pedir acceso en vez
+ * de mandar a «Entrar». Ver §shared/components/auth/SoloConCuenta.tsx.
+ */
+function conCuenta(cargar: () => Promise<{ default: React.ComponentType }>) {
+  return async () => {
+    const Pantalla = (await cargar()).default;
+    return {
+      Component: () => (
+        <SoloConCuenta>
+          <Pantalla />
+        </SoloConCuenta>
+      ),
+    };
+  };
 }
 
 /** Lo mismo, envuelto en la puerta de las rutas que piden sesión. */
@@ -150,15 +168,15 @@ const router = createBrowserRouter([
       { path: "rutas", element: <Navigate to="/" replace /> },
       { path: "metodologia", element: <Navigate to="/" replace /> },
 
-      /* Las dos pantallas de trabajo: misma cabecera, sin pie. */
+      /* Las dos pantallas de trabajo: misma cabecera, sin pie, y con cuenta. */
       {
         path: "crear",
-        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/CrearPage"))),
+        lazy: conCuenta(() => conCurriculo(import("./modules/sequences/pages/CrearPage"))),
         handle: { titulo: { es: "Cuaderno", pt: "Caderno" }, sinPie: true },
       },
       {
         path: "proyecto",
-        lazy: perezosa(() => conCurriculo(import("./modules/sequences/pages/ProyectoPage"))),
+        lazy: conCuenta(() => conCurriculo(import("./modules/sequences/pages/ProyectoPage"))),
         handle: { titulo: { es: "Seguimiento del proyecto", pt: "Acompanhamento do projeto" }, sinPie: true },
       },
 

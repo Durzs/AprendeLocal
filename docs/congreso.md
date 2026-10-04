@@ -96,17 +96,38 @@ no salen los correos.
 1. **La tabla.** Aplicar la migración `supabase/migrations/0008_rutas_demo.sql`.
 2. **El dominio en Resend.** Verificar `aprendelocal.com` en Resend (registros
    DNS). Sin dominio verificado Resend solo deja escribirse a uno mismo.
-3. **Los secretos** (Supabase → Edge Functions → Secrets). Nunca en el
-   repositorio ni en variables `VITE_*`:
+3. **Los secretos** (Supabase → Edge Functions → Secrets). Ojo: van en
+   Supabase, no en Vercel ni en los secretos de GitHub, que la función no ve.
+   Nunca en el repositorio ni en variables `VITE_*`:
    - `RESEND_API_KEY`: la clave de Resend.
-   - `CORREO_REMITENTE`: por ejemplo `AprendeLocal <hola@aprendelocal.com>`.
+   - `CORREO_REMITENTE` (opcional): por defecto `AprendeLocal <hola@aprendelocal.com>`.
+   - La función también reconoce `RESEND_KEY` para la clave y `RESEND_FROM`
+     o `EMAIL_FROM` para el remitente.
    - Opcionales: `CORREO_COPIA` (por defecto `aprendelocal@gmail.com`),
      `SITIO_URL` (por defecto `https://www.aprendelocal.com`) y `HASH_SAL`.
+   - **Sin acceso al DNS: el respaldo por Gmail.** Si el dominio no se puede
+     verificar a tiempo, la función manda por SMTP desde la casilla del
+     equipo. En la cuenta de Google de `aprendelocal@gmail.com`, con la
+     verificación en dos pasos activada, crear una contraseña de aplicación
+     en <https://myaccount.google.com/apppasswords> y cargar dos secretos:
+     `SMTP_USER` = `aprendelocal@gmail.com` y `SMTP_PASS` = la contraseña de
+     16 letras (con o sin espacios). La función intenta Resend primero y, si
+     falla, Gmail; cuando el dominio quede verificado vuelve sola a Resend.
+     Gmail deja unos 500 destinatarios al día, y cada correo cuenta dos (la
+     persona y la copia al equipo). Otra casilla sirve igual con `SMTP_HOST`
+     (por ejemplo `mail.privateemail.com`); el puerto es 465, porque Supabase
+     no deja salir por el 587.
 4. **La función** se despliega sola al fusionar en `main`, con el flujo
    `.github/workflows/desplegar-funciones.yml`, que al final comprueba que
    responde. Si hace falta a mano: `supabase functions deploy enviar-ruta
    --no-verify-jwt`.
 5. **Probar** con un correo propio desde `/congreso` antes del día.
+
+Si un correo no sale, la columna `error_envio` de `rutas_demo` dice por qué
+(por ejemplo, «falta RESEND_API_KEY o SMTP_USER y SMTP_PASS… (la función no
+ve ningún secreto de correo)», o el error que devolvió Resend o Gmail). Cuando un correo sí sale, la
+función reintenta sola, de a cinco, los que habían quedado pendientes: no hay
+que pedirle a nadie que vuelva a inscribirse.
 
 Mientras falte algo de esto, el demo no pierde a nadie: si la función no está
 desplegada o la tabla no existe, el pedido queda en la fila de la tablet y se

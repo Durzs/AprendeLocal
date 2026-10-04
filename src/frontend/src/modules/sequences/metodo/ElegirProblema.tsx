@@ -1,7 +1,15 @@
 import { useState } from "react";
 
 import { Hoja, Parrafo, Texto } from "../crear/Campos";
-import type { ActividadPropia, Expedicion } from "../crear/expedicion";
+import {
+  borrarActividad,
+  fijarObjetivos,
+  guardarActividad,
+  marcarObjetivos,
+  quitarObjetivos,
+  type ActividadPropia,
+  type Expedicion,
+} from "../crear/expedicion";
 import {
   angulosDe,
   nombreAsignatura,
@@ -10,7 +18,7 @@ import {
 } from "./problemas";
 import SelectorOA from "../crear/SelectorOA";
 import { useContenido } from "../contenido";
-import { buscarObjetivo } from "../contenido/curriculo";
+import { buscarObjetivo, objetivosQueNoCalzan, ordenarObjetivos, type Objetivo } from "../contenido/curriculo";
 import { useTx } from "../../../shared/tx";
 
 /**
@@ -138,7 +146,8 @@ export function ElegirProblema({
 
         <ColumnaObjetivos
           e={e}
-          set={set}
+          onCambio={onCambio}
+          propiaId={propiaActiva?.id ?? null}
           hayProblema={Boolean(
             elegido || e.problemaPropioNombre.trim() || e.problemaPropio.trim()
           )}
@@ -409,23 +418,16 @@ function ColumnaActividades({
    *
    * Se unen y no se reemplazan: puede haber objetivos marcados que no vienen
    * de ninguna actividad propia, y guardar una no es motivo para borrárselos.
+   * Lo que sí sale es lo que el docente le quitó a esta actividad.
    */
   function guardar(a: ActividadPropia) {
-    const existe = e.actividadesPropias.some((x) => x.id === a.id);
-    onCambio({
-      ...e,
-      actividadesPropias: existe
-        ? e.actividadesPropias.map((x) => (x.id === a.id ? a : x))
-        : [...e.actividadesPropias, a],
-      oa: [...new Set([...e.oa, ...a.oa])],
-    });
+    // Los que se le quitaron a la actividad también salen de la lista, salvo
+    // que otra actividad propia los tenga. Ver §crear/expedicion.ts.
+    onCambio(guardarActividad(e, a));
   }
 
   function borrar(id: string) {
-    onCambio({
-      ...e,
-      actividadesPropias: e.actividadesPropias.filter((x) => x.id !== id),
-    });
+    onCambio(borrarActividad(e, id));
     if (enfocada === id) ponerEnfocada(null);
     if (editando === id) ponerEditando(null);
   }
@@ -823,7 +825,8 @@ function FormularioActividad({
 
 function ColumnaObjetivos({
   e,
-  set,
+  onCambio,
+  propiaId,
   hayProblema,
   codigos,
   actividad,
@@ -832,7 +835,12 @@ function ColumnaObjetivos({
   ponerVerTodos,
 }: {
   e: Expedicion;
-  set: <K extends keyof Expedicion>(k: K, v: Expedicion[K]) => void;
+  onCambio: (e: Expedicion) => void;
+  /**
+   * La actividad propia abierta, si la hay. Lo que se marque aquí con ella
+   * abierta queda también en la actividad, que es lo que la pantalla promete.
+   */
+  propiaId: string | null;
   hayProblema: boolean;
   codigos: string[];
   actividad: Angulo | null;
@@ -849,6 +857,14 @@ function ColumnaObjetivos({
   const tx = useTx();
   const cont = useContenido();
   const porMarcar = codigos.filter((x) => !e.oa.includes(x));
+
+  // Lo marcado que ya no calza: de cursos que no están en la sala o con un
+  // código que no existe en el currículum cargado.
+  const { fueraDeCurso, desconocidos } = objetivosQueNoCalzan(
+    e.oa,
+    e.cursos.filter((x) => cont.cursos.includes(x))
+  );
+  const noCalzan = [...fueraDeCurso, ...desconocidos];
 
   /**
    * Los sugeridos repartidos por asignatura, en el orden del catálogo.
@@ -914,7 +930,7 @@ function ColumnaObjetivos({
                 value=""
                 onChange={(ev) => {
                   if (!ev.target.value) return;
-                  set("oa", [...e.oa, ev.target.value]);
+                  onCambio(marcarObjetivos(e, [ev.target.value], propiaId));
                 }}
                 className="mt-2 min-h-11 w-full rounded-lg border border-[var(--crema)]/20 bg-[var(--fondo)] px-3 py-2.5 text-[15px] text-[var(--crema-clara)]"
               >
@@ -930,7 +946,7 @@ function ColumnaObjetivos({
                       const oa = buscarObjetivo(cod);
                       return (
                         <option key={cod} value={cod}>
-                          {cod} · {recortar(oa?.texto ?? "", 85)}
+                          {oa ? nombreCorto(oa) : cod} · {recortar(oa?.texto ?? "", 85)}
                         </option>
                       );
                     })}
@@ -955,35 +971,68 @@ function ColumnaObjetivos({
           )}
 
           {/* Lo marcado, con su texto completo: aquí sí hace falta leerlo
-              entero, porque es lo que va a la hoja que firma la dirección. */}
+              entero, porque es lo que va a la hoja que firma la dirección. Va
+              en el orden del catálogo, el mismo de los indicadores y de los
+              papeles, y marca lo que ya no calza con la sala. */}
           {e.oa.length > 0 && (
-            <ul className="mt-3.5 space-y-2">
-              {e.oa.map((cod) => {
-                const oa = buscarObjetivo(cod);
-                return (
-                  <li
-                    key={cod}
-                    className="rounded-lg border border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.1] px-3.5 py-2.5"
+            <>
+              {noCalzan.length > 0 && (
+                <div className="mt-3.5 rounded-lg border border-[var(--tierra-300)]/40 bg-[var(--tierra-300)]/[0.07] px-3.5 py-3 text-sm leading-relaxed text-[var(--crema)]/90">
+                  <p>
+                    {tx(
+                      `${noCalzan.length === 1 ? "Un objetivo marcado no calza" : `${noCalzan.length} objetivos marcados no calzan`} con tu sala: abajo dice por qué. No salen en los papeles hasta que los quites o marques su curso arriba.`,
+                      `${noCalzan.length === 1 ? "Uma habilidade marcada não combina" : `${noCalzan.length} habilidades marcadas não combinam`} com a sua turma: abaixo diz por quê. Não saem nos documentos até você remover ou marcar o ano delas acima.`
+                    )}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => onCambio(quitarObjetivos(e, noCalzan))}
+                    className="mt-2 min-h-11 text-sm font-medium text-[var(--tierra-300)] underline underline-offset-4"
                   >
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-mono text-xs text-[var(--tierra-300)]">
-                        {cod}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => set("oa", e.oa.filter((x) => x !== cod))}
-                        className="ml-auto min-h-11 shrink-0 px-1 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
-                      >
-                        {tx("Quitar", "Remover")}
-                      </button>
-                    </div>
-                    <p className="text-[15px] leading-relaxed text-[var(--crema)]/85">
-                      {oa?.texto ?? cod}
-                    </p>
-                  </li>
-                );
-              })}
-            </ul>
+                    {tx("Quitar los que no calzan", "Remover as que não combinam")}
+                  </button>
+                </div>
+              )}
+              <ul className="mt-3.5 space-y-2">
+                {ordenarObjetivos(e.oa).map((cod) => {
+                  const oa = buscarObjetivo(cod);
+                  const fuera = noCalzan.includes(cod);
+                  return (
+                    <li
+                      key={cod}
+                      className={`rounded-lg border px-3.5 py-2.5 ${
+                        fuera
+                          ? "border-dashed border-[var(--crema)]/30 opacity-75"
+                          : "border-[var(--tierra-600)]/50 bg-[var(--tierra-600)]/[0.1]"
+                      }`}
+                    >
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xs font-semibold text-[var(--tierra-300)]">
+                          {oa ? nombreCorto(oa) : cod}
+                        </span>
+                        {fuera && (
+                          <span className="text-xs text-[var(--crema)]/70">
+                            {oa
+                              ? tx("· no es de tus cursos", "· não é dos seus anos")
+                              : tx("· no está en el currículum", "· não está no currículo")}
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => onCambio(quitarObjetivos(e, [cod]))}
+                          className="ml-auto min-h-11 shrink-0 px-1 text-sm text-[var(--crema)]/70 hover:text-[var(--tierra-300)]"
+                        >
+                          {tx("Quitar", "Remover")}
+                        </button>
+                      </div>
+                      <p className="text-[15px] leading-relaxed text-[var(--crema)]/85">
+                        {oa?.texto ?? cod}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
           )}
         </>
       )}
@@ -1007,12 +1056,22 @@ function ColumnaObjetivos({
           <SelectorOA
             cursos={e.cursos}
             elegidos={e.oa}
-            onElegir={(v) => set("oa", v)}
+            onElegir={(v) => onCambio(fijarObjetivos(e, v, propiaId))}
           />
         </div>
       )}
     </Columna>
   );
+}
+
+/**
+ * Cómo se nombra un objetivo en una línea: «OA 12 · Ciencias Naturales · 5º».
+ *
+ * Se mostraba el código interno («OA12_CN_5»), que no es como lo nombra
+ * nadie, y en Chile «OA 12» a secas se repite entre asignaturas y cursos.
+ */
+function nombreCorto(o: Objetivo): string {
+  return [o.etiqueta, o.nombreAsignatura, o.cursos.join(", ")].filter(Boolean).join(" · ");
 }
 
 /** El texto del objetivo, cortado para que quepa en una línea del desplegable. */

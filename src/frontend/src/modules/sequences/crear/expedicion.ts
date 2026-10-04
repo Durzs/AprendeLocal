@@ -170,6 +170,11 @@ export type Expedicion = {
    * que el modelo no puede saber. Al sacar la ruta armada se quedaron, porque
    * son ellos los que valían, y pasaron a ser campos del cuaderno como
    * cualquier otro. Los tres salen impresos en los papeles de la salida.
+   *
+   * La lámina que los pedía («Lo que solo sabes tú del lugar») se retiró del
+   * cuaderno. Los campos se quedan para no perder lo que alguien ya había
+   * escrito: si están llenos siguen saliendo en los papeles, y si están vacíos
+   * no se piden ni cuentan para el avance.
    */
   preguntarA: string;
   /** El punto exacto donde se para el curso, y cómo se llega. */
@@ -257,6 +262,22 @@ export function normalizarExpedicion(crudo: unknown): Expedicion {
   const listaStrings = (v: unknown): string[] =>
     Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
 
+  // Cada actividad propia con todos sus campos. Una guardada a medias, sin
+  // `oa` por ejemplo, rompía la columna entera al intentar recorrerla.
+  const listaActividades = (v: unknown): ActividadPropia[] => {
+    if (!Array.isArray(v)) return [];
+    return v
+      .filter((a): a is Record<string, unknown> => Boolean(a && typeof a === "object" && typeof (a as ActividadPropia).id === "string"))
+      .map((a) => ({
+        id: String(a.id),
+        asignatura: typeof a.asignatura === "string" ? a.asignatura : "",
+        enfoque: typeof a.enfoque === "string" ? a.enfoque : "",
+        queInvestigan: typeof a.queInvestigan === "string" ? a.queInvestigan : "",
+        conceptos: listaStrings(a.conceptos),
+        oa: [...new Set(listaStrings(a.oa))],
+      }));
+  };
+
   const listaSemanas = (v: unknown): Semana[] => {
     if (!Array.isArray(v)) return [];
     return v.filter(
@@ -269,8 +290,10 @@ export function normalizarExpedicion(crudo: unknown): Expedicion {
     ...VACIA,
     ...g,
     cursos: listaStrings(g.cursos),
-    oa: listaStrings(g.oa),
-    actividadesPropias: Array.isArray(g.actividadesPropias) ? (g.actividadesPropias as ActividadPropia[]) : [],
+    // Sin repetidos: un código dos veces salía dos veces en la hoja que firma
+    // la dirección y contaba doble en el escritorio.
+    oa: [...new Set(listaStrings(g.oa))],
+    actividadesPropias: listaActividades(g.actividadesPropias),
     noticias: Array.isArray(g.noticias) ? (g.noticias as { titular: string; url: string }[]) : [],
     asignaturas: listaStrings(g.asignaturas),
     conceptos: listaStrings(g.conceptos),
@@ -317,6 +340,88 @@ export function guardar(e: Expedicion): void {
   }
 }
 
+/* ── Los objetivos marcados, en un solo sitio ───────────────────────────
+ *
+ * Un objetivo puede estar en dos lugares: en la lista general (`e.oa`), que
+ * es la que leen los indicadores, la hoja de la dirección, los permisos y el
+ * escritorio; y dentro de una actividad propia (`a.oa`). Cada pantalla los
+ * tocaba a su manera y se desincronizaban:
+ *
+ *   · al quitarle un objetivo a una actividad, seguía marcado en la lista y
+ *     seguía saliendo impreso;
+ *   · al borrar una actividad, sus objetivos se quedaban;
+ *   · al quitar uno de la lista, la actividad lo conservaba y volvía a
+ *     aparecer la próxima vez que se guardaba;
+ *   · y lo que se marcaba en el buscador con una actividad propia abierta no
+ *     llegaba a la actividad, aunque la pantalla decía que sí.
+ *
+ * Desde aquí cambian los dos a la vez. La regla: la lista general es la
+ * verdad; una actividad propia es una de las fuentes que la llenan.
+ */
+
+const sinRepetir = (l: string[]) => [...new Set(l)];
+
+/** Marca objetivos. Si se marcan con una actividad propia abierta, quedan también en ella. */
+export function marcarObjetivos(e: Expedicion, codigos: string[], actividadId: string | null = null): Expedicion {
+  return {
+    ...e,
+    oa: sinRepetir([...e.oa, ...codigos]),
+    actividadesPropias: actividadId
+      ? e.actividadesPropias.map((a) => (a.id === actividadId ? { ...a, oa: sinRepetir([...a.oa, ...codigos]) } : a))
+      : e.actividadesPropias,
+  };
+}
+
+/** Desmarca objetivos: salen de la lista y de toda actividad propia que los tenga. */
+export function quitarObjetivos(e: Expedicion, codigos: string[]): Expedicion {
+  const fuera = new Set(codigos);
+  if (!fuera.size) return e;
+  return {
+    ...e,
+    oa: e.oa.filter((c) => !fuera.has(c)),
+    actividadesPropias: e.actividadesPropias.map((a) =>
+      a.oa.some((c) => fuera.has(c)) ? { ...a, oa: a.oa.filter((c) => !fuera.has(c)) } : a
+    ),
+  };
+}
+
+/** Deja marcados exactamente estos. Es lo que hace el buscador completo. */
+export function fijarObjetivos(e: Expedicion, codigos: string[], actividadId: string | null = null): Expedicion {
+  const quitados = e.oa.filter((c) => !codigos.includes(c));
+  const nuevos = codigos.filter((c) => !e.oa.includes(c));
+  return marcarObjetivos(quitarObjetivos(e, quitados), nuevos, actividadId);
+}
+
+/**
+ * Guarda una actividad propia con sus objetivos en sincronía.
+ *
+ * Los que la actividad tenía y ya no tiene salen de la lista general, salvo
+ * que otra actividad propia los siga teniendo. Los que tiene ahora entran.
+ */
+export function guardarActividad(e: Expedicion, a: ActividadPropia): Expedicion {
+  const antes = e.actividadesPropias.find((x) => x.id === a.id);
+  const limpia = { ...a, oa: sinRepetir(a.oa) };
+  const actividades = antes
+    ? e.actividadesPropias.map((x) => (x.id === a.id ? limpia : x))
+    : [...e.actividadesPropias, limpia];
+  const enOtras = new Set(actividades.filter((x) => x.id !== a.id).flatMap((x) => x.oa));
+  const soltados = (antes?.oa ?? []).filter((c) => !limpia.oa.includes(c) && !enOtras.has(c));
+  return {
+    ...e,
+    actividadesPropias: actividades,
+    oa: sinRepetir([...e.oa.filter((c) => !soltados.includes(c)), ...limpia.oa]),
+  };
+}
+
+/** Borra una actividad propia y los objetivos que solo venían de ella. */
+export function borrarActividad(e: Expedicion, id: string): Expedicion {
+  const antes = e.actividadesPropias.find((x) => x.id === id);
+  const actividades = e.actividadesPropias.filter((x) => x.id !== id);
+  const enOtras = new Set(actividades.flatMap((x) => x.oa));
+  const soltados = (antes?.oa ?? []).filter((c) => !enOtras.has(c));
+  return { ...e, actividadesPropias: actividades, oa: e.oa.filter((c) => !soltados.includes(c)) };
+}
+
 export function borrar(): void {
   try {
     localStorage.removeItem(llave());
@@ -359,8 +464,6 @@ export function completitud(e: Expedicion): number {
     e.asignaturas.length ? "x" : "",
     e.oa.length ? "x" : "",
     e.tecnicas.length ? "x" : "",
-    e.puntoDeSalida,
-    e.queCuidar,
     /* Lámina 3 */
     e.destinatario,
     e.formato ?? "",
