@@ -13,6 +13,7 @@ import {
   ClipboardCheck,
   FileSignature,
   FlaskConical,
+  Handshake,
   Leaf,
   LoaderCircle,
   Lock,
@@ -800,6 +801,84 @@ export function PasoRuta({
 
 /* ── 5 · Llevársela ──────────────────────────────────────────────────────── */
 
+/** El azul del ODS 17, Alianzas para lograr los objetivos: un piloto es eso. */
+const ALIANZAS = "#19486A";
+
+/**
+ * La invitación a un piloto, al final del sorteo.
+ *
+ * Quien llega hasta aquí ya armó una ruta y le gustó lo suficiente para dejar
+ * su correo: es el mejor momento para ofrecerle probarlo en su escuela o
+ * ayudar a diseñar lo que viene. En la tablet del stand un enlace de correo no
+ * sirve (abriría el correo del stand, no el suyo), así que ahí va un código QR
+ * que abre el correo en el teléfono de la persona, con el asunto escrito.
+ */
+function Piloto({ kiosco }: { kiosco: boolean }) {
+  const tx = useTx();
+  const correo = "aprendelocal@gmail.com";
+  const mailto = `mailto:${correo}?subject=${encodeURIComponent(
+    tx("Piloto de AprendeLocal en mi escuela", "Piloto da AprendeLocal na minha escola")
+  )}`;
+
+  return (
+    <section
+      className="grid gap-6 rounded-[2rem] border-2 p-6 sm:p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center"
+      style={{ borderColor: `${ALIANZAS}33`, background: `${ALIANZAS}0d` }}
+    >
+      <div>
+        <p className="rotulo flex items-center gap-2" style={{ color: ALIANZAS }}>
+          <Handshake className="h-4 w-4" aria-hidden />
+          {tx("Pilotos y lo que viene · ODS 17", "Pilotos e o que vem por aí · ODS 17")}
+        </p>
+        <h2 className="titulo mt-2 text-2xl text-texto sm:text-3xl [text-wrap:balance]">
+          {tx("¿Hacemos un piloto en tu escuela?", "Vamos fazer um piloto na sua escola?")}
+        </h2>
+        <p className="mt-2 max-w-2xl text-lg text-slate-700">
+          {tx(
+            "Buscamos escuelas y docentes que quieran probar AprendeLocal con su curso y ayudarnos a diseñar lo que viene. Escríbenos y conversamos.",
+            "Procuramos escolas e docentes que queiram testar a AprendeLocal com a turma e nos ajudar a desenhar o que vem por aí. Escreva para nós e conversamos."
+          )}
+        </p>
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+          {!kiosco && (
+            <a
+              href={mailto}
+              className="inline-flex min-h-12 items-center gap-2 rounded-full px-6 font-bold text-white transition hover:-translate-y-0.5"
+              style={{ background: ALIANZAS }}
+            >
+              <Mail className="h-5 w-5" aria-hidden />
+              {tx("Quiero conversar", "Quero conversar")}
+            </a>
+          )}
+          <p className="text-slate-700">
+            {kiosco ? tx("Escríbenos a ", "Escreva para ") : tx("o escribe a ", "ou escreva para ")}
+            {kiosco ? (
+              <strong style={{ color: ALIANZAS }}>{correo}</strong>
+            ) : (
+              <a href={mailto} className="font-semibold underline underline-offset-4" style={{ color: ALIANZAS }}>
+                {correo}
+              </a>
+            )}
+          </p>
+        </div>
+      </div>
+
+      {kiosco && (
+        <div className="flex flex-col items-center gap-2 text-center">
+          <Qr
+            texto={mailto}
+            etiqueta={tx("Código QR para escribirle al equipo desde tu teléfono", "Código QR para escrever para a equipe pelo celular")}
+            className="h-40 w-40"
+          />
+          <p className="max-w-[12rem] text-sm text-slate-600">
+            {tx("Escanéalo y escríbenos desde tu teléfono", "Escaneie e escreva pelo seu celular")}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export type EstadoCorreo = { estado: "libre" } | { estado: "enviando" } | Respuesta;
 
 export function PasoLlevar({
@@ -990,6 +1069,8 @@ export function PasoLlevar({
           <p className="text-sm text-slate-500">{tx("Sin cuenta, sin instalar nada.", "Sem conta, sem instalar nada.")}</p>
         </section>
       </div>
+
+      <Piloto kiosco={kiosco} />
 
       <section>
         <div className="flex flex-wrap items-end justify-between gap-4">
