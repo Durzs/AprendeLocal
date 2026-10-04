@@ -16,9 +16,10 @@ import { normalizarAvance, type Avance } from "./avance";
  * CÓMO SE REPARTEN LOS DOS SITIOS
  *
  * `localStorage` sigue siendo el que manda mientras se escribe. Es instantáneo,
- * funciona sin señal y funciona sin cuenta, y las tres cosas importan en una
- * escuela rural: armar una ruta sin registrarse tiene que seguir siendo
- * posible, porque el primer día nadie se registra.
+ * funciona sin señal y no espera a ningún servidor, que en una escuela rural
+ * importa. (El cuaderno se abría también sin cuenta; desde octubre de 2026
+ * pide sesión, ver §SoloConCuenta.tsx. Lo que el demo del stand deja en
+ * `localStorage` sube a la cuenta apenas la persona entra.)
  *
  * Supabase es el respaldo. Cuando hay sesión iniciada, lo que se escribe sube;
  * cuando se abre el cuaderno en otro computador, baja. Si no hay red, si la

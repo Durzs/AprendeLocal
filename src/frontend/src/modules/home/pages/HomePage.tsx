@@ -1,5 +1,5 @@
-import { lazy, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import Cargando from "../../../shared/components/ui/Cargando";
@@ -48,6 +48,19 @@ export default function HomePage() {
    * una vitrina. Es lo que promete el boton.
    */
   const goStart = () => navigate("/crear");
+
+  /*
+   * Llegar a una sección desde otra página: «Contacto» en la cabecera, o
+   * «Escribir al equipo» en la puerta del cuaderno, llevan a `/#contacto`. El
+   * navegador no baja solo porque la sección no existe todavía cuando lee la
+   * dirección: se pinta después de comprobar la sesión.
+   */
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (loading || user || !hash) return;
+    const id = decodeURIComponent(hash.slice(1));
+    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }));
+  }, [hash, loading, user]);
 
   const goExplore = () => {
     const el = document.getElementById("como-funciona");

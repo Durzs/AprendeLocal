@@ -279,7 +279,9 @@ export default function CongresoPage() {
 
   const alCuaderno = () => {
     if (armada) sembrarCuaderno(armada);
-    navegar("/crear");
+    // Sin cuenta, el cuaderno muestra cómo pedir acceso y avisa que la ruta
+    // quedó guardada: ver §SoloConCuenta.tsx.
+    navegar("/crear", { state: { desdeDemo: true } });
   };
 
   /* ── Lo que se ve ──────────────────────────────────────────────────────── */
